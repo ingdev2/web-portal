@@ -8,20 +8,20 @@ import {
 } from 'typeorm';
 
 export enum UserGender {
-  Male = 'Masculino',
-  Female = 'Femenino',
+  MALE = 'Masculino',
+  FEMALE = 'Femenino',
 }
 
 export enum UserIdType {
-  citizenshipCard = 'Cédula de Ciudadanía',
-  ForeignerId = 'Cédula de Extranjería',
-  civilRegistration = 'Registro Civil',
-  Passport = 'Pasaporte',
+  CITIZENSHIP_CARD = 'Cédula de Ciudadanía',
+  FOREIGNER_ID = 'Cédula de Extranjería',
+  CIVIL_REGISTRATION = 'Registro Civil',
+  PASSPORT = 'Pasaporte',
 }
 
 export enum UserRolType {
-  person = 'Persona',
-  Eps = 'Eps',
+  PERSON = 'Persona',
+  EPS = 'Eps',
 }
 
 @Entity()
@@ -65,7 +65,7 @@ export class User {
   @Column({ nullable: true })
   company_area: string;
 
-  @Column({ default: UserRolType.person })
+  @Column({ default: UserRolType.PERSON })
   rol: UserRolType;
 
   @Column({ nullable: true })

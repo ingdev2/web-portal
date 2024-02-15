@@ -8,7 +8,7 @@ import {
   IsEmpty,
   IsString,
 } from 'class-validator';
-import { UserGender, UserIdType, UserRolType } from '../user.entity';
+import { UserGender, UserIdType, UserRolType } from '../entities/user.entity';
 
 export class UpdateUserPersonDto {
   @IsOptional()
