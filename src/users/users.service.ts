@@ -34,7 +34,7 @@ export class UsersService {
 
     if (allUsersPerson.length == 0) {
       return new HttpException(
-        `No hay usuarios registrados en la base de datos`,
+        `No hay usuarios registrados en la base de datos.`,
         HttpStatus.CONFLICT,
       );
     } else {
