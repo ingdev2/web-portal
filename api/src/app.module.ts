@@ -6,6 +6,7 @@ require('dotenv').config();
 // const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
 import { UsersModule } from './users/users.module';
+import { AdminsModule } from './admins/admins.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
       autoLoadEntities: true,
     }),
     UsersModule,
+    AdminsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
