@@ -7,10 +7,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateUserPersonDto } from './dto/create_user_person.dto';
-import { UsersService } from './users.service';
-import { User } from './user.entity';
-import { UpdateUserPersonDto } from './dto/update_user_person.dto';
+import { CreateUserPersonDto } from '../dto/create_user_person.dto';
+import { UsersService } from '../services/users.service';
+import { User } from '../user.entity';
+import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 
 @Controller('users')
 export class UsersController {
