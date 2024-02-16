@@ -1,8 +1,10 @@
+import { User, UserIdType } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,13 +15,6 @@ export enum RequirementType {
   CLINIC_HISTORY = 'Historia Clínica',
   MEDICAL_ORDER = 'Orden Médica',
   MEDICAL_DISABILITY = 'Incapacidad Médica',
-}
-
-export enum MedicalReqIdType {
-  CITIZENSHIP_CARD = 'Cédula de Ciudadanía',
-  FOREIGNER_ID = 'Cédula de Extranjería',
-  CIVIL_REGISTRATION = 'Registro Civil',
-  PASSPORT = 'Pasaporte',
 }
 
 export enum RelationshipWithPatient {
@@ -42,8 +37,8 @@ export class MedicalReq {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 8, unique: true })
-  filing_number: string = uuidv4().slice(0, 8);
+  @PrimaryGeneratedColumn(uuidv4)
+  filing_number: string;
 
   @Column()
   requirement_type: RequirementType;
@@ -54,19 +49,19 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   copy_right_petition: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   aplicant_name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   aplicant_last_name: string;
 
-  @Column()
-  aplicant_id_type: MedicalReqIdType;
+  @Column({ nullable: true })
+  aplicant_id_type: UserIdType;
 
-  @Column({ type: 'bigint' })
-  id_number: number;
+  @Column({ type: 'bigint', nullable: true })
+  aplicant_id_number: number;
 
-  @Column()
+  @Column({ nullable: true })
   aplicant_email: string;
 
   @Column({ type: 'bigint', nullable: true })
@@ -76,7 +71,7 @@ export class MedicalReq {
   relationship_with_patient: RelationshipWithPatient;
 
   @Column()
-  patient_id_type: MedicalReqIdType;
+  patient_id_type: UserIdType;
 
   @Column({ type: 'bigint' })
   patient_id_number: number;
@@ -122,4 +117,7 @@ export class MedicalReq {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.medical_req)
+  aplicant: User;
 }

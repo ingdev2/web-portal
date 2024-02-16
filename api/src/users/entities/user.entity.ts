@@ -1,8 +1,12 @@
+import { MedicalReq } from 'src/medical_req/entities/medical_req.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -91,4 +95,7 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant)
+  medical_req: MedicalReq[];
 }
