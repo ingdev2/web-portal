@@ -5,10 +5,10 @@ import {
   IsNumber,
   IsOptional,
   IsDate,
-  IsEmpty,
   IsString,
+  IsDateString,
 } from 'class-validator';
-import { UserGender, UserIdType, UserRolType } from '../user.entity';
+import { UserGender, UserIdType } from '../entities/user.entity';
 
 export class CreateUserPersonDto {
   @IsNotEmpty()
@@ -24,11 +24,8 @@ export class CreateUserPersonDto {
   gender: UserGender;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   birthay_date: Date;
-
-  @IsEmpty()
-  company_name: string;
 
   @IsNotEmpty()
   @IsEnum(UserIdType)
@@ -39,7 +36,7 @@ export class CreateUserPersonDto {
   id_number: number;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   id_exp_date: Date;
 
   @IsNotEmpty()
@@ -53,13 +50,6 @@ export class CreateUserPersonDto {
   @IsNotEmpty()
   @IsString()
   password: string;
-
-  @IsEmpty()
-  company_area: string;
-
-  @IsOptional()
-  @IsEnum(UserRolType)
-  rol: UserRolType;
 
   @IsOptional()
   @IsString()
