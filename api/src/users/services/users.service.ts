@@ -175,4 +175,28 @@ export class UsersService {
       HttpStatus.CONFLICT,
     );
   }
+
+  async banUserEps(id: string) {
+    const userEpsFound = await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!userEpsFound) {
+      return new HttpException(
+        `El usuario con número de Id: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    userEpsFound.is_active = !userEpsFound.is_active;
+
+    await this.userRepository.save(userEpsFound);
+
+    return new HttpException(
+      `El usuario con número de identidad: ${userEpsFound.id_number} está con estado activo: ${userEpsFound.is_active}`,
+      HttpStatus.CONFLICT,
+    );
+  }
 }

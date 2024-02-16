@@ -4,13 +4,12 @@ import {
   IsEnum,
   IsNumber,
   IsOptional,
-  IsDate,
-  IsEmpty,
   IsString,
 } from 'class-validator';
 import {
   AdminGender,
   AdminIdType,
+  AdminCompanyArea,
   AdminRolType,
 } from '../entities/admin.entity';
 
@@ -44,7 +43,7 @@ export class CreateAdminDto {
   password: string;
 
   @IsNotEmpty()
-  company_area: string;
+  company_area: AdminCompanyArea;
 
   @IsOptional()
   @IsEnum(AdminRolType)

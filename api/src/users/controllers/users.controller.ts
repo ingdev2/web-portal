@@ -64,4 +64,9 @@ export class UsersController {
   async banUserPerson(@Param('id') id: string) {
     return await this.usersService.banUserPerson(id);
   }
+
+  @Patch('/ban/:id')
+  async banUserEps(@Param('id') id: string) {
+    return await this.usersService.banUserEps(id);
+  }
 }

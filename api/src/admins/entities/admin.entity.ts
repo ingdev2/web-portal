@@ -19,6 +19,12 @@ export enum AdminIdType {
   PASSPORT = 'Pasaporte',
 }
 
+export enum AdminCompanyArea {
+  SYSTEM_DEPARTAMENT = 'Departamento de Sistemas',
+  ARCHIVES_DEPARTAMENT = 'Departamento de Archivos',
+  LEGAL_DEPARTAMENT = 'Departamento de Jurídico',
+}
+
 export enum AdminRolType {
   SUPER_ADMIN = 'Super Admin',
   ADMIN = 'Admin',
@@ -51,7 +57,7 @@ export class Admin {
   password: string;
 
   @Column()
-  company_area: string;
+  company_area: AdminCompanyArea;
 
   @Column({ default: AdminRolType.ADMIN })
   rol: AdminRolType;
