@@ -7,11 +7,14 @@ export class MedicalReqController {
   constructor(private medicalReqService: MedicalReqService) {}
 
   @Post('/createMedicalReq/:userId')
-  async createMedicalReq(
+  async createMedicalReqPerson(
     @Param('userId') userId: string,
     @Body()
     medicalReq: CreateMedicalReqDto,
   ) {
-    return await this.medicalReqService.createMedicalReq(medicalReq, userId);
+    return await this.medicalReqService.createMedicalReqPerson(
+      userId,
+      medicalReq,
+    );
   }
 }

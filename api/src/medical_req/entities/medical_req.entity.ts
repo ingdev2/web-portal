@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -37,7 +38,7 @@ export class MedicalReq {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @PrimaryGeneratedColumn(uuidv4)
+  @Column({ generated: 'uuid' })
   filing_number: string;
 
   @Column()
@@ -94,7 +95,7 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   copy_cohabitation_certificate: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   date_of_admission: Date;
 
   @Column({ type: 'date', nullable: true })
@@ -118,6 +119,10 @@ export class MedicalReq {
   @DeleteDateColumn()
   deletedAt: Date;
 
+  @Column({ type: 'uuid', nullable: true })
+  aplicantId: string;
+
   @ManyToOne(() => User, (user) => user.medical_req)
+  @JoinColumn()
   aplicant: User;
 }

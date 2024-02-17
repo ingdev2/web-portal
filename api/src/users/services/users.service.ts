@@ -90,17 +90,17 @@ export class UsersService {
     }
   }
 
-  async getUserPersonByIdNumber(id_number: number) {
+  async getUserPersonById(id: string) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
-        id_number: id_number,
+        id: id,
         rol: UserRolType.PERSON,
       },
     });
 
     if (!userPersonFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id_number} no esta registrado.`,
+        `El usuario con número de identificación: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
@@ -108,17 +108,17 @@ export class UsersService {
     }
   }
 
-  async getUserEpsByIdNumber(id_number: number) {
+  async getUserEpsById(id: string) {
     const userEpsFound = await this.userRepository.findOne({
       where: {
-        id_number: id_number,
+        id: id,
         rol: UserRolType.EPS,
       },
     });
 
     if (!userEpsFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id_number} no esta registrado.`,
+        `El usuario con número de identificación: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {

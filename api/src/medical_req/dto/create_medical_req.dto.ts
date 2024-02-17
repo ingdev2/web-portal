@@ -6,6 +6,7 @@ import {
   IsString,
   IsBoolean,
   IsDateString,
+  IsUUID,
 } from 'class-validator';
 import {
   RequirementType,
@@ -91,7 +92,7 @@ export class CreateMedicalReqDto {
   @IsString()
   copy_cohabitation_certificate: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   date_of_admission: Date;
 
@@ -110,4 +111,8 @@ export class CreateMedicalReqDto {
   @IsOptional()
   @IsBoolean()
   is_deleted: boolean;
+
+  @IsOptional()
+  @IsUUID()
+  aplicantId: string;
 }

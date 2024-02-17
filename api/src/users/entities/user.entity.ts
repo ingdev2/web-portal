@@ -48,6 +48,9 @@ export class User {
   @Column({ nullable: true })
   company_name: string;
 
+  @Column({ nullable: true })
+  company_area: string;
+
   @Column()
   id_type: UserIdType;
 
@@ -65,9 +68,6 @@ export class User {
 
   @Column()
   password: string;
-
-  @Column({ nullable: true })
-  company_area: string;
 
   @Column({ default: UserRolType.PERSON })
   rol: UserRolType;
@@ -97,5 +97,6 @@ export class User {
   deletedAt: Date;
 
   @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant)
+  @JoinColumn()
   medical_req: MedicalReq[];
 }

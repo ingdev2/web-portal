@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
 import { CreateMedicalReqDto } from '../dto/create_medical_req.dto';
-import { User } from 'src/users/entities/user.entity';
+import { User, UserRolType } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
 export class MedicalReqService {
@@ -13,12 +14,17 @@ export class MedicalReqService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private usersService: UsersService,
   ) {}
 
-  async createMedicalReq(medicalReq: CreateMedicalReqDto, userId: string) {
+  async createMedicalReqPerson(
+    userId: string,
+    medicalReq: CreateMedicalReqDto,
+  ) {
     const userFound = await this.userRepository.findOne({
       where: {
         id: userId,
+        rol: UserRolType.PERSON,
       },
     });
 
@@ -29,25 +35,48 @@ export class MedicalReqService {
       );
     }
 
-    const newMedicalReq = new MedicalReq();
+    const aplicantDetails = new CreateMedicalReqDto();
 
-    newMedicalReq.aplicant_name = userFound.name;
-    newMedicalReq.aplicant_last_name = userFound.last_name;
-    newMedicalReq.aplicant_id_type = userFound.id_type;
-    newMedicalReq.aplicant_id_number = userFound.id_number;
-    newMedicalReq.aplicant_email = userFound.email;
-    newMedicalReq.aplicant_cellphone = userFound.cellphone;
+    aplicantDetails.aplicantId = userFound.id;
+    aplicantDetails.aplicant_name = userFound.name;
+    aplicantDetails.aplicant_last_name = userFound.last_name;
+    aplicantDetails.aplicant_id_type = userFound.id_type;
+    aplicantDetails.aplicant_id_number = userFound.id_number;
+    aplicantDetails.aplicant_email = userFound.email;
+    aplicantDetails.aplicant_cellphone = userFound.cellphone;
 
-    // if (newMedicalReq) {
-    //   this.medicalReqRepository.save(newMedicalReq);
-    // }
+    const currentDate = new Date();
+    aplicantDetails.date_of_admission = currentDate;
 
-    console.log(newMedicalReq);
-    console.log(medicalReq);
-    await this.medicalReqRepository.save(medicalReq);
-    await this.medicalReqRepository.save(newMedicalReq);
+    if (medicalReq.right_petition && !medicalReq.copy_right_petition) {
+      return new HttpException(
+        `No se ha adjuntado el documento de derecho de petición.`,
+        HttpStatus.CONFLICT,
+      );
+    }
 
-    return medicalReq;
+    if (
+      !medicalReq.copy_applicant_citizenship_card &&
+      !medicalReq.copy_cohabitation_certificate &&
+      !medicalReq.copy_marriage_certicate &&
+      !medicalReq.copy_parents_citizenship_card &&
+      !medicalReq.copy_patient_citizenship_card &&
+      !medicalReq.copy_patient_civil_registration
+    ) {
+      return new HttpException(
+        `No se ha adjuntado ningún documento.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const createMedicalReq = await this.medicalReqRepository.save(medicalReq);
+
+    await this.medicalReqRepository.update(
+      createMedicalReq.id,
+      aplicantDetails,
+    );
+
+    return await createMedicalReq;
   }
 
   getMedicalReq() {}
