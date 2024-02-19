@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRolType } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { User, UserRolType } from '../entities/user.entity';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
@@ -12,6 +12,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
+  // CREATE FUNTIONS //
 
   async createUserPerson(userPerson: CreateUserPersonDto) {
     const userPersonFound = await this.userRepository.findOne({
@@ -56,11 +58,14 @@ export class UsersService {
     return await this.userRepository.save(newUserEps);
   }
 
+  // GET FUNTIONS //
+
   async getUsersPerson() {
     const allUsersPerson = await this.userRepository.find({
       where: {
         rol: UserRolType.PERSON,
       },
+      relations: ['medical_req'],
     });
 
     if (allUsersPerson.length == 0) {
@@ -90,17 +95,18 @@ export class UsersService {
     }
   }
 
-  async getUserPersonByIdNumber(id_number: number) {
+  async getUserPersonById(id: string) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
-        id_number: id_number,
+        id: id,
         rol: UserRolType.PERSON,
       },
+      relations: ['medical_req'],
     });
 
     if (!userPersonFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id_number} no esta registrado.`,
+        `El usuario con número de identificación: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
@@ -108,23 +114,25 @@ export class UsersService {
     }
   }
 
-  async getUserEpsByIdNumber(id_number: number) {
+  async getUserEpsById(id: string) {
     const userEpsFound = await this.userRepository.findOne({
       where: {
-        id_number: id_number,
+        id: id,
         rol: UserRolType.EPS,
       },
     });
 
     if (!userEpsFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id_number} no esta registrado.`,
+        `El usuario con número de identificación: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
       return userEpsFound;
     }
   }
+
+  // UPDATE FUNTIONS //
 
   async updateUserPerson(id: string, userPerson: UpdateUserPersonDto) {
     const updateUserPerson = await this.userRepository.update(id, userPerson);
@@ -151,6 +159,8 @@ export class UsersService {
       HttpStatus.ACCEPTED,
     );
   }
+
+  // DELETED-BAN FUNTIONS //
 
   async banUserPerson(id: string) {
     const userPersonFound = await this.userRepository.findOne({

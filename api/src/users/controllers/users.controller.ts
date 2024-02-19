@@ -38,13 +38,13 @@ export class UsersController {
   }
 
   @Get('/person/:id')
-  async getUserPersonByIdNumber(@Param('id', ParseIntPipe) id_number: number) {
-    return await this.usersService.getUserPersonByIdNumber(id_number);
+  async getUserPersonById(@Param('id', ParseIntPipe) id: string) {
+    return await this.usersService.getUserPersonById(id);
   }
 
   @Get('/eps/:id')
-  async getUserEpsByIdNumber(@Param('id', ParseIntPipe) id_number: number) {
-    return await this.usersService.getUserEpsByIdNumber(id_number);
+  async getUserEpsById(@Param('id', ParseIntPipe) id: string) {
+    return await this.usersService.getUserEpsById(id);
   }
 
   @Patch('/updatePerson/:id')

@@ -1,8 +1,11 @@
+import { User, UserIdType } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,13 +16,6 @@ export enum RequirementType {
   CLINIC_HISTORY = 'Historia Clínica',
   MEDICAL_ORDER = 'Orden Médica',
   MEDICAL_DISABILITY = 'Incapacidad Médica',
-}
-
-export enum MedicalReqIdType {
-  CITIZENSHIP_CARD = 'Cédula de Ciudadanía',
-  FOREIGNER_ID = 'Cédula de Extranjería',
-  CIVIL_REGISTRATION = 'Registro Civil',
-  PASSPORT = 'Pasaporte',
 }
 
 export enum RelationshipWithPatient {
@@ -42,8 +38,8 @@ export class MedicalReq {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 8, unique: true })
-  filing_number: string = uuidv4().slice(0, 8);
+  @Column({ generated: 'uuid' })
+  filing_number: string;
 
   @Column()
   requirement_type: RequirementType;
@@ -54,29 +50,38 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   copy_right_petition: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   aplicant_name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   aplicant_last_name: string;
 
-  @Column()
-  aplicant_id_type: MedicalReqIdType;
+  @Column({ type: 'text', nullable: true })
+  aplicant_gender: string;
 
-  @Column({ type: 'bigint' })
-  id_number: number;
+  @Column({ nullable: true })
+  aplicant_id_type: UserIdType;
 
-  @Column()
+  @Column({ type: 'bigint', nullable: true })
+  aplicant_id_number: number;
+
+  @Column({ nullable: true })
   aplicant_email: string;
 
   @Column({ type: 'bigint', nullable: true })
   aplicant_cellphone: number;
 
-  @Column()
+  @Column({ nullable: true })
+  aplicant_company_name: string;
+
+  @Column({ nullable: true })
+  aplicant_company_area: string;
+
+  @Column({ nullable: true })
   relationship_with_patient: RelationshipWithPatient;
 
   @Column()
-  patient_id_type: MedicalReqIdType;
+  patient_id_type: UserIdType;
 
   @Column({ type: 'bigint' })
   patient_id_number: number;
@@ -99,7 +104,7 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   copy_cohabitation_certificate: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   date_of_admission: Date;
 
   @Column({ type: 'date', nullable: true })
@@ -122,4 +127,11 @@ export class MedicalReq {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Column({ type: 'uuid', nullable: true })
+  aplicantId: string;
+
+  @ManyToOne(() => User, (user) => user.medical_req)
+  @JoinColumn()
+  aplicant: User;
 }
