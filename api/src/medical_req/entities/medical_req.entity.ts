@@ -56,6 +56,9 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   aplicant_last_name: string;
 
+  @Column({ type: 'text', nullable: true })
+  aplicant_gender: string;
+
   @Column({ nullable: true })
   aplicant_id_type: UserIdType;
 
@@ -68,7 +71,13 @@ export class MedicalReq {
   @Column({ type: 'bigint', nullable: true })
   aplicant_cellphone: number;
 
-  @Column()
+  @Column({ nullable: true })
+  aplicant_company_name: string;
+
+  @Column({ nullable: true })
+  aplicant_company_area: string;
+
+  @Column({ nullable: true })
   relationship_with_patient: RelationshipWithPatient;
 
   @Column()

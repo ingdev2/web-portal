@@ -13,20 +13,12 @@ import {
   RelationshipWithPatient,
   RequestStatus,
 } from '../entities/medical_req.entity';
-import { UserIdType } from 'src/users/entities/user.entity';
+import { UserGender, UserIdType } from 'src/users/entities/user.entity';
 
-export class CreateMedicalReqDto {
+export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
   @IsEnum(RequirementType)
   requirement_type: RequirementType;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  right_petition: boolean;
-
-  @IsOptional()
-  @IsString()
-  copy_right_petition: string;
 
   @IsOptional()
   @IsString()
@@ -35,6 +27,10 @@ export class CreateMedicalReqDto {
   @IsOptional()
   @IsString()
   aplicant_last_name: string;
+
+  @IsOptional()
+  @IsEnum(UserGender)
+  aplicant_gender: UserGender;
 
   @IsOptional()
   @IsEnum(UserIdType)
@@ -49,12 +45,12 @@ export class CreateMedicalReqDto {
   aplicant_email: string;
 
   @IsOptional()
-  @IsNumber()
-  aplicant_cellphone: number;
+  @IsString()
+  aplicant_company_name: string;
 
-  @IsNotEmpty()
-  @IsEnum(RelationshipWithPatient)
-  relationship_with_patient: RelationshipWithPatient;
+  @IsOptional()
+  @IsString()
+  aplicant_company_area: string;
 
   @IsNotEmpty()
   @IsEnum(UserIdType)
@@ -67,30 +63,6 @@ export class CreateMedicalReqDto {
   @IsNotEmpty()
   @IsDateString()
   patient_id_exp_date: Date;
-
-  @IsOptional()
-  @IsString()
-  copy_applicant_citizenship_card: string;
-
-  @IsOptional()
-  @IsString()
-  copy_patient_citizenship_card: string;
-
-  @IsOptional()
-  @IsString()
-  copy_patient_civil_registration: string;
-
-  @IsOptional()
-  @IsString()
-  copy_parents_citizenship_card: string;
-
-  @IsOptional()
-  @IsString()
-  copy_marriage_certicate: string;
-
-  @IsOptional()
-  @IsString()
-  copy_cohabitation_certificate: string;
 
   @IsOptional()
   @IsDateString()

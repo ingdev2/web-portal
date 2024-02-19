@@ -13,6 +13,8 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  // CREATE FUNTIONS //
+
   async createUserPerson(userPerson: CreateUserPersonDto) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
@@ -56,11 +58,14 @@ export class UsersService {
     return await this.userRepository.save(newUserEps);
   }
 
+  // GET FUNTIONS //
+
   async getUsersPerson() {
     const allUsersPerson = await this.userRepository.find({
       where: {
         rol: UserRolType.PERSON,
       },
+      relations: ['medical_req'],
     });
 
     if (allUsersPerson.length == 0) {
@@ -96,6 +101,7 @@ export class UsersService {
         id: id,
         rol: UserRolType.PERSON,
       },
+      relations: ['medical_req'],
     });
 
     if (!userPersonFound) {
@@ -126,6 +132,8 @@ export class UsersService {
     }
   }
 
+  // UPDATE FUNTIONS //
+
   async updateUserPerson(id: string, userPerson: UpdateUserPersonDto) {
     const updateUserPerson = await this.userRepository.update(id, userPerson);
 
@@ -151,6 +159,8 @@ export class UsersService {
       HttpStatus.ACCEPTED,
     );
   }
+
+  // DELETED-BAN FUNTIONS //
 
   async banUserPerson(id: string) {
     const userPersonFound = await this.userRepository.findOne({
