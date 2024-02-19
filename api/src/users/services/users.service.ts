@@ -30,6 +30,14 @@ export class UsersService {
     }
 
     const newUserPerson = await this.userRepository.create(userPerson);
+
+    if (newUserPerson.rol !== 'Persona') {
+      throw new HttpException(
+        'El usuario debe tener el rol "Persona".',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     return await this.userRepository.save(newUserPerson);
   }
 
@@ -47,25 +55,29 @@ export class UsersService {
       );
     }
 
-    if (userEps.rol !== 'Eps') {
+    const newUserEps = await this.userRepository.create(userEps);
+
+    if (newUserEps.rol !== 'Eps') {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
         HttpStatus.CONFLICT,
       );
     }
 
-    const newUserEps = await this.userRepository.create(userEps);
     return await this.userRepository.save(newUserEps);
   }
 
   // GET FUNTIONS //
 
-  async getUsersPerson() {
+  async getAllUsersPerson() {
     const allUsersPerson = await this.userRepository.find({
       where: {
         rol: UserRolType.PERSON,
+        is_active: true,
       },
-      relations: ['medical_req'],
+      order: {
+        name: 'ASC',
+      },
     });
 
     if (allUsersPerson.length == 0) {
@@ -78,10 +90,14 @@ export class UsersService {
     }
   }
 
-  async getUsersEps() {
+  async getAllUsersEps() {
     const allUsersEps = await this.userRepository.find({
       where: {
         rol: UserRolType.EPS,
+        is_active: true,
+      },
+      order: {
+        name: 'ASC',
       },
     });
 
@@ -100,13 +116,14 @@ export class UsersService {
       where: {
         id: id,
         rol: UserRolType.PERSON,
+        is_active: true,
       },
       relations: ['medical_req'],
     });
 
     if (!userPersonFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id} no esta registrado.`,
+        `El usuario con número de ID: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
@@ -119,12 +136,14 @@ export class UsersService {
       where: {
         id: id,
         rol: UserRolType.EPS,
+        is_active: true,
       },
+      relations: ['medical_req'],
     });
 
     if (!userEpsFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id} no esta registrado.`,
+        `El usuario con número de ID: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
@@ -162,50 +181,26 @@ export class UsersService {
 
   // DELETED-BAN FUNTIONS //
 
-  async banUserPerson(id: string) {
-    const userPersonFound = await this.userRepository.findOne({
+  async banUsers(id: string) {
+    const userFound = await this.userRepository.findOne({
       where: {
         id: id,
       },
     });
 
-    if (!userPersonFound) {
+    if (!userFound) {
       return new HttpException(
-        `El usuario con número de Id: ${id} no esta registrado.`,
+        `El usuario con número de ID: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     }
 
-    userPersonFound.is_active = !userPersonFound.is_active;
+    userFound.is_active = !userFound.is_active;
 
-    await this.userRepository.save(userPersonFound);
-
-    return new HttpException(
-      `El usuario con número de identidad: ${userPersonFound.id_number} está con estado activo: ${userPersonFound.is_active}`,
-      HttpStatus.CONFLICT,
-    );
-  }
-
-  async banUserEps(id: string) {
-    const userEpsFound = await this.userRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!userEpsFound) {
-      return new HttpException(
-        `El usuario con número de Id: ${id} no esta registrado.`,
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    userEpsFound.is_active = !userEpsFound.is_active;
-
-    await this.userRepository.save(userEpsFound);
+    await this.userRepository.save(userFound);
 
     return new HttpException(
-      `El usuario con número de identidad: ${userEpsFound.id_number} está con estado activo: ${userEpsFound.is_active}`,
+      `El usuario con número de identidad: ${userFound.id_number} está con estado activo: ${userFound.is_active}`,
       HttpStatus.CONFLICT,
     );
   }

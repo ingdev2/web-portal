@@ -3,7 +3,6 @@ import {
   IsEmail,
   IsEnum,
   IsNumber,
-  IsOptional,
   IsString,
 } from 'class-validator';
 import {
@@ -13,7 +12,7 @@ import {
   AdminRolType,
 } from '../entities/admin.entity';
 
-export class CreateAdminDto {
+export class CreateSuperAdminDto {
   @IsNotEmpty()
   @IsString()
   name: string;

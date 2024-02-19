@@ -6,6 +6,7 @@ import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto'
 import { User, UserRolType } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
+import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 
 @Injectable()
 export class MedicalReqService {
@@ -41,6 +42,7 @@ export class MedicalReqService {
     const aplicantPersonDetails = new CreateMedicalReqPersonDto();
 
     aplicantPersonDetails.aplicantId = userPersonFound.id;
+    aplicantPersonDetails.medicalReqUserType = userPersonFound.rol;
     aplicantPersonDetails.aplicant_name = userPersonFound.name;
     aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
     aplicantPersonDetails.aplicant_gender = userPersonFound.gender;
@@ -115,6 +117,7 @@ export class MedicalReqService {
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
+    aplicantEpsDetails.medicalReqUserType = userEpsFound.rol;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
     aplicantEpsDetails.aplicant_gender = userEpsFound.gender;
@@ -147,5 +150,151 @@ export class MedicalReqService {
 
   // GET FUNTIONS //
 
-  getMedicalReq() {}
+  async getAllMedicalReqPerson() {
+    const allMedicalReqPerson = await this.medicalReqRepository.find({
+      where: {
+        medicalReqUserType: UserRolType.PERSON,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (allMedicalReqPerson.length == 0) {
+      return new HttpException(
+        `No hay requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqPerson;
+    }
+  }
+
+  async getAllMedicalReqEps() {
+    const allMedicalReqEps = await this.medicalReqRepository.find({
+      where: {
+        medicalReqUserType: UserRolType.EPS,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (allMedicalReqEps.length == 0) {
+      return new HttpException(
+        `No hay requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqEps;
+    }
+  }
+
+  async getMedicalReqPersonById(id: string) {
+    const medicalReqPersonFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+        medicalReqUserType: UserRolType.PERSON,
+        is_deleted: false,
+      },
+    });
+
+    if (!medicalReqPersonFound) {
+      return new HttpException(
+        `El requerimiento médico con número de ID: ${id} no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return medicalReqPersonFound;
+    }
+  }
+
+  async getMedicalReqEpsById(id: string) {
+    const medicalReqEpsFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+        medicalReqUserType: UserRolType.EPS,
+        is_deleted: false,
+      },
+    });
+
+    if (!medicalReqEpsFound) {
+      return new HttpException(
+        `El requerimiento médico con número de ID: ${id} no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return medicalReqEpsFound;
+    }
+  }
+
+  async getMedicalReqByFilingNumber(filingNumber: string) {
+    const medicalReqFound = await this.medicalReqRepository.findOne({
+      where: {
+        filing_number: filingNumber,
+        is_deleted: false,
+      },
+    });
+
+    if (!medicalReqFound) {
+      return new HttpException(
+        `El requerimiento médico con número de radicado: ${filingNumber} no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return medicalReqFound;
+    }
+  }
+
+  // UPDATE FUNTIONS //
+
+  async updateStatus(
+    id: string,
+    newStatusMedicalReq: UpdateStatusMedicalReqDto,
+  ) {
+    const updateMedicalReq = await this.medicalReqRepository.update(
+      id,
+      newStatusMedicalReq,
+    );
+
+    if (updateMedicalReq.affected === 0) {
+      return new HttpException(
+        `Requerimiento médico no encontrado`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return new HttpException(
+      `¡Estado cambiado correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  // DELETED-BAN FUNTIONS //
+
+  async deletedMedicalReq(id: string) {
+    const medicalReqFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!medicalReqFound) {
+      return new HttpException(
+        `El requerimiento médico con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    medicalReqFound.is_deleted = !medicalReqFound.is_deleted;
+
+    await this.medicalReqRepository.save(medicalReqFound);
+
+    return new HttpException(
+      `El requerimiento médico con número de radicado: ${medicalReqFound.filing_number} está con estado borrado: ${medicalReqFound.is_deleted}`,
+      HttpStatus.CONFLICT,
+    );
+  }
 }

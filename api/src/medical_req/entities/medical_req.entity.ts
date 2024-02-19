@@ -1,4 +1,4 @@
-import { User, UserIdType } from 'src/users/entities/user.entity';
+import { User, UserIdType, UserRolType } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -130,6 +130,9 @@ export class MedicalReq {
 
   @Column({ type: 'uuid', nullable: true })
   aplicantId: string;
+
+  @Column({ nullable: true })
+  medicalReqUserType: UserRolType;
 
   @ManyToOne(() => User, (user) => user.medical_req)
   @JoinColumn()
