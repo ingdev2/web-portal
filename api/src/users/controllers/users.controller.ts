@@ -17,6 +17,8 @@ import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  // POST METHODS //
+
   @Post('/createUserPerson')
   async createUserPerson(@Body() newUserPerson: CreateUserPersonDto) {
     return await this.usersService.createUserPerson(newUserPerson);
@@ -27,25 +29,29 @@ export class UsersController {
     return await this.usersService.createUserEps(newUserEps);
   }
 
+  // GET METHODS //
+
   @Get('/getAllPerson')
   async getUsersPerson() {
-    return await this.usersService.getUsersPerson();
+    return await this.usersService.getAllUsersPerson();
   }
 
   @Get('/getAllEps')
   async getUsersEps() {
-    return await this.usersService.getUsersEps();
+    return await this.usersService.getAllUsersEps();
   }
 
   @Get('/person/:id')
-  async getUserPersonById(@Param('id', ParseIntPipe) id: string) {
+  async getUserPersonById(@Param('id') id: string) {
     return await this.usersService.getUserPersonById(id);
   }
 
   @Get('/eps/:id')
-  async getUserEpsById(@Param('id', ParseIntPipe) id: string) {
+  async getUserEpsById(@Param('id') id: string) {
     return await this.usersService.getUserEpsById(id);
   }
+
+  // PATCH METHODS //
 
   @Patch('/updatePerson/:id')
   async updateUserPerson(
@@ -61,12 +67,7 @@ export class UsersController {
   }
 
   @Patch('/ban/:id')
-  async banUserPerson(@Param('id') id: string) {
-    return await this.usersService.banUserPerson(id);
-  }
-
-  @Patch('/ban/:id')
-  async banUserEps(@Param('id') id: string) {
-    return await this.usersService.banUserEps(id);
+  async banUsers(@Param('id') id: string) {
+    return await this.usersService.banUsers(id);
   }
 }

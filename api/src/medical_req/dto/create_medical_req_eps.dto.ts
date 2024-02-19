@@ -8,12 +8,12 @@ import {
   IsDateString,
   IsUUID,
 } from 'class-validator';
+import { RequirementType, RequestStatus } from '../entities/medical_req.entity';
 import {
-  RequirementType,
-  RelationshipWithPatient,
-  RequestStatus,
-} from '../entities/medical_req.entity';
-import { UserGender, UserIdType } from 'src/users/entities/user.entity';
+  UserGender,
+  UserIdType,
+  UserRolType,
+} from 'src/users/entities/user.entity';
 
 export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
@@ -87,4 +87,8 @@ export class CreateMedicalReqEpsDto {
   @IsOptional()
   @IsUUID()
   aplicantId: string;
+
+  @IsOptional()
+  @IsEnum(UserRolType)
+  medicalReqUserType: UserRolType;
 }
