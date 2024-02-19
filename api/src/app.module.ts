@@ -3,10 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 require('dotenv').config();
-// const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
 import { UsersModule } from './users/users.module';
 import { AdminsModule } from './admins/admins.module';
+import { MedicalReqModule } from './medical_req/medical_req.module';
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { AdminsModule } from './admins/admins.module';
     }),
     UsersModule,
     AdminsModule,
+    MedicalReqModule,
   ],
   controllers: [AppController],
   providers: [AppService],

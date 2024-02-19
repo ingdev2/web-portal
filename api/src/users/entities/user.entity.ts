@@ -1,27 +1,31 @@
+import { MedicalReq } from 'src/medical_req/entities/medical_req.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 export enum UserGender {
-  Male = 'Masculino',
-  Female = 'Femenino',
+  MALE = 'Masculino',
+  FEMALE = 'Femenino',
 }
 
 export enum UserIdType {
-  citizenshipCard = 'Cédula de Ciudadanía',
-  ForeignerId = 'Cédula de Extranjería',
-  civilRegistration = 'Registro Civil',
-  Passport = 'Pasaporte',
+  CITIZENSHIP_CARD = 'Cédula de Ciudadanía',
+  FOREIGNER_ID = 'Cédula de Extranjería',
+  CIVIL_REGISTRATION = 'Registro Civil',
+  PASSPORT = 'Pasaporte',
 }
 
 export enum UserRolType {
-  person = 'Persona',
-  Eps = 'Eps',
+  PERSON = 'Persona',
+  EPS = 'Eps',
 }
 
 @Entity()
@@ -44,6 +48,9 @@ export class User {
   @Column({ nullable: true })
   company_name: string;
 
+  @Column({ nullable: true })
+  company_area: string;
+
   @Column()
   id_type: UserIdType;
 
@@ -62,10 +69,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  company_area: string;
-
-  @Column({ default: UserRolType.person })
+  @Column({ default: UserRolType.PERSON })
   rol: UserRolType;
 
   @Column({ nullable: true })
@@ -91,4 +95,8 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant)
+  @JoinColumn()
+  medical_req: MedicalReq[];
 }

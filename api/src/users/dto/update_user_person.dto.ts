@@ -1,14 +1,10 @@
 import {
-  IsNotEmpty,
   IsEmail,
-  IsEnum,
   IsNumber,
   IsOptional,
   IsDate,
-  IsEmpty,
   IsString,
 } from 'class-validator';
-import { UserGender, UserIdType, UserRolType } from '../user.entity';
 
 export class UpdateUserPersonDto {
   @IsOptional()
@@ -20,23 +16,8 @@ export class UpdateUserPersonDto {
   last_name: string;
 
   @IsOptional()
-  @IsEnum(UserGender)
-  gender: UserGender;
-
-  @IsOptional()
   @IsDate()
   birthay_date: Date;
-
-  @IsEmpty()
-  company_name: string;
-
-  @IsEmpty()
-  @IsEnum(UserIdType)
-  id_type: UserIdType;
-
-  @IsEmpty()
-  @IsNumber()
-  id_number: number;
 
   @IsOptional()
   @IsDate()
@@ -53,13 +34,6 @@ export class UpdateUserPersonDto {
   @IsOptional()
   @IsString()
   password: string;
-
-  @IsEmpty()
-  company_area: string;
-
-  @IsEmpty()
-  @IsEnum(UserRolType)
-  rol: UserRolType;
 
   @IsOptional()
   @IsString()

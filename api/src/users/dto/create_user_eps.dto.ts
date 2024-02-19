@@ -3,13 +3,11 @@ import {
   IsEmail,
   IsEnum,
   IsNumber,
-  IsOptional,
   IsString,
-  IsDateString,
 } from 'class-validator';
 import { UserGender, UserIdType, UserRolType } from '../entities/user.entity';
 
-export class CreateUserPersonDto {
+export class CreateUserEpsDto {
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -23,10 +21,6 @@ export class CreateUserPersonDto {
   gender: UserGender;
 
   @IsNotEmpty()
-  @IsDateString()
-  birthay_date: Date;
-
-  @IsNotEmpty()
   @IsEnum(UserIdType)
   id_type: UserIdType;
 
@@ -35,36 +29,18 @@ export class CreateUserPersonDto {
   id_number: number;
 
   @IsNotEmpty()
-  @IsDateString()
-  id_exp_date: Date;
+  company_name: string;
+
+  @IsNotEmpty()
+  company_area: string;
 
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  cellphone: number;
-
-  @IsNotEmpty()
   @IsString()
   password: string;
-
-  @IsOptional()
-  @IsString()
-  residence_department: string;
-
-  @IsOptional()
-  @IsString()
-  residence_city: string;
-
-  @IsOptional()
-  @IsString()
-  residence_address: string;
-
-  @IsOptional()
-  @IsString()
-  residence_neighborhood: string;
 
   @IsNotEmpty()
   @IsEnum(UserRolType)

@@ -1,15 +1,19 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user.entity';
 import { Repository } from 'typeorm';
+import { User, UserRolType } from '../entities/user.entity';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
+import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
+import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
+  // CREATE FUNTIONS //
 
   async createUserPerson(userPerson: CreateUserPersonDto) {
     const userPersonFound = await this.userRepository.findOne({
@@ -26,11 +30,55 @@ export class UsersService {
     }
 
     const newUserPerson = await this.userRepository.create(userPerson);
+
+    if (newUserPerson.rol !== 'Persona') {
+      throw new HttpException(
+        'El usuario debe tener el rol "Persona".',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     return await this.userRepository.save(newUserPerson);
   }
 
-  async getUsersPerson() {
-    const allUsersPerson = await this.userRepository.find();
+  async createUserEps(userEps: CreateUserEpsDto) {
+    const userEpsFound = await this.userRepository.findOne({
+      where: {
+        id_number: userEps.id_number,
+      },
+    });
+
+    if (userEpsFound) {
+      return new HttpException(
+        `El usuario con número de identificación ${userEps.id_number} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const newUserEps = await this.userRepository.create(userEps);
+
+    if (newUserEps.rol !== 'Eps') {
+      throw new HttpException(
+        'El usuario debe tener el rol "Eps".',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return await this.userRepository.save(newUserEps);
+  }
+
+  // GET FUNTIONS //
+
+  async getAllUsersPerson() {
+    const allUsersPerson = await this.userRepository.find({
+      where: {
+        rol: UserRolType.PERSON,
+        is_active: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
 
     if (allUsersPerson.length == 0) {
       return new HttpException(
@@ -42,16 +90,40 @@ export class UsersService {
     }
   }
 
-  async getUserByIdNumber(id_number: number) {
+  async getAllUsersEps() {
+    const allUsersEps = await this.userRepository.find({
+      where: {
+        rol: UserRolType.EPS,
+        is_active: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    if (allUsersEps.length == 0) {
+      return new HttpException(
+        `No hay usuarios registrados en la base de datos`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allUsersEps;
+    }
+  }
+
+  async getUserPersonById(id: string) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
-        id_number: id_number,
+        id: id,
+        rol: UserRolType.PERSON,
+        is_active: true,
       },
+      relations: ['medical_req'],
     });
 
     if (!userPersonFound) {
       return new HttpException(
-        `El usuario con número de identificación: ${id_number} no esta registrado.`,
+        `El usuario con número de ID: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
@@ -59,10 +131,32 @@ export class UsersService {
     }
   }
 
-  async updateUserPerson(id: string, user: UpdateUserPersonDto) {
-    const updateUser = await this.userRepository.update(id, user);
+  async getUserEpsById(id: string) {
+    const userEpsFound = await this.userRepository.findOne({
+      where: {
+        id: id,
+        rol: UserRolType.EPS,
+        is_active: true,
+      },
+      relations: ['medical_req'],
+    });
 
-    if (updateUser.affected === 0) {
+    if (!userEpsFound) {
+      return new HttpException(
+        `El usuario con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return userEpsFound;
+    }
+  }
+
+  // UPDATE FUNTIONS //
+
+  async updateUserPerson(id: string, userPerson: UpdateUserPersonDto) {
+    const updateUserPerson = await this.userRepository.update(id, userPerson);
+
+    if (updateUserPerson.affected === 0) {
       return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
     }
 
@@ -72,26 +166,41 @@ export class UsersService {
     );
   }
 
-  async banUserPerson(id: string) {
-    const userPersonFound = await this.userRepository.findOne({
+  async updateUserEps(id: string, userEps: UpdateUserEpsDto) {
+    const updateUserEps = await this.userRepository.update(id, userEps);
+
+    if (updateUserEps.affected === 0) {
+      return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
+    }
+
+    return new HttpException(
+      `¡Datos guardados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  // DELETED-BAN FUNTIONS //
+
+  async banUsers(id: string) {
+    const userFound = await this.userRepository.findOne({
       where: {
         id: id,
       },
     });
 
-    if (!userPersonFound) {
+    if (!userFound) {
       return new HttpException(
-        `El usuario con número de Id: ${id} no esta registrado.`,
+        `El usuario con número de ID: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     }
 
-    userPersonFound.is_active = !userPersonFound.is_active;
+    userFound.is_active = !userFound.is_active;
 
-    await this.userRepository.save(userPersonFound);
+    await this.userRepository.save(userFound);
 
     return new HttpException(
-      `El usuario con número de identidad: ${userPersonFound.id_number} está con estado activo: ${userPersonFound.is_active}`,
+      `El usuario con número de identidad: ${userFound.id_number} está con estado activo: ${userFound.is_active}`,
       HttpStatus.CONFLICT,
     );
   }
