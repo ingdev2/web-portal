@@ -7,7 +7,7 @@ import {
   IsString,
   IsDateString,
 } from 'class-validator';
-import { UserGender, UserIdType } from '../entities/user.entity';
+import { UserGender, UserIdType, UserRolType } from '../entities/user.entity';
 
 export class CreateUserPersonDto {
   @IsNotEmpty()
@@ -65,4 +65,8 @@ export class CreateUserPersonDto {
   @IsOptional()
   @IsString()
   residence_neighborhood: string;
+
+  @IsNotEmpty()
+  @IsEnum(UserRolType)
+  rol: UserRolType;
 }

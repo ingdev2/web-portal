@@ -32,12 +32,12 @@ export class UsersController {
   // GET METHODS //
 
   @Get('/getAllPerson')
-  async getUsersPerson() {
+  async getAllUsersPerson() {
     return await this.usersService.getAllUsersPerson();
   }
 
   @Get('/getAllEps')
-  async getUsersEps() {
+  async getAllUsersEps() {
     return await this.usersService.getAllUsersEps();
   }
 

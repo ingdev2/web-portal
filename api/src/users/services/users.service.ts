@@ -30,6 +30,14 @@ export class UsersService {
     }
 
     const newUserPerson = await this.userRepository.create(userPerson);
+
+    if (newUserPerson.rol !== 'Persona') {
+      throw new HttpException(
+        'El usuario debe tener el rol "Persona".',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     return await this.userRepository.save(newUserPerson);
   }
 
@@ -47,14 +55,15 @@ export class UsersService {
       );
     }
 
-    if (userEps.rol !== 'Eps') {
+    const newUserEps = await this.userRepository.create(userEps);
+
+    if (newUserEps.rol !== 'Eps') {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
         HttpStatus.CONFLICT,
       );
     }
 
-    const newUserEps = await this.userRepository.create(userEps);
     return await this.userRepository.save(newUserEps);
   }
 
@@ -65,6 +74,9 @@ export class UsersService {
       where: {
         rol: UserRolType.PERSON,
         is_active: true,
+      },
+      order: {
+        name: 'ASC',
       },
     });
 
@@ -84,6 +96,9 @@ export class UsersService {
         rol: UserRolType.EPS,
         is_active: true,
       },
+      order: {
+        name: 'ASC',
+      },
     });
 
     if (allUsersEps.length == 0) {
@@ -101,6 +116,7 @@ export class UsersService {
       where: {
         id: id,
         rol: UserRolType.PERSON,
+        is_active: true,
       },
       relations: ['medical_req'],
     });
@@ -120,6 +136,7 @@ export class UsersService {
       where: {
         id: id,
         rol: UserRolType.EPS,
+        is_active: true,
       },
       relations: ['medical_req'],
     });

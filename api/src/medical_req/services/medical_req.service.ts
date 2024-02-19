@@ -156,6 +156,9 @@ export class MedicalReqService {
         medicalReqUserType: UserRolType.PERSON,
         is_deleted: false,
       },
+      order: {
+        createdAt: 'ASC',
+      },
     });
 
     if (allMedicalReqPerson.length == 0) {
@@ -174,6 +177,9 @@ export class MedicalReqService {
         medicalReqUserType: UserRolType.EPS,
         is_deleted: false,
       },
+      order: {
+        createdAt: 'ASC',
+      },
     });
 
     if (allMedicalReqEps.length == 0) {
@@ -191,6 +197,7 @@ export class MedicalReqService {
       where: {
         id: id,
         medicalReqUserType: UserRolType.PERSON,
+        is_deleted: false,
       },
     });
 
@@ -209,6 +216,7 @@ export class MedicalReqService {
       where: {
         id: id,
         medicalReqUserType: UserRolType.EPS,
+        is_deleted: false,
       },
     });
 
