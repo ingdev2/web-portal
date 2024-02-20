@@ -111,11 +111,10 @@ export class UsersService {
     }
   }
 
-  async getUserPersonById(id: string) {
+  async getUsersById(id: string) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
         id: id,
-        rol: UserRolType.PERSON,
         is_active: true,
       },
       relations: ['medical_req'],
@@ -131,24 +130,26 @@ export class UsersService {
     }
   }
 
-  async getUserEpsById(id: string) {
-    const userEpsFound = await this.userRepository.findOne({
+  async getUsersByIdNumber(idNumber: number) {
+    const userPersonFound = await this.userRepository.findOne({
       where: {
-        id: id,
-        rol: UserRolType.EPS,
+        id_number: idNumber,
         is_active: true,
       },
-      relations: ['medical_req'],
     });
 
-    if (!userEpsFound) {
+    if (!userPersonFound) {
       return new HttpException(
-        `El usuario con número de ID: ${id} no esta registrado.`,
+        `El usuario con número de identificación personal: ${idNumber} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
-      return userEpsFound;
+      return userPersonFound;
     }
+  }
+
+  async getUserFoundByIdNumber(idNumber: number) {
+    return await this.userRepository.findOneBy({ id_number: idNumber });
   }
 
   // UPDATE FUNTIONS //

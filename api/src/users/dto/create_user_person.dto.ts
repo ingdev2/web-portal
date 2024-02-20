@@ -6,16 +6,21 @@ import {
   IsOptional,
   IsString,
   IsDateString,
+  MinLength,
+  MaxLength,
 } from 'class-validator';
 import { UserGender, UserIdType, UserRolType } from '../entities/user.entity';
+import { Transform } from 'class-transformer';
 
 export class CreateUserPersonDto {
   @IsNotEmpty()
   @IsString()
+  @MinLength(3)
   name: string;
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(5)
   last_name: string;
 
   @IsNotEmpty()
@@ -46,8 +51,10 @@ export class CreateUserPersonDto {
   @IsNumber()
   cellphone: number;
 
+  @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @IsString()
+  @MinLength(7)
   password: string;
 
   @IsOptional()

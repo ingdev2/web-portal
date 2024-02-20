@@ -4,16 +4,21 @@ import {
   IsEnum,
   IsNumber,
   IsString,
+  MinLength,
+  MaxLength,
 } from 'class-validator';
 import { UserGender, UserIdType, UserRolType } from '../entities/user.entity';
+import { Transform } from 'class-transformer';
 
 export class CreateUserEpsDto {
   @IsNotEmpty()
   @IsString()
+  @MinLength(3)
   name: string;
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(5)
   last_name: string;
 
   @IsNotEmpty()
@@ -29,17 +34,21 @@ export class CreateUserEpsDto {
   id_number: number;
 
   @IsNotEmpty()
+  @MinLength(7)
   company_name: string;
 
   @IsNotEmpty()
+  @MinLength(7)
   company_area: string;
 
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @IsString()
+  @MinLength(7)
   password: string;
 
   @IsNotEmpty()

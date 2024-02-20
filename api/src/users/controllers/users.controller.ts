@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UsersService } from '../services/users.service';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
@@ -19,15 +11,15 @@ export class UsersController {
 
   // POST METHODS //
 
-  @Post('/createUserPerson')
-  async createUserPerson(@Body() newUserPerson: CreateUserPersonDto) {
-    return await this.usersService.createUserPerson(newUserPerson);
-  }
+  // @Post('/createUserPerson')
+  // async createUserPerson(@Body() newUserPerson: CreateUserPersonDto) {
+  //   return await this.usersService.createUserPerson(newUserPerson);
+  // }
 
-  @Post('/createUserEps')
-  async createUserEps(@Body() newUserEps: CreateUserEpsDto) {
-    return await this.usersService.createUserEps(newUserEps);
-  }
+  // @Post('/createUserEps')
+  // async createUserEps(@Body() newUserEps: CreateUserEpsDto) {
+  //   return await this.usersService.createUserEps(newUserEps);
+  // }
 
   // GET METHODS //
 
@@ -41,14 +33,14 @@ export class UsersController {
     return await this.usersService.getAllUsersEps();
   }
 
-  @Get('/person/:id')
-  async getUserPersonById(@Param('id') id: string) {
-    return await this.usersService.getUserPersonById(id);
+  @Get('/getUser/:id')
+  async getUsersById(@Param('id') id: string) {
+    return await this.usersService.getUsersById(id);
   }
 
-  @Get('/eps/:id')
-  async getUserEpsById(@Param('id') id: string) {
-    return await this.usersService.getUserEpsById(id);
+  @Get('/getUserById/:idNumber')
+  async getUsersByIdNumber(@Param('idNumber') idNumber: number) {
+    return await this.usersService.getUsersByIdNumber(idNumber);
   }
 
   // PATCH METHODS //
