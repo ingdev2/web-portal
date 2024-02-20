@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Admin, AdminRolType } from '../entities/admin.entity';
+import { Admin } from '../entities/admin.entity';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { Repository } from 'typeorm';
 import { CreateAdminDto } from '../dto/create_admin.dto';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
@@ -148,6 +149,13 @@ export class AdminsService {
 
   async getAdminFoundByIdNumber(idNumber: number) {
     return await this.adminRepository.findOneBy({ id_number: idNumber });
+  }
+
+  async getAdminFoundByIdNumberWithPassword(idNumber: number) {
+    return await this.adminRepository.findOne({
+      where: { id_number: idNumber },
+      select: ['id', 'name', 'id_number', 'password', 'role'],
+    });
   }
 
   // UPDATE FUNTIONS //

@@ -1,7 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRolType } from '../entities/user.entity';
+import { User } from '../entities/user.entity';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
@@ -150,6 +151,13 @@ export class UsersService {
 
   async getUserFoundByIdNumber(idNumber: number) {
     return await this.userRepository.findOneBy({ id_number: idNumber });
+  }
+
+  async getUserFoundByIdNumberWithPassword(idNumber: number) {
+    return await this.userRepository.findOne({
+      where: { id_number: idNumber },
+      select: ['id', 'name', 'id_number', 'password', 'role'],
+    });
   }
 
   // UPDATE FUNTIONS //

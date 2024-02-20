@@ -1,4 +1,6 @@
-import { User, UserIdType, UserRolType } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
+import { IdType } from '../../common/enums/id_type.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import {
   Column,
   CreateDateColumn,
@@ -9,7 +11,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 
 export enum RequirementType {
   MEDICAL_RESULTS = 'Resultados Médicos',
@@ -59,8 +60,8 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   aplicant_gender: string;
 
-  @Column({ nullable: true })
-  aplicant_id_type: UserIdType;
+  @Column({ enum: IdType, nullable: true })
+  aplicant_id_type: IdType;
 
   @Column({ type: 'bigint', nullable: true })
   aplicant_id_number: number;
@@ -77,11 +78,11 @@ export class MedicalReq {
   @Column({ nullable: true })
   aplicant_company_area: string;
 
-  @Column({ nullable: true })
+  @Column({ enum: RelationshipWithPatient, nullable: true })
   relationship_with_patient: RelationshipWithPatient;
 
-  @Column()
-  patient_id_type: UserIdType;
+  @Column({ enum: IdType })
+  patient_id_type: IdType;
 
   @Column({ type: 'bigint' })
   patient_id_number: number;
@@ -113,7 +114,7 @@ export class MedicalReq {
   @Column({ type: 'date', nullable: true })
   download_expiration_date: Date;
 
-  @Column({ default: RequestStatus.PENDING })
+  @Column({ enum: RequestStatus, default: RequestStatus.PENDING })
   request_status: RequestStatus;
 
   @Column({ type: 'boolean', default: false })
@@ -131,7 +132,7 @@ export class MedicalReq {
   @Column({ type: 'uuid', nullable: true })
   aplicantId: string;
 
-  @Column({ nullable: true })
+  @Column({ enum: UserRolType, nullable: true })
   medicalReqUserType: UserRolType;
 
   @ManyToOne(() => User, (user) => user.medical_req)

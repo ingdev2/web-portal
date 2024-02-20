@@ -1,14 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { AdminsService } from 'src/admins/services/admins.service';
 import { UsersService } from 'src/users/services/users.service';
+import { CreateSuperAdminDto } from 'src/admins/dto/create_super_admin.dto';
+import { CreateAdminDto } from 'src/admins/dto/create_admin.dto';
 import { CreateUserPersonDto } from 'src/users/dto/create_user_person.dto';
 import { CreateUserEpsDto } from 'src/users/dto/create_user_eps.dto';
+import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from '../dto/login.dto';
 
 import * as bcryptjs from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
-import { CreateAdminDto } from 'src/admins/dto/create_admin.dto';
-import { AdminsService } from 'src/admins/services/admins.service';
-import { CreateSuperAdminDto } from 'src/admins/dto/create_super_admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -141,7 +141,8 @@ export class AuthService {
   // LOGIN FUNTIONS //
 
   async loginUsers({ id_number, password }: LoginDto) {
-    const userFound = await this.usersService.getUserFoundByIdNumber(id_number);
+    const userFound =
+      await this.usersService.getUserFoundByIdNumberWithPassword(id_number);
 
     if (!userFound) {
       return new HttpException(
@@ -168,7 +169,7 @@ export class AuthService {
 
   async loginAdmins({ id_number, password }: LoginDto) {
     const adminFound =
-      await this.adminsService.getAdminFoundByIdNumber(id_number);
+      await this.adminsService.getAdminFoundByIdNumberWithPassword(id_number);
 
     if (!adminFound) {
       return new HttpException(
