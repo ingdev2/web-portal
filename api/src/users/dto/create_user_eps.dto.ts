@@ -53,5 +53,5 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   @IsEnum(UserRolType)
-  rol: UserRolType;
+  role: UserRolType;
 }

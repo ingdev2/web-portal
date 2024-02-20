@@ -70,7 +70,7 @@ export class User {
   password: string;
 
   @Column({ default: UserRolType.PERSON })
-  rol: UserRolType;
+  role: UserRolType;
 
   @Column({ nullable: true })
   residence_department: string;

@@ -60,7 +60,7 @@ export class Admin {
   company_area: AdminCompanyArea;
 
   @Column({ default: AdminRolType.ADMIN })
-  rol: AdminRolType;
+  role: AdminRolType;
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;

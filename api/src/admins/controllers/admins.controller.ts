@@ -10,15 +10,15 @@ export class AdminsController {
 
   // POST METHODS //
 
-  @Post('/createSuperAdmin')
-  async createSuperAdmin(@Body() newAdmin: CreateSuperAdminDto) {
-    return await this.adminsService.createSuperAdmin(newAdmin);
-  }
+  // @Post('/createSuperAdmin')
+  // async createSuperAdmin(@Body() newAdmin: CreateSuperAdminDto) {
+  //   return await this.adminsService.createSuperAdmin(newAdmin);
+  // }
 
-  @Post('/createAdmin')
-  async createAdmin(@Body() newAdmin: CreateAdminDto) {
-    return await this.adminsService.createAdmin(newAdmin);
-  }
+  // @Post('/createAdmin')
+  // async createAdmin(@Body() newAdmin: CreateAdminDto) {
+  //   return await this.adminsService.createAdmin(newAdmin);
+  // }
 
   // GET METHODS //
 
@@ -30,6 +30,11 @@ export class AdminsController {
   @Get('/getAdmin/:id')
   async getAdminById(@Param('id') id: number) {
     return await this.adminsService.getAdminById(id);
+  }
+
+  @Get('/getAdminById/:id')
+  async getAdminByIdNumber(@Param('id') idNumber: number) {
+    return await this.adminsService.getAdminByIdNumber(idNumber);
   }
 
   // PATCH METHODS //

@@ -28,7 +28,7 @@ export class MedicalReqService {
     const userPersonFound = await this.userRepository.findOne({
       where: {
         id: userId,
-        rol: UserRolType.PERSON,
+        role: UserRolType.PERSON,
       },
     });
 
@@ -42,7 +42,7 @@ export class MedicalReqService {
     const aplicantPersonDetails = new CreateMedicalReqPersonDto();
 
     aplicantPersonDetails.aplicantId = userPersonFound.id;
-    aplicantPersonDetails.medicalReqUserType = userPersonFound.rol;
+    aplicantPersonDetails.medicalReqUserType = userPersonFound.role;
     aplicantPersonDetails.aplicant_name = userPersonFound.name;
     aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
     aplicantPersonDetails.aplicant_gender = userPersonFound.gender;
@@ -103,7 +103,7 @@ export class MedicalReqService {
     const userEpsFound = await this.userRepository.findOne({
       where: {
         id: userId,
-        rol: UserRolType.EPS,
+        role: UserRolType.EPS,
       },
     });
 
@@ -117,7 +117,7 @@ export class MedicalReqService {
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
-    aplicantEpsDetails.medicalReqUserType = userEpsFound.rol;
+    aplicantEpsDetails.medicalReqUserType = userEpsFound.role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
     aplicantEpsDetails.aplicant_gender = userEpsFound.gender;

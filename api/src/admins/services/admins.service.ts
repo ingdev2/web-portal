@@ -30,7 +30,7 @@ export class AdminsService {
 
     const newSuperAdmin = await this.adminRepository.create(superAdmin);
 
-    if (newSuperAdmin.rol !== 'Super Admin') {
+    if (newSuperAdmin.role !== 'Super Admin') {
       throw new HttpException(
         'El admin debe tener el rol "Super Admin".',
         HttpStatus.CONFLICT,
@@ -56,7 +56,7 @@ export class AdminsService {
 
     const newAdmin = await this.adminRepository.create(admin);
 
-    if (newAdmin.rol !== 'Admin') {
+    if (newAdmin.role !== 'Admin') {
       throw new HttpException(
         'El admin debe tener el rol "Admin".',
         HttpStatus.CONFLICT,
@@ -71,7 +71,7 @@ export class AdminsService {
   async getAllAdmins() {
     const allAdmins = await this.adminRepository.find({
       where: {
-        rol: AdminRolType.ADMIN,
+        role: AdminRolType.ADMIN,
         is_active: true,
       },
       order: {
@@ -93,7 +93,7 @@ export class AdminsService {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
-        rol: AdminRolType.ADMIN,
+        role: AdminRolType.ADMIN,
         is_active: true,
       },
     });
@@ -106,6 +106,48 @@ export class AdminsService {
     } else {
       return adminFound;
     }
+  }
+
+  async getSuperAdminByIdNumber(idNumber: number) {
+    const superAdminFound = await this.adminRepository.findOne({
+      where: {
+        id_number: idNumber,
+        role: AdminRolType.SUPER_ADMIN,
+        is_active: true,
+      },
+    });
+
+    if (!superAdminFound) {
+      return new HttpException(
+        `El admin con número de identificación personal: ${idNumber} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return superAdminFound;
+    }
+  }
+
+  async getAdminByIdNumber(idNumber: number) {
+    const adminFound = await this.adminRepository.findOne({
+      where: {
+        id_number: idNumber,
+        role: AdminRolType.ADMIN,
+        is_active: true,
+      },
+    });
+
+    if (!adminFound) {
+      return new HttpException(
+        `El admin con número de identificación personal: ${idNumber} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return adminFound;
+    }
+  }
+
+  async getAdminFoundByIdNumber(idNumber: number) {
+    return await this.adminRepository.findOneBy({ id_number: idNumber });
   }
 
   // UPDATE FUNTIONS //
@@ -129,7 +171,7 @@ export class AdminsService {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
-        rol: AdminRolType.ADMIN,
+        role: AdminRolType.ADMIN,
       },
     });
 

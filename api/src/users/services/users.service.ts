@@ -31,7 +31,7 @@ export class UsersService {
 
     const newUserPerson = await this.userRepository.create(userPerson);
 
-    if (newUserPerson.rol !== 'Persona') {
+    if (newUserPerson.role !== 'Persona') {
       throw new HttpException(
         'El usuario debe tener el rol "Persona".',
         HttpStatus.CONFLICT,
@@ -57,7 +57,7 @@ export class UsersService {
 
     const newUserEps = await this.userRepository.create(userEps);
 
-    if (newUserEps.rol !== 'Eps') {
+    if (newUserEps.role !== 'Eps') {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
         HttpStatus.CONFLICT,
@@ -72,7 +72,7 @@ export class UsersService {
   async getAllUsersPerson() {
     const allUsersPerson = await this.userRepository.find({
       where: {
-        rol: UserRolType.PERSON,
+        role: UserRolType.PERSON,
         is_active: true,
       },
       order: {
@@ -93,7 +93,7 @@ export class UsersService {
   async getAllUsersEps() {
     const allUsersEps = await this.userRepository.find({
       where: {
-        rol: UserRolType.EPS,
+        role: UserRolType.EPS,
         is_active: true,
       },
       order: {
@@ -131,20 +131,20 @@ export class UsersService {
   }
 
   async getUsersByIdNumber(idNumber: number) {
-    const userPersonFound = await this.userRepository.findOne({
+    const userFound = await this.userRepository.findOne({
       where: {
         id_number: idNumber,
         is_active: true,
       },
     });
 
-    if (!userPersonFound) {
+    if (!userFound) {
       return new HttpException(
         `El usuario con número de identificación personal: ${idNumber} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
-      return userPersonFound;
+      return userFound;
     }
   }
 

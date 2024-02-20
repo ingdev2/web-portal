@@ -47,5 +47,5 @@ export class CreateAdminDto {
 
   @IsNotEmpty()
   @IsEnum(AdminRolType)
-  rol: AdminRolType;
+  role: AdminRolType;
 }
