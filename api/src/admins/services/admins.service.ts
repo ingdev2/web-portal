@@ -7,6 +7,8 @@ import { CreateAdminDto } from '../dto/create_admin.dto';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
 
+import * as bcryptjs from 'bcryptjs';
+
 @Injectable()
 export class AdminsService {
   constructor(
@@ -161,10 +163,45 @@ export class AdminsService {
   // UPDATE FUNTIONS //
 
   async updateAdmin(id: number, admin: UpdateAdminDto) {
+    const adminFound = await this.adminRepository.findOneBy({ id });
+
+    if (!adminFound) {
+      return new HttpException(
+        `Administrador no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (adminFound.role !== AdminRolType.ADMIN) {
+      return new HttpException(
+        `No tienes permiso para actualizar este administrador.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (admin.id_number) {
+      const duplicateAdmin = await this.adminRepository.findOne({
+        where: {
+          id_number: admin.id_number,
+        },
+      });
+
+      if (duplicateAdmin) {
+        return new HttpException(
+          `Número de identificación duplicado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    if (admin.password) {
+      admin.password = await bcryptjs.hash(admin.password, 10);
+    }
+
     const updateAdmin = await this.adminRepository.update(id, admin);
 
     if (updateAdmin.affected === 0) {
-      return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
+      return new HttpException(`Usuario no encontrado.`, HttpStatus.CONFLICT);
     }
 
     return new HttpException(

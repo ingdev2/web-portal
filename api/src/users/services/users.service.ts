@@ -8,6 +8,8 @@ import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 
+import * as bcryptjs from 'bcryptjs';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -163,6 +165,41 @@ export class UsersService {
   // UPDATE FUNTIONS //
 
   async updateUserPerson(id: string, userPerson: UpdateUserPersonDto) {
+    const userFound = await this.userRepository.findOneBy({ id });
+
+    if (!userFound) {
+      return new HttpException(
+        `Usuario no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userFound.role !== UserRolType.PERSON) {
+      return new HttpException(
+        `No tienes permiso para actualizar este usuario.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userPerson.id_number) {
+      const duplicateUserPerson = await this.userRepository.findOne({
+        where: {
+          id_number: userPerson.id_number,
+        },
+      });
+
+      if (duplicateUserPerson) {
+        return new HttpException(
+          `Número de identificación duplicado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    if (userPerson.password) {
+      userPerson.password = await bcryptjs.hash(userPerson.password, 10);
+    }
+
     const updateUserPerson = await this.userRepository.update(id, userPerson);
 
     if (updateUserPerson.affected === 0) {
@@ -176,6 +213,41 @@ export class UsersService {
   }
 
   async updateUserEps(id: string, userEps: UpdateUserEpsDto) {
+    const userFound = await this.userRepository.findOneBy({ id });
+
+    if (!userFound) {
+      return new HttpException(
+        `Usuario no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userFound.role !== UserRolType.EPS) {
+      return new HttpException(
+        `No tienes permiso para actualizar este usuario.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userEps.id_number) {
+      const duplicateUserEps = await this.userRepository.findOne({
+        where: {
+          id_number: userEps.id_number,
+        },
+      });
+
+      if (duplicateUserEps) {
+        return new HttpException(
+          `Número de identificación duplicado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    if (userEps.password) {
+      userEps.password = await bcryptjs.hash(userEps.password, 10);
+    }
+
     const updateUserEps = await this.userRepository.update(id, userEps);
 
     if (updateUserEps.affected === 0) {

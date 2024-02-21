@@ -1,4 +1,11 @@
-import { IsEmail, IsNumber, IsString, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsNumber,
+  IsString,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
+import { AdminRolType } from 'src/common/enums/admin_roles.enum';
 
 export class UpdateAdminDto {
   @IsOptional()

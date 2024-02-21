@@ -246,6 +246,26 @@ export class MedicalReqService {
 
   // GET FUNTIONS //
 
+  async getAllMedicalReqUsers() {
+    const allMedicalReqUsers = await this.medicalReqRepository.find({
+      where: {
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (allMedicalReqUsers.length === 0) {
+      return new HttpException(
+        `No hay requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqUsers;
+    }
+  }
+
   async getAllMedicalReqPerson() {
     const allMedicalReqPerson = await this.medicalReqRepository.find({
       where: {
@@ -295,6 +315,9 @@ export class MedicalReqService {
         medicalReqUserType: UserRolType.PERSON,
         is_deleted: false,
       },
+      order: {
+        createdAt: 'ASC',
+      },
     });
 
     if (!medicalReqPersonFound) {
@@ -313,6 +336,9 @@ export class MedicalReqService {
         id: id,
         medicalReqUserType: UserRolType.EPS,
         is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
       },
     });
 

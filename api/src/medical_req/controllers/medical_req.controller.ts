@@ -1,23 +1,20 @@
-import {
-  Body,
-  Param,
-  Controller,
-  Post,
-  Get,
-  ParseIntPipe,
-  Patch,
-} from '@nestjs/common';
+import { Body, Param, Controller, Post, Get, Patch } from '@nestjs/common';
 import { MedicalReqService } from '../services/medical_req.service';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { UserRolType } from 'src/common/enums/user_roles.enum';
 
+@Auth(AdminRolType.SUPER_ADMIN)
 @Controller('medical-req')
 export class MedicalReqController {
   constructor(private medicalReqService: MedicalReqService) {}
 
   // POST METHODS //
 
+  @Auth(UserRolType.PERSON)
   @Post('/createMedicalReqPerson/:userId')
   async createMedicalReqPerson(
     @Param('userId') userId: string,
@@ -30,6 +27,7 @@ export class MedicalReqController {
     );
   }
 
+  @Auth(UserRolType.EPS)
   @Post('/createMedicalReqEps/:userId')
   async createMedicalReqEps(
     @Param('userId') userId: string,
@@ -44,26 +42,37 @@ export class MedicalReqController {
 
   // GET METHODS //
 
+  @Auth(AdminRolType.ADMIN)
+  @Get('/getAllMedicalReqUsers')
+  async getAllMedicalReqUsers() {
+    return await this.medicalReqService.getAllMedicalReqUsers();
+  }
+
+  @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqPerson')
   async getAllMedicalReqPerson() {
     return await this.medicalReqService.getAllMedicalReqPerson();
   }
 
+  @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqEps')
   async getAllMedicalReqEps() {
     return await this.medicalReqService.getAllMedicalReqEps();
   }
 
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReqPerson/:id')
   async getMedicalReqPersonById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPersonById(id);
   }
 
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReqEps/:id')
   async getMedicalReqEpsById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqEpsById(id);
   }
 
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReq/:filing_number')
   async getMedicalReqByFilingNumber(
     @Param('filing_number') filingNumber: string,
@@ -75,6 +84,7 @@ export class MedicalReqController {
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.ADMIN)
   @Patch('/updateStatus/:id')
   async updateStatus(
     @Param('id') id: string,
@@ -83,6 +93,7 @@ export class MedicalReqController {
     return await this.medicalReqService.updateStatus(id, newStatus);
   }
 
+  @Auth(AdminRolType.ADMIN)
   @Patch('/deleted/:id')
   async deletedMedicalReq(@Param('id') id: string) {
     return await this.medicalReqService.deletedMedicalReq(id);

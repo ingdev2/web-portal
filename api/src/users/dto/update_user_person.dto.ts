@@ -20,6 +20,10 @@ export class UpdateUserPersonDto {
   birthay_date: Date;
 
   @IsOptional()
+  @IsNumber()
+  id_number: number;
+
+  @IsOptional()
   @IsDate()
   id_exp_date: Date;
 

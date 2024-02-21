@@ -8,6 +8,8 @@ import { Request } from 'express';
 import { Auth } from '../decorators/auth.decorator';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
+import { ActiveUser } from 'src/common/decorators/active_user.decorator';
+import { UserActiveInterface } from 'src/common/interfaces/user_active.interface';
 
 interface RequestWithUser extends Request {
   user: {
@@ -69,9 +71,9 @@ export class AuthController {
 
   // OPCION 1
 
-  @Get('profile')
-  @Auth(UserRolType.PERSON)
-  profile(@Req() req: RequestWithUser) {
-    return this.authService.profileUser(req.user);
-  }
+  // @Get('profile')
+  // @Auth(UserRolType.PERSON)
+  // profile(@ActiveUser() user: UserActiveInterface) {
+  //   return this.authService.profileUser(user);
+  // }
 }

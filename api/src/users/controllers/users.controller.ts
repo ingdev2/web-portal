@@ -4,7 +4,11 @@ import { UsersService } from '../services/users.service';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { UserRolType } from 'src/common/enums/user_roles.enum';
 
+@Auth(AdminRolType.SUPER_ADMIN)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -33,6 +37,7 @@ export class UsersController {
 
   // PATCH METHODS //
 
+  @Auth(UserRolType.PERSON)
   @Patch('/updatePerson/:id')
   async updateUserPerson(
     @Param('id') id: string,
@@ -41,6 +46,7 @@ export class UsersController {
     return await this.usersService.updateUserPerson(id, user);
   }
 
+  @Auth(UserRolType.EPS)
   @Patch('/updateEps/:id')
   async updateUserEps(@Param('id') id: string, @Body() user: UpdateUserEpsDto) {
     return await this.usersService.updateUserEps(id, user);
