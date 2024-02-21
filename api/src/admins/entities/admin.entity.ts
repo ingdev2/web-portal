@@ -1,3 +1,7 @@
+import { Gender } from '../../common/enums/gender.enum';
+import { IdType } from '../../common/enums/id_type.enum';
+import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import {
   Column,
   CreateDateColumn,
@@ -6,29 +10,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum AdminGender {
-  MALE = 'Masculino',
-  FEMALE = 'Femenino',
-}
-
-export enum AdminIdType {
-  CITIZENSHIP_CARD = 'Cédula de Ciudadanía',
-  FOREIGNER_ID = 'Cédula de Extranjería',
-  CIVIL_REGISTRATION = 'Registro Civil',
-  PASSPORT = 'Pasaporte',
-}
-
-export enum AdminCompanyArea {
-  SYSTEM_DEPARTAMENT = 'Departamento de Sistemas',
-  ARCHIVES_DEPARTAMENT = 'Departamento de Archivos',
-  LEGAL_DEPARTAMENT = 'Departamento de Jurídico',
-}
-
-export enum AdminRolType {
-  SUPER_ADMIN = 'Super Admin',
-  ADMIN = 'Admin',
-}
 
 @Entity()
 export class Admin {
@@ -41,11 +22,11 @@ export class Admin {
   @Column({ type: 'text' })
   last_name: string;
 
-  @Column()
-  gender: AdminGender;
+  @Column({ enum: Gender })
+  gender: Gender;
 
-  @Column()
-  id_type: AdminIdType;
+  @Column({ enum: IdType })
+  id_type: IdType;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
@@ -53,14 +34,14 @@ export class Admin {
   @Column()
   corporate_email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
-  @Column()
+  @Column({ enum: AdminCompanyArea })
   company_area: AdminCompanyArea;
 
-  @Column({ default: AdminRolType.ADMIN })
-  rol: AdminRolType;
+  @Column({ enum: AdminRolType, default: AdminRolType.ADMIN })
+  role: AdminRolType;
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;

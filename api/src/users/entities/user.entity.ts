@@ -1,32 +1,17 @@
-import { MedicalReq } from 'src/medical_req/entities/medical_req.entity';
+import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
+import { Gender } from '../../common/enums/gender.enum';
+import { IdType } from '../../common/enums/id_type.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum UserGender {
-  MALE = 'Masculino',
-  FEMALE = 'Femenino',
-}
-
-export enum UserIdType {
-  CITIZENSHIP_CARD = 'Cédula de Ciudadanía',
-  FOREIGNER_ID = 'Cédula de Extranjería',
-  CIVIL_REGISTRATION = 'Registro Civil',
-  PASSPORT = 'Pasaporte',
-}
-
-export enum UserRolType {
-  PERSON = 'Persona',
-  EPS = 'Eps',
-}
 
 @Entity()
 export class User {
@@ -39,8 +24,8 @@ export class User {
   @Column({ type: 'text' })
   last_name: string;
 
-  @Column()
-  gender: UserGender;
+  @Column({ enum: Gender })
+  gender: Gender;
 
   @Column({ type: 'date', nullable: true })
   birthay_date: Date;
@@ -51,8 +36,8 @@ export class User {
   @Column({ nullable: true })
   company_area: string;
 
-  @Column()
-  id_type: UserIdType;
+  @Column({ enum: IdType })
+  id_type: IdType;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
@@ -66,11 +51,11 @@ export class User {
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
-  @Column({ default: UserRolType.PERSON })
-  rol: UserRolType;
+  @Column({ enum: UserRolType, default: UserRolType.PERSON })
+  role: UserRolType;
 
   @Column({ nullable: true })
   residence_department: string;

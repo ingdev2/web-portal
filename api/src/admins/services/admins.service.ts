@@ -1,10 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Admin, AdminRolType } from '../entities/admin.entity';
+import { Admin } from '../entities/admin.entity';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { Repository } from 'typeorm';
 import { CreateAdminDto } from '../dto/create_admin.dto';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
+
+import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
 export class AdminsService {
@@ -30,7 +33,7 @@ export class AdminsService {
 
     const newSuperAdmin = await this.adminRepository.create(superAdmin);
 
-    if (newSuperAdmin.rol !== 'Super Admin') {
+    if (newSuperAdmin.role !== 'Super Admin') {
       throw new HttpException(
         'El admin debe tener el rol "Super Admin".',
         HttpStatus.CONFLICT,
@@ -56,7 +59,7 @@ export class AdminsService {
 
     const newAdmin = await this.adminRepository.create(admin);
 
-    if (newAdmin.rol !== 'Admin') {
+    if (newAdmin.role !== 'Admin') {
       throw new HttpException(
         'El admin debe tener el rol "Admin".',
         HttpStatus.CONFLICT,
@@ -71,7 +74,7 @@ export class AdminsService {
   async getAllAdmins() {
     const allAdmins = await this.adminRepository.find({
       where: {
-        rol: AdminRolType.ADMIN,
+        role: AdminRolType.ADMIN,
         is_active: true,
       },
       order: {
@@ -79,7 +82,7 @@ export class AdminsService {
       },
     });
 
-    if (allAdmins.length == 0) {
+    if (allAdmins.length === 0) {
       return new HttpException(
         `No hay admins registrados en la base de datos`,
         HttpStatus.CONFLICT,
@@ -93,7 +96,7 @@ export class AdminsService {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
-        rol: AdminRolType.ADMIN,
+        role: AdminRolType.ADMIN,
         is_active: true,
       },
     });
@@ -108,13 +111,97 @@ export class AdminsService {
     }
   }
 
+  async getSuperAdminByIdNumber(idNumber: number) {
+    const superAdminFound = await this.adminRepository.findOne({
+      where: {
+        id_number: idNumber,
+        role: AdminRolType.SUPER_ADMIN,
+        is_active: true,
+      },
+    });
+
+    if (!superAdminFound) {
+      return new HttpException(
+        `El admin con número de identificación personal: ${idNumber} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return superAdminFound;
+    }
+  }
+
+  async getAdminByIdNumber(idNumber: number) {
+    const adminFound = await this.adminRepository.findOne({
+      where: {
+        id_number: idNumber,
+        role: AdminRolType.ADMIN,
+        is_active: true,
+      },
+    });
+
+    if (!adminFound) {
+      return new HttpException(
+        `El admin con número de identificación personal: ${idNumber} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return adminFound;
+    }
+  }
+
+  async getAdminFoundByIdNumber(idNumber: number) {
+    return await this.adminRepository.findOneBy({ id_number: idNumber });
+  }
+
+  async getAdminFoundByIdNumberWithPassword(idNumber: number) {
+    return await this.adminRepository.findOne({
+      where: { id_number: idNumber },
+      select: ['id', 'name', 'id_number', 'password', 'role'],
+    });
+  }
+
   // UPDATE FUNTIONS //
 
   async updateAdmin(id: number, admin: UpdateAdminDto) {
+    const adminFound = await this.adminRepository.findOneBy({ id });
+
+    if (!adminFound) {
+      return new HttpException(
+        `Administrador no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (adminFound.role !== AdminRolType.ADMIN) {
+      return new HttpException(
+        `No tienes permiso para actualizar este administrador.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (admin.id_number) {
+      const duplicateAdmin = await this.adminRepository.findOne({
+        where: {
+          id_number: admin.id_number,
+        },
+      });
+
+      if (duplicateAdmin) {
+        return new HttpException(
+          `Número de identificación duplicado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    if (admin.password) {
+      admin.password = await bcryptjs.hash(admin.password, 10);
+    }
+
     const updateAdmin = await this.adminRepository.update(id, admin);
 
     if (updateAdmin.affected === 0) {
-      return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
+      return new HttpException(`Usuario no encontrado.`, HttpStatus.CONFLICT);
     }
 
     return new HttpException(
@@ -129,7 +216,7 @@ export class AdminsService {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
-        rol: AdminRolType.ADMIN,
+        role: AdminRolType.ADMIN,
       },
     });
 

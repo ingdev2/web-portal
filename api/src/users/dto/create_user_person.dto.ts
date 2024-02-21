@@ -6,29 +6,35 @@ import {
   IsOptional,
   IsString,
   IsDateString,
+  MinLength,
 } from 'class-validator';
-import { UserGender, UserIdType, UserRolType } from '../entities/user.entity';
+import { Gender } from '../../common/enums/gender.enum';
+import { IdType } from '../../common/enums/id_type.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
+import { Transform } from 'class-transformer';
 
 export class CreateUserPersonDto {
   @IsNotEmpty()
   @IsString()
+  @MinLength(3)
   name: string;
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(5)
   last_name: string;
 
   @IsNotEmpty()
-  @IsEnum(UserGender)
-  gender: UserGender;
+  @IsEnum(Gender)
+  gender: Gender;
 
   @IsNotEmpty()
   @IsDateString()
   birthay_date: Date;
 
   @IsNotEmpty()
-  @IsEnum(UserIdType)
-  id_type: UserIdType;
+  @IsEnum(IdType)
+  id_type: IdType;
 
   @IsNotEmpty()
   @IsNumber()
@@ -46,8 +52,10 @@ export class CreateUserPersonDto {
   @IsNumber()
   cellphone: number;
 
+  @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @IsString()
+  @MinLength(7)
   password: string;
 
   @IsOptional()
@@ -68,5 +76,5 @@ export class CreateUserPersonDto {
 
   @IsNotEmpty()
   @IsEnum(UserRolType)
-  rol: UserRolType;
+  role: UserRolType;
 }

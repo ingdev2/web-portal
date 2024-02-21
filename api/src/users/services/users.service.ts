@@ -1,11 +1,14 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRolType } from '../entities/user.entity';
+import { User } from '../entities/user.entity';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
+
+import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +34,7 @@ export class UsersService {
 
     const newUserPerson = await this.userRepository.create(userPerson);
 
-    if (newUserPerson.rol !== 'Persona') {
+    if (newUserPerson.role !== 'Persona') {
       throw new HttpException(
         'El usuario debe tener el rol "Persona".',
         HttpStatus.CONFLICT,
@@ -57,7 +60,7 @@ export class UsersService {
 
     const newUserEps = await this.userRepository.create(userEps);
 
-    if (newUserEps.rol !== 'Eps') {
+    if (newUserEps.role !== 'Eps') {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
         HttpStatus.CONFLICT,
@@ -72,7 +75,7 @@ export class UsersService {
   async getAllUsersPerson() {
     const allUsersPerson = await this.userRepository.find({
       where: {
-        rol: UserRolType.PERSON,
+        role: UserRolType.PERSON,
         is_active: true,
       },
       order: {
@@ -80,7 +83,7 @@ export class UsersService {
       },
     });
 
-    if (allUsersPerson.length == 0) {
+    if (allUsersPerson.length === 0) {
       return new HttpException(
         `No hay usuarios registrados en la base de datos`,
         HttpStatus.CONFLICT,
@@ -93,7 +96,7 @@ export class UsersService {
   async getAllUsersEps() {
     const allUsersEps = await this.userRepository.find({
       where: {
-        rol: UserRolType.EPS,
+        role: UserRolType.EPS,
         is_active: true,
       },
       order: {
@@ -101,7 +104,7 @@ export class UsersService {
       },
     });
 
-    if (allUsersEps.length == 0) {
+    if (allUsersEps.length === 0) {
       return new HttpException(
         `No hay usuarios registrados en la base de datos`,
         HttpStatus.CONFLICT,
@@ -111,11 +114,10 @@ export class UsersService {
     }
   }
 
-  async getUserPersonById(id: string) {
+  async getUsersById(id: string) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
         id: id,
-        rol: UserRolType.PERSON,
         is_active: true,
       },
       relations: ['medical_req'],
@@ -131,29 +133,73 @@ export class UsersService {
     }
   }
 
-  async getUserEpsById(id: string) {
-    const userEpsFound = await this.userRepository.findOne({
+  async getUsersByIdNumber(idNumber: number) {
+    const userFound = await this.userRepository.findOne({
       where: {
-        id: id,
-        rol: UserRolType.EPS,
+        id_number: idNumber,
         is_active: true,
       },
-      relations: ['medical_req'],
     });
 
-    if (!userEpsFound) {
+    if (!userFound) {
       return new HttpException(
-        `El usuario con número de ID: ${id} no esta registrado.`,
+        `El usuario con número de identificación personal: ${idNumber} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
-      return userEpsFound;
+      return userFound;
     }
+  }
+
+  async getUserFoundByIdNumber(idNumber: number) {
+    return await this.userRepository.findOneBy({ id_number: idNumber });
+  }
+
+  async getUserFoundByIdNumberWithPassword(idNumber: number) {
+    return await this.userRepository.findOne({
+      where: { id_number: idNumber },
+      select: ['id', 'name', 'id_number', 'password', 'role'],
+    });
   }
 
   // UPDATE FUNTIONS //
 
   async updateUserPerson(id: string, userPerson: UpdateUserPersonDto) {
+    const userFound = await this.userRepository.findOneBy({ id });
+
+    if (!userFound) {
+      return new HttpException(
+        `Usuario no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userFound.role !== UserRolType.PERSON) {
+      return new HttpException(
+        `No tienes permiso para actualizar este usuario.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userPerson.id_number) {
+      const duplicateUserPerson = await this.userRepository.findOne({
+        where: {
+          id_number: userPerson.id_number,
+        },
+      });
+
+      if (duplicateUserPerson) {
+        return new HttpException(
+          `Número de identificación duplicado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    if (userPerson.password) {
+      userPerson.password = await bcryptjs.hash(userPerson.password, 10);
+    }
+
     const updateUserPerson = await this.userRepository.update(id, userPerson);
 
     if (updateUserPerson.affected === 0) {
@@ -167,6 +213,41 @@ export class UsersService {
   }
 
   async updateUserEps(id: string, userEps: UpdateUserEpsDto) {
+    const userFound = await this.userRepository.findOneBy({ id });
+
+    if (!userFound) {
+      return new HttpException(
+        `Usuario no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userFound.role !== UserRolType.EPS) {
+      return new HttpException(
+        `No tienes permiso para actualizar este usuario.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    if (userEps.id_number) {
+      const duplicateUserEps = await this.userRepository.findOne({
+        where: {
+          id_number: userEps.id_number,
+        },
+      });
+
+      if (duplicateUserEps) {
+        return new HttpException(
+          `Número de identificación duplicado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    if (userEps.password) {
+      userEps.password = await bcryptjs.hash(userEps.password, 10);
+    }
+
     const updateUserEps = await this.userRepository.update(id, userEps);
 
     if (updateUserEps.affected === 0) {

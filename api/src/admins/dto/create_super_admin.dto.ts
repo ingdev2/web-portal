@@ -5,12 +5,10 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import {
-  AdminGender,
-  AdminIdType,
-  AdminCompanyArea,
-  AdminRolType,
-} from '../entities/admin.entity';
+import { Gender } from '../../common/enums/gender.enum';
+import { IdType } from '../../common/enums/id_type.enum';
+import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 export class CreateSuperAdminDto {
   @IsNotEmpty()
@@ -22,12 +20,12 @@ export class CreateSuperAdminDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsEnum(AdminGender)
-  gender: AdminGender;
+  @IsEnum(Gender)
+  gender: Gender;
 
   @IsNotEmpty()
-  @IsEnum(AdminIdType)
-  id_type: AdminIdType;
+  @IsEnum(IdType)
+  id_type: IdType;
 
   @IsNotEmpty()
   @IsNumber()
@@ -46,5 +44,5 @@ export class CreateSuperAdminDto {
 
   @IsNotEmpty()
   @IsEnum(AdminRolType)
-  rol: AdminRolType;
+  role: AdminRolType;
 }

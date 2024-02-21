@@ -7,6 +7,7 @@ require('dotenv').config();
 import { UsersModule } from './users/users.module';
 import { AdminsModule } from './admins/admins.module';
 import { MedicalReqModule } from './medical_req/medical_req.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MedicalReqModule } from './medical_req/medical_req.module';
     UsersModule,
     AdminsModule,
     MedicalReqModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
