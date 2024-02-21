@@ -80,7 +80,7 @@ export class AdminsService {
       },
     });
 
-    if (allAdmins.length == 0) {
+    if (allAdmins.length === 0) {
       return new HttpException(
         `No hay admins registrados en la base de datos`,
         HttpStatus.CONFLICT,

@@ -12,6 +12,7 @@ import {
   RequirementType,
   RelationshipWithPatient,
   RequestStatus,
+  PatientClassificationStatus,
 } from '../entities/medical_req.entity';
 import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
@@ -71,6 +72,10 @@ export class CreateMedicalReqPersonDto {
   patient_id_number: number;
 
   @IsNotEmpty()
+  @IsEnum(PatientClassificationStatus)
+  patient_class_status: PatientClassificationStatus;
+
+  @IsNotEmpty()
   @IsDateString()
   patient_id_exp_date: Date;
 
@@ -92,7 +97,7 @@ export class CreateMedicalReqPersonDto {
 
   @IsOptional()
   @IsString()
-  copy_marriage_certicate: string;
+  copy_marriage_certificate: string;
 
   @IsOptional()
   @IsString()

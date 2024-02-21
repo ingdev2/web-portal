@@ -8,18 +8,6 @@ import { UpdateAdminDto } from '../dto/update_admin.dto';
 export class AdminsController {
   constructor(private adminsService: AdminsService) {}
 
-  // POST METHODS //
-
-  // @Post('/createSuperAdmin')
-  // async createSuperAdmin(@Body() newAdmin: CreateSuperAdminDto) {
-  //   return await this.adminsService.createSuperAdmin(newAdmin);
-  // }
-
-  // @Post('/createAdmin')
-  // async createAdmin(@Body() newAdmin: CreateAdminDto) {
-  //   return await this.adminsService.createAdmin(newAdmin);
-  // }
-
   // GET METHODS //
 
   @Get('/getAllAdmins')

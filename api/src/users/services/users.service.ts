@@ -81,7 +81,7 @@ export class UsersService {
       },
     });
 
-    if (allUsersPerson.length == 0) {
+    if (allUsersPerson.length === 0) {
       return new HttpException(
         `No hay usuarios registrados en la base de datos`,
         HttpStatus.CONFLICT,
@@ -102,7 +102,7 @@ export class UsersService {
       },
     });
 
-    if (allUsersEps.length == 0) {
+    if (allUsersEps.length === 0) {
       return new HttpException(
         `No hay usuarios registrados en la base de datos`,
         HttpStatus.CONFLICT,

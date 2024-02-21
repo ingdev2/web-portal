@@ -19,6 +19,12 @@ export enum RequirementType {
   MEDICAL_DISABILITY = 'Incapacidad Médica',
 }
 
+export enum PatientClassificationStatus {
+  YOUNGER = 'Menor de edad',
+  ADULT = 'Adulto',
+  DECEASED = 'Fallecido',
+}
+
 export enum RelationshipWithPatient {
   PARENT = 'Padre/Madre',
   SON = 'Hijo(a)',
@@ -87,6 +93,9 @@ export class MedicalReq {
   @Column({ type: 'bigint' })
   patient_id_number: number;
 
+  @Column({ enum: PatientClassificationStatus, nullable: true })
+  patient_class_status: PatientClassificationStatus;
+
   @Column({ type: 'text', nullable: true })
   copy_applicant_citizenship_card: string;
 
@@ -100,7 +109,7 @@ export class MedicalReq {
   copy_parents_citizenship_card: string;
 
   @Column({ type: 'text', nullable: true })
-  copy_marriage_certicate: string;
+  copy_marriage_certificate: string;
 
   @Column({ type: 'text', nullable: true })
   copy_cohabitation_certificate: string;

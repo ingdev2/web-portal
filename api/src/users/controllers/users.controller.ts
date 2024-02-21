@@ -9,18 +9,6 @@ import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  // POST METHODS //
-
-  // @Post('/createUserPerson')
-  // async createUserPerson(@Body() newUserPerson: CreateUserPersonDto) {
-  //   return await this.usersService.createUserPerson(newUserPerson);
-  // }
-
-  // @Post('/createUserEps')
-  // async createUserEps(@Body() newUserEps: CreateUserEpsDto) {
-  //   return await this.usersService.createUserEps(newUserEps);
-  // }
-
   // GET METHODS //
 
   @Get('/getAllPerson')
