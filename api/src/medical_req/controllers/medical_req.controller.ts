@@ -7,6 +7,10 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { AdminRolType } from 'src/common/enums/admin_roles.enum';
 import { UserRolType } from 'src/common/enums/user_roles.enum';
 
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('medical_req')
+@ApiBearerAuth()
 @Auth(AdminRolType.SUPER_ADMIN)
 @Controller('medical-req')
 export class MedicalReqController {
