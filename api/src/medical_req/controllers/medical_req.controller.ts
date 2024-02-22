@@ -65,12 +65,14 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
+  @Auth(UserRolType.PERSON)
   @Get('/medicalReqPerson/:id')
   async getMedicalReqPersonById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPersonById(id);
   }
 
   @Auth(AdminRolType.ADMIN)
+  @Auth(UserRolType.EPS)
   @Get('/medicalReqEps/:id')
   async getMedicalReqEpsById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqEpsById(id);
