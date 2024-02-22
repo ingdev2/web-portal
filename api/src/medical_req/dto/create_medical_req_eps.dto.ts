@@ -58,7 +58,7 @@ export class CreateMedicalReqEpsDto {
   @IsNumber()
   patient_id_number: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   patient_id_exp_date: Date;
 

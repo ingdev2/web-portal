@@ -93,6 +93,9 @@ export class MedicalReq {
   @Column({ type: 'bigint' })
   patient_id_number: number;
 
+  @Column({ type: 'date', nullable: true })
+  patient_id_exp_date: Date;
+
   @Column({ enum: PatientClassificationStatus, nullable: true })
   patient_class_status: PatientClassificationStatus;
 

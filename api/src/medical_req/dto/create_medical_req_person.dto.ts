@@ -75,7 +75,7 @@ export class CreateMedicalReqPersonDto {
   @IsEnum(PatientClassificationStatus)
   patient_class_status: PatientClassificationStatus;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   patient_id_exp_date: Date;
 
