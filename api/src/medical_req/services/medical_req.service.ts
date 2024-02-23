@@ -13,6 +13,14 @@ import { UserRolType } from '../../common/enums/user_roles.enum';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
+import { NodemailerService } from 'src/nodemailer/services/nodemailer.service';
+import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+import {
+  MEDICAL_REQ_CREATED,
+  MEDICAL_REQ_UPDATE,
+  SUBJECT_EMAIL_CONFIRM_CREATION,
+  SUBJECT_EMAIL_STATUS_CHANGE,
+} from 'src/nodemailer/constants/email_config.constant';
 
 @Injectable()
 export class MedicalReqService {
@@ -22,6 +30,7 @@ export class MedicalReqService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private nodemailerService: NodemailerService,
     private usersService: UsersService,
   ) {}
 
@@ -189,6 +198,18 @@ export class MedicalReqService {
       },
     });
 
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
+    emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.medicalReqFilingNumber =
+      medicalReqCompleted.filing_number;
+    emailDetailsToSend.requirementType = medicalReqCompleted.requirement_type;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
+    emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
     return await medicalReqCompleted;
   }
 
@@ -240,6 +261,18 @@ export class MedicalReqService {
         id: createMedicalReq.id,
       },
     });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
+    emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.medicalReqFilingNumber =
+      medicalReqCompleted.filing_number;
+    emailDetailsToSend.requirementType = medicalReqCompleted.requirement_type;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
+    emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return await medicalReqCompleted;
   }
@@ -383,19 +416,35 @@ export class MedicalReqService {
       sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
 
       newStatusMedicalReq.answer_date = currentDate;
-
       newStatusMedicalReq.download_expiration_date = sevenDaysLater;
 
-      const updateMedicalReq = await this.medicalReqRepository.update(
-        id,
-        newStatusMedicalReq,
-      );
+      await this.medicalReqRepository.update(id, newStatusMedicalReq);
     }
 
     const updateMedicalReq = await this.medicalReqRepository.update(
       id,
       newStatusMedicalReq,
     );
+
+    const updatedMedicalReq = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [updatedMedicalReq.aplicant_email];
+    emailDetailsToSend.userName = updatedMedicalReq.aplicant_name;
+    emailDetailsToSend.medicalReqFilingNumber = updatedMedicalReq.filing_number;
+    emailDetailsToSend.requirementType = updatedMedicalReq.requirement_type;
+    emailDetailsToSend.requestStatusReq = updatedMedicalReq.request_status;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
+    emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
+
+    console.log(emailDetailsToSend);
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     if (updateMedicalReq.affected === 0) {
       return new HttpException(

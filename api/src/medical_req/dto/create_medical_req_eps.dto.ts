@@ -7,6 +7,7 @@ import {
   IsBoolean,
   IsDateString,
   IsUUID,
+  IsEmail,
 } from 'class-validator';
 import { RequirementType, RequestStatus } from '../entities/medical_req.entity';
 import { Gender } from '../../common/enums/gender.enum';
@@ -39,7 +40,7 @@ export class CreateMedicalReqEpsDto {
   aplicant_id_number: number;
 
   @IsOptional()
-  @IsString()
+  @IsEmail()
   aplicant_email: string;
 
   @IsOptional()

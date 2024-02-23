@@ -1,0 +1,31 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Notificación de Nuevo Requerimiento Médico</title>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0;
+      padding: 0; } .container { max-width: 600px; margin: 0 auto; padding:
+      20px; border: 1px solid #ccc; border-radius: 10px; background-color:
+      #f9f9f9; } h1 { text-align: center; } p { margin: 10px 0; } .highlight {
+      font-weight: bold; color: #007bff; /* Color azul */ } .important {
+      font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Notificación de Nuevo Requerimiento Médico</h1>
+      <p>Cordial saludo,</p>
+      <p>Señor(a) <span class='highlight'>{{userName}}</span>,</p>
+      <p>Se ha creado correctamente un nuevo requerimiento médico tipo:
+        <span class='highlight'>{{requirementType}}</span>
+        con número de radicado:
+        <span class='highlight'>{{medicalReqFilingNumber}}</span>.</p>
+      <p>A partir de la fecha, nuestro tiempo de respuesta aproximado a su
+        requerimiento es de
+        <span class='important'>24 horas</span>. Agradecemos su paciencia.</p>
+      <p><span class='important'>Horario de atención (08:00 a.m.-06:00 p.m.)</span></p>
+      <p>Att: Departamento de archivos de Clínica Bonnadona Prevenir</p>
+    </div>
+  </body>
+</html>

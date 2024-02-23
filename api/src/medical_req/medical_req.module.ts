@@ -5,9 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicalReq } from './entities/medical_req.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
+import { NodemailerModule } from 'src/nodemailer/nodemailer.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MedicalReq, User]), UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([MedicalReq, User]),
+    UsersModule,
+    NodemailerModule,
+  ],
   providers: [MedicalReqService],
   controllers: [MedicalReqController],
 })

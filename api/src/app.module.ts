@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AdminsModule } from './admins/admins.module';
 import { MedicalReqModule } from './medical_req/medical_req.module';
 import { AuthModule } from './auth/auth.module';
+import { NodemailerModule } from './nodemailer/nodemailer.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
     AdminsModule,
     MedicalReqModule,
     AuthModule,
+    NodemailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

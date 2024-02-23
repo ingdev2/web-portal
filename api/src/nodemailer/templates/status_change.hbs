@@ -1,0 +1,34 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Notificación de Cambio de Estado de Solicitud</title>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0;
+      padding: 0; } .container { max-width: 600px; margin: 0 auto; padding:
+      20px; border: 1px solid #ccc; border-radius: 10px; background-color:
+      #f9f9f9; } h1 { text-align: center; } p { margin: 10px 0; } .highlight {
+      font-weight: bold; color: #007bff; /* Color azul */ } .button { display:
+      inline-block; padding: 10px 20px; background-color: #007bff; color: #fff;
+      text-decoration: none; border-radius: 5px; } .button:hover {
+      background-color: #0056b3; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <h1>Notificación de Cambio de Estado de Solicitud</h1>
+      <p>Cordial saludo,</p>
+      <p>Señor(a) <span class='highlight'>{{userName}}</span>,</p>
+      <p>Le informamos que el estado de su solicitud tipo:
+        <span class='highlight'>{{requirementType}}</span>
+        con número de radicado:
+        <span class='highlight'>{{medicalReqFilingNumber}}</span>
+        ha cambiado a estado:
+        <span class='highlight'>{{requestStatusReq}}</span>.</p>
+      <p>Lo invitamos a ingresar a nuestro portal web y ver el estado de sus
+        solicitudes:
+        <a href='https://clinicabonnadona.com' class='button'>Portal Web Proced</a></p>
+      <p>Att: Departamento de archivos de Clínica Bonnadona Prevenir</p>
+    </div>
+  </body>
+</html>
