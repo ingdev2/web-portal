@@ -4,8 +4,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 import {
   DEFAULT_EMAIL_FROM,
   NAME_EMAIL_FROM,
-  SUBJECT_EMAIL_CONFIRM_CREATION,
-  SUBJECT_EMAIL_STATUS_CHANGE,
 } from 'src/nodemailer/constants/email_config.constant';
 
 @Injectable()

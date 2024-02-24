@@ -12,15 +12,16 @@ import { DEFAULT_EMAIL_FROM } from './constants/email_config.constant';
       useFactory: async () => ({
         transport: {
           host: process.env.MAIL_HOST,
-          port: Number(process.env.MAIL_HOST),
-          secure: false,
+          port: Number(process.env.MAIL_PORT),
+          secure: true, // true para 465, false para otros puertos
+          requireTLS: true,
           auth: {
             user: process.env.MAIL_USER,
             pass: process.env.MAIL_PASS,
           },
         },
         defaults: {
-          from: `"No responder" ${DEFAULT_EMAIL_FROM}`,
+          from: `No responder ${DEFAULT_EMAIL_FROM}`,
         },
         template: {
           dir: join(__dirname, './templates'),

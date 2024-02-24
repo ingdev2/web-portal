@@ -2,19 +2,27 @@
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Notificación de Nuevo Requerimiento Médico</title>
+    <title>Nuevo Requerimiento Médico</title>
     <style>
-      body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0;
-      padding: 0; } .container { max-width: 600px; margin: 0 auto; padding:
-      20px; border: 1px solid #ccc; border-radius: 10px; background-color:
-      #f9f9f9; } h1 { text-align: center; } p { margin: 10px 0; } .highlight {
-      font-weight: bold; color: #007bff; /* Color azul */ } .important {
-      font-weight: bold; }
+      body { font-family: Arial, Helvetica, sans-serif; line-height: 2.0;
+      margin: 0; padding: 0; } .container { max-width: 609px; margin: 0 auto;
+      padding: 20px; border: 2px solid #ccc; border-radius: 13px;
+      background-color: #f7f7f7; } h1 { text-align: center; color:#015E90;
+      font-weight: bold; line-height: 1.3;} p { margin: 10px 0; size: 22px; }
+      .highlight { font-weight: bold; color: #015E90; } .important {
+      font-weight: bold; }.logo { display: block; margin: 0 auto; height: 77px;}
     </style>
   </head>
   <body>
     <div class='container'>
-      <h1>Notificación de Nuevo Requerimiento Médico</h1>
+      <br />
+      <img
+        src='https://i.ibb.co/3R5LYzk/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png'
+        alt='Logo'
+        class='logo'
+      />
+      <br />
+      <h1>REQUERIMIENTO MÉDICO CREADO CORRECTAMENTE</h1>
       <p>Cordial saludo,</p>
       <p>Señor(a) <span class='highlight'>{{userName}}</span>,</p>
       <p>Se ha creado correctamente un nuevo requerimiento médico tipo:
@@ -26,6 +34,13 @@
         <span class='important'>24 horas</span>. Agradecemos su paciencia.</p>
       <p><span class='important'>Horario de atención (08:00 a.m.-06:00 p.m.)</span></p>
       <p>Att: Departamento de archivos de Clínica Bonnadona Prevenir</p>
+      <br />
+      <img
+        src='https://clinicabonnadona.com/wp-content/uploads/2023/06/nuevo_bonna_logo.png'
+        alt='Logo'
+        class='logo'
+      />
+      <br />
     </div>
   </body>
 </html>
