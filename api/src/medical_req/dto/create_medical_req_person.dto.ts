@@ -7,6 +7,8 @@ import {
   IsBoolean,
   IsDateString,
   IsUUID,
+  IsArray,
+  IsEmail,
 } from 'class-validator';
 import {
   RequirementType,
@@ -28,8 +30,8 @@ export class CreateMedicalReqPersonDto {
   right_petition: boolean;
 
   @IsOptional()
-  @IsString()
-  copy_right_petition: string;
+  @IsArray()
+  copy_right_petition: string[];
 
   @IsOptional()
   @IsString()
@@ -52,7 +54,7 @@ export class CreateMedicalReqPersonDto {
   aplicant_id_number: number;
 
   @IsOptional()
-  @IsString()
+  @IsEmail()
   aplicant_email: string;
 
   @IsOptional()
@@ -75,33 +77,33 @@ export class CreateMedicalReqPersonDto {
   @IsEnum(PatientClassificationStatus)
   patient_class_status: PatientClassificationStatus;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   patient_id_exp_date: Date;
 
   @IsOptional()
-  @IsString()
-  copy_applicant_citizenship_card: string;
+  @IsArray()
+  copy_applicant_citizenship_card: string[];
 
   @IsOptional()
-  @IsString()
-  copy_patient_citizenship_card: string;
+  @IsArray()
+  copy_patient_citizenship_card: string[];
 
   @IsOptional()
-  @IsString()
-  copy_patient_civil_registration: string;
+  @IsArray()
+  copy_patient_civil_registration: string[];
 
   @IsOptional()
-  @IsString()
-  copy_parents_citizenship_card: string;
+  @IsArray()
+  copy_parents_citizenship_card: string[];
 
   @IsOptional()
-  @IsString()
-  copy_marriage_certificate: string;
+  @IsArray()
+  copy_marriage_certificate: string[];
 
   @IsOptional()
-  @IsString()
-  copy_cohabitation_certificate: string;
+  @IsArray()
+  copy_cohabitation_certificate: string[];
 
   @IsOptional()
   @IsDateString()

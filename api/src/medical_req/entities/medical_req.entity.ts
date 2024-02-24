@@ -54,8 +54,8 @@ export class MedicalReq {
   @Column({ type: 'boolean', default: false })
   right_petition: boolean;
 
-  @Column({ type: 'text', nullable: true })
-  copy_right_petition: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_right_petition: string[];
 
   @Column({ type: 'text', nullable: true })
   aplicant_name: string;
@@ -93,26 +93,29 @@ export class MedicalReq {
   @Column({ type: 'bigint' })
   patient_id_number: number;
 
+  @Column({ type: 'date', nullable: true })
+  patient_id_exp_date: Date;
+
   @Column({ enum: PatientClassificationStatus, nullable: true })
   patient_class_status: PatientClassificationStatus;
 
-  @Column({ type: 'text', nullable: true })
-  copy_applicant_citizenship_card: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_applicant_citizenship_card: string[];
 
-  @Column({ type: 'text', nullable: true })
-  copy_patient_citizenship_card: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_patient_citizenship_card: string[];
 
-  @Column({ type: 'text', nullable: true })
-  copy_patient_civil_registration: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_patient_civil_registration: string[];
 
-  @Column({ type: 'text', nullable: true })
-  copy_parents_citizenship_card: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_parents_citizenship_card: string[];
 
-  @Column({ type: 'text', nullable: true })
-  copy_marriage_certificate: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_marriage_certificate: string[];
 
-  @Column({ type: 'text', nullable: true })
-  copy_cohabitation_certificate: string;
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_cohabitation_certificate: string[];
 
   @Column({ type: 'date', nullable: true })
   date_of_admission: Date;

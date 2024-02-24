@@ -7,6 +7,11 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { AdminRolType } from 'src/common/enums/admin_roles.enum';
 import { UserRolType } from 'src/common/enums/user_roles.enum';
 
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+
+@ApiTags('medical_req')
+@ApiBearerAuth()
 @Auth(AdminRolType.SUPER_ADMIN)
 @Controller('medical-req')
 export class MedicalReqController {
@@ -61,12 +66,14 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
+  @Auth(UserRolType.PERSON)
   @Get('/medicalReqPerson/:id')
   async getMedicalReqPersonById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPersonById(id);
   }
 
   @Auth(AdminRolType.ADMIN)
+  @Auth(UserRolType.EPS)
   @Get('/medicalReqEps/:id')
   async getMedicalReqEpsById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqEpsById(id);

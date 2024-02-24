@@ -6,18 +6,10 @@ import { CreateUserEpsDto } from 'src/users/dto/create_user_eps.dto';
 import { LoginDto } from '../dto/login.dto';
 import { Request } from 'express';
 import { Auth } from '../decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
-import { ActiveUser } from 'src/common/decorators/active_user.decorator';
-import { UserActiveInterface } from 'src/common/interfaces/user_active.interface';
 
-interface RequestWithUser extends Request {
-  user: {
-    id_number: number;
-    role: Enumerator;
-  };
-}
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
