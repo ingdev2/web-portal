@@ -82,6 +82,5 @@ export class User {
   deletedAt: Date;
 
   @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant)
-  @JoinColumn()
   medical_req: MedicalReq[];
 }

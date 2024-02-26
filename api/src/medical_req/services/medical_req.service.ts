@@ -208,7 +208,7 @@ export class MedicalReqService {
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
 
-    await this.nodemailerService.sendEmail(emailDetailsToSend);
+    // await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return await medicalReqCompleted;
   }
@@ -272,7 +272,7 @@ export class MedicalReqService {
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
 
-    await this.nodemailerService.sendEmail(emailDetailsToSend);
+    // await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return await medicalReqCompleted;
   }

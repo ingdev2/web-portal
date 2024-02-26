@@ -2,6 +2,7 @@ import { User } from '../../users/entities/user.entity';
 import { IdType } from '../../common/enums/id_type.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -147,7 +148,10 @@ export class MedicalReq {
   @Column({ enum: UserRolType, nullable: true })
   medicalReqUserType: UserRolType;
 
-  @ManyToOne(() => User, (user) => user.medical_req)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.medical_req, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'aplicantId' })
   aplicant: User;
 }
