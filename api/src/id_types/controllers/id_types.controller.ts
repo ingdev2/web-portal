@@ -11,8 +11,8 @@ import { IdTypesService } from '../services/id_types.service';
 import { CreateIdTypeDto } from '../dto/create-id_type.dto';
 import { UpdateIdTypeDto } from '../dto/update-id_type.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 @ApiTags('id-types')
 @ApiBearerAuth()

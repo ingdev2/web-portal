@@ -1,4 +1,3 @@
-import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
 import {
   Column,
   CreateDateColumn,
@@ -11,7 +10,8 @@ import {
 } from 'typeorm';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
-import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
 export class Admin {
@@ -32,9 +32,6 @@ export class Admin {
 
   @Column({ select: false })
   password: string;
-
-  @Column({ enum: AdminCompanyArea })
-  company_area: AdminCompanyArea;
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
@@ -71,4 +68,11 @@ export class Admin {
 
   @Column()
   admin_id_type: number;
+
+  @ManyToOne(() => CompanyArea, (companyArea) => companyArea.admin)
+  @JoinColumn({ name: 'company_area', referencedColumnName: 'id' })
+  companyArea: CompanyArea;
+
+  @Column()
+  company_area: number;
 }

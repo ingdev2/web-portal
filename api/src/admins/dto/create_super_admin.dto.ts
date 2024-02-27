@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsEmail, IsNumber, IsString } from 'class-validator';
-import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
 
 export class CreateSuperAdminDto {
   @IsNotEmpty()
@@ -23,9 +22,6 @@ export class CreateSuperAdminDto {
   password: string;
 
   @IsNotEmpty()
-  company_area: AdminCompanyArea;
-
-  @IsNotEmpty()
   admin_role: number;
 
   @IsNotEmpty()
@@ -33,4 +29,7 @@ export class CreateSuperAdminDto {
 
   @IsNotEmpty()
   admin_id_type: number;
+
+  @IsNotEmpty()
+  company_area: number;
 }

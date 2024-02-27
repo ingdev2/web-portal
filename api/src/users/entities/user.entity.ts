@@ -12,7 +12,8 @@ import {
 } from 'typeorm';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
-import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
 export class User {
@@ -27,12 +28,6 @@ export class User {
 
   @Column({ type: 'date', nullable: true })
   birthay_date: Date;
-
-  @Column({ nullable: true })
-  company_name: string;
-
-  @Column({ nullable: true })
-  company_area: string;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
@@ -102,4 +97,11 @@ export class User {
 
   @Column()
   user_id_type: number;
+
+  @ManyToOne(() => CompanyArea, (companyArea) => companyArea.user)
+  @JoinColumn({ name: 'company_area', referencedColumnName: 'id' })
+  companyArea: CompanyArea;
+
+  @Column({ nullable: true })
+  company_area: number;
 }

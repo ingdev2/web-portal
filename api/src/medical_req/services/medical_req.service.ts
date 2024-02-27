@@ -9,8 +9,7 @@ import {
 } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { User } from '../../users/entities/user.entity';
-import { UserRole } from 'src/user_roles/entities/user_role.entity';
-import { UsersService } from '../../users/services/users.service';
+import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
@@ -20,9 +19,9 @@ import {
   MEDICAL_REQ_UPDATE,
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
-} from 'src/nodemailer/constants/email_config.constant';
-import { UserRolType } from 'src/common/enums/user_roles.enum';
-import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
+} from '../../nodemailer/constants/email_config.constant';
+import { UserRolType } from '../../common/enums/user_roles.enum';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 
 @Injectable()
 export class MedicalReqService {
@@ -287,7 +286,6 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_id_type = userEpsFound.user_id_type;
     aplicantEpsDetails.aplicant_id_number = userEpsFound.id_number;
     aplicantEpsDetails.aplicant_email = userEpsFound.email;
-    aplicantEpsDetails.aplicant_company_name = userEpsFound.company_name;
     aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
 
     const currentDate = new Date();

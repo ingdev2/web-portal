@@ -1,19 +1,19 @@
 import { Admin } from '../..//admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Gender } from '../../common/enums/gender.enum';
+import { CompanyAreaEnum } from '../../common/enums/company_area.enum';
 
 @Entity()
-export class GenderType {
+export class CompanyArea {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ enum: Gender })
-  name: Gender;
+  @Column({ enum: CompanyAreaEnum })
+  name: CompanyAreaEnum;
 
-  @OneToMany(() => Admin, (admin) => admin.gender)
+  @OneToMany(() => Admin, (admin) => admin.companyArea)
   admin: Admin[];
 
-  @OneToMany(() => User, (user) => user.gender)
+  @OneToMany(() => User, (user) => user.companyArea)
   user: User[];
 }

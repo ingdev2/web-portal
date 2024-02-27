@@ -78,10 +78,7 @@ export class MedicalReq {
   aplicant_cellphone: number;
 
   @Column({ nullable: true })
-  aplicant_company_name: string;
-
-  @Column({ nullable: true })
-  aplicant_company_area: string;
+  aplicant_company_area: number;
 
   @Column({ enum: RelationshipWithPatient, nullable: true })
   relationship_with_patient: RelationshipWithPatient;

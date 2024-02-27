@@ -11,8 +11,8 @@ import { GenderTypeService } from '../services/genders.service';
 import { CreateGenderTypeDto } from '../dto/create-gender.dto';
 import { UpdateGenderTypeDto } from '../dto/update-gender.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 @ApiTags('genders')
 @ApiBearerAuth()

@@ -14,7 +14,7 @@ export class UpdateUserEpsDto {
   id_number: number;
 
   @IsOptional()
-  company_area: string;
+  company_area: number;
 
   @IsOptional()
   @IsEmail()

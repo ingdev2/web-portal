@@ -27,10 +27,6 @@ export class CreateUserEpsDto {
   company_name: string;
 
   @IsNotEmpty()
-  @MinLength(7)
-  company_area: string;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -48,4 +44,7 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   user_id_type: number;
+
+  @IsNotEmpty()
+  company_area: number;
 }

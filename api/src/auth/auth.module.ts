@@ -6,7 +6,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants/jwt.constants';
 import { UserRolesModule } from '../user_roles/user_roles.module';
-import { AdminRolesModule } from 'src/admin_roles/admin_roles.module';
+import { AdminRolesModule } from '../admin_roles/admin_roles.module';
 
 @Module({
   imports: [

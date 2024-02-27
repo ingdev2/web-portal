@@ -1,5 +1,5 @@
-import { Admin } from 'src/admins/entities/admin.entity';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { Admin } from '../../admins/entities/admin.entity';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

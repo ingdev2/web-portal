@@ -11,8 +11,8 @@ import { UserRolesService } from '../services/user_roles.service';
 import { CreateUserRoleDto } from '../dto/create-user_role.dto';
 import { UpdateUserRoleDto } from '../dto/update-user_role.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 @ApiTags('user-roles')
 @ApiBearerAuth()
