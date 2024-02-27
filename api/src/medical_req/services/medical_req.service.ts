@@ -9,6 +9,7 @@ import {
 } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { User } from '../../users/entities/user.entity';
+import { UserRole } from 'src/user_roles/entities/user_role.entity';
 import { UsersService } from '../../users/services/users.service';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
@@ -20,12 +21,16 @@ import {
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from 'src/nodemailer/constants/email_config.constant';
+import { UserRolType } from 'src/common/enums/user_roles.enum';
 
 @Injectable()
 export class MedicalReqService {
   constructor(
     @InjectRepository(MedicalReq)
     private medicalReqRepository: Repository<MedicalReq>,
+
+    @InjectRepository(UserRole)
+    private userRoleRepository: Repository<UserRole>,
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -42,7 +47,6 @@ export class MedicalReqService {
     const userPersonFound = await this.userRepository.findOne({
       where: {
         id: userId,
-        // role: 1,
       },
     });
 
@@ -53,10 +57,24 @@ export class MedicalReqService {
       );
     }
 
+    const userRolePerson = await this.userRoleRepository.findOne({
+      where: {
+        id: userPersonFound.user_role,
+        name: UserRolType.PERSON,
+      },
+    });
+
+    if (!userRolePerson) {
+      throw new HttpException(
+        'El usuario debe tener el rol "Persona".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const aplicantPersonDetails = new CreateMedicalReqPersonDto();
 
     aplicantPersonDetails.aplicantId = userPersonFound.id;
-    // aplicantPersonDetails.medicalReqUserType = userPersonFound.role;
+    aplicantPersonDetails.medicalReqUserType = userPersonFound.user_role;
     aplicantPersonDetails.aplicant_name = userPersonFound.name;
     aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
     aplicantPersonDetails.aplicant_gender = userPersonFound.gender;
@@ -219,7 +237,6 @@ export class MedicalReqService {
     const userEpsFound = await this.userRepository.findOne({
       where: {
         id: userId,
-        // role: 2,
       },
     });
 
@@ -230,10 +247,24 @@ export class MedicalReqService {
       );
     }
 
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        id: userEpsFound.user_role,
+        name: UserRolType.EPS,
+      },
+    });
+
+    if (!userRoleEps) {
+      throw new HttpException(
+        'El usuario debe tener el rol "Eps".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
-    // aplicantEpsDetails.medicalReqUserType = userEpsFound.role;
+    aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
     aplicantEpsDetails.aplicant_gender = userEpsFound.gender;
@@ -299,9 +330,15 @@ export class MedicalReqService {
   }
 
   async getAllMedicalReqPerson() {
+    const userRolePerson = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.PERSON,
+      },
+    });
+
     const allMedicalReqPerson = await this.medicalReqRepository.find({
       where: {
-        medicalReqUserType: 1,
+        medicalReqUserType: userRolePerson.id,
         is_deleted: false,
       },
       order: {
@@ -320,9 +357,15 @@ export class MedicalReqService {
   }
 
   async getAllMedicalReqEps() {
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.EPS,
+      },
+    });
+
     const allMedicalReqEps = await this.medicalReqRepository.find({
       where: {
-        medicalReqUserType: 2,
+        medicalReqUserType: userRoleEps.id,
         is_deleted: false,
       },
       order: {
@@ -341,10 +384,16 @@ export class MedicalReqService {
   }
 
   async getMedicalReqPersonById(id: string) {
+    const userRolePerson = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.PERSON,
+      },
+    });
+
     const medicalReqPersonFound = await this.medicalReqRepository.findOne({
       where: {
         id: id,
-        medicalReqUserType: 1,
+        medicalReqUserType: userRolePerson.id,
         is_deleted: false,
       },
       order: {
@@ -363,10 +412,16 @@ export class MedicalReqService {
   }
 
   async getMedicalReqEpsById(id: string) {
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.EPS,
+      },
+    });
+
     const medicalReqEpsFound = await this.medicalReqRepository.findOne({
       where: {
         id: id,
-        medicalReqUserType: 2,
+        medicalReqUserType: userRoleEps.id,
         is_deleted: false,
       },
       order: {
