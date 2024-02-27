@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { AdminsService } from 'src/admins/services/admins.service';
-import { UsersService } from 'src/users/services/users.service';
-import { CreateSuperAdminDto } from 'src/admins/dto/create_super_admin.dto';
-import { CreateAdminDto } from 'src/admins/dto/create_admin.dto';
-import { CreateUserPersonDto } from 'src/users/dto/create_user_person.dto';
-import { CreateUserEpsDto } from 'src/users/dto/create_user_eps.dto';
+import { AdminsService } from '../../admins/services/admins.service';
+import { UsersService } from '../../users/services/users.service';
+import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
+import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
+import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from '../dto/login.dto';
 

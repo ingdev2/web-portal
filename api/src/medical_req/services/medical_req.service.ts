@@ -8,12 +8,12 @@ import {
   RequestStatus,
 } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/services/users.service';
+import { User } from '../../users/entities/user.entity';
+import { UsersService } from '../../users/services/users.service';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
-import { NodemailerService } from 'src/nodemailer/services/nodemailer.service';
-import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import {
   MEDICAL_REQ_CREATED,
   MEDICAL_REQ_UPDATE,

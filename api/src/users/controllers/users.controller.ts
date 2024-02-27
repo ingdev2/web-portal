@@ -1,12 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UsersService } from '../services/users.service';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
-import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
-import { UserRolType } from 'src/common/enums/user_roles.enum';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 

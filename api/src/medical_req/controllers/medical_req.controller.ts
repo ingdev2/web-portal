@@ -4,11 +4,10 @@ import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto'
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
-import { UserRolType } from 'src/common/enums/user_roles.enum';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 
 @ApiTags('medical_req')
 @ApiBearerAuth()

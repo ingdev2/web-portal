@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { AdminsService } from '../services/admins.service';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 

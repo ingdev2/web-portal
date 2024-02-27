@@ -1,8 +1,6 @@
 import { User } from '../../users/entities/user.entity';
 import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
