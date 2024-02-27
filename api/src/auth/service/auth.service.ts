@@ -87,7 +87,7 @@ export class AuthService {
     residence_city,
     residence_address,
     residence_neighborhood,
-    role,
+    user_role,
   }: CreateUserPersonDto) {
     await this.usersService.getUsersByIdNumber(id_number);
 
@@ -106,7 +106,7 @@ export class AuthService {
       residence_city,
       residence_address,
       residence_neighborhood,
-      role,
+      user_role,
     });
   }
 
@@ -120,7 +120,7 @@ export class AuthService {
     company_area,
     email,
     password,
-    role,
+    user_role,
   }: CreateUserEpsDto) {
     await this.usersService.getUsersByIdNumber(id_number);
 
@@ -134,7 +134,7 @@ export class AuthService {
       company_area,
       email,
       password: await bcryptjs.hash(password, 10),
-      role,
+      user_role,
     });
   }
 

@@ -9,11 +9,14 @@ import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 
 import * as bcryptjs from 'bcryptjs';
+import { UserRole } from 'src/user_roles/entities/user_role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(UserRole)
+    private userRoleRepository: Repository<UserRole>,
   ) {}
 
   // CREATE FUNTIONS //
@@ -32,14 +35,23 @@ export class UsersService {
       );
     }
 
-    const newUserPerson = await this.userRepository.create(userPerson);
+    const userRolePerson = await this.userRoleRepository.findOne({
+      where: {
+        id: userPerson.user_role,
+        name: UserRolType.PERSON,
+      },
+    });
 
-    if (newUserPerson.role !== 'Persona') {
+    if (!userRolePerson) {
       throw new HttpException(
         'El usuario debe tener el rol "Persona".',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    const newUserPerson = await this.userRepository.create(userPerson);
+
+    newUserPerson.user_role = userRolePerson.id;
 
     return await this.userRepository.save(newUserPerson);
   }
@@ -58,14 +70,23 @@ export class UsersService {
       );
     }
 
-    const newUserEps = await this.userRepository.create(userEps);
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        id: userEps.user_role,
+        name: UserRolType.EPS,
+      },
+    });
 
-    if (newUserEps.role !== 'Eps') {
+    if (!userRoleEps) {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    const newUserEps = await this.userRepository.create(userEps);
+
+    newUserEps.user_role = userRoleEps.id;
 
     return await this.userRepository.save(newUserEps);
   }
@@ -73,44 +94,70 @@ export class UsersService {
   // GET FUNTIONS //
 
   async getAllUsersPerson() {
-    const allUsersPerson = await this.userRepository.find({
+    const userRolePerson = await this.userRoleRepository.findOne({
       where: {
-        role: UserRolType.PERSON,
-        is_active: true,
-      },
-      order: {
-        name: 'ASC',
+        name: UserRolType.PERSON,
       },
     });
 
-    if (allUsersPerson.length === 0) {
-      return new HttpException(
-        `No hay usuarios registrados en la base de datos`,
-        HttpStatus.CONFLICT,
-      );
+    if (userRolePerson) {
+      const allUsersPerson = await this.userRepository.find({
+        where: {
+          role: userRolePerson,
+          is_active: true,
+        },
+        order: {
+          name: 'ASC',
+        },
+      });
+
+      if (!allUsersPerson.length) {
+        return new HttpException(
+          `No hay usuarios registrados en la base de datos`,
+          HttpStatus.CONFLICT,
+        );
+      } else {
+        return allUsersPerson;
+      }
     } else {
-      return allUsersPerson;
+      throw new HttpException(
+        'No hay role creado de "Persona".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getAllUsersEps() {
-    const allUsersEps = await this.userRepository.find({
+    const userRoleEps = await this.userRoleRepository.findOne({
       where: {
-        role: UserRolType.EPS,
-        is_active: true,
-      },
-      order: {
-        name: 'ASC',
+        name: UserRolType.EPS,
       },
     });
 
-    if (allUsersEps.length === 0) {
-      return new HttpException(
-        `No hay usuarios registrados en la base de datos`,
-        HttpStatus.CONFLICT,
-      );
+    if (userRoleEps) {
+      const allUsersEps = await this.userRepository.find({
+        where: {
+          role: userRoleEps,
+          is_active: true,
+        },
+        order: {
+          name: 'ASC',
+        },
+      });
+
+      if (!allUsersEps.length) {
+        return new HttpException(
+          `No hay usuarios registrados en la base de datos`,
+          HttpStatus.CONFLICT,
+        );
+      } else {
+        return allUsersEps;
+      }
     } else {
-      return allUsersEps;
+      throw new HttpException(
+        'No hay role creado de "Eps".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -174,7 +221,13 @@ export class UsersService {
       );
     }
 
-    if (userFound.role !== UserRolType.PERSON) {
+    const userRolePerson = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.PERSON,
+      },
+    });
+
+    if (userFound.user_role !== userRolePerson.id) {
       return new HttpException(
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
@@ -222,7 +275,13 @@ export class UsersService {
       );
     }
 
-    if (userFound.role !== UserRolType.EPS) {
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.EPS,
+      },
+    });
+
+    if (userFound.user_role !== userRoleEps.id) {
       return new HttpException(
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,

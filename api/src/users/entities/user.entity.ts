@@ -1,7 +1,6 @@
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 import {
   Column,
   CreateDateColumn,
@@ -9,9 +8,11 @@ import {
   Entity,
   JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserRole } from 'src/user_roles/entities/user_role.entity';
 
 @Entity()
 export class User {
@@ -54,9 +55,6 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @Column({ enum: UserRolType, default: UserRolType.PERSON })
-  role: UserRolType;
-
   @Column({ nullable: true })
   residence_department: string;
 
@@ -81,6 +79,19 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant)
+  @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant, {
+    eager: true,
+    cascade: true,
+  })
   medical_req: MedicalReq[];
+
+  @OneToOne(() => UserRole, (role) => role.user, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'user_role', referencedColumnName: 'id' })
+  role: UserRole;
+
+  @Column()
+  user_role: number;
 }

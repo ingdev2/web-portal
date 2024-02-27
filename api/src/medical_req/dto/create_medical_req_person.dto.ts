@@ -18,7 +18,6 @@ import {
 } from '../entities/medical_req.entity';
 import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 
 export class CreateMedicalReqPersonDto {
   @IsNotEmpty()
@@ -130,6 +129,5 @@ export class CreateMedicalReqPersonDto {
   aplicantId: string;
 
   @IsOptional()
-  @IsEnum(UserRolType)
-  medicalReqUserType: UserRolType;
+  medicalReqUserType: number;
 }

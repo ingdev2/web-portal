@@ -10,7 +10,6 @@ import {
 } from 'class-validator';
 import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 import { Transform } from 'class-transformer';
 
 export class CreateUserPersonDto {
@@ -75,6 +74,5 @@ export class CreateUserPersonDto {
   residence_neighborhood: string;
 
   @IsNotEmpty()
-  @IsEnum(UserRolType)
-  role: UserRolType;
+  user_role: number;
 }

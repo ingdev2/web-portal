@@ -145,13 +145,10 @@ export class MedicalReq {
   @Column({ type: 'uuid', nullable: true })
   aplicantId: string;
 
-  @Column({ enum: UserRolType, nullable: true })
-  medicalReqUserType: UserRolType;
+  @Column({ nullable: true })
+  medicalReqUserType: number;
 
-  @ManyToOne(() => User, (user) => user.medical_req, {
-    eager: true,
-    cascade: true,
-  })
+  @ManyToOne(() => User, (user) => user.medical_req)
   @JoinColumn({ name: 'aplicantId' })
   aplicant: User;
 }

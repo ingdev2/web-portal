@@ -9,7 +9,6 @@ import {
 } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { User } from 'src/users/entities/user.entity';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
@@ -43,7 +42,7 @@ export class MedicalReqService {
     const userPersonFound = await this.userRepository.findOne({
       where: {
         id: userId,
-        role: UserRolType.PERSON,
+        // role: 1,
       },
     });
 
@@ -57,7 +56,7 @@ export class MedicalReqService {
     const aplicantPersonDetails = new CreateMedicalReqPersonDto();
 
     aplicantPersonDetails.aplicantId = userPersonFound.id;
-    aplicantPersonDetails.medicalReqUserType = userPersonFound.role;
+    // aplicantPersonDetails.medicalReqUserType = userPersonFound.role;
     aplicantPersonDetails.aplicant_name = userPersonFound.name;
     aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
     aplicantPersonDetails.aplicant_gender = userPersonFound.gender;
@@ -220,7 +219,7 @@ export class MedicalReqService {
     const userEpsFound = await this.userRepository.findOne({
       where: {
         id: userId,
-        role: UserRolType.EPS,
+        // role: 2,
       },
     });
 
@@ -234,7 +233,7 @@ export class MedicalReqService {
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
-    aplicantEpsDetails.medicalReqUserType = userEpsFound.role;
+    // aplicantEpsDetails.medicalReqUserType = userEpsFound.role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
     aplicantEpsDetails.aplicant_gender = userEpsFound.gender;
@@ -302,7 +301,7 @@ export class MedicalReqService {
   async getAllMedicalReqPerson() {
     const allMedicalReqPerson = await this.medicalReqRepository.find({
       where: {
-        medicalReqUserType: UserRolType.PERSON,
+        medicalReqUserType: 1,
         is_deleted: false,
       },
       order: {
@@ -323,7 +322,7 @@ export class MedicalReqService {
   async getAllMedicalReqEps() {
     const allMedicalReqEps = await this.medicalReqRepository.find({
       where: {
-        medicalReqUserType: UserRolType.EPS,
+        medicalReqUserType: 2,
         is_deleted: false,
       },
       order: {
@@ -345,7 +344,7 @@ export class MedicalReqService {
     const medicalReqPersonFound = await this.medicalReqRepository.findOne({
       where: {
         id: id,
-        medicalReqUserType: UserRolType.PERSON,
+        medicalReqUserType: 1,
         is_deleted: false,
       },
       order: {
@@ -367,7 +366,7 @@ export class MedicalReqService {
     const medicalReqEpsFound = await this.medicalReqRepository.findOne({
       where: {
         id: id,
-        medicalReqUserType: UserRolType.EPS,
+        medicalReqUserType: 2,
         is_deleted: false,
       },
       order: {

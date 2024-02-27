@@ -1,5 +1,6 @@
+import { User } from 'src/users/entities/user.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class UserRole {
@@ -7,5 +8,8 @@ export class UserRole {
   id: number;
 
   @Column({ enum: UserRolType, default: UserRolType.PERSON })
-  role: UserRolType;
+  name: UserRolType;
+
+  @OneToOne(() => User, (user) => user.role)
+  user: User;
 }
