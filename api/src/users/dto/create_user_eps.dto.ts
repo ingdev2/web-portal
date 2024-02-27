@@ -1,13 +1,10 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsEnum,
   IsNumber,
   IsString,
   MinLength,
 } from 'class-validator';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
 import { Transform } from 'class-transformer';
 
 export class CreateUserEpsDto {
@@ -20,10 +17,6 @@ export class CreateUserEpsDto {
   @IsString()
   @MinLength(5)
   last_name: string;
-
-  @IsNotEmpty()
-  @IsEnum(IdType)
-  id_type: IdType;
 
   @IsNotEmpty()
   @IsNumber()
@@ -52,4 +45,7 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   user_gender: number;
+
+  @IsNotEmpty()
+  user_id_type: number;
 }

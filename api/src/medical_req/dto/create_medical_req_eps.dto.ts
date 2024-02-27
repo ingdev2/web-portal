@@ -10,8 +10,6 @@ import {
   IsEmail,
 } from 'class-validator';
 import { RequirementType, RequestStatus } from '../entities/medical_req.entity';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
 
 export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
@@ -30,8 +28,7 @@ export class CreateMedicalReqEpsDto {
   aplicant_gender: number;
 
   @IsOptional()
-  @IsEnum(IdType)
-  aplicant_id_type: IdType;
+  aplicant_id_type: number;
 
   @IsOptional()
   @IsNumber()
@@ -50,8 +47,7 @@ export class CreateMedicalReqEpsDto {
   aplicant_company_area: string;
 
   @IsNotEmpty()
-  @IsEnum(IdType)
-  patient_id_type: IdType;
+  patient_id_type: number;
 
   @IsNotEmpty()
   @IsNumber()

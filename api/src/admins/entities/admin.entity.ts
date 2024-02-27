@@ -1,4 +1,3 @@
-import { IdType } from '../../common/enums/id_type.enum';
 import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
 import {
   Column,
@@ -12,6 +11,7 @@ import {
 } from 'typeorm';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
 
 @Entity()
 export class Admin {
@@ -23,9 +23,6 @@ export class Admin {
 
   @Column({ type: 'text' })
   last_name: string;
-
-  @Column({ enum: IdType })
-  id_type: IdType;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
@@ -67,4 +64,11 @@ export class Admin {
 
   @Column()
   admin_gender: number;
+
+  @ManyToOne(() => IdTypeEntity, (id_type) => id_type.admin)
+  @JoinColumn({ name: 'admin_id_type', referencedColumnName: 'id' })
+  id_type: IdTypeEntity;
+
+  @Column()
+  admin_id_type: number;
 }

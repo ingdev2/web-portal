@@ -1,6 +1,4 @@
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -13,7 +11,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { GenderType } from 'src/genders/entities/gender.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
 
 @Entity()
 export class User {
@@ -34,9 +33,6 @@ export class User {
 
   @Column({ nullable: true })
   company_area: string;
-
-  @Column({ enum: IdType })
-  id_type: IdType;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
@@ -99,4 +95,11 @@ export class User {
 
   @Column()
   user_gender: number;
+
+  @ManyToOne(() => IdTypeEntity, (id_type) => id_type.user)
+  @JoinColumn({ name: 'user_id_type', referencedColumnName: 'id' })
+  id_type: IdTypeEntity;
+
+  @Column()
+  user_id_type: number;
 }

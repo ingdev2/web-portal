@@ -65,8 +65,8 @@ export class MedicalReq {
   @Column({ nullable: true })
   aplicant_gender: number;
 
-  @Column({ enum: IdType, nullable: true })
-  aplicant_id_type: IdType;
+  @Column({ nullable: true })
+  aplicant_id_type: number;
 
   @Column({ type: 'bigint', nullable: true })
   aplicant_id_number: number;
@@ -86,8 +86,8 @@ export class MedicalReq {
   @Column({ enum: RelationshipWithPatient, nullable: true })
   relationship_with_patient: RelationshipWithPatient;
 
-  @Column({ enum: IdType })
-  patient_id_type: IdType;
+  @Column()
+  patient_id_type: number;
 
   @Column({ type: 'bigint' })
   patient_id_number: number;

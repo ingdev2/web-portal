@@ -16,8 +16,6 @@ import {
   RequestStatus,
   PatientClassificationStatus,
 } from '../entities/medical_req.entity';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
 
 export class CreateMedicalReqPersonDto {
   @IsNotEmpty()
@@ -44,8 +42,7 @@ export class CreateMedicalReqPersonDto {
   aplicant_gender: number;
 
   @IsOptional()
-  @IsEnum(IdType)
-  aplicant_id_type: IdType;
+  aplicant_id_type: number;
 
   @IsOptional()
   @IsNumber()
@@ -64,8 +61,7 @@ export class CreateMedicalReqPersonDto {
   relationship_with_patient: RelationshipWithPatient;
 
   @IsNotEmpty()
-  @IsEnum(IdType)
-  patient_id_type: IdType;
+  patient_id_type: number;
 
   @IsNotEmpty()
   @IsNumber()

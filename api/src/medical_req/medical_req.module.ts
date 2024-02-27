@@ -7,11 +7,11 @@ import { User } from '../users/entities/user.entity';
 import { UsersModule } from '../users/users.module';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
 import { UserRole } from '../user_roles/entities/user_role.entity';
-import { AdminRole } from 'src/admin_roles/entities/admin_role.entity';
+import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MedicalReq, User, UserRole]),
+    TypeOrmModule.forFeature([MedicalReq, User, UserRole, IdTypeEntity]),
     UsersModule,
     NodemailerModule,
   ],

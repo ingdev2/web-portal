@@ -22,6 +22,7 @@ import {
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from 'src/nodemailer/constants/email_config.constant';
 import { UserRolType } from 'src/common/enums/user_roles.enum';
+import { IdTypeEntity } from 'src/id_types/entities/id_type.entity';
 
 @Injectable()
 export class MedicalReqService {
@@ -32,10 +33,12 @@ export class MedicalReqService {
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
 
+    @InjectRepository(IdTypeEntity)
+    private userIdTypeRepository: Repository<IdTypeEntity>,
+
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private nodemailerService: NodemailerService,
-    private usersService: UsersService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -78,7 +81,7 @@ export class MedicalReqService {
     aplicantPersonDetails.aplicant_name = userPersonFound.name;
     aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
     aplicantPersonDetails.aplicant_gender = userPersonFound.user_gender;
-    aplicantPersonDetails.aplicant_id_type = userPersonFound.id_type;
+    aplicantPersonDetails.aplicant_id_type = userPersonFound.user_id_type;
     aplicantPersonDetails.aplicant_id_number = userPersonFound.id_number;
     aplicantPersonDetails.aplicant_email = userPersonFound.email;
     aplicantPersonDetails.aplicant_cellphone = userPersonFound.cellphone;
@@ -200,6 +203,19 @@ export class MedicalReqService {
       }
     }
 
+    const userIdType = await this.userIdTypeRepository.findOne({
+      where: {
+        id: medicalReqPerson.patient_id_type,
+      },
+    });
+
+    if (!userIdType) {
+      throw new HttpException(
+        'El tipo de documento de identidad del paciente no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const createMedicalReqPerson =
       await this.medicalReqRepository.save(medicalReqPerson);
 
@@ -268,7 +284,7 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
     aplicantEpsDetails.aplicant_gender = userEpsFound.user_gender;
-    aplicantEpsDetails.aplicant_id_type = userEpsFound.id_type;
+    aplicantEpsDetails.aplicant_id_type = userEpsFound.user_id_type;
     aplicantEpsDetails.aplicant_id_number = userEpsFound.id_number;
     aplicantEpsDetails.aplicant_email = userEpsFound.email;
     aplicantEpsDetails.aplicant_company_name = userEpsFound.company_name;
@@ -276,6 +292,19 @@ export class MedicalReqService {
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;
+
+    const userIdType = await this.userIdTypeRepository.findOne({
+      where: {
+        id: medicalReqEps.patient_id_type,
+      },
+    });
+
+    if (!userIdType) {
+      throw new HttpException(
+        'El tipo de documento de identidad del paciente no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const createMedicalReq =
       await this.medicalReqRepository.save(medicalReqEps);
