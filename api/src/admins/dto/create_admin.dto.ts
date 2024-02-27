@@ -8,7 +8,6 @@ import {
 import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
 import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 export class CreateAdminDto {
   @IsNotEmpty()
@@ -43,6 +42,5 @@ export class CreateAdminDto {
   company_area: AdminCompanyArea;
 
   @IsNotEmpty()
-  @IsEnum(AdminRolType)
-  role: AdminRolType;
+  admin_role: number;
 }

@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { UserRolType } from 'src/common/enums/user_roles.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 
 export class CreateUserRoleDto {
   @IsNotEmpty()

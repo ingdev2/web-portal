@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
-import { Repository } from 'typeorm';
-import { CreateAdminDto } from '../dto/create_admin.dto';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
+import { CreateAdminDto } from '../dto/create_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
+import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 
 import * as bcryptjs from 'bcryptjs';
 
@@ -13,6 +14,8 @@ import * as bcryptjs from 'bcryptjs';
 export class AdminsService {
   constructor(
     @InjectRepository(Admin) private adminRepository: Repository<Admin>,
+    @InjectRepository(AdminRole)
+    private adminRoleRepository: Repository<AdminRole>,
   ) {}
 
   // CREATE FUNTIONS //
@@ -31,14 +34,23 @@ export class AdminsService {
       );
     }
 
-    const newSuperAdmin = await this.adminRepository.create(superAdmin);
+    const adminRoleSuperAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        id: superAdmin.admin_role,
+        name: AdminRolType.SUPER_ADMIN,
+      },
+    });
 
-    if (newSuperAdmin.role !== 'Super Admin') {
+    if (!adminRoleSuperAdmin) {
       throw new HttpException(
-        'El admin debe tener el rol "Super Admin".',
-        HttpStatus.CONFLICT,
+        'El administrador debe tener el rol "Super Admin".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    const newSuperAdmin = await this.adminRepository.create(superAdmin);
+
+    newSuperAdmin.admin_role = adminRoleSuperAdmin.id;
 
     return await this.adminRepository.save(newSuperAdmin);
   }
@@ -57,14 +69,23 @@ export class AdminsService {
       );
     }
 
-    const newAdmin = await this.adminRepository.create(admin);
+    const adminRoleAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        id: admin.admin_role,
+        name: AdminRolType.ADMIN,
+      },
+    });
 
-    if (newAdmin.role !== 'Admin') {
+    if (!adminRoleAdmin) {
       throw new HttpException(
-        'El admin debe tener el rol "Admin".',
-        HttpStatus.CONFLICT,
+        'El administrador debe tener el rol "Admin".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    const newAdmin = await this.adminRepository.create(admin);
+
+    newAdmin.admin_role = adminRoleAdmin.id;
 
     return await this.adminRepository.save(newAdmin);
   }
@@ -72,31 +93,50 @@ export class AdminsService {
   // GET FUNTIONS //
 
   async getAllAdmins() {
-    const allAdmins = await this.adminRepository.find({
+    const adminRoleAdmin = await this.adminRoleRepository.findOne({
       where: {
-        role: AdminRolType.ADMIN,
-        is_active: true,
-      },
-      order: {
-        name: 'ASC',
+        name: AdminRolType.ADMIN,
       },
     });
 
-    if (allAdmins.length === 0) {
-      return new HttpException(
-        `No hay admins registrados en la base de datos`,
-        HttpStatus.CONFLICT,
-      );
+    if (adminRoleAdmin) {
+      const allAdmins = await this.adminRepository.find({
+        where: {
+          role: adminRoleAdmin,
+          is_active: true,
+        },
+        order: {
+          name: 'ASC',
+        },
+      });
+
+      if (!allAdmins.length) {
+        return new HttpException(
+          `No hay administradores registrados en la base de datos`,
+          HttpStatus.CONFLICT,
+        );
+      } else {
+        return allAdmins;
+      }
     } else {
-      return allAdmins;
+      throw new HttpException(
+        'No hay role creado de "Admin".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getAdminById(id: number) {
+    const adminRoleAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.ADMIN,
+      },
+    });
+
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
-        role: AdminRolType.ADMIN,
+        admin_role: adminRoleAdmin.id,
         is_active: true,
       },
     });
@@ -112,10 +152,16 @@ export class AdminsService {
   }
 
   async getSuperAdminByIdNumber(idNumber: number) {
+    const adminRoleSuperAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.SUPER_ADMIN,
+      },
+    });
+
     const superAdminFound = await this.adminRepository.findOne({
       where: {
         id_number: idNumber,
-        role: AdminRolType.SUPER_ADMIN,
+        admin_role: adminRoleSuperAdmin.id,
         is_active: true,
       },
     });
@@ -131,10 +177,16 @@ export class AdminsService {
   }
 
   async getAdminByIdNumber(idNumber: number) {
+    const adminRoleAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.ADMIN,
+      },
+    });
+
     const adminFound = await this.adminRepository.findOne({
       where: {
         id_number: idNumber,
-        role: AdminRolType.ADMIN,
+        admin_role: adminRoleAdmin.id,
         is_active: true,
       },
     });
@@ -172,9 +224,15 @@ export class AdminsService {
       );
     }
 
-    if (adminFound.role !== AdminRolType.ADMIN) {
+    const adminRoleAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.ADMIN,
+      },
+    });
+
+    if (adminFound.admin_role !== adminRoleAdmin.id) {
       return new HttpException(
-        `No tienes permiso para actualizar este administrador.`,
+        `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
       );
     }
@@ -216,7 +274,6 @@ export class AdminsService {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
-        role: AdminRolType.ADMIN,
       },
     });
 
@@ -224,6 +281,19 @@ export class AdminsService {
       return new HttpException(
         `El admin con número de ID: ${id} no esta registrado.`,
         HttpStatus.CONFLICT,
+      );
+    }
+
+    const adminRoleAdmin = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.ADMIN,
+      },
+    });
+
+    if (adminFound.admin_role !== adminRoleAdmin.id) {
+      return new HttpException(
+        `No tienes permiso para actualizar este usuario.`,
+        HttpStatus.UNAUTHORIZED,
       );
     }
 

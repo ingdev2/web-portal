@@ -1,15 +1,17 @@
 import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
 import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 
 @Entity()
 export class Admin {
@@ -40,9 +42,6 @@ export class Admin {
   @Column({ enum: AdminCompanyArea })
   company_area: AdminCompanyArea;
 
-  @Column({ enum: AdminRolType, default: AdminRolType.ADMIN })
-  role: AdminRolType;
-
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
 
@@ -54,4 +53,14 @@ export class Admin {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToOne(() => AdminRole, (role) => role.admin, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'admin_role', referencedColumnName: 'id' })
+  role: AdminRole;
+
+  @Column()
+  admin_role: number;
 }

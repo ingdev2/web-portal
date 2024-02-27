@@ -12,7 +12,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from 'src/user_roles/entities/user_role.entity';
+import { UserRole } from '../../user_roles/entities/user_role.entity';
 
 @Entity()
 export class User {

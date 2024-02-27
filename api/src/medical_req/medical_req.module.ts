@@ -7,6 +7,7 @@ import { User } from '../users/entities/user.entity';
 import { UsersModule } from '../users/users.module';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
 import { UserRole } from '../user_roles/entities/user_role.entity';
+import { AdminRole } from 'src/admin_roles/entities/admin_role.entity';
 
 @Module({
   imports: [

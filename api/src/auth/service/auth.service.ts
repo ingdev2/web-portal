@@ -29,7 +29,7 @@ export class AuthService {
     corporate_email,
     password,
     company_area,
-    role,
+    admin_role,
   }: CreateSuperAdminDto) {
     await this.adminsService.getSuperAdminByIdNumber(id_number);
 
@@ -42,7 +42,7 @@ export class AuthService {
       corporate_email,
       password: await bcryptjs.hash(password, 10),
       company_area,
-      role,
+      admin_role,
     });
   }
 
@@ -55,7 +55,7 @@ export class AuthService {
     corporate_email,
     password,
     company_area,
-    role,
+    admin_role,
   }: CreateAdminDto) {
     await this.adminsService.getAdminByIdNumber(id_number);
 
@@ -68,7 +68,7 @@ export class AuthService {
       corporate_email,
       password: await bcryptjs.hash(password, 10),
       company_area,
-      role,
+      admin_role,
     });
   }
 
