@@ -77,7 +77,7 @@ export class MedicalReqService {
     aplicantPersonDetails.medicalReqUserType = userPersonFound.user_role;
     aplicantPersonDetails.aplicant_name = userPersonFound.name;
     aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
-    aplicantPersonDetails.aplicant_gender = userPersonFound.gender;
+    aplicantPersonDetails.aplicant_gender = userPersonFound.user_gender;
     aplicantPersonDetails.aplicant_id_type = userPersonFound.id_type;
     aplicantPersonDetails.aplicant_id_number = userPersonFound.id_number;
     aplicantPersonDetails.aplicant_email = userPersonFound.email;
@@ -267,7 +267,7 @@ export class MedicalReqService {
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
-    aplicantEpsDetails.aplicant_gender = userEpsFound.gender;
+    aplicantEpsDetails.aplicant_gender = userEpsFound.user_gender;
     aplicantEpsDetails.aplicant_id_type = userEpsFound.id_type;
     aplicantEpsDetails.aplicant_id_number = userEpsFound.id_number;
     aplicantEpsDetails.aplicant_email = userEpsFound.email;

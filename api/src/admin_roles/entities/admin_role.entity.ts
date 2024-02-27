@@ -1,6 +1,6 @@
 import { Admin } from 'src/admins/entities/admin.entity';
 import { AdminRolType } from 'src/common/enums/admin_roles.enum';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class AdminRole {
@@ -10,6 +10,6 @@ export class AdminRole {
   @Column({ enum: AdminRolType, default: AdminRolType.ADMIN })
   name: AdminRolType;
 
-  @OneToOne(() => Admin, (admin) => admin.role)
-  admin: Admin;
+  @OneToMany(() => Admin, (admin) => admin.role)
+  admin: Admin[];
 }

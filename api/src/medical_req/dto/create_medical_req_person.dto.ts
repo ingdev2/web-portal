@@ -41,8 +41,7 @@ export class CreateMedicalReqPersonDto {
   aplicant_last_name: string;
 
   @IsOptional()
-  @IsEnum(Gender)
-  aplicant_gender: Gender;
+  aplicant_gender: number;
 
   @IsOptional()
   @IsEnum(IdType)

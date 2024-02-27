@@ -24,10 +24,6 @@ export class CreateUserPersonDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsEnum(Gender)
-  gender: Gender;
-
-  @IsNotEmpty()
   @IsDateString()
   birthay_date: Date;
 
@@ -75,4 +71,7 @@ export class CreateUserPersonDto {
 
   @IsNotEmpty()
   user_role: number;
+
+  @IsNotEmpty()
+  user_gender: number;
 }

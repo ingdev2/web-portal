@@ -5,7 +5,6 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
 import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
 
@@ -17,10 +16,6 @@ export class CreateSuperAdminDto {
   @IsNotEmpty()
   @IsString()
   last_name: string;
-
-  @IsNotEmpty()
-  @IsEnum(Gender)
-  gender: Gender;
 
   @IsNotEmpty()
   @IsEnum(IdType)
@@ -43,4 +38,7 @@ export class CreateSuperAdminDto {
 
   @IsNotEmpty()
   admin_role: number;
+
+  @IsNotEmpty()
+  admin_gender: number;
 }

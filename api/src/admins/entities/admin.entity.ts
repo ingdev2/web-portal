@@ -1,4 +1,3 @@
-import { Gender } from '../../common/enums/gender.enum';
 import { IdType } from '../../common/enums/id_type.enum';
 import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
 import {
@@ -7,11 +6,12 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
 
 @Entity()
 export class Admin {
@@ -23,9 +23,6 @@ export class Admin {
 
   @Column({ type: 'text' })
   last_name: string;
-
-  @Column({ enum: Gender })
-  gender: Gender;
 
   @Column({ enum: IdType })
   id_type: IdType;
@@ -54,7 +51,7 @@ export class Admin {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne(() => AdminRole, (role) => role.admin, {
+  @ManyToOne(() => AdminRole, (role) => role.admin, {
     eager: true,
     cascade: true,
   })
@@ -63,4 +60,11 @@ export class Admin {
 
   @Column()
   admin_role: number;
+
+  @ManyToOne(() => GenderType, (gender) => gender.admin)
+  @JoinColumn({ name: 'admin_gender', referencedColumnName: 'id' })
+  gender: GenderType;
+
+  @Column()
+  admin_gender: number;
 }

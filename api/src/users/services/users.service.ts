@@ -51,8 +51,6 @@ export class UsersService {
 
     const newUserPerson = await this.userRepository.create(userPerson);
 
-    newUserPerson.user_role = userRolePerson.id;
-
     return await this.userRepository.save(newUserPerson);
   }
 
@@ -85,8 +83,6 @@ export class UsersService {
     }
 
     const newUserEps = await this.userRepository.create(userEps);
-
-    newUserEps.user_role = userRoleEps.id;
 
     return await this.userRepository.save(newUserEps);
   }

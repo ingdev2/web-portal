@@ -23,7 +23,7 @@ export class AuthService {
   async registerSuperAdmin({
     name,
     last_name,
-    gender,
+    admin_gender,
     id_type,
     id_number,
     corporate_email,
@@ -36,7 +36,7 @@ export class AuthService {
     return await this.adminsService.createSuperAdmin({
       name,
       last_name,
-      gender,
+      admin_gender,
       id_type,
       id_number,
       corporate_email,
@@ -49,7 +49,7 @@ export class AuthService {
   async registerAdmin({
     name,
     last_name,
-    gender,
+    admin_gender,
     id_type,
     id_number,
     corporate_email,
@@ -62,7 +62,7 @@ export class AuthService {
     return await this.adminsService.createAdmin({
       name,
       last_name,
-      gender,
+      admin_gender,
       id_type,
       id_number,
       corporate_email,
@@ -75,7 +75,7 @@ export class AuthService {
   async registerUserPerson({
     name,
     last_name,
-    gender,
+    user_gender,
     birthay_date,
     id_type,
     id_number,
@@ -94,7 +94,7 @@ export class AuthService {
     return await this.usersService.createUserPerson({
       name,
       last_name,
-      gender,
+      user_gender,
       birthay_date,
       id_type,
       id_number,
@@ -113,7 +113,7 @@ export class AuthService {
   async registerUserEps({
     name,
     last_name,
-    gender,
+    user_gender,
     id_type,
     id_number,
     company_name,
@@ -127,7 +127,7 @@ export class AuthService {
     return await this.usersService.createUserEps({
       name,
       last_name,
-      gender,
+      user_gender,
       id_type,
       id_number,
       company_name,

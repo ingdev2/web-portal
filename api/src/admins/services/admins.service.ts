@@ -50,8 +50,6 @@ export class AdminsService {
 
     const newSuperAdmin = await this.adminRepository.create(superAdmin);
 
-    newSuperAdmin.admin_role = adminRoleSuperAdmin.id;
-
     return await this.adminRepository.save(newSuperAdmin);
   }
 
@@ -84,8 +82,6 @@ export class AdminsService {
     }
 
     const newAdmin = await this.adminRepository.create(admin);
-
-    newAdmin.admin_role = adminRoleAdmin.id;
 
     return await this.adminRepository.save(newAdmin);
   }

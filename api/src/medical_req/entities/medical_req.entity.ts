@@ -62,8 +62,8 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   aplicant_last_name: string;
 
-  @Column({ type: 'text', nullable: true })
-  aplicant_gender: string;
+  @Column({ nullable: true })
+  aplicant_gender: number;
 
   @Column({ enum: IdType, nullable: true })
   aplicant_id_type: IdType;

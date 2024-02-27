@@ -22,10 +22,6 @@ export class CreateUserEpsDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsEnum(Gender)
-  gender: Gender;
-
-  @IsNotEmpty()
   @IsEnum(IdType)
   id_type: IdType;
 
@@ -53,4 +49,7 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   user_role: number;
+
+  @IsNotEmpty()
+  user_gender: number;
 }

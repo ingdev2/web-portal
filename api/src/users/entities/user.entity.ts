@@ -7,12 +7,13 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
+import { GenderType } from 'src/genders/entities/gender.entity';
 
 @Entity()
 export class User {
@@ -24,9 +25,6 @@ export class User {
 
   @Column({ type: 'text' })
   last_name: string;
-
-  @Column({ enum: Gender })
-  gender: Gender;
 
   @Column({ type: 'date', nullable: true })
   birthay_date: Date;
@@ -85,7 +83,7 @@ export class User {
   })
   medical_req: MedicalReq[];
 
-  @OneToOne(() => UserRole, (role) => role.user, {
+  @ManyToOne(() => UserRole, (role) => role.user, {
     eager: true,
     cascade: true,
   })
@@ -94,4 +92,11 @@ export class User {
 
   @Column()
   user_role: number;
+
+  @ManyToOne(() => GenderType, (gender) => gender.user)
+  @JoinColumn({ name: 'user_gender', referencedColumnName: 'id' })
+  gender: GenderType;
+
+  @Column()
+  user_gender: number;
 }
