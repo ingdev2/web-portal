@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MedicalReq, RequestStatus } from '../entities/medical_req.entity';
+import { MedicalReq, RequirementStatus } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { User } from '../../users/entities/user.entity';
@@ -559,7 +559,7 @@ export class MedicalReqService {
     id: string,
     newStatusMedicalReq: UpdateStatusMedicalReqDto,
   ) {
-    if (newStatusMedicalReq.request_status === RequestStatus.DELIVERED) {
+    if (newStatusMedicalReq.request_status === RequirementStatus.DELIVERED) {
       const currentDate = new Date();
 
       const sevenDaysLater = new Date();

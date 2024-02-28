@@ -1,10 +1,10 @@
 import { IsNotEmpty, IsEnum, IsOptional, IsDateString } from 'class-validator';
-import { RequestStatus } from '../entities/medical_req.entity';
+import { RequirementStatus } from '../entities/medical_req.entity';
 
 export class UpdateStatusMedicalReqDto {
   @IsNotEmpty()
-  @IsEnum(RequestStatus)
-  request_status: RequestStatus;
+  @IsEnum(RequirementStatus)
+  request_status: RequirementStatus;
 
   @IsOptional()
   @IsDateString()

@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum RequestStatus {
+export enum RequirementStatus {
   PENDING = 'Pendiente',
   DELIVERED = 'Entregada',
   REJECTED = 'Rechazada',
@@ -94,8 +94,8 @@ export class MedicalReq {
   @Column({ type: 'date', nullable: true })
   download_expiration_date: Date;
 
-  @Column({ enum: RequestStatus, default: RequestStatus.PENDING })
-  request_status: RequestStatus;
+  @Column({ enum: RequirementStatus, default: RequirementStatus.PENDING })
+  request_status: RequirementStatus;
 
   @Column({ type: 'boolean', default: false })
   is_deleted: boolean;

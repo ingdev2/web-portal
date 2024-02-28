@@ -10,7 +10,7 @@ import {
   IsArray,
   IsEmail,
 } from 'class-validator';
-import { RequestStatus } from '../entities/medical_req.entity';
+import { RequirementStatus } from '../entities/medical_req.entity';
 
 export class CreateMedicalReqPersonDto {
   @IsNotEmpty()
@@ -104,8 +104,8 @@ export class CreateMedicalReqPersonDto {
   download_expiration_date: Date;
 
   @IsOptional()
-  @IsEnum(RequestStatus)
-  request_status: RequestStatus;
+  @IsEnum(RequirementStatus)
+  request_status: RequirementStatus;
 
   @IsOptional()
   @IsBoolean()
