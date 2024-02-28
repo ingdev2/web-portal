@@ -1,6 +1,7 @@
 import { User } from '../../users/entities/user.entity';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
-import { PatientClassStatus } from 'src/patient_class_status/entities/patient_class_status.entity';
+import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
+import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
 import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import {
   Column,
@@ -12,13 +13,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum RequirementStatus {
-  PENDING = 'Pendiente',
-  DELIVERED = 'Entregada',
-  REJECTED = 'Rechazada',
-  EXPIRED = 'Expirada',
-}
 
 @Entity()
 export class MedicalReq {
@@ -94,9 +88,6 @@ export class MedicalReq {
   @Column({ type: 'date', nullable: true })
   download_expiration_date: Date;
 
-  @Column({ enum: RequirementStatus, default: RequirementStatus.PENDING })
-  request_status: RequirementStatus;
-
   @Column({ type: 'boolean', default: false })
   is_deleted: boolean;
 
@@ -156,4 +147,11 @@ export class MedicalReq {
 
   @Column({ nullable: true })
   relationship_with_patient: number;
+
+  @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
+  @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })
+  req_status: RequirementStatus;
+
+  @Column({ nullable: true })
+  requirement_status: number;
 }

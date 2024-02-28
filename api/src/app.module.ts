@@ -18,6 +18,7 @@ import { CompanyAreaModule } from './company_area/company_area.module';
 import { RequirementTypeModule } from './requirement_type/requirement_type.module';
 import { PatientClassStatusModule } from './patient_class_status/patient_class_status.module';
 import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module';
+import { RequirementStatusModule } from './requirement_status/requirement_status.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module
     RequirementTypeModule,
     PatientClassStatusModule,
     RelWithPatientModule,
+    RequirementStatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],

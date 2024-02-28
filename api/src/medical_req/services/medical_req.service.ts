@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MedicalReq, RequirementStatus } from '../entities/medical_req.entity';
+import { MedicalReq } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { User } from '../../users/entities/user.entity';
@@ -19,10 +19,12 @@ import {
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
+import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
 import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
 import { PatientClassificationStatus } from '../enums/patient_classification_status.enum';
 import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';
+import { RequirementStatusEnum } from '../enums/requirement_status.enum';
 
 @Injectable()
 export class MedicalReqService {
@@ -38,6 +40,9 @@ export class MedicalReqService {
 
     @InjectRepository(RequirementType)
     private medicalReqTypeRepository: Repository<IdTypeEntity>,
+
+    @InjectRepository(RequirementStatus)
+    private requerimentStatusRepository: Repository<RequirementStatus>,
 
     @InjectRepository(PatientClassStatus)
     private patientClassStatusRepository: Repository<PatientClassStatus>,
@@ -102,14 +107,12 @@ export class MedicalReqService {
     const {
       right_petition,
       copy_right_petition,
-      relationship_with_patient,
       copy_patient_citizenship_card,
       copy_patient_civil_registration,
       copy_applicant_citizenship_card,
       copy_parents_citizenship_card,
       copy_cohabitation_certificate,
       copy_marriage_certificate,
-      patient_class_status,
     } = medicalReqPerson;
 
     const minorDocuments =
@@ -263,12 +266,32 @@ export class MedicalReqService {
       );
     }
 
+    const reqStatusPending = await this.requerimentStatusRepository.findOne({
+      where: { name: RequirementStatusEnum.PENDING },
+    });
+
+    if (!reqStatusPending) {
+      throw new HttpException(
+        'El estado "Pendiente" de requerimiento no existe',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const insertStatusPending = new CreateMedicalReqPersonDto();
+
+    insertStatusPending.requirement_status = reqStatusPending.id;
+
     const createMedicalReqPerson =
       await this.medicalReqRepository.save(medicalReqPerson);
 
     await this.medicalReqRepository.update(
       createMedicalReqPerson.id,
       aplicantPersonDetails,
+    );
+
+    await this.medicalReqRepository.update(
+      createMedicalReqPerson.id,
+      insertStatusPending,
     );
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
@@ -368,12 +391,32 @@ export class MedicalReqService {
       );
     }
 
+    const reqStatusPending = await this.requerimentStatusRepository.findOne({
+      where: { name: RequirementStatusEnum.PENDING },
+    });
+
+    if (!reqStatusPending) {
+      throw new HttpException(
+        'El estado "Pendiente" de requerimiento no existe',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const insertStatusPending = new CreateMedicalReqEpsDto();
+
+    insertStatusPending.requirement_status = reqStatusPending.id;
+
     const createMedicalReq =
       await this.medicalReqRepository.save(medicalReqEps);
 
     await this.medicalReqRepository.update(
       createMedicalReq.id,
       aplicantEpsDetails,
+    );
+
+    await this.medicalReqRepository.update(
+      createMedicalReq.id,
+      insertStatusPending,
     );
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
@@ -559,7 +602,20 @@ export class MedicalReqService {
     id: string,
     newStatusMedicalReq: UpdateStatusMedicalReqDto,
   ) {
-    if (newStatusMedicalReq.request_status === RequirementStatus.DELIVERED) {
+    const requirementStatus = await this.requerimentStatusRepository.findOne({
+      where: { id: newStatusMedicalReq.requirement_status },
+    });
+
+    if (!requirementStatus) {
+      throw new HttpException(
+        'El estado de requerimiento no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const requerimentStatusName = requirementStatus.name;
+
+    if (requerimentStatusName === RequirementStatusEnum.DELIVERED) {
       const currentDate = new Date();
 
       const sevenDaysLater = new Date();
@@ -576,7 +632,7 @@ export class MedicalReqService {
       newStatusMedicalReq,
     );
 
-    const updatedMedicalReq = await this.medicalReqRepository.findOne({
+    const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
       where: {
         id: id,
       },
@@ -584,16 +640,17 @@ export class MedicalReqService {
 
     const sendReqTypeName =
       await this.requirementTypeService.getRequirementTypeById(
-        updatedMedicalReq.requirement_type,
+        updatedMedicalReqFound.requirement_type,
       );
 
     const emailDetailsToSend = new SendEmailDto();
 
-    emailDetailsToSend.recipients = [updatedMedicalReq.aplicant_email];
-    emailDetailsToSend.userName = updatedMedicalReq.aplicant_name;
-    emailDetailsToSend.medicalReqFilingNumber = updatedMedicalReq.filing_number;
+    emailDetailsToSend.recipients = [updatedMedicalReqFound.aplicant_email];
+    emailDetailsToSend.userName = updatedMedicalReqFound.aplicant_name;
+    emailDetailsToSend.medicalReqFilingNumber =
+      updatedMedicalReqFound.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
-    emailDetailsToSend.requestStatusReq = updatedMedicalReq.request_status;
+    emailDetailsToSend.requestStatusReq = requerimentStatusName;
     emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
 

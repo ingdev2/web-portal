@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { RelationshipWithPatient } from 'src/medical_req/enums/relationship_with_patient.enum';
+import { RelationshipWithPatient } from '../../medical_req/enums/relationship_with_patient.enum';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 
 @Entity()
