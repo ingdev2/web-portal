@@ -10,11 +10,7 @@ import {
   IsArray,
   IsEmail,
 } from 'class-validator';
-import {
-  RelationshipWithPatient,
-  RequestStatus,
-  PatientClassificationStatus,
-} from '../entities/medical_req.entity';
+import { RequestStatus } from '../entities/medical_req.entity';
 
 export class CreateMedicalReqPersonDto {
   @IsNotEmpty()
@@ -55,8 +51,7 @@ export class CreateMedicalReqPersonDto {
   aplicant_cellphone: number;
 
   @IsNotEmpty()
-  @IsEnum(RelationshipWithPatient)
-  relationship_with_patient: RelationshipWithPatient;
+  relationship_with_patient: number;
 
   @IsNotEmpty()
   patient_id_type: number;
@@ -66,8 +61,7 @@ export class CreateMedicalReqPersonDto {
   patient_id_number: number;
 
   @IsNotEmpty()
-  @IsEnum(PatientClassificationStatus)
-  patient_class_status: PatientClassificationStatus;
+  patient_class_status: number;
 
   @IsOptional()
   @IsDateString()

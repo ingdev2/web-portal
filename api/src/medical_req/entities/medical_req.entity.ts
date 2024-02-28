@@ -1,5 +1,7 @@
-import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
 import { User } from '../../users/entities/user.entity';
+import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
+import { PatientClassStatus } from 'src/patient_class_status/entities/patient_class_status.entity';
+import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,20 +12,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum PatientClassificationStatus {
-  YOUNGER = 'Menor de edad',
-  ADULT = 'Adulto',
-  DECEASED = 'Fallecido',
-}
-
-export enum RelationshipWithPatient {
-  PARENT = 'Padre/Madre',
-  SON = 'Hijo(a)',
-  BROTHER = 'Hermano(a)',
-  SPOUSE = 'Esposo(a)',
-  FAMILIAR = 'Familiar',
-}
 
 export enum RequestStatus {
   PENDING = 'Pendiente',
@@ -70,9 +58,6 @@ export class MedicalReq {
   @Column({ nullable: true })
   aplicant_company_area: number;
 
-  @Column({ enum: RelationshipWithPatient, nullable: true })
-  relationship_with_patient: RelationshipWithPatient;
-
   @Column()
   patient_id_type: number;
 
@@ -81,9 +66,6 @@ export class MedicalReq {
 
   @Column({ type: 'date', nullable: true })
   patient_id_exp_date: Date;
-
-  @Column({ enum: PatientClassificationStatus, nullable: true })
-  patient_class_status: PatientClassificationStatus;
 
   @Column({ type: 'text', array: true, nullable: true })
   copy_applicant_citizenship_card: string[];
@@ -146,4 +128,32 @@ export class MedicalReq {
 
   @Column()
   requirement_type: number;
+
+  @ManyToOne(
+    () => PatientClassStatus,
+    (patient_class) => patient_class.medical_req,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
+  @JoinColumn({ name: 'patient_class_status', referencedColumnName: 'id' })
+  patient_class: PatientClassStatus;
+
+  @Column({ nullable: true })
+  patient_class_status: number;
+
+  @ManyToOne(
+    () => RelWithPatient,
+    (rel_with_patient) => rel_with_patient.medical_req,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
+  @JoinColumn({ name: 'relationship_with_patient', referencedColumnName: 'id' })
+  rel_with_patient: RelWithPatient;
+
+  @Column({ nullable: true })
+  relationship_with_patient: number;
 }

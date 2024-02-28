@@ -16,6 +16,8 @@ import { GenderTypeModule } from './genders/genders.module';
 import { IdTypesModule } from './id_types/id_types.module';
 import { CompanyAreaModule } from './company_area/company_area.module';
 import { RequirementTypeModule } from './requirement_type/requirement_type.module';
+import { PatientClassStatusModule } from './patient_class_status/patient_class_status.module';
+import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { RequirementTypeModule } from './requirement_type/requirement_type.modul
     IdTypesModule,
     CompanyAreaModule,
     RequirementTypeModule,
+    PatientClassStatusModule,
+    RelWithPatientModule,
   ],
   controllers: [AppController],
   providers: [AppService],

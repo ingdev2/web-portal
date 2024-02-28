@@ -18,7 +18,6 @@ export class MedicalReqController {
 
   // POST METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(UserRolType.PERSON)
   @Post('/createMedicalReqPerson/:userId')
   async createMedicalReqPerson(
@@ -32,7 +31,6 @@ export class MedicalReqController {
     );
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(UserRolType.EPS)
   @Post('/createMedicalReqEps/:userId')
   async createMedicalReqEps(
@@ -48,44 +46,36 @@ export class MedicalReqController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqUsers')
   async getAllMedicalReqUsers() {
     return await this.medicalReqService.getAllMedicalReqUsers();
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqPerson')
   async getAllMedicalReqPerson() {
     return await this.medicalReqService.getAllMedicalReqPerson();
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqEps')
   async getAllMedicalReqEps() {
     return await this.medicalReqService.getAllMedicalReqEps();
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
-  @Auth(AdminRolType.ADMIN)
-  @Auth(UserRolType.PERSON)
+  @Auth(AdminRolType.ADMIN, UserRolType.PERSON)
   @Get('/medicalReqPerson/:id')
   async getMedicalReqPersonById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPersonById(id);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
-  @Auth(AdminRolType.ADMIN)
-  @Auth(UserRolType.EPS)
+  @Auth(AdminRolType.ADMIN, UserRolType.EPS)
   @Get('/medicalReqEps/:id')
   async getMedicalReqEpsById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqEpsById(id);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Get('/medicalReq/:filing_number')
   async getMedicalReqByFilingNumber(
@@ -98,7 +88,6 @@ export class MedicalReqController {
 
   // PATCH METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Patch('/updateStatus/:id')
   async updateStatus(
@@ -108,7 +97,6 @@ export class MedicalReqController {
     return await this.medicalReqService.updateStatus(id, newStatus);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Patch('/deleted/:id')
   async deletedMedicalReq(@Param('id') id: string) {

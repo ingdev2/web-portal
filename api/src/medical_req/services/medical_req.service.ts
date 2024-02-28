@@ -1,12 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  MedicalReq,
-  PatientClassificationStatus,
-  RelationshipWithPatient,
-  RequestStatus,
-} from '../entities/medical_req.entity';
+import { MedicalReq, RequestStatus } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { User } from '../../users/entities/user.entity';
@@ -24,6 +19,10 @@ import {
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
+import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
+import { PatientClassificationStatus } from '../enums/patient_classification_status.enum';
+import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
+import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';
 
 @Injectable()
 export class MedicalReqService {
@@ -39,6 +38,12 @@ export class MedicalReqService {
 
     @InjectRepository(RequirementType)
     private medicalReqTypeRepository: Repository<IdTypeEntity>,
+
+    @InjectRepository(PatientClassStatus)
+    private patientClassStatusRepository: Repository<PatientClassStatus>,
+
+    @InjectRepository(RelWithPatient)
+    private relWithPatientRepository: Repository<RelWithPatient>,
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -136,8 +141,21 @@ export class MedicalReqService {
       );
     }
 
+    const patientClassStatus = await this.patientClassStatusRepository.findOne({
+      where: { id: medicalReqPerson.patient_class_status },
+    });
+
+    if (!patientClassStatus) {
+      throw new HttpException(
+        'La clasificación de paciente no es valida',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const patientClassStatusName = patientClassStatus.name;
+
     if (
-      patient_class_status === PatientClassificationStatus.YOUNGER &&
+      patientClassStatusName === PatientClassificationStatus.YOUNGER &&
       !minorDocuments
     ) {
       throw new HttpException(
@@ -147,7 +165,7 @@ export class MedicalReqService {
     }
 
     if (
-      patient_class_status === PatientClassificationStatus.ADULT &&
+      patientClassStatusName === PatientClassificationStatus.ADULT &&
       !adultDocuments
     ) {
       return new HttpException(
@@ -156,9 +174,22 @@ export class MedicalReqService {
       );
     }
 
-    if (patient_class_status === PatientClassificationStatus.DECEASED) {
+    const relWithPatient = await this.relWithPatientRepository.findOne({
+      where: { id: medicalReqPerson.relationship_with_patient },
+    });
+
+    if (!relWithPatient) {
+      throw new HttpException(
+        'El parentesco con el paciente no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const relWithPatientName = relWithPatient.name;
+
+    if (patientClassStatusName === PatientClassificationStatus.DECEASED) {
       if (
-        relationship_with_patient === RelationshipWithPatient.PARENT &&
+        relWithPatientName === RelationshipWithPatient.PARENT &&
         !documentsDeceasedParents
       ) {
         return new HttpException(
@@ -168,7 +199,7 @@ export class MedicalReqService {
       }
 
       if (
-        relationship_with_patient === RelationshipWithPatient.SON &&
+        relWithPatientName === RelationshipWithPatient.SON &&
         !documentsDeceasedSon
       ) {
         return new HttpException(
@@ -178,7 +209,7 @@ export class MedicalReqService {
       }
 
       if (
-        relationship_with_patient === RelationshipWithPatient.SPOUSE &&
+        relWithPatientName === RelationshipWithPatient.SPOUSE &&
         !documentsDeceasedSpouse
       ) {
         return new HttpException(
@@ -188,7 +219,7 @@ export class MedicalReqService {
       }
 
       if (
-        relationship_with_patient === RelationshipWithPatient.BROTHER &&
+        relWithPatientName === RelationshipWithPatient.BROTHER &&
         !documentsDeceasedFamiliar
       ) {
         return new HttpException(
@@ -198,7 +229,7 @@ export class MedicalReqService {
       }
 
       if (
-        relationship_with_patient === RelationshipWithPatient.FAMILIAR &&
+        relWithPatientName === RelationshipWithPatient.FAMILIAR &&
         !documentsDeceasedFamiliar
       ) {
         return new HttpException(
@@ -565,8 +596,6 @@ export class MedicalReqService {
     emailDetailsToSend.requestStatusReq = updatedMedicalReq.request_status;
     emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
-
-    console.log(emailDetailsToSend);
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 

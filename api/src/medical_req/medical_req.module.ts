@@ -9,6 +9,8 @@ import { UserRole } from '../user_roles/entities/user_role.entity';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
 import { RequirementTypeModule } from '../requirement_type/requirement_type.module';
 import { RequirementType } from '../requirement_type/entities/requirement_type.entity';
+import { PatientClassStatus } from '../patient_class_status/entities/patient_class_status.entity';
+import { RelWithPatient } from '../rel_with_patient/entities/rel_with_patient.entity';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { RequirementType } from '../requirement_type/entities/requirement_type.e
       UserRole,
       IdTypeEntity,
       RequirementType,
+      PatientClassStatus,
+      RelWithPatient,
     ]),
     NodemailerModule,
     RequirementTypeModule,
