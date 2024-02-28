@@ -9,12 +9,11 @@ import {
   IsUUID,
   IsEmail,
 } from 'class-validator';
-import { RequirementType, RequestStatus } from '../entities/medical_req.entity';
+import { RequestStatus } from '../entities/medical_req.entity';
 
 export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
-  @IsEnum(RequirementType)
-  requirement_type: RequirementType;
+  requirement_type: number;
 
   @IsOptional()
   @IsString()

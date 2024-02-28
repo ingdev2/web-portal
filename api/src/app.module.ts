@@ -15,6 +15,7 @@ import { AdminRolesModule } from './admin_roles/admin_roles.module';
 import { GenderTypeModule } from './genders/genders.module';
 import { IdTypesModule } from './id_types/id_types.module';
 import { CompanyAreaModule } from './company_area/company_area.module';
+import { RequirementTypeModule } from './requirement_type/requirement_type.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CompanyAreaModule } from './company_area/company_area.module';
     GenderTypeModule,
     IdTypesModule,
     CompanyAreaModule,
+    RequirementTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

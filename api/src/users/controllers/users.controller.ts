@@ -39,6 +39,7 @@ export class UsersController {
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(UserRolType.PERSON)
   @Patch('/updatePerson/:id')
   async updateUserPerson(
@@ -48,6 +49,7 @@ export class UsersController {
     return await this.usersService.updateUserPerson(id, user);
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(UserRolType.EPS)
   @Patch('/updateEps/:id')
   async updateUserEps(@Param('id') id: string, @Body() user: UpdateUserEpsDto) {

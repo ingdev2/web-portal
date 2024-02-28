@@ -8,11 +8,12 @@ import {
   RequestStatus,
 } from '../entities/medical_req.entity';
 import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
+import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import {
   MEDICAL_REQ_CREATED,
@@ -22,6 +23,7 @@ import {
 } from '../../nodemailer/constants/email_config.constant';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
 
 @Injectable()
 export class MedicalReqService {
@@ -35,9 +37,13 @@ export class MedicalReqService {
     @InjectRepository(IdTypeEntity)
     private userIdTypeRepository: Repository<IdTypeEntity>,
 
+    @InjectRepository(RequirementType)
+    private medicalReqTypeRepository: Repository<IdTypeEntity>,
+
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private nodemailerService: NodemailerService,
+    private readonly requirementTypeService: RequirementTypeService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -215,6 +221,17 @@ export class MedicalReqService {
       );
     }
 
+    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+      where: { id: medicalReqPerson.requirement_type },
+    });
+
+    if (!medicalReqType) {
+      throw new HttpException(
+        'El tipo de requerimiento médico no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const createMedicalReqPerson =
       await this.medicalReqRepository.save(medicalReqPerson);
 
@@ -230,13 +247,18 @@ export class MedicalReqService {
       },
     });
 
+    const sendReqTypeName =
+      await this.requirementTypeService.getRequirementTypeById(
+        medicalReqCompleted.requirement_type,
+      );
+
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
-    emailDetailsToSend.requirementType = medicalReqCompleted.requirement_type;
+    emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
 
@@ -304,6 +326,17 @@ export class MedicalReqService {
       );
     }
 
+    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+      where: { id: medicalReqEps.requirement_type },
+    });
+
+    if (!medicalReqType) {
+      throw new HttpException(
+        'El tipo de requerimiento médico no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const createMedicalReq =
       await this.medicalReqRepository.save(medicalReqEps);
 
@@ -319,13 +352,18 @@ export class MedicalReqService {
       },
     });
 
+    const sendReqTypeName =
+      await this.requirementTypeService.getRequirementTypeById(
+        medicalReqCompleted.requirement_type,
+      );
+
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
-    emailDetailsToSend.requirementType = medicalReqCompleted.requirement_type;
+    emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
 
@@ -513,12 +551,17 @@ export class MedicalReqService {
       },
     });
 
+    const sendReqTypeName =
+      await this.requirementTypeService.getRequirementTypeById(
+        updatedMedicalReq.requirement_type,
+      );
+
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [updatedMedicalReq.aplicant_email];
     emailDetailsToSend.userName = updatedMedicalReq.aplicant_name;
     emailDetailsToSend.medicalReqFilingNumber = updatedMedicalReq.filing_number;
-    emailDetailsToSend.requirementType = updatedMedicalReq.requirement_type;
+    emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.requestStatusReq = updatedMedicalReq.request_status;
     emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;

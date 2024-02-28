@@ -32,6 +32,7 @@ export class AdminsController {
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Auth(AdminRolType.ADMIN)
   @Patch('/updateAdmin/:id')
   async updateAdmin(

@@ -1,5 +1,5 @@
+import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
 import { User } from '../../users/entities/user.entity';
-import { IdType } from '../../common/enums/id_type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -10,13 +10,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum RequirementType {
-  MEDICAL_RESULTS = 'Resultados Médicos',
-  CLINIC_HISTORY = 'Historia Clínica',
-  MEDICAL_ORDER = 'Orden Médica',
-  MEDICAL_DISABILITY = 'Incapacidad Médica',
-}
 
 export enum PatientClassificationStatus {
   YOUNGER = 'Menor de edad',
@@ -46,9 +39,6 @@ export class MedicalReq {
 
   @Column({ generated: 'uuid' })
   filing_number: string;
-
-  @Column()
-  requirement_type: RequirementType;
 
   @Column({ type: 'boolean', default: false })
   right_petition: boolean;
@@ -146,4 +136,14 @@ export class MedicalReq {
   @ManyToOne(() => User, (user) => user.medical_req)
   @JoinColumn({ name: 'aplicantId' })
   aplicant: User;
+
+  @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'requirement_type', referencedColumnName: 'id' })
+  req_type: RequirementType;
+
+  @Column()
+  requirement_type: number;
 }

@@ -11,7 +11,6 @@ import {
   IsEmail,
 } from 'class-validator';
 import {
-  RequirementType,
   RelationshipWithPatient,
   RequestStatus,
   PatientClassificationStatus,
@@ -19,8 +18,7 @@ import {
 
 export class CreateMedicalReqPersonDto {
   @IsNotEmpty()
-  @IsEnum(RequirementType)
-  requirement_type: RequirementType;
+  requirement_type: number;
 
   @IsNotEmpty()
   @IsBoolean()
