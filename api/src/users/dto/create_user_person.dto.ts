@@ -1,16 +1,12 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
   IsDateString,
   MinLength,
 } from 'class-validator';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 import { Transform } from 'class-transformer';
 
 export class CreateUserPersonDto {
@@ -25,16 +21,8 @@ export class CreateUserPersonDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsEnum(Gender)
-  gender: Gender;
-
-  @IsNotEmpty()
   @IsDateString()
   birthay_date: Date;
-
-  @IsNotEmpty()
-  @IsEnum(IdType)
-  id_type: IdType;
 
   @IsNotEmpty()
   @IsNumber()
@@ -74,7 +62,12 @@ export class CreateUserPersonDto {
   @IsString()
   residence_neighborhood: string;
 
+  @IsOptional()
+  user_role: number;
+
   @IsNotEmpty()
-  @IsEnum(UserRolType)
-  role: UserRolType;
+  user_gender: number;
+
+  @IsNotEmpty()
+  user_id_type: number;
 }

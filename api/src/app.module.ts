@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 require('dotenv').config();
 
 import { UsersModule } from './users/users.module';
@@ -9,6 +10,15 @@ import { AdminsModule } from './admins/admins.module';
 import { MedicalReqModule } from './medical_req/medical_req.module';
 import { AuthModule } from './auth/auth.module';
 import { NodemailerModule } from './nodemailer/nodemailer.module';
+import { UserRolesModule } from './user_roles/user_roles.module';
+import { AdminRolesModule } from './admin_roles/admin_roles.module';
+import { GenderTypeModule } from './genders/genders.module';
+import { IdTypesModule } from './id_types/id_types.module';
+import { CompanyAreaModule } from './company_area/company_area.module';
+import { RequirementTypeModule } from './requirement_type/requirement_type.module';
+import { PatientClassStatusModule } from './patient_class_status/patient_class_status.module';
+import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module';
+import { RequirementStatusModule } from './requirement_status/requirement_status.module';
 
 @Module({
   imports: [
@@ -28,6 +38,15 @@ import { NodemailerModule } from './nodemailer/nodemailer.module';
     MedicalReqModule,
     AuthModule,
     NodemailerModule,
+    UserRolesModule,
+    AdminRolesModule,
+    GenderTypeModule,
+    IdTypesModule,
+    CompanyAreaModule,
+    RequirementTypeModule,
+    PatientClassStatusModule,
+    RelWithPatientModule,
+    RequirementStatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,0 +1,15 @@
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { RequirementTypeEnum } from '../../medical_req/enums/requirement_type.enum';
+import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
+
+@Entity()
+export class RequirementType {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ enum: RequirementTypeEnum })
+  name: RequirementTypeEnum;
+
+  @OneToMany(() => MedicalReq, (medical_req) => medical_req.req_type)
+  medical_req: MedicalReq[];
+}

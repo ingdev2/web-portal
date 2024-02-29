@@ -1,15 +1,17 @@
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
-import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
 export class Admin {
@@ -22,12 +24,6 @@ export class Admin {
   @Column({ type: 'text' })
   last_name: string;
 
-  @Column({ enum: Gender })
-  gender: Gender;
-
-  @Column({ enum: IdType })
-  id_type: IdType;
-
   @Column({ type: 'bigint', unique: true })
   id_number: number;
 
@@ -36,12 +32,6 @@ export class Admin {
 
   @Column({ select: false })
   password: string;
-
-  @Column({ enum: AdminCompanyArea })
-  company_area: AdminCompanyArea;
-
-  @Column({ enum: AdminRolType, default: AdminRolType.ADMIN })
-  role: AdminRolType;
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
@@ -54,4 +44,35 @@ export class Admin {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToOne(() => AdminRole, (role) => role.admin, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'admin_role', referencedColumnName: 'id' })
+  role: AdminRole;
+
+  @Column()
+  admin_role: number;
+
+  @ManyToOne(() => GenderType, (gender) => gender.admin)
+  @JoinColumn({ name: 'admin_gender', referencedColumnName: 'id' })
+  gender: GenderType;
+
+  @Column()
+  admin_gender: number;
+
+  @ManyToOne(() => IdTypeEntity, (id_type) => id_type.admin)
+  @JoinColumn({ name: 'admin_id_type', referencedColumnName: 'id' })
+  id_type: IdTypeEntity;
+
+  @Column()
+  admin_id_type: number;
+
+  @ManyToOne(() => CompanyArea, (companyArea) => companyArea.admin)
+  @JoinColumn({ name: 'company_area', referencedColumnName: 'id' })
+  companyArea: CompanyArea;
+
+  @Column()
+  company_area: number;
 }

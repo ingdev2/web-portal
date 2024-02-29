@@ -1,6 +1,8 @@
 import { User } from '../../users/entities/user.entity';
-import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
+import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
+import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
+import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
+import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,34 +14,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum RequirementType {
-  MEDICAL_RESULTS = 'Resultados Médicos',
-  CLINIC_HISTORY = 'Historia Clínica',
-  MEDICAL_ORDER = 'Orden Médica',
-  MEDICAL_DISABILITY = 'Incapacidad Médica',
-}
-
-export enum PatientClassificationStatus {
-  YOUNGER = 'Menor de edad',
-  ADULT = 'Adulto',
-  DECEASED = 'Fallecido',
-}
-
-export enum RelationshipWithPatient {
-  PARENT = 'Padre/Madre',
-  SON = 'Hijo(a)',
-  BROTHER = 'Hermano(a)',
-  SPOUSE = 'Esposo(a)',
-  FAMILIAR = 'Familiar',
-}
-
-export enum RequestStatus {
-  PENDING = 'Pendiente',
-  DELIVERED = 'Entregada',
-  REJECTED = 'Rechazada',
-  EXPIRED = 'Expirada',
-}
-
 @Entity()
 export class MedicalReq {
   @PrimaryGeneratedColumn('uuid')
@@ -47,9 +21,6 @@ export class MedicalReq {
 
   @Column({ generated: 'uuid' })
   filing_number: string;
-
-  @Column()
-  requirement_type: RequirementType;
 
   @Column({ type: 'boolean', default: false })
   right_petition: boolean;
@@ -63,11 +34,11 @@ export class MedicalReq {
   @Column({ type: 'text', nullable: true })
   aplicant_last_name: string;
 
-  @Column({ type: 'text', nullable: true })
-  aplicant_gender: string;
+  @Column({ nullable: true })
+  aplicant_gender: number;
 
-  @Column({ enum: IdType, nullable: true })
-  aplicant_id_type: IdType;
+  @Column({ nullable: true })
+  aplicant_id_type: number;
 
   @Column({ type: 'bigint', nullable: true })
   aplicant_id_number: number;
@@ -79,25 +50,16 @@ export class MedicalReq {
   aplicant_cellphone: number;
 
   @Column({ nullable: true })
-  aplicant_company_name: string;
+  aplicant_company_area: number;
 
-  @Column({ nullable: true })
-  aplicant_company_area: string;
-
-  @Column({ enum: RelationshipWithPatient, nullable: true })
-  relationship_with_patient: RelationshipWithPatient;
-
-  @Column({ enum: IdType })
-  patient_id_type: IdType;
+  @Column()
+  patient_id_type: number;
 
   @Column({ type: 'bigint' })
   patient_id_number: number;
 
   @Column({ type: 'date', nullable: true })
   patient_id_exp_date: Date;
-
-  @Column({ enum: PatientClassificationStatus, nullable: true })
-  patient_class_status: PatientClassificationStatus;
 
   @Column({ type: 'text', array: true, nullable: true })
   copy_applicant_citizenship_card: string[];
@@ -126,9 +88,6 @@ export class MedicalReq {
   @Column({ type: 'date', nullable: true })
   download_expiration_date: Date;
 
-  @Column({ enum: RequestStatus, default: RequestStatus.PENDING })
-  request_status: RequestStatus;
-
   @Column({ type: 'boolean', default: false })
   is_deleted: boolean;
 
@@ -144,10 +103,55 @@ export class MedicalReq {
   @Column({ type: 'uuid', nullable: true })
   aplicantId: string;
 
-  @Column({ enum: UserRolType, nullable: true })
-  medicalReqUserType: UserRolType;
+  @Column({ nullable: true })
+  medicalReqUserType: number;
 
   @ManyToOne(() => User, (user) => user.medical_req)
-  @JoinColumn()
+  @JoinColumn({ name: 'aplicantId' })
   aplicant: User;
+
+  @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'requirement_type', referencedColumnName: 'id' })
+  req_type: RequirementType;
+
+  @Column()
+  requirement_type: number;
+
+  @ManyToOne(
+    () => PatientClassStatus,
+    (patient_class) => patient_class.medical_req,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
+  @JoinColumn({ name: 'patient_class_status', referencedColumnName: 'id' })
+  patient_class: PatientClassStatus;
+
+  @Column({ nullable: true })
+  patient_class_status: number;
+
+  @ManyToOne(
+    () => RelWithPatient,
+    (rel_with_patient) => rel_with_patient.medical_req,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
+  @JoinColumn({ name: 'relationship_with_patient', referencedColumnName: 'id' })
+  rel_with_patient: RelWithPatient;
+
+  @Column({ nullable: true })
+  relationship_with_patient: number;
+
+  @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
+  @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })
+  req_status: RequirementStatus;
+
+  @Column({ nullable: true })
+  requirement_status: number;
 }

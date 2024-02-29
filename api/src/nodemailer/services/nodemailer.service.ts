@@ -4,7 +4,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import {
   DEFAULT_EMAIL_FROM,
   NAME_EMAIL_FROM,
-} from 'src/nodemailer/constants/email_config.constant';
+} from '../../nodemailer/constants/email_config.constant';
 
 @Injectable()
 export class NodemailerService {

@@ -9,15 +9,10 @@ import {
   IsUUID,
   IsEmail,
 } from 'class-validator';
-import { RequirementType, RequestStatus } from '../entities/medical_req.entity';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 
 export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
-  @IsEnum(RequirementType)
-  requirement_type: RequirementType;
+  requirement_type: number;
 
   @IsOptional()
   @IsString()
@@ -28,12 +23,10 @@ export class CreateMedicalReqEpsDto {
   aplicant_last_name: string;
 
   @IsOptional()
-  @IsEnum(Gender)
-  aplicant_gender: Gender;
+  aplicant_gender: number;
 
   @IsOptional()
-  @IsEnum(IdType)
-  aplicant_id_type: IdType;
+  aplicant_id_type: number;
 
   @IsOptional()
   @IsNumber()
@@ -48,12 +41,11 @@ export class CreateMedicalReqEpsDto {
   aplicant_company_name: string;
 
   @IsOptional()
-  @IsString()
-  aplicant_company_area: string;
+  @IsNumber()
+  aplicant_company_area: number;
 
   @IsNotEmpty()
-  @IsEnum(IdType)
-  patient_id_type: IdType;
+  patient_id_type: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -76,8 +68,7 @@ export class CreateMedicalReqEpsDto {
   download_expiration_date: Date;
 
   @IsOptional()
-  @IsEnum(RequestStatus)
-  request_status: RequestStatus;
+  requirement_status: number;
 
   @IsOptional()
   @IsBoolean()
@@ -88,6 +79,5 @@ export class CreateMedicalReqEpsDto {
   aplicantId: string;
 
   @IsOptional()
-  @IsEnum(UserRolType)
-  medicalReqUserType: UserRolType;
+  medicalReqUserType: number;
 }

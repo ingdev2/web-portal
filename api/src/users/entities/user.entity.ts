@@ -1,17 +1,19 @@
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserRole } from '../../user_roles/entities/user_role.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
 export class User {
@@ -24,20 +26,11 @@ export class User {
   @Column({ type: 'text' })
   last_name: string;
 
-  @Column({ enum: Gender })
-  gender: Gender;
-
-  @Column({ type: 'date', nullable: true })
-  birthay_date: Date;
-
   @Column({ nullable: true })
   company_name: string;
 
-  @Column({ nullable: true })
-  company_area: string;
-
-  @Column({ enum: IdType })
-  id_type: IdType;
+  @Column({ type: 'date', nullable: true })
+  birthay_date: Date;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
@@ -53,9 +46,6 @@ export class User {
 
   @Column({ select: false })
   password: string;
-
-  @Column({ enum: UserRolType, default: UserRolType.PERSON })
-  role: UserRolType;
 
   @Column({ nullable: true })
   residence_department: string;
@@ -81,7 +71,40 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant)
-  @JoinColumn()
+  @OneToMany(() => MedicalReq, (medical_req) => medical_req.aplicant, {
+    eager: true,
+    cascade: true,
+  })
   medical_req: MedicalReq[];
+
+  @ManyToOne(() => UserRole, (role) => role.user, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'user_role', referencedColumnName: 'id' })
+  role: UserRole;
+
+  @Column()
+  user_role: number;
+
+  @ManyToOne(() => GenderType, (gender) => gender.user)
+  @JoinColumn({ name: 'user_gender', referencedColumnName: 'id' })
+  gender: GenderType;
+
+  @Column()
+  user_gender: number;
+
+  @ManyToOne(() => IdTypeEntity, (id_type) => id_type.user)
+  @JoinColumn({ name: 'user_id_type', referencedColumnName: 'id' })
+  id_type: IdTypeEntity;
+
+  @Column()
+  user_id_type: number;
+
+  @ManyToOne(() => CompanyArea, (companyArea) => companyArea.user)
+  @JoinColumn({ name: 'company_area', referencedColumnName: 'id' })
+  companyArea: CompanyArea;
+
+  @Column({ nullable: true })
+  company_area: number;
 }

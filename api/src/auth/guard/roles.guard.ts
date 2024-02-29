@@ -10,8 +10,7 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<
-      UserRolType[],
-      AdminRolType[]
+      (AdminRolType | UserRolType)[]
     >(ROLES_KEY, [context.getHandler(), context.getClass()]);
 
     if (!requiredRoles) {
@@ -20,10 +19,18 @@ export class RolesGuard implements CanActivate {
 
     const { user } = context.switchToHttp().getRequest();
 
-    if (user.role === AdminRolType.SUPER_ADMIN) {
+    if (!user || !user.role || !user.role.name) {
+      return false;
+    }
+
+    if (user.role.name === AdminRolType.SUPER_ADMIN) {
       return true;
     }
 
-    return requiredRoles.some((rol) => user.role?.includes(rol));
+    const userRole = user.role.name;
+
+    console.log(userRole);
+
+    return requiredRoles.some((role) => role === userRole);
   }
 }

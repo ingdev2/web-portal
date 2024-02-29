@@ -10,20 +10,10 @@ import {
   IsArray,
   IsEmail,
 } from 'class-validator';
-import {
-  RequirementType,
-  RelationshipWithPatient,
-  RequestStatus,
-  PatientClassificationStatus,
-} from '../entities/medical_req.entity';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
-import { UserRolType } from '../../common/enums/user_roles.enum';
 
 export class CreateMedicalReqPersonDto {
   @IsNotEmpty()
-  @IsEnum(RequirementType)
-  requirement_type: RequirementType;
+  requirement_type: number;
 
   @IsNotEmpty()
   @IsBoolean()
@@ -42,12 +32,10 @@ export class CreateMedicalReqPersonDto {
   aplicant_last_name: string;
 
   @IsOptional()
-  @IsEnum(Gender)
-  aplicant_gender: Gender;
+  aplicant_gender: number;
 
   @IsOptional()
-  @IsEnum(IdType)
-  aplicant_id_type: IdType;
+  aplicant_id_type: number;
 
   @IsOptional()
   @IsNumber()
@@ -62,20 +50,17 @@ export class CreateMedicalReqPersonDto {
   aplicant_cellphone: number;
 
   @IsNotEmpty()
-  @IsEnum(RelationshipWithPatient)
-  relationship_with_patient: RelationshipWithPatient;
+  relationship_with_patient: number;
 
   @IsNotEmpty()
-  @IsEnum(IdType)
-  patient_id_type: IdType;
+  patient_id_type: number;
 
   @IsNotEmpty()
   @IsNumber()
   patient_id_number: number;
 
   @IsNotEmpty()
-  @IsEnum(PatientClassificationStatus)
-  patient_class_status: PatientClassificationStatus;
+  patient_class_status: number;
 
   @IsOptional()
   @IsDateString()
@@ -118,8 +103,7 @@ export class CreateMedicalReqPersonDto {
   download_expiration_date: Date;
 
   @IsOptional()
-  @IsEnum(RequestStatus)
-  request_status: RequestStatus;
+  requirement_status: number;
 
   @IsOptional()
   @IsBoolean()
@@ -130,6 +114,5 @@ export class CreateMedicalReqPersonDto {
   aplicantId: string;
 
   @IsOptional()
-  @IsEnum(UserRolType)
-  medicalReqUserType: UserRolType;
+  medicalReqUserType: number;
 }

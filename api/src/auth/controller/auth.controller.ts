@@ -1,13 +1,11 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateAdminDto } from 'src/admins/dto/create_admin.dto';
-import { CreateUserPersonDto } from 'src/users/dto/create_user_person.dto';
-import { CreateUserEpsDto } from 'src/users/dto/create_user_eps.dto';
+import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
+import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { LoginDto } from '../dto/login.dto';
-import { Request } from 'express';
-import { Auth } from '../decorators/auth.decorator';
 
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')

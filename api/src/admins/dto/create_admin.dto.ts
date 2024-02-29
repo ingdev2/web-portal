@@ -1,14 +1,10 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsEnum,
   IsNumber,
   IsString,
+  IsOptional,
 } from 'class-validator';
-import { Gender } from '../../common/enums/gender.enum';
-import { IdType } from '../../common/enums/id_type.enum';
-import { AdminCompanyArea } from '../../common/enums/admin_company_area.enum';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 export class CreateAdminDto {
   @IsNotEmpty()
@@ -18,14 +14,6 @@ export class CreateAdminDto {
   @IsNotEmpty()
   @IsString()
   last_name: string;
-
-  @IsNotEmpty()
-  @IsEnum(Gender)
-  gender: Gender;
-
-  @IsNotEmpty()
-  @IsEnum(IdType)
-  id_type: IdType;
 
   @IsNotEmpty()
   @IsNumber()
@@ -39,10 +27,15 @@ export class CreateAdminDto {
   @IsString()
   password: string;
 
-  @IsNotEmpty()
-  company_area: AdminCompanyArea;
+  @IsOptional()
+  admin_role: number;
 
   @IsNotEmpty()
-  @IsEnum(AdminRolType)
-  role: AdminRolType;
+  admin_gender: number;
+
+  @IsNotEmpty()
+  admin_id_type: number;
+
+  @IsNotEmpty()
+  company_area: number;
 }
