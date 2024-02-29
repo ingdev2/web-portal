@@ -62,7 +62,7 @@ export class CreateUserPersonDto {
   @IsString()
   residence_neighborhood: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   user_role: number;
 
   @IsNotEmpty()

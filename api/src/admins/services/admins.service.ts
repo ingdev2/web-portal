@@ -34,23 +34,49 @@ export class AdminsService {
       );
     }
 
+    const roleSuperAdminFound = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.SUPER_ADMIN,
+      },
+    });
+
+    if (!roleSuperAdminFound) {
+      throw new HttpException(
+        'El rol "Super Admin" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const insertRoleAdminSuperAdmin = await this.adminRepository.create({
+      ...superAdmin,
+      admin_role: roleSuperAdminFound.id,
+    });
+
+    const adminSuperAdminWithRole = await this.adminRepository.save(
+      insertRoleAdminSuperAdmin,
+    );
+
     const adminRoleSuperAdmin = await this.adminRoleRepository.findOne({
       where: {
-        id: superAdmin.admin_role,
+        id: adminSuperAdminWithRole.admin_role,
         name: AdminRolType.SUPER_ADMIN,
       },
     });
 
     if (!adminRoleSuperAdmin) {
       throw new HttpException(
-        'El administrador debe tener el rol "Super Admin".',
+        'El usuario debe tener el rol "Super Admin".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    const newSuperAdmin = await this.adminRepository.create(superAdmin);
+    await this.adminRepository.update(adminSuperAdminWithRole.id, superAdmin);
 
-    return await this.adminRepository.save(newSuperAdmin);
+    const newAdminSuperAdmin = await this.adminRepository.findOne({
+      where: { id: adminSuperAdminWithRole.id },
+    });
+
+    return newAdminSuperAdmin;
   }
 
   async createAdmin(admin: CreateAdminDto) {
@@ -67,23 +93,49 @@ export class AdminsService {
       );
     }
 
+    const roleAdminFound = await this.adminRoleRepository.findOne({
+      where: {
+        name: AdminRolType.ADMIN,
+      },
+    });
+
+    if (!roleAdminFound) {
+      throw new HttpException(
+        'El rol "Admin" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const insertRoleAdminInAdmin = await this.adminRepository.create({
+      ...admin,
+      admin_role: roleAdminFound.id,
+    });
+
+    const adminInAdminWithRole = await this.adminRepository.save(
+      insertRoleAdminInAdmin,
+    );
+
     const adminRoleAdmin = await this.adminRoleRepository.findOne({
       where: {
-        id: admin.admin_role,
+        id: adminInAdminWithRole.admin_role,
         name: AdminRolType.ADMIN,
       },
     });
 
     if (!adminRoleAdmin) {
       throw new HttpException(
-        'El administrador debe tener el rol "Admin".',
+        'El usuario debe tener el rol "Admin".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    const newAdmin = await this.adminRepository.create(admin);
+    await this.adminRepository.update(adminInAdminWithRole.id, admin);
 
-    return await this.adminRepository.save(newAdmin);
+    const newAdminInAdmin = await this.adminRepository.findOne({
+      where: { id: adminInAdminWithRole.id },
+    });
+
+    return newAdminInAdmin;
   }
 
   // GET FUNTIONS //

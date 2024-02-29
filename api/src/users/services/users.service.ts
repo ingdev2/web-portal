@@ -35,9 +35,30 @@ export class UsersService {
       );
     }
 
+    const rolePersonFound = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.PERSON,
+      },
+    });
+
+    if (!rolePersonFound) {
+      throw new HttpException(
+        'El rol "Persona" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const insertRoleUserPerson = await this.userRepository.create({
+      ...userPerson,
+      user_role: rolePersonFound.id,
+    });
+
+    const userPersonWithRole =
+      await this.userRepository.save(insertRoleUserPerson);
+
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
-        id: userPerson.user_role,
+        id: userPersonWithRole.user_role,
         name: UserRolType.PERSON,
       },
     });
@@ -49,9 +70,13 @@ export class UsersService {
       );
     }
 
-    const newUserPerson = await this.userRepository.create(userPerson);
+    await this.userRepository.update(userPersonWithRole.id, userPerson);
 
-    return await this.userRepository.save(newUserPerson);
+    const newUserPerson = await this.userRepository.findOne({
+      where: { id: userPersonWithRole.id },
+    });
+
+    return newUserPerson;
   }
 
   async createUserEps(userEps: CreateUserEpsDto) {
@@ -68,9 +93,29 @@ export class UsersService {
       );
     }
 
+    const roleEpsFound = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.EPS,
+      },
+    });
+
+    if (!roleEpsFound) {
+      throw new HttpException(
+        'El rol "Eps" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const insertRoleUserEps = await this.userRepository.create({
+      ...userEps,
+      user_role: roleEpsFound.id,
+    });
+
+    const userEpsWithRole = await this.userRepository.save(insertRoleUserEps);
+
     const userRoleEps = await this.userRoleRepository.findOne({
       where: {
-        id: userEps.user_role,
+        id: userEpsWithRole.user_role,
         name: UserRolType.EPS,
       },
     });
@@ -82,9 +127,13 @@ export class UsersService {
       );
     }
 
-    const newUserEps = await this.userRepository.create(userEps);
+    await this.userRepository.update(userEpsWithRole.id, userEps);
 
-    return await this.userRepository.save(newUserEps);
+    const newUserEps = await this.userRepository.findOne({
+      where: { id: userEpsWithRole.id },
+    });
+
+    return newUserEps;
   }
 
   // GET FUNTIONS //

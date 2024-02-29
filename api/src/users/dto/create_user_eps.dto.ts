@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsString,
   MinLength,
+  IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -36,7 +37,7 @@ export class CreateUserEpsDto {
   @MinLength(7)
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   user_role: number;
 
   @IsNotEmpty()

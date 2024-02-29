@@ -26,6 +26,9 @@ export class User {
   @Column({ type: 'text' })
   last_name: string;
 
+  @Column({ nullable: true })
+  company_name: string;
+
   @Column({ type: 'date', nullable: true })
   birthay_date: Date;
 
