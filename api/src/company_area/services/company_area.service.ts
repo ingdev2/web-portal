@@ -15,13 +15,13 @@ export class CompanyAreaService {
   // CREATE FUNTIONS //
 
   async createCompanyArea(companyArea: CreateCompanyAreaDto) {
-    const companyNameFound = await this.companyAreaRepository.findOne({
+    const companyAreaFound = await this.companyAreaRepository.findOne({
       where: {
         name: companyArea.name,
       },
     });
 
-    if (companyNameFound) {
+    if (companyAreaFound) {
       return new HttpException(
         `El área de empresa: ${companyArea.name} ya está registrada.`,
         HttpStatus.CONFLICT,

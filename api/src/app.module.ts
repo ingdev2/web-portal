@@ -19,6 +19,7 @@ import { RequirementTypeModule } from './requirement_type/requirement_type.modul
 import { PatientClassStatusModule } from './patient_class_status/patient_class_status.module';
 import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module';
 import { RequirementStatusModule } from './requirement_status/requirement_status.module';
+import { EpsCompanyModule } from './eps_company/eps_company.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { RequirementStatusModule } from './requirement_status/requirement_status
     PatientClassStatusModule,
     RelWithPatientModule,
     RequirementStatusModule,
+    EpsCompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

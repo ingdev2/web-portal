@@ -11,9 +11,9 @@ export class CompanyArea {
   @Column({ enum: CompanyAreaEnum })
   name: CompanyAreaEnum;
 
-  @OneToMany(() => Admin, (admin) => admin.companyArea)
+  @OneToMany(() => Admin, (admin) => admin.company_admin_area)
   admin: Admin[];
 
-  @OneToMany(() => User, (user) => user.companyArea)
+  @OneToMany(() => User, (user) => user.company_user_area)
   user: User[];
 }
