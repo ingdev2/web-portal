@@ -13,6 +13,7 @@ import {
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { EpsCompany } from '../../eps_company/entities/eps_company.entity';
 import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
@@ -25,9 +26,6 @@ export class User {
 
   @Column({ type: 'text' })
   last_name: string;
-
-  @Column({ nullable: true })
-  company_name: string;
 
   @Column({ type: 'date', nullable: true })
   birthay_date: Date;
@@ -101,9 +99,16 @@ export class User {
   @Column()
   user_id_type: number;
 
-  @ManyToOne(() => CompanyArea, (companyArea) => companyArea.user)
+  @ManyToOne(() => EpsCompany, (eps) => eps.user)
+  @JoinColumn({ name: 'eps_company', referencedColumnName: 'id' })
+  eps: EpsCompany;
+
+  @Column({ nullable: true })
+  eps_company: number;
+
+  @ManyToOne(() => CompanyArea, (company_user_area) => company_user_area.user)
   @JoinColumn({ name: 'company_area', referencedColumnName: 'id' })
-  companyArea: CompanyArea;
+  company_user_area: CompanyArea;
 
   @Column({ nullable: true })
   company_area: number;

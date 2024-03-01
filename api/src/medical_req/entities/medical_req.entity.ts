@@ -50,6 +50,9 @@ export class MedicalReq {
   aplicant_cellphone: number;
 
   @Column({ nullable: true })
+  aplicant_eps_company: number;
+
+  @Column({ nullable: true })
   aplicant_company_area: number;
 
   @Column()

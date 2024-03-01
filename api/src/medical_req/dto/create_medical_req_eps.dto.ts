@@ -37,8 +37,8 @@ export class CreateMedicalReqEpsDto {
   aplicant_email: string;
 
   @IsOptional()
-  @IsString()
-  aplicant_company_name: string;
+  @IsNumber()
+  aplicant_eps_company: number;
 
   @IsOptional()
   @IsNumber()

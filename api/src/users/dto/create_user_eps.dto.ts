@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsString,
   MinLength,
+  MaxLength,
   IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -24,10 +25,6 @@ export class CreateUserEpsDto {
   id_number: number;
 
   @IsNotEmpty()
-  @MinLength(7)
-  company_name: string;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -45,6 +42,9 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   user_id_type: number;
+
+  @IsNotEmpty()
+  eps_company: number;
 
   @IsNotEmpty()
   company_area: number;

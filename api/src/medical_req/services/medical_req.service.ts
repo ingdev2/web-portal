@@ -316,7 +316,7 @@ export class MedicalReqService {
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
 
-    // await this.nodemailerService.sendEmail(emailDetailsToSend);
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return await medicalReqCompleted;
   }
@@ -362,6 +362,7 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_id_type = userEpsFound.user_id_type;
     aplicantEpsDetails.aplicant_id_number = userEpsFound.id_number;
     aplicantEpsDetails.aplicant_email = userEpsFound.email;
+    aplicantEpsDetails.aplicant_eps_company = userEpsFound.eps_company;
     aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
 
     const currentDate = new Date();
@@ -441,7 +442,7 @@ export class MedicalReqService {
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
 
-    // await this.nodemailerService.sendEmail(emailDetailsToSend);
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return await medicalReqCompleted;
   }

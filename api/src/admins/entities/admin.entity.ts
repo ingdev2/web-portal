@@ -69,9 +69,12 @@ export class Admin {
   @Column()
   admin_id_type: number;
 
-  @ManyToOne(() => CompanyArea, (companyArea) => companyArea.admin)
+  @ManyToOne(
+    () => CompanyArea,
+    (company_admin_area) => company_admin_area.admin,
+  )
   @JoinColumn({ name: 'company_area', referencedColumnName: 'id' })
-  companyArea: CompanyArea;
+  company_admin_area: CompanyArea;
 
   @Column()
   company_area: number;
