@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AdminsService } from '../../admins/services/admins.service';
 import { UsersService } from '../../users/services/users.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
@@ -145,9 +150,8 @@ export class AuthService {
       await this.usersService.getUserFoundByIdNumberWithPassword(id_number);
 
     if (!userFound) {
-      return new HttpException(
+      throw new UnauthorizedException(
         `¡El número de identificación es incorrecto!`,
-        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -157,7 +161,7 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      return new HttpException(`¡Contraseña incorrecta!`, HttpStatus.CONFLICT);
+      throw new UnauthorizedException(`¡Contraseña incorrecta!`);
     }
 
     const payload = { id_number: userFound.id_number, role: userFound.role };
@@ -172,9 +176,8 @@ export class AuthService {
       await this.adminsService.getAdminFoundByIdNumberWithPassword(id_number);
 
     if (!adminFound) {
-      return new HttpException(
+      throw new UnauthorizedException(
         `¡El número de identificación es incorrecto!`,
-        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -184,10 +187,13 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      return new HttpException(`¡Contraseña incorrecta!`, HttpStatus.CONFLICT);
+      throw new UnauthorizedException(`¡Contraseña incorrecta!`);
     }
 
-    const payload = { id_number: adminFound.id_number, role: adminFound.role };
+    const payload = {
+      id_number: adminFound.id_number,
+      role: adminFound.role,
+    };
 
     const token = await this.jwtService.signAsync(payload);
 

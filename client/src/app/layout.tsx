@@ -1,12 +1,33 @@
 import React from "react";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import SessionAuthProvider from "@/context/SessionAuthProvider";
 
-const RootLayout = ({ children }: React.PropsWithChildren) => (
-  <html lang="en">
-    <body>
-      <AntdRegistry>{children}</AntdRegistry>
-    </body>
-  </html>
-);
+const inter = Inter({ subsets: ["latin"] });
 
-export default RootLayout;
+export const metadata: Metadata = {
+  title: "Portal Web PROCED",
+  description: "Hecho con Next.js",
+  icons: {
+    icon: "../../public/logos/favicon.ico.png",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <main className="container">
+          <AntdRegistry>
+            <SessionAuthProvider>{children}</SessionAuthProvider>
+          </AntdRegistry>
+        </main>
+      </body>
+    </html>
+  );
+}
