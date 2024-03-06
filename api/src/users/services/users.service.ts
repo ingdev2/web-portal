@@ -280,21 +280,6 @@ export class UsersService {
       );
     }
 
-    if (userPerson.id_number) {
-      const duplicateUserPerson = await this.userRepository.findOne({
-        where: {
-          id_number: userPerson.id_number,
-        },
-      });
-
-      if (duplicateUserPerson) {
-        return new HttpException(
-          `Número de identificación duplicado.`,
-          HttpStatus.CONFLICT,
-        );
-      }
-    }
-
     const updateUserPerson = await this.userRepository.update(id, userPerson);
 
     if (updateUserPerson.affected === 0) {
@@ -328,21 +313,6 @@ export class UsersService {
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
       );
-    }
-
-    if (userEps.id_number) {
-      const duplicateUserEps = await this.userRepository.findOne({
-        where: {
-          id_number: userEps.id_number,
-        },
-      });
-
-      if (duplicateUserEps) {
-        return new HttpException(
-          `Número de identificación duplicado.`,
-          HttpStatus.CONFLICT,
-        );
-      }
     }
 
     const updateUserEps = await this.userRepository.update(id, userEps);

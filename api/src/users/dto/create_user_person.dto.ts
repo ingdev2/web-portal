@@ -6,6 +6,7 @@ import {
   IsString,
   IsDateString,
   MinLength,
+  MaxLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -29,10 +30,6 @@ export class CreateUserPersonDto {
   id_number: number;
 
   @IsNotEmpty()
-  @IsDateString()
-  id_exp_date: Date;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
 
@@ -44,6 +41,7 @@ export class CreateUserPersonDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(7)
+  @MaxLength(14)
   password: string;
 
   @IsOptional()

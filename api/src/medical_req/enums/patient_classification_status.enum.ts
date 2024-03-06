@@ -1,5 +1,5 @@
 export enum PatientClassificationStatus {
-  YOUNGER = 'Menor de edad',
-  ADULT = 'Adulto',
-  DECEASED = 'Fallecido',
+  YOUNGER = 'MENOR DE EDAD',
+  ADULT = 'ADULTO',
+  DECEASED = 'FALLECIDO',
 }

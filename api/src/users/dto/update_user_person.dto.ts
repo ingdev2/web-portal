@@ -16,18 +16,6 @@ export class UpdateUserPersonDto {
   last_name: string;
 
   @IsOptional()
-  @IsDate()
-  birthay_date: Date;
-
-  @IsOptional()
-  @IsNumber()
-  id_number: number;
-
-  @IsOptional()
-  @IsDate()
-  id_exp_date: Date;
-
-  @IsOptional()
   @IsEmail()
   email: string;
 

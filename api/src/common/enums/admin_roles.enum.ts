@@ -1,4 +1,4 @@
 export enum AdminRolType {
-  SUPER_ADMIN = 'Super Admin',
-  ADMIN = 'Admin',
+  SUPER_ADMIN = 'SUPER ADMIN',
+  ADMIN = 'ADMIN',
 }

@@ -1,6 +1,6 @@
 export enum RequirementStatusEnum {
-  PENDING = 'Pendiente',
-  DELIVERED = 'Entregada',
-  REJECTED = 'Rechazada',
-  EXPIRED = 'Expirada',
+  UNDER_REVIEW = 'EN REVISIÓN',
+  DELIVERED = 'ENTREGADA',
+  REJECTED = 'RECHAZADA',
+  EXPIRED = 'EXPIRADA',
 }

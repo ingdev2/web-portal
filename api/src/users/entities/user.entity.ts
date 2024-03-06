@@ -27,20 +27,17 @@ export class User {
   @Column({ type: 'text' })
   last_name: string;
 
-  @Column({ type: 'date', nullable: true })
-  birthay_date: Date;
-
   @Column({ type: 'bigint', unique: true })
   id_number: number;
-
-  @Column({ type: 'date', nullable: true })
-  id_exp_date: Date;
 
   @Column()
   email: string;
 
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
+
+  @Column({ type: 'date', nullable: true })
+  birthay_date: Date;
 
   @Column({ select: false })
   password: string;
@@ -59,6 +56,9 @@ export class User {
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  accept_terms: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

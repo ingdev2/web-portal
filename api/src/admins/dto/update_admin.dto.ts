@@ -16,4 +16,7 @@ export class UpdateAdminDto {
   @IsOptional()
   @IsEmail()
   corporate_email: string;
+
+  @IsOptional()
+  company_area: number;
 }

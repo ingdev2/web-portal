@@ -10,10 +10,6 @@ export class UpdateUserEpsDto {
   last_name: string;
 
   @IsOptional()
-  @IsNumber()
-  id_number: number;
-
-  @IsOptional()
   company_area: number;
 
   @IsOptional()

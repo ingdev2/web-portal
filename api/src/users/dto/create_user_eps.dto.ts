@@ -32,6 +32,7 @@ export class CreateUserEpsDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(7)
+  @MaxLength(14)
   password: string;
 
   @IsOptional()

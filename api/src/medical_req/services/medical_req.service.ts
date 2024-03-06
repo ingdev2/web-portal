@@ -267,12 +267,12 @@ export class MedicalReqService {
     }
 
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.PENDING },
+      where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
 
     if (!reqStatusPending) {
       throw new HttpException(
-        'El estado "Pendiente" de requerimiento no existe',
+        'El estado "En Revisión" de requerimiento no existe',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -393,12 +393,12 @@ export class MedicalReqService {
     }
 
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.PENDING },
+      where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
 
     if (!reqStatusPending) {
       throw new HttpException(
-        'El estado "Pendiente" de requerimiento no existe',
+        'El estado "En Revisión" de requerimiento no existe',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
