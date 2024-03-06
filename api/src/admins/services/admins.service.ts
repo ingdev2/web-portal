@@ -7,7 +7,7 @@ import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { CreateAdminDto } from '../dto/create_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
-import { UpdatePasswordAdmin } from '../dto/update_password_admin.dto';
+import { UpdatePasswordAdminDto } from '../dto/update_password_admin.dto';
 
 import * as bcryptjs from 'bcryptjs';
 
@@ -313,8 +313,12 @@ export class AdminsService {
     );
   }
 
-  async updateAdminPassword(id: number, passwords: UpdatePasswordAdmin) {
-    const adminFound = await this.adminRepository.findOneBy({ id });
+  async updateAdminPassword(id: number, passwords: UpdatePasswordAdminDto) {
+    const adminFound = await this.adminRepository
+      .createQueryBuilder('admin')
+      .addSelect(['admin.password'])
+      .where('admin.id = :id', { id })
+      .getOne();
 
     if (!adminFound) {
       throw new HttpException(

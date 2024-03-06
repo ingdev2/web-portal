@@ -2,12 +2,13 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
-import { UserRole } from '../../user_roles/entities/user_role.entity';
+import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
 
 import * as bcryptjs from 'bcryptjs';
 
@@ -294,10 +295,6 @@ export class UsersService {
       }
     }
 
-    if (userPerson.password) {
-      userPerson.password = await bcryptjs.hash(userPerson.password, 10);
-    }
-
     const updateUserPerson = await this.userRepository.update(id, userPerson);
 
     if (updateUserPerson.affected === 0) {
@@ -348,10 +345,6 @@ export class UsersService {
       }
     }
 
-    if (userEps.password) {
-      userEps.password = await bcryptjs.hash(userEps.password, 10);
-    }
-
     const updateUserEps = await this.userRepository.update(id, userEps);
 
     if (updateUserEps.affected === 0) {
@@ -360,6 +353,52 @@ export class UsersService {
 
     return new HttpException(
       `¡Datos guardados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  async updateUserPassword(id: string, passwords: UpdatePasswordUserDto) {
+    const userFound = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect(['user.password'])
+      .where('user.id = :id', { id })
+      .getOne();
+
+    if (!userFound) {
+      throw new HttpException(
+        `Usuario no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const isPasswordValid = await bcryptjs.compare(
+      passwords.oldPassword,
+      userFound.password,
+    );
+    if (!isPasswordValid) {
+      throw new HttpException(
+        `Contraseña antigua incorrecta.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const isNewPasswordSameAsOld = await bcryptjs.compare(
+      passwords.newPassword,
+      userFound.password,
+    );
+    if (isNewPasswordSameAsOld) {
+      throw new HttpException(
+        `La nueva contraseña no puede ser igual a la antigua.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const hashedNewPassword = await bcryptjs.hash(passwords.newPassword, 10);
+
+    await this.userRepository.update(id, { password: hashedNewPassword });
+
+    return new HttpException(
+      `Contraseña actualizada correctamente.`,
       HttpStatus.ACCEPTED,
     );
   }

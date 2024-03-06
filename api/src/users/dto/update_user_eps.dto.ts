@@ -19,8 +19,4 @@ export class UpdateUserEpsDto {
   @IsOptional()
   @IsEmail()
   email: string;
-
-  @IsOptional()
-  @IsString()
-  password: string;
 }

@@ -37,10 +37,6 @@ export class UpdateUserPersonDto {
 
   @IsOptional()
   @IsString()
-  password: string;
-
-  @IsOptional()
-  @IsString()
   residence_department: string;
 
   @IsOptional()
