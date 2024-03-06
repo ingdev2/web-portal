@@ -39,7 +39,7 @@ export class UsersController {
 
   // PATCH METHODS //
 
-  @Auth(UserRolType.PERSON)
+  @Auth(UserRolType.PATIENT)
   @Patch('/updatePerson/:id')
   async updateUserPerson(
     @Param('id') id: string,

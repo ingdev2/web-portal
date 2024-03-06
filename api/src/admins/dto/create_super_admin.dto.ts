@@ -4,6 +4,8 @@ import {
   IsNumber,
   IsString,
   IsOptional,
+  MinLength,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateSuperAdminDto {
@@ -25,6 +27,8 @@ export class CreateSuperAdminDto {
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(7)
+  @MaxLength(14)
   password: string;
 
   @IsOptional()

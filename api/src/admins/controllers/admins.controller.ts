@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { AdminsService } from '../services/admins.service';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
+import { UpdatePasswordAdmin } from '../dto/update_password_admin.dto';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
@@ -40,6 +41,17 @@ export class AdminsController {
     @Body() admin: UpdateAdminDto,
   ) {
     return await this.adminsService.updateAdmin(id, admin);
+  }
+
+  @Auth(AdminRolType.ADMIN)
+  @Patch('/updatePassword/:id')
+  async updateAdminPassword(
+    @Param('id')
+    id: number,
+    @Body()
+    passwords: UpdatePasswordAdmin,
+  ) {
+    return await this.adminsService.updateAdminPassword(id, passwords);
   }
 
   @Patch('/banAdmin/:id')

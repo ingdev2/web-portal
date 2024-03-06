@@ -18,7 +18,7 @@ export class MedicalReqController {
 
   // POST METHODS //
 
-  @Auth(UserRolType.PERSON)
+  @Auth(UserRolType.PATIENT)
   @Post('/createMedicalReqPerson/:userId')
   async createMedicalReqPerson(
     @Param('userId') userId: string,
@@ -64,7 +64,7 @@ export class MedicalReqController {
     return await this.medicalReqService.getAllMedicalReqEps();
   }
 
-  @Auth(AdminRolType.ADMIN, UserRolType.PERSON)
+  @Auth(AdminRolType.ADMIN, UserRolType.PATIENT)
   @Get('/medicalReqPerson/:id')
   async getMedicalReqPersonById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPersonById(id);

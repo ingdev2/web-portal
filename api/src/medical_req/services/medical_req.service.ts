@@ -78,13 +78,13 @@ export class MedicalReqService {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
         id: userPersonFound.user_role,
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 
     if (!userRolePerson) {
       throw new HttpException(
-        'El usuario debe tener el rol "Persona".',
+        'El usuario debe tener el rol "Paciente".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -472,7 +472,7 @@ export class MedicalReqService {
   async getAllMedicalReqPerson() {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 
@@ -526,7 +526,7 @@ export class MedicalReqService {
   async getMedicalReqPersonById(id: string) {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 

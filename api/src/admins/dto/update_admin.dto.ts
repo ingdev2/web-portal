@@ -16,8 +16,4 @@ export class UpdateAdminDto {
   @IsOptional()
   @IsEmail()
   corporate_email: string;
-
-  @IsOptional()
-  @IsString()
-  password: string;
 }

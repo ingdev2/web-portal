@@ -37,13 +37,13 @@ export class UsersService {
 
     const rolePersonFound = await this.userRoleRepository.findOne({
       where: {
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 
     if (!rolePersonFound) {
       throw new HttpException(
-        'El rol "Persona" no existe.',
+        'El rol "Paciente" no existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -59,13 +59,13 @@ export class UsersService {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
         id: userPersonWithRole.user_role,
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 
     if (!userRolePerson) {
       throw new HttpException(
-        'El usuario debe tener el rol "Persona".',
+        'El usuario debe tener el rol "Paciente".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -141,7 +141,7 @@ export class UsersService {
   async getAllUsersPerson() {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 
@@ -166,7 +166,7 @@ export class UsersService {
       }
     } else {
       throw new HttpException(
-        'No hay role creado de "Persona".',
+        'No hay role creado de "Paciente".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -268,7 +268,7 @@ export class UsersService {
 
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
-        name: UserRolType.PERSON,
+        name: UserRolType.PATIENT,
       },
     });
 
