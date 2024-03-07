@@ -250,9 +250,9 @@ export class UsersService {
     });
   }
 
-  async getUserFoundByIdAndCode(idNumber: string, verificationCode: number) {
+  async getUserFoundByIdAndCode(idNumber: number, verificationCode: number) {
     return await this.userRepository.findOneBy({
-      id: idNumber,
+      id_number: idNumber,
       verification_code: verificationCode,
       is_active: true,
     });

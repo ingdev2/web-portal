@@ -241,9 +241,9 @@ export class AuthService {
     return { id_type, id_number };
   }
 
-  async verifyCodeAndLoginUsers(id: string, verification_code: number) {
+  async verifyCodeAndLoginUsers(idNumber: number, verification_code: number) {
     const userFound = await this.usersService.getUserFoundByIdAndCode(
-      id,
+      idNumber,
       verification_code,
     );
 

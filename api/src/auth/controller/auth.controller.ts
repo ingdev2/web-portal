@@ -56,13 +56,13 @@ export class AuthController {
     return await this.authService.loginUsers(loginAdmin);
   }
 
-  @Post('verifiedLoginUsers/:id')
+  @Post('verifiedLoginUsers/:idNumber')
   async verifyCodeAndLoginUsers(
-    @Param('id') id: string,
+    @Param('idNumber') idNumber: number,
     @Body('verification_code') verification_code: number,
   ) {
     return await this.authService.verifyCodeAndLoginUsers(
-      id,
+      idNumber,
       verification_code,
     );
   }

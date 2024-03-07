@@ -6,6 +6,11 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
+        id_type: {
+          label: "Tipo de identificación",
+          type: "text",
+          placeholder: "CC",
+        },
         id_number: {
           label: "Número de identificación",
           type: "number",
@@ -14,6 +19,13 @@ const handler = NextAuth({
           pattern: "[0-9]*",
         },
         password: { label: "Contraseña", type: "password" },
+        verification_code: {
+          label: "Código de verificación",
+          type: "number",
+          placeholder: "1234",
+          inputMode: "numeric",
+          pattern: "[0-9]*",
+        },
       },
 
       async authorize(credentials, req) {
