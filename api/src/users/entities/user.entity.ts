@@ -112,4 +112,7 @@ export class User {
 
   @Column({ nullable: true })
   company_area: number;
+
+  @Column({ nullable: true })
+  verification_code: number;
 }

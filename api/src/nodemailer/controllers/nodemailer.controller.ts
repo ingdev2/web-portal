@@ -20,6 +20,7 @@ export class NodemailerController {
       requirementType,
       requestStatusReq,
       emailTemplate,
+      verificationCode,
     }: SendEmailDto,
   ) {
     return await this.nodemailerService.sendEmail({
@@ -31,6 +32,7 @@ export class NodemailerController {
       requirementType,
       requestStatusReq,
       emailTemplate,
+      verificationCode,
     });
   }
 }

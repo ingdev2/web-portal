@@ -254,10 +254,21 @@ export class AdminsService {
     return await this.adminRepository.findOneBy({ id_number: idNumber });
   }
 
-  async getAdminFoundByIdNumberWithPassword(idNumber: number) {
+  async getAdminFoundByIdNumberWithPassword(
+    adminIdType: number,
+    idNumber: number,
+  ) {
     return await this.adminRepository.findOne({
-      where: { id_number: idNumber },
-      select: ['id', 'name', 'id_number', 'password', 'role'],
+      where: { admin_id_type: adminIdType, id_number: idNumber },
+      select: [
+        'id',
+        'name',
+        'admin_id_type',
+        'id_number',
+        'password',
+        'corporate_email',
+        'role',
+      ],
     });
   }
 

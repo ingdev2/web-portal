@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
@@ -46,6 +54,17 @@ export class AuthController {
   @Post('loginUsers')
   async loginUsers(@Body() loginAdmin: LoginDto) {
     return await this.authService.loginUsers(loginAdmin);
+  }
+
+  @Post('verifiedLoginUsers/:id')
+  async verifyCodeAndLoginUsers(
+    @Param('id') id: string,
+    @Body('verification_code') verification_code: number,
+  ) {
+    return await this.authService.verifyCodeAndLoginUsers(
+      id,
+      verification_code,
+    );
   }
 
   // FORMAS DE AUTH ROLES //

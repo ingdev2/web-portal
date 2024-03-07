@@ -1,13 +1,16 @@
 import {
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
+  MaxLength,
   MinLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class LoginDto {
+  @IsNotEmpty()
+  id_type: number;
+
   @IsNotEmpty()
   @IsNumber()
   id_number: number;
@@ -16,5 +19,6 @@ export class LoginDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(7)
+  @MaxLength(14)
   password: string;
 }

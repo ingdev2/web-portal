@@ -245,13 +245,34 @@ export class UsersService {
   }
 
   async getUserFoundByIdNumber(idNumber: number) {
-    return await this.userRepository.findOneBy({ id_number: idNumber });
+    return await this.userRepository.findOneBy({
+      id_number: idNumber,
+    });
   }
 
-  async getUserFoundByIdNumberWithPassword(idNumber: number) {
+  async getUserFoundByIdAndCode(idNumber: string, verificationCode: number) {
+    return await this.userRepository.findOneBy({
+      id: idNumber,
+      verification_code: verificationCode,
+      is_active: true,
+    });
+  }
+
+  async getUserFoundByIdNumberWithPassword(
+    userIdType: number,
+    idNumber: number,
+  ) {
     return await this.userRepository.findOne({
-      where: { id_number: idNumber },
-      select: ['id', 'name', 'id_number', 'password', 'role'],
+      where: { user_id_type: userIdType, id_number: idNumber },
+      select: [
+        'id',
+        'name',
+        'user_id_type',
+        'id_number',
+        'password',
+        'email',
+        'role',
+      ],
     });
   }
 

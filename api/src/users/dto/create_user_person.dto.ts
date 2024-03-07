@@ -68,4 +68,8 @@ export class CreateUserPersonDto {
 
   @IsNotEmpty()
   user_id_type: number;
+
+  @IsOptional()
+  @IsNumber()
+  verification_code: number;
 }

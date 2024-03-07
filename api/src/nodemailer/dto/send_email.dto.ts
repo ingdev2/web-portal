@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class SendEmailDto {
   @IsOptional()
@@ -16,11 +22,11 @@ export class SendEmailDto {
   @IsString()
   userName: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   medicalReqFilingNumber: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   requirementType: string;
 
@@ -31,4 +37,8 @@ export class SendEmailDto {
   @IsOptional()
   @IsString()
   requestStatusReq?: string;
+
+  @IsOptional()
+  @IsNumber()
+  verificationCode: number;
 }

@@ -38,6 +38,18 @@ export class UsersController {
     return await this.usersService.getUsersByIdNumber(idNumber);
   }
 
+  @Get('/validateCode/:id')
+  async getUserFoundByIdAndCode(
+    @Param('id') id: string,
+    @Body('verificationCode')
+    verificationCode: number,
+  ) {
+    return await this.usersService.getUserFoundByIdAndCode(
+      id,
+      verificationCode,
+    );
+  }
+
   // PATCH METHODS //
 
   @Auth(UserRolType.PATIENT)
