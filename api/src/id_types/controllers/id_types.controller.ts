@@ -29,7 +29,6 @@ export class IdTypesController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Get('/getAll')
   getAllIdTypes() {
     return this.idTypesService.getAllIdTypes();

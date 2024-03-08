@@ -15,11 +15,11 @@ export default function ButtonAuth() {
   if (session) {
     return (
       <>
-        Ingresaste como: {session.user?.email} <br />
+        Ingresaste como: {session.user?.name} <br />
         <Button
           type="primary"
           onClick={() => signOut()}
-          className="btn btn-danger"
+          className="button-signout"
         >
           Cerrar sesión
         </Button>
@@ -30,11 +30,7 @@ export default function ButtonAuth() {
     <>
       No estas registrado
       <br />
-      <Button
-        type="primary"
-        onClick={() => signIn()}
-        className="btn btn-primary"
-      >
+      <Button type="primary" onClick={() => signIn()} className="button-signin">
         Iniciar sesión
       </Button>
     </>

@@ -40,7 +40,7 @@ export class UsersController {
 
   @Get('/validateCode/:id')
   async getUserFoundByIdAndCode(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body('verificationCode')
     verificationCode: number,
   ) {

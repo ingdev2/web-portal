@@ -7,9 +7,8 @@ const handler = NextAuth({
       name: "Credentials",
       credentials: {
         id_type: {
-          label: "Tipo de identificación",
+          label: "Tipo de documento",
           type: "text",
-          placeholder: "CC",
         },
         id_number: {
           label: "Número de identificación",
@@ -18,13 +17,9 @@ const handler = NextAuth({
           inputMode: "numeric",
           pattern: "[0-9]*",
         },
-        password: { label: "Contraseña", type: "password" },
-        verification_code: {
-          label: "Código de verificación",
-          type: "number",
-          placeholder: "1234",
-          inputMode: "numeric",
-          pattern: "[0-9]*",
+        password: {
+          label: "Contraseña",
+          type: "password",
         },
       },
 
@@ -34,6 +29,7 @@ const handler = NextAuth({
           {
             method: "POST",
             body: JSON.stringify({
+              id_type: credentials?.id_type,
               id_number: credentials?.id_number
                 ? parseInt(credentials?.id_number)
                 : undefined,
@@ -53,18 +49,18 @@ const handler = NextAuth({
       },
     }),
   ],
-  // callbacks: {
-  //   async jwt({ token, user }) {
-  //     return { ...token, ...user };
-  //   },
-  //   async session({ session, token }) {
-  //     session.user = token as any;
-  //     return session;
-  //   },
-  // },
-  // pages: {
-  //   signIn: "/login",
-  // },
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    async session({ session, token }) {
+      session.user = token as any;
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/users-login",
+  },
 });
 
 export { handler as GET, handler as POST };
