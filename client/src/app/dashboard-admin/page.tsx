@@ -9,8 +9,6 @@ const DashboardAdminPage = () => {
     return <p>Loading...</p>;
   }
 
-  console.log(session);
-
   return (
     <div>
       <h1>Dashboard</h1>

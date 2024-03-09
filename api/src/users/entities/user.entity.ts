@@ -21,26 +21,23 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   last_name: string;
-
-  @Column({ type: 'date', nullable: true })
-  birthay_date: Date;
 
   @Column({ type: 'bigint', unique: true })
   id_number: number;
-
-  @Column({ type: 'date', nullable: true })
-  id_exp_date: Date;
 
   @Column()
   email: string;
 
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
+
+  @Column({ type: 'date', nullable: true })
+  birthdate: Date;
 
   @Column({ select: false })
   password: string;
@@ -59,6 +56,9 @@ export class User {
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  accept_terms: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -112,4 +112,7 @@ export class User {
 
   @Column({ nullable: true })
   company_area: number;
+
+  @Column({ nullable: true })
+  verification_code: number;
 }

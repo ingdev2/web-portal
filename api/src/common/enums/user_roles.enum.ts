@@ -1,4 +1,4 @@
 export enum UserRolType {
-  PERSON = 'Persona',
-  EPS = 'Eps',
+  PATIENT = 'PACIENTE',
+  EPS = 'EPS',
 }

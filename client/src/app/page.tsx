@@ -1,13 +1,9 @@
 import React from "react";
-import { Button } from "antd";
-import ButtonAuth from "@/components/ButtonAuth";
+import ButtonAuth from "@/components/auth/ButtonAuth";
 
 const HomePage = () => (
-  <div className="App">
+  <div className="HomePage">
     <h2>Página de Inicio</h2>
-    <Button type="primary">Botón de Ant Design</Button>
-    <br />
-    <br />
     <ButtonAuth></ButtonAuth>
   </div>
 );

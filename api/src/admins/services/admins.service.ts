@@ -2,11 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
+import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { CreateAdminDto } from '../dto/create_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
-import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
+import { UpdatePasswordAdminDto } from '../dto/update_password_admin.dto';
 
 import * as bcryptjs from 'bcryptjs';
 
@@ -253,10 +254,21 @@ export class AdminsService {
     return await this.adminRepository.findOneBy({ id_number: idNumber });
   }
 
-  async getAdminFoundByIdNumberWithPassword(idNumber: number) {
+  async getAdminFoundByIdNumberWithPassword(
+    adminIdType: number,
+    idNumber: number,
+  ) {
     return await this.adminRepository.findOne({
-      where: { id_number: idNumber },
-      select: ['id', 'name', 'id_number', 'password', 'role'],
+      where: { admin_id_type: adminIdType, id_number: idNumber },
+      select: [
+        'id',
+        'name',
+        'admin_id_type',
+        'id_number',
+        'password',
+        'corporate_email',
+        'role',
+      ],
     });
   }
 
@@ -300,10 +312,6 @@ export class AdminsService {
       }
     }
 
-    if (admin.password) {
-      admin.password = await bcryptjs.hash(admin.password, 10);
-    }
-
     const updateAdmin = await this.adminRepository.update(id, admin);
 
     if (updateAdmin.affected === 0) {
@@ -312,6 +320,52 @@ export class AdminsService {
 
     return new HttpException(
       `¡Datos guardados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  async updateAdminPassword(id: number, passwords: UpdatePasswordAdminDto) {
+    const adminFound = await this.adminRepository
+      .createQueryBuilder('admin')
+      .addSelect(['admin.password'])
+      .where('admin.id = :id', { id })
+      .getOne();
+
+    if (!adminFound) {
+      throw new HttpException(
+        `Administrador no encontrado.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const isPasswordValid = await bcryptjs.compare(
+      passwords.oldPassword,
+      adminFound.password,
+    );
+    if (!isPasswordValid) {
+      throw new HttpException(
+        `Contraseña antigua incorrecta.`,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const isNewPasswordSameAsOld = await bcryptjs.compare(
+      passwords.newPassword,
+      adminFound.password,
+    );
+    if (isNewPasswordSameAsOld) {
+      throw new HttpException(
+        `La nueva contraseña no puede ser igual a la antigua.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const hashedNewPassword = await bcryptjs.hash(passwords.newPassword, 10);
+
+    await this.adminRepository.update(id, { password: hashedNewPassword });
+
+    return new HttpException(
+      `Contraseña actualizada correctamente.`,
       HttpStatus.ACCEPTED,
     );
   }

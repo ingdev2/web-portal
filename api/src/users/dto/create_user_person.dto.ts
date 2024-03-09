@@ -6,31 +6,28 @@ import {
   IsString,
   IsDateString,
   MinLength,
+  MaxLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateUserPersonDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(3)
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(5)
   last_name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
-  birthay_date: Date;
+  birthdate: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   id_number: number;
-
-  @IsNotEmpty()
-  @IsDateString()
-  id_exp_date: Date;
 
   @IsNotEmpty()
   @IsEmail()
@@ -44,6 +41,7 @@ export class CreateUserPersonDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(7)
+  @MaxLength(14)
   password: string;
 
   @IsOptional()
@@ -70,4 +68,8 @@ export class CreateUserPersonDto {
 
   @IsNotEmpty()
   user_id_type: number;
+
+  @IsOptional()
+  @IsNumber()
+  verification_code: number;
 }

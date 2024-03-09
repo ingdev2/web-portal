@@ -9,7 +9,7 @@ export class RequirementStatus {
 
   @Column({
     enum: RequirementStatusEnum,
-    default: RequirementStatusEnum.PENDING,
+    default: RequirementStatusEnum.UNDER_REVIEW,
   })
   name: RequirementStatusEnum;
 

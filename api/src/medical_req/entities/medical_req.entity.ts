@@ -61,8 +61,8 @@ export class MedicalReq {
   @Column({ type: 'bigint' })
   patient_id_number: number;
 
-  @Column({ type: 'date', nullable: true })
-  patient_id_exp_date: Date;
+  @Column({ type: 'boolean', default: false })
+  accept_terms: boolean;
 
   @Column({ type: 'text', array: true, nullable: true })
   copy_applicant_citizenship_card: string[];

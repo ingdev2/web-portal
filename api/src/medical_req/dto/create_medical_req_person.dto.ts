@@ -63,8 +63,8 @@ export class CreateMedicalReqPersonDto {
   patient_class_status: number;
 
   @IsOptional()
-  @IsDateString()
-  patient_id_exp_date: Date;
+  @IsBoolean()
+  accept_terms: boolean;
 
   @IsOptional()
   @IsArray()

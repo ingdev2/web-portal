@@ -1,6 +1,6 @@
 export enum RequirementTypeEnum {
-  MEDICAL_RESULTS = 'Resultados Médicos',
-  CLINIC_HISTORY = 'Historia Clínica',
-  MEDICAL_ORDER = 'Orden Médica',
-  MEDICAL_DISABILITY = 'Incapacidad Médica',
+  MEDICAL_RESULTS = 'RESULTADOS MÉDICOS',
+  CLINIC_HISTORY = 'HISTORIA CLÍNICA',
+  MEDICAL_ORDER = 'ORDEN MÉDICA',
+  MEDICAL_DISABILITY = 'INCAPACIDAD MÉDICA',
 }

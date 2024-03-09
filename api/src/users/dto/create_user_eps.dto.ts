@@ -28,10 +28,15 @@ export class CreateUserEpsDto {
   @IsEmail()
   email: string;
 
+  @IsNotEmpty()
+  @IsNumber()
+  cellphone: number;
+
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @IsString()
   @MinLength(7)
+  @MaxLength(14)
   password: string;
 
   @IsOptional()
@@ -48,4 +53,8 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   company_area: number;
+
+  @IsOptional()
+  @IsNumber()
+  verification_code: number;
 }

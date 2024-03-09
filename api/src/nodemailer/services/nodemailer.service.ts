@@ -20,6 +20,7 @@ export class NodemailerService {
       requirementType,
       emailTemplate,
       requestStatusReq,
+      verificationCode,
     } = email;
 
     const emailSent = await this.mailerService.sendMail({
@@ -35,6 +36,7 @@ export class NodemailerService {
         medicalReqFilingNumber,
         requirementType,
         requestStatusReq,
+        verificationCode,
       },
     });
 

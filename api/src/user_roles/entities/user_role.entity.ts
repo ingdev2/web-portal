@@ -7,7 +7,7 @@ export class UserRole {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ enum: UserRolType, default: UserRolType.PERSON })
+  @Column({ enum: UserRolType, default: UserRolType.PATIENT })
   name: UserRolType;
 
   @OneToMany(() => User, (user) => user.role)
