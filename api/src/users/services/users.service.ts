@@ -47,13 +47,6 @@ export class UsersService {
         },
       );
 
-      // if (!response.data.data || response.data.data.length === 0) {
-      //   throw new HttpException(
-      //     'No se encontró el paciente de la base de datos.',
-      //     HttpStatus.INTERNAL_SERVER_ERROR,
-      //   );
-      // }
-
       const allData = response.data;
 
       const idTypeAbbrev = allData.data[0]?.TIPO;
@@ -84,7 +77,7 @@ export class UsersService {
 
       const idTypeId = idTypeOfUserIdNumber.id;
 
-      return [allData, idTypeId];
+      return [allData, { 'Número de ID de tipo de documento': idTypeId }];
     } catch (error) {
       throw new HttpException(
         'Hubo un error al consultar en la base de datos.',
@@ -126,13 +119,11 @@ export class UsersService {
       idNumber: userPerson.id_number,
     });
 
-    const patientData = data[0].data;
-
-    console.log(patientData);
+    const patientData = data[0]?.data;
 
     if (!patientData || patientData.length === 0) {
       return new HttpException(
-        `El paciente con número de identificación ${userPerson.id_number} no esta registrado en la base de datos de la clínica.`,
+        `El número de identificación ${userPerson.id_number} no esta registrado en la base de datos de la clínica.`,
         HttpStatus.CONFLICT,
       );
     }

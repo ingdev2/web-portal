@@ -89,6 +89,17 @@ export class MedicalReqService {
       );
     }
 
+    const reqStatusPending = await this.requerimentStatusRepository.findOne({
+      where: { name: RequirementStatusEnum.UNDER_REVIEW },
+    });
+
+    if (!reqStatusPending) {
+      throw new HttpException(
+        'El estado "En Revisión" de requerimiento no existe',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const aplicantPersonDetails = new CreateMedicalReqPersonDto();
 
     aplicantPersonDetails.aplicantId = userPersonFound.id;
@@ -100,6 +111,8 @@ export class MedicalReqService {
     aplicantPersonDetails.aplicant_id_number = userPersonFound.id_number;
     aplicantPersonDetails.aplicant_email = userPersonFound.email;
     aplicantPersonDetails.aplicant_cellphone = userPersonFound.cellphone;
+    aplicantPersonDetails.requirement_status = reqStatusPending.id;
+    aplicantPersonDetails.accept_terms = true;
 
     const currentDate = new Date();
     aplicantPersonDetails.date_of_admission = currentDate;
@@ -266,32 +279,12 @@ export class MedicalReqService {
       );
     }
 
-    const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.UNDER_REVIEW },
-    });
-
-    if (!reqStatusPending) {
-      throw new HttpException(
-        'El estado "En Revisión" de requerimiento no existe',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    const insertStatusPending = new CreateMedicalReqPersonDto();
-
-    insertStatusPending.requirement_status = reqStatusPending.id;
-
     const createMedicalReqPerson =
       await this.medicalReqRepository.save(medicalReqPerson);
 
     await this.medicalReqRepository.update(
       createMedicalReqPerson.id,
       aplicantPersonDetails,
-    );
-
-    await this.medicalReqRepository.update(
-      createMedicalReqPerson.id,
-      insertStatusPending,
     );
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
@@ -352,6 +345,17 @@ export class MedicalReqService {
       );
     }
 
+    const reqStatusPending = await this.requerimentStatusRepository.findOne({
+      where: { name: RequirementStatusEnum.UNDER_REVIEW },
+    });
+
+    if (!reqStatusPending) {
+      throw new HttpException(
+        'El estado "En Revisión" de requerimiento no existe',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
@@ -363,7 +367,8 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_id_number = userEpsFound.id_number;
     aplicantEpsDetails.aplicant_email = userEpsFound.email;
     aplicantEpsDetails.aplicant_eps_company = userEpsFound.eps_company;
-    aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
+    aplicantEpsDetails.accept_terms = true;
+    aplicantEpsDetails.requirement_status = reqStatusPending.id;
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;
@@ -392,32 +397,12 @@ export class MedicalReqService {
       );
     }
 
-    const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.UNDER_REVIEW },
-    });
-
-    if (!reqStatusPending) {
-      throw new HttpException(
-        'El estado "En Revisión" de requerimiento no existe',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    const insertStatusPending = new CreateMedicalReqEpsDto();
-
-    insertStatusPending.requirement_status = reqStatusPending.id;
-
     const createMedicalReq =
       await this.medicalReqRepository.save(medicalReqEps);
 
     await this.medicalReqRepository.update(
       createMedicalReq.id,
       aplicantEpsDetails,
-    );
-
-    await this.medicalReqRepository.update(
-      createMedicalReq.id,
-      insertStatusPending,
     );
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
