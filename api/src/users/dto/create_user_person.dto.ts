@@ -11,21 +11,21 @@ import {
 import { Transform } from 'class-transformer';
 
 export class CreateUserPersonDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(3)
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(5)
   last_name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
-  birthay_date: Date;
+  birthdate: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   id_number: number;
 

@@ -4,25 +4,144 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { IdType } from '../../common/enums/id_type.enum';
 import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
+import { ValidatePatientDto } from '../dto/validate_patient.dto';
 
 import * as bcryptjs from 'bcryptjs';
+import axios from 'axios';
+import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
+
+    @InjectRepository(IdTypeEntity)
+    private idTypeRepository: Repository<IdTypeEntity>,
   ) {}
 
   // CREATE FUNTIONS //
 
+  async validateThatThePatientExist({
+    idType,
+    idNumber,
+  }: ValidatePatientDto): Promise<any[]> {
+    try {
+      const AUTH_VALUE = process.env.X_AUTH_VALUE;
+
+      const response = await axios.get(
+        `https://apitorrecontrol.bonnadona.net/api_torre_control/hosvital/paciente/path/${idNumber}/${idType}`,
+        {
+          headers: {
+            'X-Authorization': AUTH_VALUE,
+          },
+        },
+      );
+
+      // if (!response.data.data || response.data.data.length === 0) {
+      //   throw new HttpException(
+      //     'No se encontró el paciente de la base de datos.',
+      //     HttpStatus.INTERNAL_SERVER_ERROR,
+      //   );
+      // }
+
+      const allData = response.data;
+
+      const idTypeAbbrev = allData.data[0]?.TIPO;
+
+      const idTypeAbbreviations: Record<IdTypeAbbrev, IdType> = {
+        [IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA]: IdType.CITIZENSHIP_CARD,
+        [IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA]: IdType.FOREIGNER_ID,
+        [IdTypeAbbrev.TARJETA_DE_IDENTIDAD]: IdType.IDENTITY_CARD,
+        [IdTypeAbbrev.REGISTRO_CIVIL]: IdType.CIVIL_REGISTRATION,
+        [IdTypeAbbrev.PASAPORTE]: IdType.PASSPORT,
+        [IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA]:
+          IdType.SPECIAL_RESIDENCE_PERMIT,
+        [IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL]:
+          IdType.TEMPORARY_PROTECTION_PERMIT,
+        [IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN]:
+          IdType.MINOR_WITHOUT_IDENTIFICATION,
+        [IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN]:
+          IdType.ADULT_WITHOUT_IDENTIFICATION,
+      };
+
+      const idTypeNumberForInsert = idTypeAbbreviations[idTypeAbbrev];
+
+      const idTypeOfUserIdNumber = await this.idTypeRepository.findOne({
+        where: {
+          name: idTypeNumberForInsert,
+        },
+      });
+
+      const idTypeId = idTypeOfUserIdNumber.id;
+
+      return [allData, idTypeId];
+    } catch (error) {
+      throw new HttpException(
+        'Hubo un error al consultar en la base de datos.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        error,
+      );
+    }
+  }
+
   async createUserPerson(userPerson: CreateUserPersonDto) {
+    const idTypeOfUser = await this.idTypeRepository.findOne({
+      where: {
+        id: userPerson.user_id_type,
+      },
+    });
+
+    const idTypeName = idTypeOfUser.name;
+
+    const idTypeAbbreviations: Record<string, string> = {
+      [IdType.CITIZENSHIP_CARD]: IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA,
+      [IdType.FOREIGNER_ID]: IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA,
+      [IdType.IDENTITY_CARD]: IdTypeAbbrev.TARJETA_DE_IDENTIDAD,
+      [IdType.CIVIL_REGISTRATION]: IdTypeAbbrev.REGISTRO_CIVIL,
+      [IdType.PASSPORT]: IdTypeAbbrev.PASAPORTE,
+      [IdType.SPECIAL_RESIDENCE_PERMIT]:
+        IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA,
+      [IdType.TEMPORARY_PROTECTION_PERMIT]:
+        IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL,
+      [IdType.MINOR_WITHOUT_IDENTIFICATION]:
+        IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN,
+      [IdType.ADULT_WITHOUT_IDENTIFICATION]:
+        IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN,
+    };
+
+    const idTypeNameForConsult = idTypeAbbreviations[idTypeName] || '';
+
+    const data = await this.validateThatThePatientExist({
+      idType: idTypeNameForConsult,
+      idNumber: userPerson.id_number,
+    });
+
+    const patientData = data[0].data;
+
+    console.log(patientData);
+
+    if (!patientData || patientData.length === 0) {
+      return new HttpException(
+        `El paciente con número de identificación ${userPerson.id_number} no esta registrado en la base de datos de la clínica.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const dataToCreateUser = new CreateUserPersonDto();
+
+    dataToCreateUser.name = patientData[0]?.NOMBRE;
+    dataToCreateUser.birthdate = patientData[0]?.FECHA_NACIMIENTO;
+
     const userPersonFound = await this.userRepository.findOne({
       where: {
         id_number: userPerson.id_number,
@@ -52,6 +171,7 @@ export class UsersService {
     const insertRoleUserPerson = await this.userRepository.create({
       ...userPerson,
       user_role: rolePersonFound.id,
+      accept_terms: true,
     });
 
     const userPersonWithRole =
@@ -72,6 +192,7 @@ export class UsersService {
     }
 
     await this.userRepository.update(userPersonWithRole.id, userPerson);
+    await this.userRepository.update(userPersonWithRole.id, dataToCreateUser);
 
     const newUserPerson = await this.userRepository.findOne({
       where: { id: userPersonWithRole.id },
@@ -110,6 +231,7 @@ export class UsersService {
     const insertRoleUserEps = await this.userRepository.create({
       ...userEps,
       user_role: roleEpsFound.id,
+      accept_terms: true,
     });
 
     const userEpsWithRole = await this.userRepository.save(insertRoleUserEps);

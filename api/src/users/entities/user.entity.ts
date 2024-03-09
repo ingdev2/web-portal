@@ -21,10 +21,10 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   last_name: string;
 
   @Column({ type: 'bigint', unique: true })
@@ -37,7 +37,7 @@ export class User {
   cellphone: number;
 
   @Column({ type: 'date', nullable: true })
-  birthay_date: Date;
+  birthdate: Date;
 
   @Column({ select: false })
   password: string;
