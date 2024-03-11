@@ -311,7 +311,7 @@ export class MedicalReqService {
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
-    return await medicalReqCompleted;
+    return medicalReqCompleted;
   }
 
   async createMedicalReqEps(
@@ -429,7 +429,7 @@ export class MedicalReqService {
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
-    return await medicalReqCompleted;
+    return medicalReqCompleted;
   }
 
   // GET FUNTIONS //

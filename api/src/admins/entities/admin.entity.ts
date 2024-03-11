@@ -1,3 +1,7 @@
+import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,10 +12,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
-import { GenderType } from '../../genders/entities/gender.entity';
-import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
-import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
 export class Admin {

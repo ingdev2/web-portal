@@ -1,3 +1,8 @@
+import { UserRole } from '../../user_roles/entities/user_role.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { EpsCompany } from '../../eps_company/entities/eps_company.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 import {
   Column,
@@ -10,11 +15,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { GenderType } from '../../genders/entities/gender.entity';
-import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
-import { EpsCompany } from '../../eps_company/entities/eps_company.entity';
-import { CompanyArea } from '../../company_area/entities/company_area.entity';
 
 @Entity()
 export class User {
@@ -30,14 +30,14 @@ export class User {
   @Column({ type: 'bigint', unique: true })
   id_number: number;
 
+  @Column({ type: 'date', nullable: true })
+  birthdate: Date;
+
   @Column()
   email: string;
 
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
-
-  @Column({ type: 'date', nullable: true })
-  birthdate: Date;
 
   @Column({ select: false })
   password: string;

@@ -12,14 +12,14 @@ import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { LoginDto } from '../dto/login.dto';
-import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
-import { NodemailerService } from 'src/nodemailer/services/nodemailer.service';
+import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
+import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import {
   EMAIL_VERIFICATION_CODE,
   SUBJECT_EMAIL_VERIFICATION_CODE,
-} from 'src/nodemailer/constants/email_config.constant';
+} from '../../nodemailer/constants/email_config.constant';
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcryptjs from 'bcryptjs';

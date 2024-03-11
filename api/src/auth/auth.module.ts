@@ -5,11 +5,11 @@ import { AdminsModule } from '../admins/admins.module';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants/jwt.constants';
+import { User } from '../users/entities/user.entity';
 import { UserRolesModule } from '../user_roles/user_roles.module';
 import { AdminRolesModule } from '../admin_roles/admin_roles.module';
-import { NodemailerModule } from 'src/nodemailer/nodemailer.module';
+import { NodemailerModule } from '../nodemailer/nodemailer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [

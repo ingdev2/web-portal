@@ -21,6 +21,7 @@ import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module
 import { RequirementStatusModule } from './requirement_status/requirement_status.module';
 import { EpsCompanyModule } from './eps_company/eps_company.module';
 import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module';
+import { AuthorizedFamiliarModule } from './authorized_familiar/authorized_familiar.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module
     RequirementStatusModule,
     EpsCompanyModule,
     DeptsAndCitiesModule,
+    AuthorizedFamiliarModule,
   ],
   controllers: [AppController],
   providers: [AppService],
