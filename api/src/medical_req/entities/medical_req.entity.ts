@@ -106,7 +106,7 @@ export class MedicalReq {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.medical_req)
+  @ManyToOne(() => User, (aplicant) => aplicant.medical_req)
   aplicant: User;
 
   @Column({ nullable: true })

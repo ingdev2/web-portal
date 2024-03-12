@@ -2,10 +2,9 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArrayContains, DeepPartial, Raw, Repository } from 'typeorm';
 import { AuthorizedFamiliar } from '../entities/authorized_familiar.entity';
-import { FamiliarLoginDto } from 'src/auth/dto/familiar_login.dto';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { UserRolType } from 'src/common/enums/user_roles.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.dto';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { UUID } from 'crypto';
@@ -28,10 +27,22 @@ export class AuthorizedFamiliarService {
     userId: UUID,
     familiar: CreateAuthorizedFamiliarDto,
   ) {
+    const patientRole = await this.userRoleRepository.findOne({
+      where: { name: UserRolType.PATIENT },
+    });
+
+    if (!patientRole) {
+      return new HttpException(
+        `El rol "Paciente" no existe.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const patientFound = await this.userRepository.findOne({
       where: {
         id: userId,
         is_active: true,
+        user_role: patientRole.id,
       },
     });
 
@@ -249,7 +260,15 @@ export class AuthorizedFamiliarService {
         email: familiarEmail,
         rel_with_patient: relWithPatient,
       },
-      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
+      select: [
+        'id',
+        'name',
+        'user_id_type',
+        'id_number',
+        'email',
+        'role',
+        'patients_id',
+      ],
     });
 
     if (!familiarPatient) {

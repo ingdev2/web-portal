@@ -301,12 +301,21 @@ export class AuthService {
         user_id_type: id_type,
         id_number: id_number,
       },
-      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
+      select: [
+        'id',
+        'name',
+        'user_id_type',
+        'id_number',
+        'email',
+        'role',
+        'login_patient_id_number',
+      ],
     });
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);
 
     familiarVerified.verification_code = verificationCode;
+    familiarVerified.login_patient_id_number = patient_id_number;
 
     await this.familiarRepository.save(familiarVerified);
 
@@ -325,7 +334,12 @@ export class AuthService {
       await this.familiarRepository.save(familiarVerified);
     });
 
-    return { id_type, id_number, email };
+    schedule.scheduleJob(new Date(Date.now() + 20 * 60 * 1000), async () => {
+      familiarVerified.login_patient_id_number = null;
+      await this.familiarRepository.save(familiarVerified);
+    });
+
+    return { id_type, id_number, email, patient_id_number };
   }
 
   async verifyCodeAndLoginUsers(idNumber: number, verification_code: number) {
@@ -385,6 +399,7 @@ export class AuthService {
       token,
       id_type: familiarFound.user_id_type,
       id_number: familiarFound.id_number,
+      patientIdNumber: familiarFound.login_patient_id_number,
     };
   }
 

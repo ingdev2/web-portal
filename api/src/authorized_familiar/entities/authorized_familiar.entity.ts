@@ -98,5 +98,8 @@ export class AuthorizedFamiliar {
   patients_id: UUID[];
 
   @Column({ nullable: true })
+  login_patient_id_number: number;
+
+  @Column({ nullable: true })
   verification_code: number;
 }
