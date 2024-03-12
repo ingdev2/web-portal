@@ -8,9 +8,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdminsService } from '../../admins/services/admins.service';
 import { UsersService } from '../../users/services/users.service';
+import { AuthorizedFamiliarService } from '../../authorized_familiar/services/authorized_familiar.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { User } from '../../users/entities/user.entity';
 import { LoginDto } from '../dto/login.dto';
@@ -23,6 +25,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcryptjs from 'bcryptjs';
+import { UUID } from 'crypto';
 
 const schedule = require('node-schedule');
 
@@ -33,6 +36,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     private readonly adminsService: AdminsService,
     private readonly usersService: UsersService,
+    private readonly familiarService: AuthorizedFamiliarService,
     private readonly jwtService: JwtService,
     private readonly nodemailerService: NodemailerService,
   ) {}
@@ -125,6 +129,39 @@ export class AuthService {
       residence_address,
       residence_neighborhood,
       user_role,
+      verification_code,
+    });
+  }
+
+  async registerFamiliar(
+    userId: UUID,
+    {
+      name,
+      last_name,
+      user_id_type,
+      id_number,
+      email,
+      cellphone,
+      user_gender,
+      rel_with_patient,
+      user_role,
+      patients_id,
+      verification_code,
+    }: CreateAuthorizedFamiliarDto,
+  ) {
+    await this.familiarService.getFamiliarByIdNumber(id_number);
+
+    return await this.familiarService.createUserFamiliar(userId, {
+      name,
+      last_name,
+      user_id_type,
+      id_number,
+      email,
+      cellphone,
+      user_gender,
+      rel_with_patient,
+      user_role,
+      patients_id,
       verification_code,
     });
   }

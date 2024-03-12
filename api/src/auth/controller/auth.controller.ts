@@ -10,10 +10,12 @@ import {
 import { AuthService } from '../service/auth.service';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { LoginDto } from '../dto/login.dto';
 
 import { ApiTags } from '@nestjs/swagger';
+import { UUID } from 'crypto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -37,6 +39,14 @@ export class AuthController {
   @Post('registerUserPerson')
   async registerUserPerson(@Body() registerUserPerson: CreateUserPersonDto) {
     return await this.authService.registerUserPerson(registerUserPerson);
+  }
+
+  @Post(':userId/registerFamiliar')
+  async registerFamiliar(
+    @Param('userId') userId: UUID,
+    @Body() registerFamiliar: CreateAuthorizedFamiliarDto,
+  ) {
+    return await this.authService.registerFamiliar(userId, registerFamiliar);
   }
 
   @Post('registerUserEps')

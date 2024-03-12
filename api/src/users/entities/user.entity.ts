@@ -10,11 +10,14 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AuthorizedFamiliar } from 'src/authorized_familiar/entities/authorized_familiar.entity';
 
 @Entity()
 export class User {
@@ -112,6 +115,13 @@ export class User {
 
   @Column({ nullable: true })
   company_area: number;
+
+  @ManyToMany(() => AuthorizedFamiliar, (familiar) => familiar.patient, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  familiar: AuthorizedFamiliar[];
 
   @Column({ nullable: true })
   verification_code: number;

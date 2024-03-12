@@ -18,7 +18,7 @@ export class CreateUserPersonDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(5)
+  @MinLength(3)
   last_name: string;
 
   @IsOptional()

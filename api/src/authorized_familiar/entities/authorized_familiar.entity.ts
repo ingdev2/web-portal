@@ -1,3 +1,4 @@
+import { User } from 'src/users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
@@ -9,11 +10,13 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UUID } from 'crypto';
 
 @Entity()
 export class AuthorizedFamiliar {
@@ -43,10 +46,7 @@ export class AuthorizedFamiliar {
   @Column({ type: 'bigint', unique: true })
   id_number: number;
 
-  @ManyToOne(() => UserRole, (role) => role.user, {
-    eager: true,
-    cascade: true,
-  })
+  @ManyToOne(() => UserRole, (role) => role.user)
   @JoinColumn({ name: 'user_role', referencedColumnName: 'id' })
   role: UserRole;
 
@@ -73,11 +73,14 @@ export class AuthorizedFamiliar {
   @Column()
   rel_with_patient: number;
 
-  @OneToMany(() => MedicalReq, (medical_req) => medical_req.familiar, {
-    eager: true,
-    cascade: true,
-  })
+  @OneToMany(() => MedicalReq, (medical_req) => medical_req.familiar)
   medical_req: MedicalReq[];
+
+  @Column({ type: 'boolean', default: false })
+  accept_terms: boolean;
+
+  @Column({ type: 'boolean', default: true })
+  is_active: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -87,4 +90,13 @@ export class AuthorizedFamiliar {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToMany(() => User, (patient) => patient.familiar)
+  patient: User[];
+
+  @Column({ type: 'uuid', array: true })
+  patients_id: UUID[];
+
+  @Column({ nullable: true })
+  verification_code: number;
 }

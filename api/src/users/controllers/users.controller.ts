@@ -4,11 +4,11 @@ import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
-import { Auth } from '../../auth/decorators/auth.decorator';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()

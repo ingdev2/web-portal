@@ -1,4 +1,27 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateAuthorizedFamiliarDto } from './create-authorized_familiar.dto';
+import {
+  IsEmail,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
-export class UpdateAuthorizedFamiliarDto extends PartialType(CreateAuthorizedFamiliarDto) {}
+export class UpdateAuthorizedFamiliarDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  last_name: string;
+
+  @IsOptional()
+  @IsEmail()
+  email: string;
+
+  @IsOptional()
+  @IsNumber()
+  cellphone: number;
+}

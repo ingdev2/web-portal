@@ -182,8 +182,8 @@ export class UsersService {
       );
     }
 
-    await this.userRepository.update(userPersonWithRole.id, userPerson);
     await this.userRepository.update(userPersonWithRole.id, dataToCreateUser);
+    await this.userRepository.update(userPersonWithRole.id, userPerson);
 
     const newUserPerson = await this.userRepository.findOne({
       where: { id: userPersonWithRole.id },

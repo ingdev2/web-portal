@@ -17,7 +17,7 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(5)
+  @MinLength(3)
   last_name: string;
 
   @IsNotEmpty()
