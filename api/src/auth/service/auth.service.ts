@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdminsService } from '../../admins/services/admins.service';
@@ -16,14 +11,16 @@ import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/creat
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { User } from '../../users/entities/user.entity';
 import { LoginDto } from '../dto/login.dto';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
+import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import {
   EMAIL_VERIFICATION_CODE,
   SUBJECT_EMAIL_VERIFICATION_CODE,
 } from '../../nodemailer/constants/email_config.constant';
-import { JwtService } from '@nestjs/jwt';
 
+import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 import { UUID } from 'crypto';
 
@@ -34,6 +31,8 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(AuthorizedFamiliar)
+    private familiarRepository: Repository<AuthorizedFamiliar>,
     private readonly adminsService: AdminsService,
     private readonly usersService: UsersService,
     private readonly familiarService: AuthorizedFamiliarService,
@@ -278,6 +277,57 @@ export class AuthService {
     return { id_type, id_number };
   }
 
+  async loginRelatives({
+    id_type,
+    id_number,
+    email,
+    patient_id_number,
+    rel_with_patient,
+  }: FamiliarLoginDto) {
+    const familiarFound = await this.familiarService.getFamiliarWithPatient(
+      id_type,
+      id_number,
+      email,
+      patient_id_number,
+      rel_with_patient,
+    );
+
+    if (!familiarFound) {
+      throw new UnauthorizedException(`¡Datos de ingreso incorrectos!`);
+    }
+
+    const familiarVerified = await this.familiarRepository.findOne({
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+      },
+      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
+    });
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    familiarVerified.verification_code = verificationCode;
+
+    await this.familiarRepository.save(familiarVerified);
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [familiarVerified.email];
+    emailDetailsToSend.userName = familiarVerified.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.verificationCode = familiarVerified.verification_code;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+      familiarVerified.verification_code = null;
+      await this.familiarRepository.save(familiarVerified);
+    });
+
+    return { id_type, id_number, email };
+  }
+
   async verifyCodeAndLoginUsers(idNumber: number, verification_code: number) {
     const userFound = await this.usersService.getUserFoundByIdAndCode(
       idNumber,
@@ -303,6 +353,38 @@ export class AuthService {
       token,
       id_type: userFound.user_id_type,
       id_number: userFound.id_number,
+    };
+  }
+
+  async verifyCodeAndLoginRelatives(
+    idNumber: number,
+    verification_code: number,
+  ) {
+    const familiarFound =
+      await this.familiarService.getFamiliarFoundByIdAndCode(
+        idNumber,
+        verification_code,
+      );
+
+    if (!familiarFound) {
+      throw new UnauthorizedException(`¡Código de verificación incorrecto!`);
+    }
+
+    const payload = {
+      id_type: familiarFound.user_id_type,
+      id_number: familiarFound.id_number,
+      role: familiarFound.role,
+    };
+
+    const token = await this.jwtService.signAsync(payload);
+
+    familiarFound.verification_code = null;
+    await this.familiarRepository.save(familiarFound);
+
+    return {
+      token,
+      id_type: familiarFound.user_id_type,
+      id_number: familiarFound.id_number,
     };
   }
 

@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants/jwt.constants';
 import { Admin } from '../admins/entities/admin.entity';
 import { User } from '../users/entities/user.entity';
+import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_familiar.entity';
 import { UserRolesModule } from '../user_roles/user_roles.module';
 import { AdminRolesModule } from '../admin_roles/admin_roles.module';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
@@ -15,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Admin]),
+    TypeOrmModule.forFeature([User, Admin, AuthorizedFamiliar]),
     AdminsModule,
     UsersModule,
     AuthorizedFamiliarModule,

@@ -16,6 +16,7 @@ import { LoginDto } from '../dto/login.dto';
 
 import { ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
+import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -66,12 +67,28 @@ export class AuthController {
     return await this.authService.loginUsers(loginAdmin);
   }
 
+  @Post('loginRelatives')
+  async loginRelatives(@Body() loginFamiliar: FamiliarLoginDto) {
+    return await this.authService.loginRelatives(loginFamiliar);
+  }
+
   @Post('verifiedLoginUsers/:idNumber')
   async verifyCodeAndLoginUsers(
     @Param('idNumber') idNumber: number,
     @Body('verification_code') verification_code: number,
   ) {
     return await this.authService.verifyCodeAndLoginUsers(
+      idNumber,
+      verification_code,
+    );
+  }
+
+  @Post('verifiedLoginRelatives/:idNumber')
+  async verifyCodeAndLoginRelatives(
+    @Param('idNumber') idNumber: number,
+    @Body('verification_code') verification_code: number,
+  ) {
+    return await this.authService.verifyCodeAndLoginRelatives(
       idNumber,
       verification_code,
     );

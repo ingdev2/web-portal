@@ -2,10 +2,10 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArrayContains, DeepPartial, Raw, Repository } from 'typeorm';
 import { AuthorizedFamiliar } from '../entities/authorized_familiar.entity';
+import { FamiliarLoginDto } from 'src/auth/dto/familiar_login.dto';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from 'src/common/enums/user_roles.enum';
-import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.dto';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { UUID } from 'crypto';
@@ -20,9 +20,6 @@ export class AuthorizedFamiliarService {
 
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
-
-    @InjectRepository(IdTypeEntity)
-    private idTypeRepository: Repository<IdTypeEntity>,
   ) {}
 
   // CREATE FUNTIONS //
@@ -197,7 +194,7 @@ export class AuthorizedFamiliarService {
         id: id,
         is_active: true,
       },
-      // relations: ['medical_req'],
+      relations: ['medical_req'],
     });
 
     if (!userFamiliarFound) {
@@ -215,6 +212,7 @@ export class AuthorizedFamiliarService {
       where: {
         id_number: idNumber,
       },
+      relations: ['medical_req'],
     });
 
     if (!familiarFound) {
@@ -225,6 +223,59 @@ export class AuthorizedFamiliarService {
     } else {
       return familiarFound;
     }
+  }
+
+  async getFamiliarWithPatient(
+    familiarIdType: number,
+    idNumber: number,
+    familiarEmail: string,
+    patientIdNumber: number,
+    relWithPatient: number,
+  ) {
+    const patientData = await this.userRepository.findOne({
+      where: {
+        id_number: patientIdNumber,
+      },
+    });
+
+    if (!patientData) {
+      return null;
+    }
+
+    const familiarPatient = await this.familiarRepository.findOne({
+      where: {
+        user_id_type: familiarIdType,
+        id_number: idNumber,
+        email: familiarEmail,
+        rel_with_patient: relWithPatient,
+      },
+      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
+    });
+
+    if (!familiarPatient) {
+      return null;
+    }
+
+    const verifiedRelationship = patientData.familiar.find(
+      (f) => f.id === familiarPatient.id,
+    );
+
+    if (!verifiedRelationship) {
+      return null;
+    }
+
+    return familiarPatient;
+  }
+
+  async getFamiliarFoundByIdAndCode(
+    idNumber: number,
+    verificationCode: number,
+  ) {
+    return await this.familiarRepository.findOneBy({
+      id_number: idNumber,
+      verification_code: verificationCode,
+      is_active: true,
+    });
   }
 
   // UPDATE FUNTIONS //

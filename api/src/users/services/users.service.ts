@@ -363,14 +363,6 @@ export class UsersService {
     });
   }
 
-  async getUserFoundByIdAndCode(idNumber: number, verificationCode: number) {
-    return await this.userRepository.findOneBy({
-      id_number: idNumber,
-      verification_code: verificationCode,
-      is_active: true,
-    });
-  }
-
   async getUserFoundByIdNumberWithPassword(
     userIdType: number,
     idNumber: number,
@@ -386,6 +378,14 @@ export class UsersService {
         'email',
         'role',
       ],
+    });
+  }
+
+  async getUserFoundByIdAndCode(idNumber: number, verificationCode: number) {
+    return await this.userRepository.findOneBy({
+      id_number: idNumber,
+      verification_code: verificationCode,
+      is_active: true,
     });
   }
 
