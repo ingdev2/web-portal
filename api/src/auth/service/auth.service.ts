@@ -253,9 +253,12 @@ export class AuthService {
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);
 
-    userFound.verification_code = verificationCode;
-
-    await this.userRepository.save(userFound);
+    await this.userRepository.update(
+      {
+        id: userFound.id,
+      },
+      { verification_code: verificationCode },
+    );
 
     const emailDetailsToSend = new SendEmailDto();
 
@@ -268,8 +271,12 @@ export class AuthService {
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
-      userFound.verification_code = null;
-      await this.userRepository.save(userFound);
+      await this.userRepository.update(
+        {
+          id: userFound.id,
+        },
+        { verification_code: null },
+      );
     });
 
     return { id_type, id_number };
@@ -312,9 +319,12 @@ export class AuthService {
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);
 
-    familiarVerified.verification_code = verificationCode;
-
-    await this.familiarRepository.save(familiarVerified);
+    await this.familiarRepository.update(
+      {
+        id: familiarVerified.id,
+      },
+      { verification_code: verificationCode },
+    );
 
     const emailDetailsToSend = new SendEmailDto();
 
@@ -327,8 +337,12 @@ export class AuthService {
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
-      familiarVerified.verification_code = null;
-      await this.familiarRepository.save(familiarVerified);
+      await this.familiarRepository.update(
+        {
+          id: familiarVerified.id,
+        },
+        { verification_code: null },
+      );
     });
 
     return { id_type, id_number, email, patient_id_number };
@@ -352,8 +366,12 @@ export class AuthService {
 
     const token = await this.jwtService.signAsync(payload);
 
-    userFound.verification_code = null;
-    await this.userRepository.save(userFound);
+    await this.userRepository.update(
+      {
+        id: userFound.id,
+      },
+      { verification_code: null },
+    );
 
     return {
       token,
@@ -384,8 +402,12 @@ export class AuthService {
 
     const token = await this.jwtService.signAsync(payload);
 
-    familiarFound.verification_code = null;
-    await this.familiarRepository.save(familiarFound);
+    await this.familiarRepository.update(
+      {
+        id: familiarFound.id,
+      },
+      { verification_code: null },
+    );
 
     return {
       token,

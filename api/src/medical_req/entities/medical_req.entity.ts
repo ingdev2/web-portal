@@ -136,10 +136,19 @@ export class MedicalReq {
   @ManyToOne(() => User, (aplicant) => aplicant.medical_req)
   aplicant: User;
 
+  @Column({ type: 'boolean', default: false })
+  in_legal_area: boolean;
+
   @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
   @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })
   req_status: RequirementStatus;
 
   @Column({ nullable: true })
   requirement_status: number;
+
+  @Column({ type: 'text', array: true, nullable: true })
+  sent_documents: string[];
+
+  @Column({ type: 'text', nullable: true })
+  comments: string;
 }

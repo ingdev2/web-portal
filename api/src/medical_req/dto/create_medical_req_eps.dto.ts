@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -12,6 +11,7 @@ import {
 
 export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
+  @IsNumber()
   requirement_type: number;
 
   @IsOptional()
@@ -23,9 +23,11 @@ export class CreateMedicalReqEpsDto {
   aplicant_last_name: string;
 
   @IsOptional()
+  @IsNumber()
   aplicant_gender: number;
 
   @IsOptional()
+  @IsNumber()
   aplicant_id_type: number;
 
   @IsOptional()
@@ -49,6 +51,7 @@ export class CreateMedicalReqEpsDto {
   aplicant_company_area: number;
 
   @IsNotEmpty()
+  @IsNumber()
   patient_id_type: number;
 
   @IsNotEmpty()
@@ -72,6 +75,7 @@ export class CreateMedicalReqEpsDto {
   download_expiration_date: Date;
 
   @IsOptional()
+  @IsNumber()
   requirement_status: number;
 
   @IsOptional()
@@ -83,5 +87,6 @@ export class CreateMedicalReqEpsDto {
   aplicantId: string;
 
   @IsOptional()
+  @IsNumber()
   medicalReqUserType: number;
 }

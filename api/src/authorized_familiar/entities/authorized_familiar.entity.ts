@@ -91,6 +91,9 @@ export class AuthorizedFamiliar {
   @DeleteDateColumn()
   deletedAt: Date;
 
+  @Column({ type: 'text', array: true, nullable: true })
+  copy_familiar_citizenship_card: string[];
+
   // @ManyToMany(() => User, (patient) => patient.familiar)
   // patient: User[];
 
