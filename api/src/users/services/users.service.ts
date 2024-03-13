@@ -253,7 +253,7 @@ export class UsersService {
 
   // GET FUNTIONS //
 
-  async getAllUsersPerson() {
+  async getAllUsersPatient() {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
