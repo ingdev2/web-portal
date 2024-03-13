@@ -38,11 +38,7 @@ export class CreateMedicalReqPatientDto {
 
   @IsOptional()
   @IsNumber()
-  aplicant_eps_company: number;
-
-  @IsOptional()
-  @IsNumber()
-  aplicant_company_area: number;
+  aplicant_cellphone: number;
 
   @IsNotEmpty()
   patient_id_type: number;

@@ -24,7 +24,7 @@ export class AuthorizedFamiliarService {
   // CREATE FUNTIONS //
 
   async createUserFamiliar(
-    userId: UUID,
+    userId: string,
     familiar: CreateAuthorizedFamiliarDto,
   ) {
     const patientRole = await this.userRoleRepository.findOne({
@@ -53,57 +53,49 @@ export class AuthorizedFamiliarService {
       );
     }
 
-    const patientWithFamiliarFound = await this.familiarRepository.findOne({
+    const familiarWithPatientFound = await this.familiarRepository.findOne({
       where: {
         id_number: familiar.id_number,
-        patients_id: ArrayContains([userId]),
+        patient_id: patientFound.id,
       },
     });
 
-    if (patientWithFamiliarFound) {
+    if (familiarWithPatientFound) {
       return new HttpException(
         `El familiar con número de identificación: ${familiar.id_number} ya está registrado con este paciente.`,
         HttpStatus.CONFLICT,
       );
     }
 
-    var familiarAnAssignedPatient = await this.familiarRepository.findOne({
+    const familiarWithAnotherPatient = await this.familiarRepository.findOne({
       where: {
         id_number: familiar.id_number,
       },
     });
 
-    if (familiarAnAssignedPatient) {
-      const addAnotherPatient = new CreateAuthorizedFamiliarDto();
+    if (familiarWithAnotherPatient) {
+      const newFamiliar = await this.familiarRepository.create({
+        ...familiar,
+        user_role: familiarWithAnotherPatient.user_role,
+        patient_id: patientFound.id,
+        accept_terms: true,
+      } as DeepPartial<AuthorizedFamiliar>);
 
-      Object.assign(addAnotherPatient, familiarAnAssignedPatient);
-
-      addAnotherPatient.patients_id.push(userId);
-
-      await this.familiarRepository.update(
-        familiarAnAssignedPatient.id,
-        addAnotherPatient,
-      );
-
-      const familiarWithAnotherPatient =
-        await await this.familiarRepository.findOne({
-          where: {
-            id_number: familiar.id_number,
-          },
-        });
+      const familiarWithRole = await this.familiarRepository.save(newFamiliar);
 
       const patientFamiliar = await this.userRepository.findOne({
         where: { id: userId },
       });
-      const familiarPatient = await this.familiarRepository.findOne({
-        where: { id: familiarWithAnotherPatient.id },
+
+      const newFamiliarOfOtherPatient = await this.familiarRepository.findOne({
+        where: { id: familiarWithRole.id },
       });
 
-      await patientFamiliar.familiar.push(familiarPatient);
+      await patientFamiliar.familiar.push(newFamiliarOfOtherPatient);
 
       await this.userRepository.save(patientFamiliar);
 
-      return familiarWithAnotherPatient;
+      return newFamiliarOfOtherPatient;
     }
 
     const roleFamiliarFound = await this.userRoleRepository.findOne({
@@ -122,7 +114,7 @@ export class AuthorizedFamiliarService {
     const insertRoleFamiliar = await this.familiarRepository.create({
       ...familiar,
       user_role: roleFamiliarFound.id,
-      patients_id: [patientFound.id],
+      patient_id: patientFound.id,
       accept_terms: true,
     } as DeepPartial<AuthorizedFamiliar>);
 
@@ -152,11 +144,12 @@ export class AuthorizedFamiliarService {
     const patientFamiliar = await this.userRepository.findOne({
       where: { id: userId },
     });
-    const familiarPatient = await this.familiarRepository.findOne({
+
+    const newFamiliarOfPatient = await this.familiarRepository.findOne({
       where: { id: newFamiliar.id },
     });
 
-    await patientFamiliar.familiar.push(familiarPatient);
+    await patientFamiliar.familiar.push(newFamiliarOfPatient);
 
     await this.userRepository.save(patientFamiliar);
 
@@ -258,6 +251,7 @@ export class AuthorizedFamiliarService {
         user_id_type: familiarIdType,
         id_number: idNumber,
         email: familiarEmail,
+        patient_id: patientData.id,
         rel_with_patient: relWithPatient,
       },
       select: [
@@ -267,7 +261,7 @@ export class AuthorizedFamiliarService {
         'id_number',
         'email',
         'role',
-        'patients_id',
+        'patient_id',
       ],
     });
 

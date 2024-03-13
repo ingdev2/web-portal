@@ -22,14 +22,41 @@ export class MedicalReq {
   @Column({ generated: 'uuid' })
   filing_number: string;
 
+  @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req)
+  @JoinColumn({ name: 'requirement_type', referencedColumnName: 'id' })
+  req_type: RequirementType;
+
+  @Column()
+  requirement_type: number;
+
   @Column({ type: 'boolean', default: false })
   right_petition: boolean;
 
   @Column({ type: 'text', array: true, nullable: true })
   copy_right_petition: string[];
 
+  @Column({ nullable: true })
+  medicalReqUserType: number;
+
+  @ManyToOne(() => AuthorizedFamiliar, (familiar) => familiar.medical_req)
+  @JoinColumn({ name: 'familiar_id', referencedColumnName: 'id' })
+  familiar: AuthorizedFamiliar;
+
+  @Column({ type: 'uuid', nullable: true })
+  familiar_id: string;
+
   @Column({ type: 'uuid', nullable: true })
   aplicantId: string;
+
+  @ManyToOne(
+    () => PatientClassStatus,
+    (patient_class) => patient_class.medical_req,
+  )
+  @JoinColumn({ name: 'patient_class_status', referencedColumnName: 'id' })
+  patient_class: PatientClassStatus;
+
+  @Column({ nullable: true })
+  patient_class_status: number;
 
   @Column()
   patient_id_type: number;
@@ -108,33 +135,6 @@ export class MedicalReq {
 
   @ManyToOne(() => User, (aplicant) => aplicant.medical_req)
   aplicant: User;
-
-  @Column({ nullable: true })
-  medicalReqUserType: number;
-
-  @ManyToOne(() => AuthorizedFamiliar, (familiar) => familiar.medical_req)
-  @JoinColumn({ name: 'familiar_id', referencedColumnName: 'id' })
-  familiar: AuthorizedFamiliar;
-
-  @Column({ type: 'uuid', nullable: true })
-  familiar_id: string;
-
-  @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req)
-  @JoinColumn({ name: 'requirement_type', referencedColumnName: 'id' })
-  req_type: RequirementType;
-
-  @Column()
-  requirement_type: number;
-
-  @ManyToOne(
-    () => PatientClassStatus,
-    (patient_class) => patient_class.medical_req,
-  )
-  @JoinColumn({ name: 'patient_class_status', referencedColumnName: 'id' })
-  patient_class: PatientClassStatus;
-
-  @Column({ nullable: true })
-  patient_class_status: number;
 
   @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
   @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })

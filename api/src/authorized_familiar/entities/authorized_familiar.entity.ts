@@ -1,4 +1,4 @@
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
@@ -43,7 +43,7 @@ export class AuthorizedFamiliar {
   @Column()
   user_id_type: number;
 
-  @Column({ type: 'bigint', unique: true })
+  @Column({ type: 'bigint' })
   id_number: number;
 
   @ManyToOne(() => UserRole, (role) => role.user)
@@ -91,14 +91,11 @@ export class AuthorizedFamiliar {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToMany(() => User, (patient) => patient.familiar)
-  patient: User[];
+  // @ManyToMany(() => User, (patient) => patient.familiar)
+  // patient: User[];
 
-  @Column({ type: 'uuid', array: true })
-  patients_id: UUID[];
-
-  @Column({ nullable: true })
-  login_patient_id_number: number;
+  @Column({ type: 'uuid', unique: true })
+  patient_id: string;
 
   @Column({ nullable: true })
   verification_code: number;

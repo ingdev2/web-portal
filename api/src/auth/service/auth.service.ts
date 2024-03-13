@@ -6,7 +6,7 @@ import { UsersService } from '../../users/services/users.service';
 import { AuthorizedFamiliarService } from '../../authorized_familiar/services/authorized_familiar.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
-import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserPatientDto } from '../../users/dto/create_user_person.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { User } from '../../users/entities/user.entity';
@@ -94,7 +94,7 @@ export class AuthService {
     });
   }
 
-  async registerUserPerson({
+  async registerUserPatient({
     name,
     last_name,
     user_gender,
@@ -110,10 +110,10 @@ export class AuthService {
     residence_neighborhood,
     user_role,
     verification_code,
-  }: CreateUserPersonDto) {
+  }: CreateUserPatientDto) {
     await this.usersService.getUsersByIdNumber(id_number);
 
-    return await this.usersService.createUserPerson({
+    return await this.usersService.createUserPatient({
       name,
       last_name,
       user_gender,
@@ -133,7 +133,7 @@ export class AuthService {
   }
 
   async registerFamiliar(
-    userId: UUID,
+    userId: string,
     {
       name,
       last_name,
@@ -144,7 +144,6 @@ export class AuthService {
       user_gender,
       rel_with_patient,
       user_role,
-      patients_id,
       verification_code,
     }: CreateAuthorizedFamiliarDto,
   ) {
@@ -160,7 +159,6 @@ export class AuthService {
       user_gender,
       rel_with_patient,
       user_role,
-      patients_id,
       verification_code,
     });
   }
@@ -296,26 +294,25 @@ export class AuthService {
       throw new UnauthorizedException(`¡Datos de ingreso incorrectos!`);
     }
 
+    const patientOfFamiliar = await this.userRepository.findOne({
+      where: {
+        id: familiarFound.patient_id,
+      },
+    });
+
     const familiarVerified = await this.familiarRepository.findOne({
       where: {
         user_id_type: id_type,
         id_number: id_number,
+        email: email,
+        patient_id: patientOfFamiliar.id,
       },
-      select: [
-        'id',
-        'name',
-        'user_id_type',
-        'id_number',
-        'email',
-        'role',
-        'login_patient_id_number',
-      ],
+      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
     });
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);
 
     familiarVerified.verification_code = verificationCode;
-    familiarVerified.login_patient_id_number = patient_id_number;
 
     await this.familiarRepository.save(familiarVerified);
 
@@ -331,11 +328,6 @@ export class AuthService {
 
     schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
       familiarVerified.verification_code = null;
-      await this.familiarRepository.save(familiarVerified);
-    });
-
-    schedule.scheduleJob(new Date(Date.now() + 20 * 60 * 1000), async () => {
-      familiarVerified.login_patient_id_number = null;
       await this.familiarRepository.save(familiarVerified);
     });
 
@@ -399,7 +391,7 @@ export class AuthService {
       token,
       id_type: familiarFound.user_id_type,
       id_number: familiarFound.id_number,
-      patientIdNumber: familiarFound.login_patient_id_number,
+      patientIdNumber: familiarFound.patient_id,
     };
   }
 

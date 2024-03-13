@@ -7,13 +7,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { AdminRolType } from 'src/common/enums/admin_roles.enum';
-import { UserRolType } from 'src/common/enums/user_roles.enum';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import { AuthorizedFamiliarService } from '../services/authorized_familiar.service';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('authorized-familiar')
 @ApiBearerAuth()

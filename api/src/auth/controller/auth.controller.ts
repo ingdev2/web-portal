@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
-import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserPatientDto } from '../../users/dto/create_user_person.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
@@ -29,14 +29,14 @@ export class AuthController {
     return await this.authService.registerAdmin(registerAdmin);
   }
 
-  @Post('registerUserPerson')
-  async registerUserPerson(@Body() registerUserPerson: CreateUserPersonDto) {
-    return await this.authService.registerUserPerson(registerUserPerson);
+  @Post('registerUserPatient')
+  async registerUserPatient(@Body() registerUserPatient: CreateUserPatientDto) {
+    return await this.authService.registerUserPatient(registerUserPatient);
   }
 
   @Post(':userId/registerFamiliar')
   async registerFamiliar(
-    @Param('userId') userId: UUID,
+    @Param('userId') userId: string,
     @Body() registerFamiliar: CreateAuthorizedFamiliarDto,
   ) {
     return await this.authService.registerFamiliar(userId, registerFamiliar);

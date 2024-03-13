@@ -38,6 +38,10 @@ export class CreateMedicalReqEpsDto {
 
   @IsOptional()
   @IsNumber()
+  aplicant_cellphone: number;
+
+  @IsOptional()
+  @IsNumber()
   aplicant_eps_company: number;
 
   @IsOptional()

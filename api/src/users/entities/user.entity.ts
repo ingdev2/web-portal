@@ -17,7 +17,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AuthorizedFamiliar } from 'src/authorized_familiar/entities/authorized_familiar.entity';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 
 @Entity()
 export class User {
@@ -116,7 +116,7 @@ export class User {
   @Column({ nullable: true })
   company_area: number;
 
-  @ManyToMany(() => AuthorizedFamiliar, (familiar) => familiar.patient, {
+  @ManyToMany(() => AuthorizedFamiliar, {
     eager: true,
     cascade: true,
   })

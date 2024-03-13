@@ -6,7 +6,6 @@ import {
   MinLength,
   IsOptional,
 } from 'class-validator';
-import { UUID } from 'crypto';
 
 export class CreateAuthorizedFamiliarDto {
   @IsNotEmpty()
@@ -30,9 +29,6 @@ export class CreateAuthorizedFamiliarDto {
   @IsNotEmpty()
   @IsNumber()
   cellphone: number;
-
-  @IsOptional()
-  patients_id: UUID[];
 
   @IsOptional()
   rel_with_patient: number;
