@@ -1,6 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { RelationshipWithPatient } from '../../medical_req/enums/relationship_with_patient.enum';
-import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class RelWithPatient {
@@ -10,6 +10,9 @@ export class RelWithPatient {
   @Column({ enum: RelationshipWithPatient })
   name: RelationshipWithPatient;
 
-  @OneToMany(() => MedicalReq, (medical_req) => medical_req.rel_with_patient)
-  medical_req: MedicalReq[];
+  @OneToMany(
+    () => AuthorizedFamiliar,
+    (authorized_familiar) => authorized_familiar.relationship_with_patient,
+  )
+  familiar: AuthorizedFamiliar[];
 }

@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class CreateUserPersonDto {
+export class CreateUserPatientDto {
   @IsOptional()
   @IsString()
   @MinLength(3)
@@ -18,7 +18,7 @@ export class CreateUserPersonDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(5)
+  @MinLength(3)
   last_name: string;
 
   @IsOptional()

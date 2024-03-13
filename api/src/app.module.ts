@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { NodemailerModule } from './nodemailer/nodemailer.module';
 import { UserRolesModule } from './user_roles/user_roles.module';
 import { AdminRolesModule } from './admin_roles/admin_roles.module';
+import { AuthorizedFamiliarModule } from './authorized_familiar/authorized_familiar.module';
 import { GenderTypeModule } from './genders/genders.module';
 import { IdTypesModule } from './id_types/id_types.module';
 import { CompanyAreaModule } from './company_area/company_area.module';
@@ -37,6 +38,7 @@ import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module
     }),
     UsersModule,
     AdminsModule,
+    AuthorizedFamiliarModule,
     MedicalReqModule,
     AuthModule,
     NodemailerModule,

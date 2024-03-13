@@ -6,7 +6,7 @@ import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { IdType } from '../../common/enums/id_type.enum';
-import { CreateUserPersonDto } from '../dto/create_user_person.dto';
+import { CreateUserPatientDto } from '../dto/create_user_person.dto';
 import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
@@ -87,10 +87,10 @@ export class UsersService {
     }
   }
 
-  async createUserPerson(userPerson: CreateUserPersonDto) {
+  async createUserPatient(userPatient: CreateUserPatientDto) {
     const idTypeOfUser = await this.idTypeRepository.findOne({
       where: {
-        id: userPerson.user_id_type,
+        id: userPatient.user_id_type,
       },
     });
 
@@ -116,80 +116,81 @@ export class UsersService {
 
     const data = await this.validateThatThePatientExist({
       idType: idTypeNameForConsult,
-      idNumber: userPerson.id_number,
+      idNumber: userPatient.id_number,
     });
 
     const patientData = data[0]?.data;
 
     if (!patientData || patientData.length === 0) {
       return new HttpException(
-        `El número de identificación ${userPerson.id_number} no esta registrado en la base de datos de la clínica.`,
+        `El paciente con número de identificación ${userPatient.id_number} no esta registrado en la base de datos de la clínica.`,
         HttpStatus.CONFLICT,
       );
     }
 
-    const dataToCreateUser = new CreateUserPersonDto();
+    const dataToCreateUser = new CreateUserPatientDto();
 
     dataToCreateUser.name = patientData[0]?.NOMBRE;
     dataToCreateUser.birthdate = patientData[0]?.FECHA_NACIMIENTO;
 
-    const userPersonFound = await this.userRepository.findOne({
+    const userPatientFound = await this.userRepository.findOne({
       where: {
-        id_number: userPerson.id_number,
+        id_number: userPatient.id_number,
       },
     });
 
-    if (userPersonFound) {
+    if (userPatientFound) {
       return new HttpException(
-        `El usuario con número de identificación ${userPerson.id_number} ya está registrado.`,
+        `El usuario con número de identificación ${userPatient.id_number} ya está registrado.`,
         HttpStatus.CONFLICT,
       );
     }
 
-    const rolePersonFound = await this.userRoleRepository.findOne({
+    const rolePatientFound = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
       },
     });
 
-    if (!rolePersonFound) {
+    if (!rolePatientFound) {
       throw new HttpException(
         'El rol "Paciente" no existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    const insertRoleUserPerson = await this.userRepository.create({
-      ...userPerson,
-      user_role: rolePersonFound.id,
+    const insertRoleUserPatient = await this.userRepository.create({
+      ...userPatient,
+      user_role: rolePatientFound.id,
       accept_terms: true,
     });
 
-    const userPersonWithRole =
-      await this.userRepository.save(insertRoleUserPerson);
+    const userPatientWithRole = await this.userRepository.save(
+      insertRoleUserPatient,
+    );
 
-    const userRolePerson = await this.userRoleRepository.findOne({
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
-        id: userPersonWithRole.user_role,
+        id: userPatientWithRole.user_role,
         name: UserRolType.PATIENT,
       },
     });
 
-    if (!userRolePerson) {
+    if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    await this.userRepository.update(userPersonWithRole.id, userPerson);
-    await this.userRepository.update(userPersonWithRole.id, dataToCreateUser);
+    await this.userRepository.update(userPatientWithRole.id, dataToCreateUser);
+    await this.userRepository.update(userPatientWithRole.id, userPatient);
 
-    const newUserPerson = await this.userRepository.findOne({
-      where: { id: userPersonWithRole.id },
+    const newUserPatient = await this.userRepository.findOne({
+      where: { id: userPatientWithRole.id },
     });
 
-    return newUserPerson;
+    return newUserPatient;
   }
 
   async createUserEps(userEps: CreateUserEpsDto) {
@@ -252,7 +253,7 @@ export class UsersService {
 
   // GET FUNTIONS //
 
-  async getAllUsersPerson() {
+  async getAllUsersPatient() {
     const userRolePerson = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
@@ -363,14 +364,6 @@ export class UsersService {
     });
   }
 
-  async getUserFoundByIdAndCode(idNumber: number, verificationCode: number) {
-    return await this.userRepository.findOneBy({
-      id_number: idNumber,
-      verification_code: verificationCode,
-      is_active: true,
-    });
-  }
-
   async getUserFoundByIdNumberWithPassword(
     userIdType: number,
     idNumber: number,
@@ -386,6 +379,14 @@ export class UsersService {
         'email',
         'role',
       ],
+    });
+  }
+
+  async getUserFoundByIdAndCode(idNumber: number, verificationCode: number) {
+    return await this.userRepository.findOneBy({
+      id_number: idNumber,
+      verification_code: verificationCode,
+      is_active: true,
     });
   }
 

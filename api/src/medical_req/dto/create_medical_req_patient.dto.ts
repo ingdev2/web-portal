@@ -9,7 +9,7 @@ import {
   IsEmail,
 } from 'class-validator';
 
-export class CreateMedicalReqEpsDto {
+export class CreateMedicalReqPatientDto {
   @IsNotEmpty()
   @IsNumber()
   requirement_type: number;
@@ -44,17 +44,9 @@ export class CreateMedicalReqEpsDto {
 
   @IsOptional()
   @IsNumber()
-  aplicant_eps_company: number;
-
-  @IsOptional()
-  @IsNumber()
-  aplicant_company_area: number;
-
-  @IsNotEmpty()
-  @IsNumber()
   patient_id_type: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   patient_id_number: number;
 

@@ -4,7 +4,7 @@ import { MedicalReqController } from './controllers/medical_req.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicalReq } from './entities/medical_req.entity';
 import { User } from '../users/entities/user.entity';
-import { NodemailerModule } from '../nodemailer/nodemailer.module';
+import { UsersModule } from '../users/users.module';
 import { UserRole } from '../user_roles/entities/user_role.entity';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
 import { RequirementType } from '../requirement_type/entities/requirement_type.entity';
@@ -13,6 +13,7 @@ import { RequirementStatus } from '../requirement_status/entities/requirement_st
 import { RequirementStatusModule } from '../requirement_status/requirement_status.module';
 import { PatientClassStatus } from '../patient_class_status/entities/patient_class_status.entity';
 import { RelWithPatient } from '../rel_with_patient/entities/rel_with_patient.entity';
+import { NodemailerModule } from '../nodemailer/nodemailer.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { RelWithPatient } from '../rel_with_patient/entities/rel_with_patient.en
       RelWithPatient,
       RequirementStatus,
     ]),
+    UsersModule,
     NodemailerModule,
     RequirementTypeModule,
     RequirementStatusModule,

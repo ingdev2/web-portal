@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -11,7 +10,7 @@ import {
   IsEmail,
 } from 'class-validator';
 
-export class CreateMedicalReqPersonDto {
+export class CreateMedicalReqFamiliarDto {
   @IsNotEmpty()
   requirement_type: number;
 

@@ -4,12 +4,10 @@ import {
   IsNumber,
   IsString,
   MinLength,
-  MaxLength,
   IsOptional,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
 
-export class CreateUserEpsDto {
+export class CreateAuthorizedFamiliarDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
@@ -32,12 +30,8 @@ export class CreateUserEpsDto {
   @IsNumber()
   cellphone: number;
 
-  @Transform(({ value }) => value.trim())
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(7)
-  @MaxLength(14)
-  password: string;
+  @IsOptional()
+  rel_with_patient: number;
 
   @IsOptional()
   user_role: number;
@@ -47,12 +41,6 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty()
   user_id_type: number;
-
-  @IsNotEmpty()
-  eps_company: number;
-
-  @IsNotEmpty()
-  company_area: number;
 
   @IsOptional()
   @IsNumber()

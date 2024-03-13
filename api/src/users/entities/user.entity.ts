@@ -1,3 +1,8 @@
+import { UserRole } from '../../user_roles/entities/user_role.entity';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { EpsCompany } from '../../eps_company/entities/eps_company.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 import {
   Column,
@@ -5,16 +10,14 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { GenderType } from '../../genders/entities/gender.entity';
-import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
-import { EpsCompany } from '../../eps_company/entities/eps_company.entity';
-import { CompanyArea } from '../../company_area/entities/company_area.entity';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 
 @Entity()
 export class User {
@@ -30,14 +33,14 @@ export class User {
   @Column({ type: 'bigint', unique: true })
   id_number: number;
 
+  @Column({ type: 'date', nullable: true })
+  birthdate: Date;
+
   @Column()
   email: string;
 
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
-
-  @Column({ type: 'date', nullable: true })
-  birthdate: Date;
 
   @Column({ select: false })
   password: string;
@@ -112,6 +115,13 @@ export class User {
 
   @Column({ nullable: true })
   company_area: number;
+
+  @ManyToMany(() => AuthorizedFamiliar, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  familiar: AuthorizedFamiliar[];
 
   @Column({ nullable: true })
   verification_code: number;

@@ -1,19 +1,14 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
-import { CreateUserPersonDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserPatientDto } from '../../users/dto/create_user_person.dto';
+import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
+import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { LoginDto } from '../dto/login.dto';
 
 import { ApiTags } from '@nestjs/swagger';
+import { UUID } from 'crypto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,9 +29,17 @@ export class AuthController {
     return await this.authService.registerAdmin(registerAdmin);
   }
 
-  @Post('registerUserPerson')
-  async registerUserPerson(@Body() registerUserPerson: CreateUserPersonDto) {
-    return await this.authService.registerUserPerson(registerUserPerson);
+  @Post('registerUserPatient')
+  async registerUserPatient(@Body() registerUserPatient: CreateUserPatientDto) {
+    return await this.authService.registerUserPatient(registerUserPatient);
+  }
+
+  @Post(':userId/registerFamiliar')
+  async registerFamiliar(
+    @Param('userId') userId: string,
+    @Body() registerFamiliar: CreateAuthorizedFamiliarDto,
+  ) {
+    return await this.authService.registerFamiliar(userId, registerFamiliar);
   }
 
   @Post('registerUserEps')
@@ -56,6 +59,11 @@ export class AuthController {
     return await this.authService.loginUsers(loginAdmin);
   }
 
+  @Post('loginRelatives')
+  async loginRelatives(@Body() loginFamiliar: FamiliarLoginDto) {
+    return await this.authService.loginRelatives(loginFamiliar);
+  }
+
   @Post('verifiedLoginUsers/:idNumber')
   async verifyCodeAndLoginUsers(
     @Param('idNumber') idNumber: number,
@@ -67,22 +75,14 @@ export class AuthController {
     );
   }
 
-  // FORMAS DE AUTH ROLES //
-
-  // OPCION 1
-
-  // @Get('profile')
-  // @Roles(UserRolType.EPS)
-  // @UseGuards(AuthGuard, RolesGuard)
-  // profile(@Req() req: RequestWithUser) {
-  //   return this.authService.profileUser(req.user);
-  // }
-
-  // OPCION 1
-
-  // @Get('profile')
-  // @Auth(UserRolType.PERSON)
-  // profile(@ActiveUser() user: UserActiveInterface) {
-  //   return this.authService.profileUser(user);
-  // }
+  @Post('verifiedLoginRelatives/:idNumber')
+  async verifyCodeAndLoginRelatives(
+    @Param('idNumber') idNumber: number,
+    @Body('verification_code') verification_code: number,
+  ) {
+    return await this.authService.verifyCodeAndLoginRelatives(
+      idNumber,
+      verification_code,
+    );
+  }
 }

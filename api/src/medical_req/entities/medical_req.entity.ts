@@ -2,7 +2,7 @@ import { User } from '../../users/entities/user.entity';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
 import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
 import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
-import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import {
   Column,
   CreateDateColumn,
@@ -22,11 +22,47 @@ export class MedicalReq {
   @Column({ generated: 'uuid' })
   filing_number: string;
 
+  @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req)
+  @JoinColumn({ name: 'requirement_type', referencedColumnName: 'id' })
+  req_type: RequirementType;
+
+  @Column()
+  requirement_type: number;
+
   @Column({ type: 'boolean', default: false })
   right_petition: boolean;
 
   @Column({ type: 'text', array: true, nullable: true })
   copy_right_petition: string[];
+
+  @Column({ nullable: true })
+  medicalReqUserType: number;
+
+  @ManyToOne(() => AuthorizedFamiliar, (familiar) => familiar.medical_req)
+  @JoinColumn({ name: 'familiar_id', referencedColumnName: 'id' })
+  familiar: AuthorizedFamiliar;
+
+  @Column({ type: 'uuid', nullable: true })
+  familiar_id: string;
+
+  @Column({ type: 'uuid', nullable: true })
+  aplicantId: string;
+
+  @ManyToOne(
+    () => PatientClassStatus,
+    (patient_class) => patient_class.medical_req,
+  )
+  @JoinColumn({ name: 'patient_class_status', referencedColumnName: 'id' })
+  patient_class: PatientClassStatus;
+
+  @Column({ nullable: true })
+  patient_class_status: number;
+
+  @Column()
+  patient_id_type: number;
+
+  @Column({ type: 'bigint' })
+  patient_id_number: number;
 
   @Column({ type: 'text', nullable: true })
   aplicant_name: string;
@@ -54,12 +90,6 @@ export class MedicalReq {
 
   @Column({ nullable: true })
   aplicant_company_area: number;
-
-  @Column()
-  patient_id_type: number;
-
-  @Column({ type: 'bigint' })
-  patient_id_number: number;
 
   @Column({ type: 'boolean', default: false })
   accept_terms: boolean;
@@ -103,53 +133,11 @@ export class MedicalReq {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @Column({ type: 'uuid', nullable: true })
-  aplicantId: string;
-
-  @Column({ nullable: true })
-  medicalReqUserType: number;
-
-  @ManyToOne(() => User, (user) => user.medical_req)
-  @JoinColumn({ name: 'aplicantId' })
+  @ManyToOne(() => User, (aplicant) => aplicant.medical_req)
   aplicant: User;
 
-  @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req, {
-    eager: true,
-    cascade: true,
-  })
-  @JoinColumn({ name: 'requirement_type', referencedColumnName: 'id' })
-  req_type: RequirementType;
-
-  @Column()
-  requirement_type: number;
-
-  @ManyToOne(
-    () => PatientClassStatus,
-    (patient_class) => patient_class.medical_req,
-    {
-      eager: true,
-      cascade: true,
-    },
-  )
-  @JoinColumn({ name: 'patient_class_status', referencedColumnName: 'id' })
-  patient_class: PatientClassStatus;
-
-  @Column({ nullable: true })
-  patient_class_status: number;
-
-  @ManyToOne(
-    () => RelWithPatient,
-    (rel_with_patient) => rel_with_patient.medical_req,
-    {
-      eager: true,
-      cascade: true,
-    },
-  )
-  @JoinColumn({ name: 'relationship_with_patient', referencedColumnName: 'id' })
-  rel_with_patient: RelWithPatient;
-
-  @Column({ nullable: true })
-  relationship_with_patient: number;
+  @Column({ type: 'boolean', default: false })
+  in_legal_area: boolean;
 
   @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
   @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })
@@ -157,4 +145,10 @@ export class MedicalReq {
 
   @Column({ nullable: true })
   requirement_status: number;
+
+  @Column({ type: 'text', array: true, nullable: true })
+  sent_documents: string[];
+
+  @Column({ type: 'text', nullable: true })
+  comments: string;
 }

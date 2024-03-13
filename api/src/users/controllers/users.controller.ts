@@ -4,22 +4,21 @@ import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
-import { Auth } from '../../auth/decorators/auth.decorator';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN)
+@Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   // GET METHODS //
 
-  @Auth(AdminRolType.ADMIN)
   @Get('/validatePatient')
   async validateThatThePatientExist(
     @Body()
@@ -28,11 +27,12 @@ export class UsersController {
     return await this.usersService.validateThatThePatientExist(patientData);
   }
 
-  @Get('/getAllPerson')
-  async getAllUsersPerson() {
-    return await this.usersService.getAllUsersPerson();
+  @Get('/getAllPatient')
+  async getAllUsersPatient() {
+    return await this.usersService.getAllUsersPatient();
   }
 
+  @Auth(AdminRolType.ADMIN)
   @Get('/getAllEps')
   async getAllUsersEps() {
     return await this.usersService.getAllUsersEps();
@@ -46,18 +46,6 @@ export class UsersController {
   @Get('/getUserById/:idNumber')
   async getUsersByIdNumber(@Param('idNumber') idNumber: number) {
     return await this.usersService.getUsersByIdNumber(idNumber);
-  }
-
-  @Get('/validateCode/:id')
-  async getUserFoundByIdAndCode(
-    @Param('id') id: number,
-    @Body('verificationCode')
-    verificationCode: number,
-  ) {
-    return await this.usersService.getUserFoundByIdAndCode(
-      id,
-      verificationCode,
-    );
   }
 
   // PATCH METHODS //
@@ -77,7 +65,7 @@ export class UsersController {
     return await this.usersService.updateUserEps(id, user);
   }
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS, AdminRolType.ADMIN)
+  @Auth(UserRolType.PATIENT, UserRolType.EPS)
   @Patch('/updatePassword/:id')
   async updateUserPassword(
     @Param('id')

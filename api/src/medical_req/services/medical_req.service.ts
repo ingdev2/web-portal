@@ -2,13 +2,25 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
-import { CreateMedicalReqPersonDto } from '../dto/create_medical_req_person.dto';
+import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
+import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
-import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { UserRolType } from '../../common/enums/user_roles.enum';
+import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
+import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
+import { PatientClassificationStatus } from '../enums/patient_classification_status.enum';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
+import { IdType } from '../../common/enums/id_type.enum';
+import { IdTypeAbbrev } from '../../users/enums/id_type_abbrev.enum';
+import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
+import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';
+import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
+import { RequirementStatusEnum } from '../enums/requirement_status.enum';
+import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
+import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import {
   MEDICAL_REQ_CREATED,
@@ -16,15 +28,7 @@ import {
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
-import { UserRolType } from '../../common/enums/user_roles.enum';
-import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
-import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
-import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
-import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
-import { PatientClassificationStatus } from '../enums/patient_classification_status.enum';
-import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
-import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';
-import { RequirementStatusEnum } from '../enums/requirement_status.enum';
+import { CreateMedicalReqPatientDto } from '../dto/create_medical_req_patient.dto';
 
 @Injectable()
 export class MedicalReqService {
@@ -52,15 +56,17 @@ export class MedicalReqService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    private usersService: UsersService,
     private nodemailerService: NodemailerService,
     private readonly requirementTypeService: RequirementTypeService,
   ) {}
 
   // CREATE FUNTIONS //
 
-  async createMedicalReqPerson(
+  async createMedicalReqFamiliar(
     userId: string,
-    medicalReqPerson: CreateMedicalReqPersonDto,
+    medicalReqPerson: CreateMedicalReqFamiliarDto,
   ) {
     const userPersonFound = await this.userRepository.findOne({
       where: {
@@ -100,7 +106,7 @@ export class MedicalReqService {
       );
     }
 
-    const aplicantPersonDetails = new CreateMedicalReqPersonDto();
+    const aplicantPersonDetails = new CreateMedicalReqFamiliarDto();
 
     aplicantPersonDetails.aplicantId = userPersonFound.id;
     aplicantPersonDetails.medicalReqUserType = userPersonFound.user_role;
@@ -311,7 +317,175 @@ export class MedicalReqService {
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
-    return await medicalReqCompleted;
+    return medicalReqCompleted;
+  }
+
+  async createMedicalReqPatient(
+    userId: string,
+    medicalReqPatient: CreateMedicalReqPatientDto,
+  ) {
+    const userPatientFound = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!userPatientFound) {
+      return new HttpException(
+        `El usuario no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        id: userPatientFound.user_role,
+        name: UserRolType.PATIENT,
+      },
+    });
+
+    if (!userRoleEps) {
+      throw new HttpException(
+        'El usuario debe tener el rol "Paciente".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const idTypeOfPatient = await this.userIdTypeRepository.findOne({
+      where: {
+        id: userPatientFound.user_id_type,
+      },
+    });
+
+    const idTypeName = idTypeOfPatient.name;
+
+    const idTypeAbbreviations: Record<string, string> = {
+      [IdType.CITIZENSHIP_CARD]: IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA,
+      [IdType.FOREIGNER_ID]: IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA,
+      [IdType.IDENTITY_CARD]: IdTypeAbbrev.TARJETA_DE_IDENTIDAD,
+      [IdType.CIVIL_REGISTRATION]: IdTypeAbbrev.REGISTRO_CIVIL,
+      [IdType.PASSPORT]: IdTypeAbbrev.PASAPORTE,
+      [IdType.SPECIAL_RESIDENCE_PERMIT]:
+        IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA,
+      [IdType.TEMPORARY_PROTECTION_PERMIT]:
+        IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL,
+      [IdType.MINOR_WITHOUT_IDENTIFICATION]:
+        IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN,
+      [IdType.ADULT_WITHOUT_IDENTIFICATION]:
+        IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN,
+    };
+
+    const idTypeNameForConsult = idTypeAbbreviations[idTypeName] || '';
+
+    const data = await this.usersService.validateThatThePatientExist({
+      idType: idTypeNameForConsult,
+      idNumber: userPatientFound.id_number,
+    });
+
+    const patientData = data[0]?.data;
+
+    if (!patientData || patientData.length === 0) {
+      return new HttpException(
+        `El paciente con número de identificación ${medicalReqPatient.patient_id_number} no esta registrado en la base de datos de la clínica.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const reqStatusPending = await this.requerimentStatusRepository.findOne({
+      where: { name: RequirementStatusEnum.UNDER_REVIEW },
+    });
+
+    if (!reqStatusPending) {
+      throw new HttpException(
+        'El estado "En Revisión" de requerimiento no existe',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const aplicantPatientDetails = new CreateMedicalReqPatientDto();
+
+    aplicantPatientDetails.aplicantId = userPatientFound.id;
+    aplicantPatientDetails.medicalReqUserType = userPatientFound.user_role;
+    aplicantPatientDetails.aplicant_name = userPatientFound.name;
+    aplicantPatientDetails.aplicant_last_name = userPatientFound.last_name;
+    aplicantPatientDetails.aplicant_gender = userPatientFound.user_gender;
+    aplicantPatientDetails.aplicant_id_type = userPatientFound.user_id_type;
+    aplicantPatientDetails.aplicant_id_number = userPatientFound.id_number;
+    aplicantPatientDetails.aplicant_email = userPatientFound.email;
+    aplicantPatientDetails.aplicant_cellphone = userPatientFound.cellphone;
+    aplicantPatientDetails.accept_terms = true;
+    aplicantPatientDetails.requirement_status = reqStatusPending.id;
+    aplicantPatientDetails.patient_id_type = userPatientFound.user_id_type;
+    aplicantPatientDetails.patient_id_number = userPatientFound.id_number;
+    aplicantPatientDetails.requirement_type =
+      medicalReqPatient.requirement_type;
+
+    const currentDate = new Date();
+    aplicantPatientDetails.date_of_admission = currentDate;
+
+    const userIdType = await this.userIdTypeRepository.findOne({
+      where: {
+        id: medicalReqPatient.patient_id_type,
+      },
+    });
+
+    if (!userIdType) {
+      throw new HttpException(
+        'El tipo de documento de identidad del paciente no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+      where: { id: medicalReqPatient.requirement_type },
+    });
+
+    if (!medicalReqType) {
+      throw new HttpException(
+        'El tipo de requerimiento médico no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const createMedicalReq = await this.medicalReqRepository.save(
+      aplicantPatientDetails,
+    );
+
+    const medicalReqCompleted = await this.medicalReqRepository.findOne({
+      where: {
+        id: createMedicalReq.id,
+        aplicantId: userPatientFound.id,
+      },
+    });
+
+    if (
+      !medicalReqCompleted.patient_id_type ||
+      !medicalReqCompleted.patient_id_number
+    ) {
+      throw new HttpException(
+        'El tipo y númerp de documento de identidad del paciente es requerido',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const sendReqTypeName =
+      await this.requirementTypeService.getRequirementTypeById(
+        medicalReqCompleted.requirement_type,
+      );
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
+    emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.medicalReqFilingNumber =
+      medicalReqCompleted.filing_number;
+    emailDetailsToSend.requirementType = sendReqTypeName.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
+    emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    return medicalReqCompleted;
   }
 
   async createMedicalReqEps(
@@ -345,6 +519,46 @@ export class MedicalReqService {
       );
     }
 
+    const idTypeOfPatient = await this.userIdTypeRepository.findOne({
+      where: {
+        id: medicalReqEps.patient_id_type,
+      },
+    });
+
+    const idTypeName = idTypeOfPatient.name;
+
+    const idTypeAbbreviations: Record<string, string> = {
+      [IdType.CITIZENSHIP_CARD]: IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA,
+      [IdType.FOREIGNER_ID]: IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA,
+      [IdType.IDENTITY_CARD]: IdTypeAbbrev.TARJETA_DE_IDENTIDAD,
+      [IdType.CIVIL_REGISTRATION]: IdTypeAbbrev.REGISTRO_CIVIL,
+      [IdType.PASSPORT]: IdTypeAbbrev.PASAPORTE,
+      [IdType.SPECIAL_RESIDENCE_PERMIT]:
+        IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA,
+      [IdType.TEMPORARY_PROTECTION_PERMIT]:
+        IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL,
+      [IdType.MINOR_WITHOUT_IDENTIFICATION]:
+        IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN,
+      [IdType.ADULT_WITHOUT_IDENTIFICATION]:
+        IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN,
+    };
+
+    const idTypeNameForConsult = idTypeAbbreviations[idTypeName] || '';
+
+    const data = await this.usersService.validateThatThePatientExist({
+      idType: idTypeNameForConsult,
+      idNumber: medicalReqEps.patient_id_number,
+    });
+
+    const patientData = data[0]?.data;
+
+    if (!patientData || patientData.length === 0) {
+      return new HttpException(
+        `El paciente con número de identificación ${medicalReqEps.patient_id_number} no esta registrado en la base de datos de la clínica.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
       where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
@@ -366,7 +580,9 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_id_type = userEpsFound.user_id_type;
     aplicantEpsDetails.aplicant_id_number = userEpsFound.id_number;
     aplicantEpsDetails.aplicant_email = userEpsFound.email;
+    aplicantEpsDetails.aplicant_cellphone = userEpsFound.cellphone;
     aplicantEpsDetails.aplicant_eps_company = userEpsFound.eps_company;
+    aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
     aplicantEpsDetails.accept_terms = true;
     aplicantEpsDetails.requirement_status = reqStatusPending.id;
 
@@ -407,8 +623,8 @@ export class MedicalReqService {
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
       where: {
-        aplicantId: userId,
         id: createMedicalReq.id,
+        aplicantId: userEpsFound.id,
       },
     });
 
@@ -429,7 +645,7 @@ export class MedicalReqService {
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
-    return await medicalReqCompleted;
+    return medicalReqCompleted;
   }
 
   // GET FUNTIONS //
