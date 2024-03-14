@@ -6,11 +6,10 @@ import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
-
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 
-@ApiTags('medical_req')
+@ApiTags('medical-req')
 @ApiBearerAuth()
 @Auth(AdminRolType.SUPER_ADMIN)
 @Controller('medical-req')
@@ -67,9 +66,15 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Get('/getAllMedicalReqPerson')
-  async getAllMedicalReqPerson() {
-    return await this.medicalReqService.getAllMedicalReqPerson();
+  @Get('/getAllMedicalReqPatient')
+  async getAllMedicalReqPatient() {
+    return await this.medicalReqService.getAllMedicalReqPatient();
+  }
+
+  @Auth(AdminRolType.ADMIN)
+  @Get('/getAllMedicalReqFamiliar')
+  async getAllMedicalReqFamiliar() {
+    return await this.medicalReqService.getAllMedicalReqFamiliar();
   }
 
   @Auth(AdminRolType.ADMIN)
@@ -78,10 +83,24 @@ export class MedicalReqController {
     return await this.medicalReqService.getAllMedicalReqEps();
   }
 
-  @Auth(AdminRolType.ADMIN, UserRolType.PATIENT)
-  @Get('/medicalReqPerson/:id')
-  async getMedicalReqPersonById(@Param('id') id: string) {
-    return await this.medicalReqService.getMedicalReqPersonById(id);
+  @Auth(
+    AdminRolType.ADMIN,
+    UserRolType.PATIENT,
+    UserRolType.AUTHORIZED_FAMILIAR,
+  )
+  @Get('/medicalReqPatient/:id')
+  async getMedicalReqPatientById(@Param('id') id: string) {
+    return await this.medicalReqService.getMedicalReqPatientById(id);
+  }
+
+  @Auth(
+    AdminRolType.ADMIN,
+    UserRolType.PATIENT,
+    UserRolType.AUTHORIZED_FAMILIAR,
+  )
+  @Get('/medicalReqFamiliar/:id')
+  async getMedicalReqFamiliarById(@Param('id') id: string) {
+    return await this.medicalReqService.getMedicalReqFamiliarById(id);
   }
 
   @Auth(AdminRolType.ADMIN, UserRolType.EPS)

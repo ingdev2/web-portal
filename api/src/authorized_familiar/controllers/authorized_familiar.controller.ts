@@ -11,7 +11,6 @@ import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { AuthorizedFamiliarService } from '../services/authorized_familiar.service';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
-
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 
@@ -26,16 +25,19 @@ export class AuthorizedFamiliarController {
 
   // GET METHODS //
 
+  @Auth(UserRolType.PATIENT)
   @Get('/getAllRelatives')
   async getAllRelatives() {
     return await this.authorizedFamiliarService.getAllRelatives();
   }
 
+  @Auth(UserRolType.PATIENT)
   @Get('/getFamiliar/:id')
   async getFamiliarById(@Param('id') id: string) {
     return await this.authorizedFamiliarService.getFamiliarById(id);
   }
 
+  @Auth(UserRolType.PATIENT)
   @Get('/getFamiliarById/:idNumber')
   async getFamiliarByIdNumber(@Param('idNumber') idNumber: number) {
     return await this.authorizedFamiliarService.getFamiliarByIdNumber(idNumber);

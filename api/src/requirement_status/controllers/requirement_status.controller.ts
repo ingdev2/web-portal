@@ -10,9 +10,9 @@ import {
 import { RequirementStatusService } from '../services/requirement_status.service';
 import { CreateRequirementStatusDto } from '../dto/create-requirement_status.dto';
 import { UpdateRequirementStatusDto } from '../dto/update-requirement_status.dto';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 @ApiTags('requirement-status')
 @ApiBearerAuth()

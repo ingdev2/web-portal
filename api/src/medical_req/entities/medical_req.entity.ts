@@ -3,12 +3,15 @@ import { RequirementType } from '../../requirement_type/entities/requirement_typ
 import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
 import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
+import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -57,6 +60,9 @@ export class MedicalReq {
 
   @Column({ nullable: true })
   patient_class_status: number;
+
+  @Column({ nullable: true })
+  relationship_with_patient: number;
 
   @Column()
   patient_id_type: number;
@@ -146,9 +152,25 @@ export class MedicalReq {
   @Column({ nullable: true })
   requirement_status: number;
 
-  @Column({ type: 'text', array: true, nullable: true })
-  sent_documents: string[];
+  @Column({ type: 'text', nullable: true })
+  user_message: string;
 
   @Column({ type: 'text', nullable: true })
-  comments: string;
+  response_comments: string;
+
+  @ManyToMany(() => ReasonsForRejection, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable({ name: 'medicalReqs_reasonsForRejection' })
+  reasons_for_rejection: ReasonsForRejection[];
+  @JoinColumn({
+    name: 'motive_for_rejection',
+    referencedColumnName: 'rejection_title',
+  })
+  @Column({ type: 'text', nullable: true, array: true })
+  motive_for_rejection: string[];
+
+  @Column({ type: 'text', array: true, nullable: true })
+  documents_delivered: string[];
 }

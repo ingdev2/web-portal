@@ -6,7 +6,7 @@ import { UsersService } from '../../users/services/users.service';
 import { AuthorizedFamiliarService } from '../../authorized_familiar/services/authorized_familiar.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
-import { CreateUserPatientDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { User } from '../../users/entities/user.entity';
@@ -260,13 +260,19 @@ export class AuthService {
       { verification_code: verificationCode },
     );
 
+    const userWithCode = await this.userRepository.findOne({
+      where: {
+        id: userFound.id,
+      },
+    });
+
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [userFound.email];
     emailDetailsToSend.userName = userFound.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
-    emailDetailsToSend.verificationCode = userFound.verification_code;
+    emailDetailsToSend.verificationCode = userWithCode.verification_code;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -326,13 +332,19 @@ export class AuthService {
       { verification_code: verificationCode },
     );
 
+    const familiarWithCode = await this.familiarRepository.findOne({
+      where: {
+        id: familiarVerified.id,
+      },
+    });
+
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [familiarVerified.email];
     emailDetailsToSend.userName = familiarVerified.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
-    emailDetailsToSend.verificationCode = familiarVerified.verification_code;
+    emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 

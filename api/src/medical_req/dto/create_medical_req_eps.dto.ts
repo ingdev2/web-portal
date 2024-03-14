@@ -79,14 +79,14 @@ export class CreateMedicalReqEpsDto {
   requirement_status: number;
 
   @IsOptional()
-  @IsBoolean()
-  is_deleted: boolean;
-
-  @IsOptional()
   @IsUUID()
   aplicantId: string;
 
   @IsOptional()
   @IsNumber()
   medicalReqUserType: number;
+
+  @IsNotEmpty()
+  @IsString()
+  user_message: string;
 }

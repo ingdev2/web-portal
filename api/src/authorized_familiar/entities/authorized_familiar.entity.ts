@@ -16,7 +16,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UUID } from 'crypto';
 
 @Entity()
 export class AuthorizedFamiliar {

@@ -120,7 +120,7 @@ export class User {
     eager: true,
     cascade: true,
   })
-  @JoinTable()
+  @JoinTable({ name: 'patientUsers_authorizedRelatives' })
   familiar: AuthorizedFamiliar[];
 
   @Column({ nullable: true })

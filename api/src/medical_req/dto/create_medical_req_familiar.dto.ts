@@ -15,12 +15,36 @@ export class CreateMedicalReqFamiliarDto {
   requirement_type: number;
 
   @IsNotEmpty()
+  patient_class_status: number;
+
+  @IsNotEmpty()
+  relationship_with_patient: number;
+
+  @IsNotEmpty()
+  patient_id_type: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  patient_id_number: number;
+
+  @IsNotEmpty()
   @IsBoolean()
   right_petition: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  user_message: string;
 
   @IsOptional()
   @IsArray()
   copy_right_petition: string[];
+
+  @IsOptional()
+  medicalReqUserType: number;
+
+  @IsOptional()
+  @IsUUID()
+  familiar_id: string;
 
   @IsOptional()
   @IsString()
@@ -47,19 +71,6 @@ export class CreateMedicalReqFamiliarDto {
   @IsOptional()
   @IsNumber()
   aplicant_cellphone: number;
-
-  @IsNotEmpty()
-  relationship_with_patient: number;
-
-  @IsNotEmpty()
-  patient_id_type: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  patient_id_number: number;
-
-  @IsNotEmpty()
-  patient_class_status: number;
 
   @IsOptional()
   @IsBoolean()
@@ -103,15 +114,4 @@ export class CreateMedicalReqFamiliarDto {
 
   @IsOptional()
   requirement_status: number;
-
-  @IsOptional()
-  @IsBoolean()
-  is_deleted: boolean;
-
-  @IsOptional()
-  @IsUUID()
-  aplicantId: string;
-
-  @IsOptional()
-  medicalReqUserType: number;
 }
