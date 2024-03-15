@@ -5,7 +5,7 @@ import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_f
 import { AuthorizedFamiliarModule } from '../authorized_familiar/authorized_familiar.module';
 import { IdTypesModule } from '../id_types/id_types.module';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
-import { DeptsAndCitiesModule } from 'src/depts_and_cities/depts_and_cities.module';
+import { DeptsAndCitiesModule } from '../depts_and_cities/depts_and_cities.module';
 import { Module } from '@nestjs/common';
 import { UsersController } from './controllers/users.controller';
 import { UsersService } from './services/users.service';

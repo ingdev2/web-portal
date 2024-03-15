@@ -43,6 +43,10 @@ export class CreateMedicalReqPatientDto {
   aplicant_cellphone: number;
 
   @IsOptional()
+  @IsString()
+  patient_name: string;
+
+  @IsOptional()
   @IsNumber()
   patient_id_type: number;
 

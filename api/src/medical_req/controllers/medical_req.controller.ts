@@ -32,14 +32,14 @@ export class MedicalReqController {
   }
 
   @Auth(UserRolType.AUTHORIZED_FAMILIAR)
-  @Post('/createMedicalReqFamiliar/:userId')
+  @Post('/createMedicalReqFamiliar/:familiarId')
   async createMedicalReqFamiliar(
-    @Param('userId') userId: string,
+    @Param('familiarId') familiarId: string,
     @Body()
     medicalReqFamiliar: CreateMedicalReqFamiliarDto,
   ) {
     return await this.medicalReqService.createMedicalReqFamiliar(
-      userId,
+      familiarId,
       medicalReqFamiliar,
     );
   }

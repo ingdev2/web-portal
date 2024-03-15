@@ -64,6 +64,9 @@ export class MedicalReq {
   @Column({ nullable: true })
   relationship_with_patient: number;
 
+  @Column({ type: 'text', nullable: true })
+  patient_name: string;
+
   @Column()
   patient_id_type: number;
 

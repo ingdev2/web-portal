@@ -50,6 +50,10 @@ export class CreateMedicalReqEpsDto {
   @IsNumber()
   aplicant_company_area: number;
 
+  @IsOptional()
+  @IsString()
+  patient_name: string;
+
   @IsNotEmpty()
   @IsNumber()
   patient_id_type: number;

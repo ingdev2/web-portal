@@ -69,18 +69,19 @@ export class MedicalReqService {
   // CREATE FUNTIONS //
 
   async createMedicalReqFamiliar(
-    userId: string,
+    familiarId: string,
     medicalReqFamiliar: CreateMedicalReqFamiliarDto,
   ) {
     const userPatientFound = await this.userRepository.findOne({
       where: {
-        id: userId,
+        user_id_type: medicalReqFamiliar.patient_id_type,
+        id_number: medicalReqFamiliar.patient_id_number,
       },
     });
 
     if (!userPatientFound) {
       return new HttpException(
-        `El usuario no está registrado.`,
+        `El usuario paciente no está registrado.`,
         HttpStatus.CONFLICT,
       );
     }
@@ -99,21 +100,31 @@ export class MedicalReqService {
       );
     }
 
-    const userFamiliarFound = await this.familiarRepository.findOne({
-      where: {
-        patient_id: userPatientFound.id,
-      },
-    });
-
     const verifiedFamiliar = await this.familiarRepository.findOne({
       where: {
-        id: userFamiliarFound.id,
+        id: familiarId,
+        patient_id: userPatientFound.id,
+        rel_with_patient: medicalReqFamiliar.relationship_with_patient,
       },
     });
 
     if (!verifiedFamiliar) {
       throw new HttpException(
         'El familiar no tiene parentesco con el paciente.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const userRoleFamiliar = await this.userRoleRepository.findOne({
+      where: {
+        id: verifiedFamiliar.user_role,
+        name: UserRolType.AUTHORIZED_FAMILIAR,
+      },
+    });
+
+    if (!userRoleFamiliar) {
+      throw new HttpException(
+        'El usuario debe tener el rol "Familiar Autorizado".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -132,6 +143,7 @@ export class MedicalReqService {
     const aplicantFamiliarDetails = new CreateMedicalReqFamiliarDto();
 
     aplicantFamiliarDetails.familiar_id = verifiedFamiliar.id;
+    aplicantFamiliarDetails.patient_name = userPatientFound.name;
     aplicantFamiliarDetails.medicalReqUserType = verifiedFamiliar.user_role;
     aplicantFamiliarDetails.aplicant_name = verifiedFamiliar.name;
     aplicantFamiliarDetails.aplicant_last_name = verifiedFamiliar.last_name;
@@ -354,6 +366,8 @@ export class MedicalReqService {
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.pacientName = userPatientFound.name;
+    emailDetailsToSend.pacientIdNumber = userPatientFound.id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -382,14 +396,14 @@ export class MedicalReqService {
       );
     }
 
-    const userRoleEps = await this.userRoleRepository.findOne({
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
         id: userPatientFound.user_role,
         name: UserRolType.PATIENT,
       },
     });
 
-    if (!userRoleEps) {
+    if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -450,6 +464,7 @@ export class MedicalReqService {
     const aplicantPatientDetails = new CreateMedicalReqPatientDto();
 
     aplicantPatientDetails.aplicantId = userPatientFound.id;
+    aplicantPatientDetails.patient_name = userPatientFound.name;
     aplicantPatientDetails.medicalReqUserType = userPatientFound.user_role;
     aplicantPatientDetails.aplicant_name = userPatientFound.name;
     aplicantPatientDetails.aplicant_last_name = userPatientFound.last_name;
@@ -508,7 +523,7 @@ export class MedicalReqService {
       !medicalReqCompleted.patient_id_number
     ) {
       throw new HttpException(
-        'El tipo y númerp de documento de identidad del paciente es requerido',
+        'El tipo y número de documento de identidad del paciente es requerido',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -522,6 +537,8 @@ export class MedicalReqService {
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.pacientName = userPatientFound.name;
+    emailDetailsToSend.pacientIdNumber = userPatientFound.id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -618,6 +635,7 @@ export class MedicalReqService {
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
+    aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
@@ -682,6 +700,8 @@ export class MedicalReqService {
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.pacientName = patientData[0]?.NOMBRE;
+    emailDetailsToSend.pacientIdNumber = medicalReqEps.patient_id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;

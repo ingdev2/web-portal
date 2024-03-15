@@ -36,7 +36,7 @@ export class User {
   @Column({ type: 'date', nullable: true })
   birthdate: Date;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ type: 'bigint', nullable: true })

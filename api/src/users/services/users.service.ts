@@ -149,6 +149,19 @@ export class UsersService {
       );
     }
 
+    const userPatientEmailFound = await this.userRepository.findOne({
+      where: {
+        email: userPatient.email,
+      },
+    });
+
+    if (userPatientEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${userPatient.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const rolePatientFound = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
@@ -229,6 +242,19 @@ export class UsersService {
     if (userEpsFound) {
       return new HttpException(
         `El usuario con número de identificación ${userEps.id_number} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const userEpsEmailFound = await this.userRepository.findOne({
+      where: {
+        email: userEps.email,
+      },
+    });
+
+    if (userEpsEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${userEps.email} ya está registrado.`,
         HttpStatus.CONFLICT,
       );
     }

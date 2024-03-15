@@ -27,6 +27,10 @@ export class CreateMedicalReqFamiliarDto {
   @IsNumber()
   patient_id_number: number;
 
+  @IsOptional()
+  @IsString()
+  patient_name: string;
+
   @IsNotEmpty()
   @IsBoolean()
   right_petition: boolean;
