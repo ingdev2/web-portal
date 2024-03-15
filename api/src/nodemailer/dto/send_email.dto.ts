@@ -22,6 +22,14 @@ export class SendEmailDto {
   @IsString()
   userName: string;
 
+  @IsNotEmpty()
+  @IsString()
+  pacientName: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  pacientIdNumber: number;
+
   @IsOptional()
   @IsString()
   medicalReqFilingNumber: string;

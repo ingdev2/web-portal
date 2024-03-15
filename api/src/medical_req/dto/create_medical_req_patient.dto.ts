@@ -43,6 +43,10 @@ export class CreateMedicalReqPatientDto {
   aplicant_cellphone: number;
 
   @IsOptional()
+  @IsString()
+  patient_name: string;
+
+  @IsOptional()
   @IsNumber()
   patient_id_type: number;
 
@@ -71,14 +75,14 @@ export class CreateMedicalReqPatientDto {
   requirement_status: number;
 
   @IsOptional()
-  @IsBoolean()
-  is_deleted: boolean;
-
-  @IsOptional()
   @IsUUID()
   aplicantId: string;
 
   @IsOptional()
   @IsNumber()
   medicalReqUserType: number;
+
+  @IsNotEmpty()
+  @IsString()
+  user_message: string;
 }

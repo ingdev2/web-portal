@@ -1,16 +1,18 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
-import { CreateUserPatientDto } from '../../users/dto/create_user_person.dto';
+import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { LoginDto } from '../dto/login.dto';
-
-import { ApiTags } from '@nestjs/swagger';
-import { UUID } from 'crypto';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { UserRolType } from '../../common/enums/user_roles.enum';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('auth')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -24,6 +26,7 @@ export class AuthController {
     return await this.authService.registerSuperAdmin(registerSuperAdmin);
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('registerAdmin')
   async registerAdmin(@Body() registerAdmin: CreateAdminDto) {
     return await this.authService.registerAdmin(registerAdmin);
@@ -34,6 +37,7 @@ export class AuthController {
     return await this.authService.registerUserPatient(registerUserPatient);
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
   @Post(':userId/registerFamiliar')
   async registerFamiliar(
     @Param('userId') userId: string,
@@ -42,6 +46,7 @@ export class AuthController {
     return await this.authService.registerFamiliar(userId, registerFamiliar);
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('registerUserEps')
   async registerUserEps(@Body() registerUserEps: CreateUserEpsDto) {
     return await this.authService.registerUserEps(registerUserEps);

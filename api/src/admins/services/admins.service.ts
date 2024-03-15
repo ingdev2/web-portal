@@ -35,6 +35,19 @@ export class AdminsService {
       );
     }
 
+    const adminSuperAdminEmailFound = await this.adminRepository.findOne({
+      where: {
+        corporate_email: superAdmin.corporate_email,
+      },
+    });
+
+    if (adminSuperAdminEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${superAdmin.corporate_email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const roleSuperAdminFound = await this.adminRoleRepository.findOne({
       where: {
         name: AdminRolType.SUPER_ADMIN,
@@ -90,6 +103,19 @@ export class AdminsService {
     if (adminFound) {
       return new HttpException(
         `El admin con número de identificación ${admin.id_number} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const adminAdminEmailFound = await this.adminRepository.findOne({
+      where: {
+        corporate_email: admin.corporate_email,
+      },
+    });
+
+    if (adminAdminEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${admin.corporate_email} ya está registrado.`,
         HttpStatus.CONFLICT,
       );
     }

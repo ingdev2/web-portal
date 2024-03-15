@@ -16,7 +16,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UUID } from 'crypto';
 
 @Entity()
 export class AuthorizedFamiliar {
@@ -46,7 +45,10 @@ export class AuthorizedFamiliar {
   @Column({ type: 'bigint' })
   id_number: number;
 
-  @ManyToOne(() => UserRole, (role) => role.user)
+  @ManyToOne(() => UserRole, (role) => role.familiar, {
+    eager: true,
+    cascade: true,
+  })
   @JoinColumn({ name: 'user_role', referencedColumnName: 'id' })
   role: UserRole;
 

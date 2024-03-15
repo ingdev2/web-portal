@@ -6,8 +6,10 @@ import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { IdType } from '../../common/enums/id_type.enum';
-import { CreateUserPatientDto } from '../dto/create_user_person.dto';
-import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
+import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
+import { DeptsAndCitiesService } from '../../depts_and_cities/services/depts_and_cities.service';
+import { CreateUserPatientDto } from '../dto/create_user_patient.dto';
+import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
@@ -15,7 +17,6 @@ import { ValidatePatientDto } from '../dto/validate_patient.dto';
 
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
-import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
 
 @Injectable()
 export class UsersService {
@@ -27,6 +28,8 @@ export class UsersService {
 
     @InjectRepository(IdTypeEntity)
     private idTypeRepository: Repository<IdTypeEntity>,
+
+    private locationService: DeptsAndCitiesService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -146,6 +149,19 @@ export class UsersService {
       );
     }
 
+    const userPatientEmailFound = await this.userRepository.findOne({
+      where: {
+        email: userPatient.email,
+      },
+    });
+
+    if (userPatientEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${userPatient.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const rolePatientFound = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
@@ -165,6 +181,19 @@ export class UsersService {
       accept_terms: true,
     });
 
+    const patientLocation =
+      await this.locationService.getLocationByDepartmentAndCity({
+        department_name: userPatient.residence_department,
+        city_name: userPatient.residence_city,
+      });
+
+    if (!patientLocation) {
+      throw new HttpException(
+        'No se encontró el departamento o la ciudad ingresada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const userPatientWithRole = await this.userRepository.save(
       insertRoleUserPatient,
     );
@@ -183,7 +212,17 @@ export class UsersService {
       );
     }
 
+    const insertLocationPatient = await this.userRepository.create({
+      ...userPatient,
+      residence_department: patientLocation.department_name,
+      residence_city: patientLocation.city_name,
+    });
+
     await this.userRepository.update(userPatientWithRole.id, dataToCreateUser);
+    await this.userRepository.update(
+      userPatientWithRole.id,
+      insertLocationPatient,
+    );
     await this.userRepository.update(userPatientWithRole.id, userPatient);
 
     const newUserPatient = await this.userRepository.findOne({
@@ -203,6 +242,19 @@ export class UsersService {
     if (userEpsFound) {
       return new HttpException(
         `El usuario con número de identificación ${userEps.id_number} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const userEpsEmailFound = await this.userRepository.findOne({
+      where: {
+        email: userEps.email,
+      },
+    });
+
+    if (userEpsEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${userEps.email} ya está registrado.`,
         HttpStatus.CONFLICT,
       );
     }
@@ -254,16 +306,16 @@ export class UsersService {
   // GET FUNTIONS //
 
   async getAllUsersPatient() {
-    const userRolePerson = await this.userRoleRepository.findOne({
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
       },
     });
 
-    if (userRolePerson) {
+    if (userRolePatient) {
       const allUsersPerson = await this.userRepository.find({
         where: {
-          role: userRolePerson,
+          role: userRolePatient,
           is_active: true,
         },
         order: {
@@ -392,7 +444,7 @@ export class UsersService {
 
   // UPDATE FUNTIONS //
 
-  async updateUserPerson(id: string, userPerson: UpdateUserPersonDto) {
+  async updateUserPatient(id: string, userPatient: UpdateUserPatientDto) {
     const userFound = await this.userRepository.findOneBy({ id });
 
     if (!userFound) {
@@ -402,22 +454,22 @@ export class UsersService {
       );
     }
 
-    const userRolePerson = await this.userRoleRepository.findOne({
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
       },
     });
 
-    if (userFound.user_role !== userRolePerson.id) {
+    if (userFound.user_role !== userRolePatient.id) {
       return new HttpException(
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
       );
     }
 
-    const updateUserPerson = await this.userRepository.update(id, userPerson);
+    const updateUserPatient = await this.userRepository.update(id, userPatient);
 
-    if (updateUserPerson.affected === 0) {
+    if (updateUserPatient.affected === 0) {
       return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
     }
 

@@ -67,6 +67,19 @@ export class AuthorizedFamiliarService {
       );
     }
 
+    const userFamiliarEmailFound = await this.userRepository.findOne({
+      where: {
+        email: familiar.email,
+      },
+    });
+
+    if (userFamiliarEmailFound) {
+      return new HttpException(
+        `El correo electrónico ${familiar.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const familiarWithAnotherPatient = await this.familiarRepository.findOne({
       where: {
         id_number: familiar.id_number,
@@ -79,7 +92,7 @@ export class AuthorizedFamiliarService {
         user_role: familiarWithAnotherPatient.user_role,
         patient_id: patientFound.id,
         accept_terms: true,
-      } as DeepPartial<AuthorizedFamiliar>);
+      });
 
       const familiarWithRole = await this.familiarRepository.save(newFamiliar);
 
@@ -116,7 +129,7 @@ export class AuthorizedFamiliarService {
       user_role: roleFamiliarFound.id,
       patient_id: patientFound.id,
       accept_terms: true,
-    } as DeepPartial<AuthorizedFamiliar>);
+    });
 
     const familiarWithRole =
       await this.familiarRepository.save(insertRoleFamiliar);
@@ -135,7 +148,7 @@ export class AuthorizedFamiliarService {
       );
     }
 
-    await this.familiarRepository.update(familiarWithRole.id, familiarWithRole);
+    await this.familiarRepository.update(familiarWithRole.id, familiar);
 
     const newFamiliar = await this.familiarRepository.findOne({
       where: { id: familiarWithRole.id },
@@ -153,7 +166,18 @@ export class AuthorizedFamiliarService {
 
     await this.userRepository.save(patientFamiliar);
 
-    return newFamiliar;
+    await this.familiarRepository.update(
+      familiarWithRole.id,
+      newFamiliarOfPatient,
+    );
+
+    console.log(newFamiliar.role);
+    console.log(newFamiliarOfPatient.role);
+    console.log(newFamiliar.user_role);
+    console.log(newFamiliarOfPatient.user_role);
+    console.log(familiar);
+
+    return newFamiliarOfPatient;
   }
 
   // GET FUNTIONS //

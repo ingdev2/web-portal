@@ -5,5 +5,6 @@ import { DeptsAndCitiesController } from './controllers/depts_and_cities.control
 @Module({
   controllers: [DeptsAndCitiesController],
   providers: [DeptsAndCitiesService],
+  exports: [DeptsAndCitiesService],
 })
 export class DeptsAndCitiesModule {}

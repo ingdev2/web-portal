@@ -27,7 +27,7 @@ export class Admin {
   @Column({ type: 'bigint', unique: true })
   id_number: number;
 
-  @Column()
+  @Column({ unique: true })
   corporate_email: string;
 
   @Column({ select: false })

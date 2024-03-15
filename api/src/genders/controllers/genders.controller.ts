@@ -29,7 +29,6 @@ export class GenderTypeController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Get('/getAll')
   getAllGenderTypes() {
     return this.genderTypeService.getAllGenderTypes();

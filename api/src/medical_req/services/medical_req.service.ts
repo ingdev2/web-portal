@@ -2,7 +2,9 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
+import { CreateMedicalReqPatientDto } from '../dto/create_medical_req_patient.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { User } from '../../users/entities/user.entity';
@@ -28,13 +30,18 @@ import {
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
-import { CreateMedicalReqPatientDto } from '../dto/create_medical_req_patient.dto';
 
 @Injectable()
 export class MedicalReqService {
   constructor(
     @InjectRepository(MedicalReq)
     private medicalReqRepository: Repository<MedicalReq>,
+
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+
+    @InjectRepository(AuthorizedFamiliar)
+    private familiarRepository: Repository<AuthorizedFamiliar>,
 
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
@@ -54,9 +61,6 @@ export class MedicalReqService {
     @InjectRepository(RelWithPatient)
     private relWithPatientRepository: Repository<RelWithPatient>,
 
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-
     private usersService: UsersService,
     private nodemailerService: NodemailerService,
     private readonly requirementTypeService: RequirementTypeService,
@@ -65,32 +69,62 @@ export class MedicalReqService {
   // CREATE FUNTIONS //
 
   async createMedicalReqFamiliar(
-    userId: string,
-    medicalReqPerson: CreateMedicalReqFamiliarDto,
+    familiarId: string,
+    medicalReqFamiliar: CreateMedicalReqFamiliarDto,
   ) {
-    const userPersonFound = await this.userRepository.findOne({
+    const userPatientFound = await this.userRepository.findOne({
       where: {
-        id: userId,
+        user_id_type: medicalReqFamiliar.patient_id_type,
+        id_number: medicalReqFamiliar.patient_id_number,
       },
     });
 
-    if (!userPersonFound) {
+    if (!userPatientFound) {
       return new HttpException(
-        `El usuario no está registrado.`,
+        `El usuario paciente no está registrado.`,
         HttpStatus.CONFLICT,
       );
     }
 
-    const userRolePerson = await this.userRoleRepository.findOne({
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
-        id: userPersonFound.user_role,
+        id: userPatientFound.user_role,
         name: UserRolType.PATIENT,
       },
     });
 
-    if (!userRolePerson) {
+    if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const verifiedFamiliar = await this.familiarRepository.findOne({
+      where: {
+        id: familiarId,
+        patient_id: userPatientFound.id,
+        rel_with_patient: medicalReqFamiliar.relationship_with_patient,
+      },
+    });
+
+    if (!verifiedFamiliar) {
+      throw new HttpException(
+        'El familiar no tiene parentesco con el paciente.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const userRoleFamiliar = await this.userRoleRepository.findOne({
+      where: {
+        id: verifiedFamiliar.user_role,
+        name: UserRolType.AUTHORIZED_FAMILIAR,
+      },
+    });
+
+    if (!userRoleFamiliar) {
+      throw new HttpException(
+        'El usuario debe tener el rol "Familiar Autorizado".',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -106,22 +140,23 @@ export class MedicalReqService {
       );
     }
 
-    const aplicantPersonDetails = new CreateMedicalReqFamiliarDto();
+    const aplicantFamiliarDetails = new CreateMedicalReqFamiliarDto();
 
-    aplicantPersonDetails.aplicantId = userPersonFound.id;
-    aplicantPersonDetails.medicalReqUserType = userPersonFound.user_role;
-    aplicantPersonDetails.aplicant_name = userPersonFound.name;
-    aplicantPersonDetails.aplicant_last_name = userPersonFound.last_name;
-    aplicantPersonDetails.aplicant_gender = userPersonFound.user_gender;
-    aplicantPersonDetails.aplicant_id_type = userPersonFound.user_id_type;
-    aplicantPersonDetails.aplicant_id_number = userPersonFound.id_number;
-    aplicantPersonDetails.aplicant_email = userPersonFound.email;
-    aplicantPersonDetails.aplicant_cellphone = userPersonFound.cellphone;
-    aplicantPersonDetails.requirement_status = reqStatusPending.id;
-    aplicantPersonDetails.accept_terms = true;
+    aplicantFamiliarDetails.familiar_id = verifiedFamiliar.id;
+    aplicantFamiliarDetails.patient_name = userPatientFound.name;
+    aplicantFamiliarDetails.medicalReqUserType = verifiedFamiliar.user_role;
+    aplicantFamiliarDetails.aplicant_name = verifiedFamiliar.name;
+    aplicantFamiliarDetails.aplicant_last_name = verifiedFamiliar.last_name;
+    aplicantFamiliarDetails.aplicant_gender = verifiedFamiliar.user_gender;
+    aplicantFamiliarDetails.aplicant_id_type = verifiedFamiliar.user_id_type;
+    aplicantFamiliarDetails.aplicant_id_number = verifiedFamiliar.id_number;
+    aplicantFamiliarDetails.aplicant_email = verifiedFamiliar.email;
+    aplicantFamiliarDetails.aplicant_cellphone = verifiedFamiliar.cellphone;
+    aplicantFamiliarDetails.requirement_status = reqStatusPending.id;
+    aplicantFamiliarDetails.accept_terms = true;
 
     const currentDate = new Date();
-    aplicantPersonDetails.date_of_admission = currentDate;
+    aplicantFamiliarDetails.date_of_admission = currentDate;
 
     const {
       right_petition,
@@ -132,7 +167,7 @@ export class MedicalReqService {
       copy_parents_citizenship_card,
       copy_cohabitation_certificate,
       copy_marriage_certificate,
-    } = medicalReqPerson;
+    } = medicalReqFamiliar;
 
     const minorDocuments =
       copy_parents_citizenship_card && copy_patient_civil_registration;
@@ -164,7 +199,7 @@ export class MedicalReqService {
     }
 
     const patientClassStatus = await this.patientClassStatusRepository.findOne({
-      where: { id: medicalReqPerson.patient_class_status },
+      where: { id: medicalReqFamiliar.patient_class_status },
     });
 
     if (!patientClassStatus) {
@@ -197,10 +232,17 @@ export class MedicalReqService {
     }
 
     const relWithPatient = await this.relWithPatientRepository.findOne({
-      where: { id: medicalReqPerson.relationship_with_patient },
+      where: { id: medicalReqFamiliar.relationship_with_patient },
     });
 
-    if (!relWithPatient) {
+    const verifiedRelationshipWithPatient =
+      await this.familiarRepository.findOne({
+        where: {
+          rel_with_patient: relWithPatient.id,
+        },
+      });
+
+    if (!relWithPatient || !verifiedRelationshipWithPatient) {
       throw new HttpException(
         'El parentesco con el paciente no es valido',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -263,7 +305,7 @@ export class MedicalReqService {
 
     const userIdType = await this.userIdTypeRepository.findOne({
       where: {
-        id: medicalReqPerson.patient_id_type,
+        id: medicalReqFamiliar.patient_id_type,
       },
     });
 
@@ -275,7 +317,7 @@ export class MedicalReqService {
     }
 
     const medicalReqType = await this.medicalReqTypeRepository.findOne({
-      where: { id: medicalReqPerson.requirement_type },
+      where: { id: medicalReqFamiliar.requirement_type },
     });
 
     if (!medicalReqType) {
@@ -285,20 +327,35 @@ export class MedicalReqService {
       );
     }
 
-    const createMedicalReqPerson =
-      await this.medicalReqRepository.save(medicalReqPerson);
+    const createMedicalReqFamiliar =
+      await this.medicalReqRepository.save(medicalReqFamiliar);
 
     await this.medicalReqRepository.update(
-      createMedicalReqPerson.id,
-      aplicantPersonDetails,
+      createMedicalReqFamiliar.id,
+      aplicantFamiliarDetails,
     );
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
       where: {
-        aplicantId: userId,
-        id: createMedicalReqPerson.id,
+        id: createMedicalReqFamiliar.id,
+        familiar_id: verifiedFamiliar.id,
       },
     });
+
+    if (medicalReqCompleted.copy_applicant_citizenship_card) {
+      const citizenshipCard =
+        medicalReqCompleted.copy_applicant_citizenship_card;
+
+      await this.familiarRepository.update(
+        { id: verifiedFamiliar.id },
+        { copy_familiar_citizenship_card: null },
+      );
+
+      await this.familiarRepository.update(
+        { id: verifiedFamiliar.id },
+        { copy_familiar_citizenship_card: citizenshipCard },
+      );
+    }
 
     const sendReqTypeName =
       await this.requirementTypeService.getRequirementTypeById(
@@ -309,6 +366,8 @@ export class MedicalReqService {
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.pacientName = userPatientFound.name;
+    emailDetailsToSend.pacientIdNumber = userPatientFound.id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -337,14 +396,14 @@ export class MedicalReqService {
       );
     }
 
-    const userRoleEps = await this.userRoleRepository.findOne({
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
         id: userPatientFound.user_role,
         name: UserRolType.PATIENT,
       },
     });
 
-    if (!userRoleEps) {
+    if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -405,6 +464,7 @@ export class MedicalReqService {
     const aplicantPatientDetails = new CreateMedicalReqPatientDto();
 
     aplicantPatientDetails.aplicantId = userPatientFound.id;
+    aplicantPatientDetails.patient_name = userPatientFound.name;
     aplicantPatientDetails.medicalReqUserType = userPatientFound.user_role;
     aplicantPatientDetails.aplicant_name = userPatientFound.name;
     aplicantPatientDetails.aplicant_last_name = userPatientFound.last_name;
@@ -463,7 +523,7 @@ export class MedicalReqService {
       !medicalReqCompleted.patient_id_number
     ) {
       throw new HttpException(
-        'El tipo y númerp de documento de identidad del paciente es requerido',
+        'El tipo y número de documento de identidad del paciente es requerido',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -477,6 +537,8 @@ export class MedicalReqService {
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.pacientName = userPatientFound.name;
+    emailDetailsToSend.pacientIdNumber = userPatientFound.id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -573,6 +635,7 @@ export class MedicalReqService {
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
+    aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
     aplicantEpsDetails.aplicant_last_name = userEpsFound.last_name;
@@ -637,6 +700,8 @@ export class MedicalReqService {
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
     emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.pacientName = patientData[0]?.NOMBRE;
+    emailDetailsToSend.pacientIdNumber = medicalReqEps.patient_id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -670,16 +735,16 @@ export class MedicalReqService {
     }
   }
 
-  async getAllMedicalReqPerson() {
-    const userRolePerson = await this.userRoleRepository.findOne({
+  async getAllMedicalReqPatient() {
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
       },
     });
 
-    const allMedicalReqPerson = await this.medicalReqRepository.find({
+    const allMedicalReqPatient = await this.medicalReqRepository.find({
       where: {
-        medicalReqUserType: userRolePerson.id,
+        medicalReqUserType: userRolePatient.id,
         is_deleted: false,
       },
       order: {
@@ -687,13 +752,40 @@ export class MedicalReqService {
       },
     });
 
-    if (allMedicalReqPerson.length === 0) {
+    if (allMedicalReqPatient.length === 0) {
       return new HttpException(
         `No hay requerimientos creados actualmente.`,
         HttpStatus.CONFLICT,
       );
     } else {
-      return allMedicalReqPerson;
+      return allMedicalReqPatient;
+    }
+  }
+
+  async getAllMedicalReqFamiliar() {
+    const userRoleFamiliar = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.AUTHORIZED_FAMILIAR,
+      },
+    });
+
+    const allMedicalReqFamiliar = await this.medicalReqRepository.find({
+      where: {
+        medicalReqUserType: userRoleFamiliar.id,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (allMedicalReqFamiliar.length === 0) {
+      return new HttpException(
+        `No hay requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqFamiliar;
     }
   }
 
@@ -724,17 +816,17 @@ export class MedicalReqService {
     }
   }
 
-  async getMedicalReqPersonById(id: string) {
-    const userRolePerson = await this.userRoleRepository.findOne({
+  async getMedicalReqPatientById(id: string) {
+    const userRolePatient = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
       },
     });
 
-    const medicalReqPersonFound = await this.medicalReqRepository.findOne({
+    const medicalReqPatientFound = await this.medicalReqRepository.findOne({
       where: {
         id: id,
-        medicalReqUserType: userRolePerson.id,
+        medicalReqUserType: userRolePatient.id,
         is_deleted: false,
       },
       order: {
@@ -742,13 +834,41 @@ export class MedicalReqService {
       },
     });
 
-    if (!medicalReqPersonFound) {
+    if (!medicalReqPatientFound) {
       return new HttpException(
         `El requerimiento médico con número de ID: ${id} no está registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
-      return medicalReqPersonFound;
+      return medicalReqPatientFound;
+    }
+  }
+
+  async getMedicalReqFamiliarById(id: string) {
+    const userRoleFamiliar = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.AUTHORIZED_FAMILIAR,
+      },
+    });
+
+    const medicalReqFamiliarFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+        medicalReqUserType: userRoleFamiliar.id,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (!medicalReqFamiliarFound) {
+      return new HttpException(
+        `El requerimiento médico con número de ID: ${id} no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return medicalReqFamiliarFound;
     }
   }
 

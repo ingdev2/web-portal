@@ -10,9 +10,9 @@ import {
 import { PatientClassStatusService } from '../services/patient_class_status.service';
 import { CreatePatientClassStatusDto } from '../dto/create-patient_class_status.dto';
 import { UpdatePatientClassStatusDto } from '../dto/update-patient_class_status.dto';
+import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
 
 @ApiTags('patient-class-status')
 @ApiBearerAuth()

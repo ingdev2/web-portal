@@ -22,6 +22,7 @@ import { RelWithPatientModule } from './rel_with_patient/rel_with_patient.module
 import { RequirementStatusModule } from './requirement_status/requirement_status.module';
 import { EpsCompanyModule } from './eps_company/eps_company.module';
 import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module';
+import { ReasonsForRejectionModule } from './reasons_for_rejection/reasons_for_rejection.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module
     RequirementStatusModule,
     EpsCompanyModule,
     DeptsAndCitiesModule,
+    ReasonsForRejectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

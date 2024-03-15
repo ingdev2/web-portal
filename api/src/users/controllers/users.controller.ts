@@ -1,12 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
+import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
-
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 
@@ -19,6 +18,7 @@ export class UsersController {
 
   // GET METHODS //
 
+  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
   @Get('/validatePatient')
   async validateThatThePatientExist(
     @Body()
@@ -32,7 +32,6 @@ export class UsersController {
     return await this.usersService.getAllUsersPatient();
   }
 
-  @Auth(AdminRolType.ADMIN)
   @Get('/getAllEps')
   async getAllUsersEps() {
     return await this.usersService.getAllUsersEps();
@@ -51,12 +50,12 @@ export class UsersController {
   // PATCH METHODS //
 
   @Auth(UserRolType.PATIENT)
-  @Patch('/updatePerson/:id')
+  @Patch('/updatePatient/:id')
   async updateUserPerson(
     @Param('id') id: string,
-    @Body() user: UpdateUserPersonDto,
+    @Body() user: UpdateUserPatientDto,
   ) {
-    return await this.usersService.updateUserPerson(id, user);
+    return await this.usersService.updateUserPatient(id, user);
   }
 
   @Auth(UserRolType.EPS)

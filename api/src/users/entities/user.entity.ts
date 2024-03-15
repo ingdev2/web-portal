@@ -36,7 +36,7 @@ export class User {
   @Column({ type: 'date', nullable: true })
   birthdate: Date;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ type: 'bigint', nullable: true })
@@ -120,7 +120,7 @@ export class User {
     eager: true,
     cascade: true,
   })
-  @JoinTable()
+  @JoinTable({ name: 'patientUsers_authorizedRelatives' })
   familiar: AuthorizedFamiliar[];
 
   @Column({ nullable: true })

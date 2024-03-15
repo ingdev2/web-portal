@@ -50,6 +50,10 @@ export class CreateMedicalReqEpsDto {
   @IsNumber()
   aplicant_company_area: number;
 
+  @IsOptional()
+  @IsString()
+  patient_name: string;
+
   @IsNotEmpty()
   @IsNumber()
   patient_id_type: number;
@@ -79,14 +83,14 @@ export class CreateMedicalReqEpsDto {
   requirement_status: number;
 
   @IsOptional()
-  @IsBoolean()
-  is_deleted: boolean;
-
-  @IsOptional()
   @IsUUID()
   aplicantId: string;
 
   @IsOptional()
   @IsNumber()
   medicalReqUserType: number;
+
+  @IsNotEmpty()
+  @IsString()
+  user_message: string;
 }

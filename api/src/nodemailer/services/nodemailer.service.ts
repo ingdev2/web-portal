@@ -16,6 +16,8 @@ export class NodemailerService {
       recipients,
       subject,
       userName,
+      pacientName,
+      pacientIdNumber,
       medicalReqFilingNumber,
       requirementType,
       emailTemplate,
@@ -33,6 +35,8 @@ export class NodemailerService {
       template: emailTemplate,
       context: {
         userName,
+        pacientName,
+        pacientIdNumber,
         medicalReqFilingNumber,
         requirementType,
         requestStatusReq,
