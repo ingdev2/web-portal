@@ -96,9 +96,6 @@ export class AuthorizedFamiliar {
   @Column({ type: 'text', array: true, nullable: true })
   copy_familiar_citizenship_card: string[];
 
-  // @ManyToMany(() => User, (patient) => patient.familiar)
-  // patient: User[];
-
   @Column({ type: 'uuid', unique: true })
   patient_id: string;
 

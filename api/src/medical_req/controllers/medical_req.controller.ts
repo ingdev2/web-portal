@@ -60,6 +60,11 @@ export class MedicalReqController {
   // GET METHODS //
 
   @Auth(AdminRolType.ADMIN)
+  @Get('/getAllMedicalReqUsersToLegalArea')
+  async getAllMedReqUsersToLegalArea() {
+    return await this.medicalReqService.getAllMedReqUsersToLegalArea();
+  }
+  @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqUsers')
   async getAllMedicalReqUsers() {
     return await this.medicalReqService.getAllMedicalReqUsers();
@@ -122,12 +127,36 @@ export class MedicalReqController {
   // PATCH METHODS //
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/updateStatus/:id')
-  async updateStatus(
-    @Param('id') id: string,
-    @Body() newStatus: UpdateStatusMedicalReqDto,
+  @Patch('/deliveredStatus/:reqId')
+  async changeStatusToDelivered(
+    @Param('reqId') reqId: string,
+    @Body() deliveredStatus: UpdateStatusMedicalReqDto,
   ) {
-    return await this.medicalReqService.updateStatus(id, newStatus);
+    return await this.medicalReqService.changeStatusToDelivered(
+      reqId,
+      deliveredStatus,
+    );
+  }
+
+  @Auth(AdminRolType.ADMIN)
+  @Patch('/rejectedStatus/:reqId')
+  async changeStatusToRejected(
+    @Param('reqId') reqId: string,
+    @Body() rejectedStatus: UpdateStatusMedicalReqDto,
+  ) {
+    return await this.medicalReqService.changeStatusToRejected(
+      reqId,
+      rejectedStatus,
+    );
+  }
+
+  @Auth(AdminRolType.ADMIN)
+  @Patch('/sendToLegalArea/:reqId')
+  async sendToLegalArea(
+    @Param('reqId') reqId: string,
+    @Body() sendToLegalArea: UpdateStatusMedicalReqDto,
+  ) {
+    return await this.medicalReqService.sendToLegalArea(reqId, sendToLegalArea);
   }
 
   @Auth(AdminRolType.ADMIN)

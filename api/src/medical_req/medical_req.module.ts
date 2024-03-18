@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicalReq } from './entities/medical_req.entity';
 import { User } from '../users/entities/user.entity';
 import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_familiar.entity';
+import { ReasonsForRejection } from '../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import { UsersModule } from '../users/users.module';
 import { UserRole } from '../user_roles/entities/user_role.entity';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
@@ -28,6 +29,7 @@ import { NodemailerModule } from '../nodemailer/nodemailer.module';
       PatientClassStatus,
       RelWithPatient,
       RequirementStatus,
+      ReasonsForRejection,
     ]),
     UsersModule,
     NodemailerModule,
