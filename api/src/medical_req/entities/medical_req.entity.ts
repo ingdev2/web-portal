@@ -169,10 +169,10 @@ export class MedicalReq {
   reasons_for_rejection: ReasonsForRejection[];
   @JoinColumn({
     name: 'motive_for_rejection',
-    referencedColumnName: 'rejection_title',
+    referencedColumnName: 'id',
   })
-  @Column({ type: 'text', nullable: true, array: true })
-  motive_for_rejection: string[];
+  @Column({ type: 'integer', nullable: true, array: true })
+  motive_for_rejection: number[];
 
   @Column({ type: 'text', array: true, nullable: true })
   documents_delivered: string[];

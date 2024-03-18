@@ -171,12 +171,6 @@ export class AuthorizedFamiliarService {
       newFamiliarOfPatient,
     );
 
-    console.log(newFamiliar.role);
-    console.log(newFamiliarOfPatient.role);
-    console.log(newFamiliar.user_role);
-    console.log(newFamiliarOfPatient.user_role);
-    console.log(familiar);
-
     return newFamiliarOfPatient;
   }
 

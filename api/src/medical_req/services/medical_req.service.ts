@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
@@ -24,12 +24,15 @@ import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
+import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import {
   MEDICAL_REQ_CREATED,
   MEDICAL_REQ_UPDATE,
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
+
+const schedule = require('node-schedule');
 
 @Injectable()
 export class MedicalReqService {
@@ -60,6 +63,9 @@ export class MedicalReqService {
 
     @InjectRepository(RelWithPatient)
     private relWithPatientRepository: Repository<RelWithPatient>,
+
+    @InjectRepository(ReasonsForRejection)
+    private reasonsForRejectionRepository: Repository<ReasonsForRejection>,
 
     private usersService: UsersService,
     private nodemailerService: NodemailerService,
@@ -735,6 +741,27 @@ export class MedicalReqService {
     }
   }
 
+  async getAllMedReqUsersToLegalArea() {
+    const allMedicalReqUsersToLegalArea = await this.medicalReqRepository.find({
+      where: {
+        in_legal_area: true,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (allMedicalReqUsersToLegalArea.length === 0) {
+      return new HttpException(
+        `No hay requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqUsersToLegalArea;
+    }
+  }
+
   async getAllMedicalReqPatient() {
     const userRolePatient = await this.userRoleRepository.findOne({
       where: {
@@ -920,12 +947,181 @@ export class MedicalReqService {
 
   // UPDATE FUNTIONS //
 
-  async updateStatus(
-    id: string,
-    newStatusMedicalReq: UpdateStatusMedicalReqDto,
+  async changeStatusToDelivered(
+    reqId: string,
+    deliveredStatus: UpdateStatusMedicalReqDto,
   ) {
+    const requirementFound = await this.medicalReqRepository.findOne({
+      where: { id: reqId },
+    });
+
+    if (!requirementFound) {
+      throw new HttpException(
+        'Requerimiento médico no encontrado',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const statusDeliveredFound = await this.requerimentStatusRepository.findOne(
+      {
+        where: {
+          name: RequirementStatusEnum.DELIVERED,
+        },
+      },
+    );
+
+    if (!statusDeliveredFound) {
+      throw new HttpException(
+        'El estado "Entregado" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const statusDeliveredId = (deliveredStatus.requirement_status =
+      statusDeliveredFound.id);
+
+    const requirementStatusDelivered =
+      await this.requerimentStatusRepository.findOne({
+        where: { id: statusDeliveredId },
+      });
+
+    if (!requirementStatusDelivered) {
+      throw new HttpException(
+        'El estado de requerimiento no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const currentDate = new Date();
+
+    const sevenDaysLater = new Date();
+    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+
+    deliveredStatus.answer_date = currentDate;
+    deliveredStatus.download_expiration_date = sevenDaysLater;
+
+    if (
+      deliveredStatus.answer_date &&
+      deliveredStatus.download_expiration_date
+    ) {
+      await this.medicalReqRepository.update(reqId, deliveredStatus);
+    }
+
+    const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: reqId,
+      },
+    });
+
+    const statusExpiredFound = await this.requerimentStatusRepository.findOne({
+      where: {
+        name: RequirementStatusEnum.EXPIRED,
+      },
+    });
+
+    if (!statusExpiredFound) {
+      throw new HttpException(
+        'El estado "Expirado" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const statusExpiredId = statusExpiredFound.id;
+
+    const requirementStatusExpired =
+      await this.requerimentStatusRepository.findOne({
+        where: { id: statusExpiredId },
+      });
+
+    if (!requirementStatusExpired) {
+      throw new HttpException(
+        'El estado de requerimiento no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    schedule.scheduleJob(
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      async () => {
+        await this.medicalReqRepository.update(
+          {
+            id: updatedMedicalReqFound.id,
+          },
+          {
+            documents_delivered: null,
+            requirement_status: requirementStatusExpired.id,
+          },
+        );
+      },
+    );
+
+    const sendReqTypeName =
+      await this.requirementTypeService.getRequirementTypeById(
+        updatedMedicalReqFound.requirement_type,
+      );
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [updatedMedicalReqFound.aplicant_email];
+    emailDetailsToSend.userName = updatedMedicalReqFound.aplicant_name;
+    emailDetailsToSend.medicalReqFilingNumber =
+      updatedMedicalReqFound.filing_number;
+    emailDetailsToSend.requirementType = sendReqTypeName.name;
+    emailDetailsToSend.requestStatusReq = requirementStatusDelivered.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
+    emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    return updatedMedicalReqFound;
+  }
+
+  async changeStatusToRejected(
+    reqId: string,
+    rejectedStatus: UpdateStatusMedicalReqDto,
+  ) {
+    const requirementFound = await this.medicalReqRepository.findOne({
+      where: { id: reqId },
+    });
+
+    if (!requirementFound) {
+      throw new HttpException(
+        'Requerimiento médico no encontrado',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const motiveOfRejection = await this.reasonsForRejectionRepository.findOne({
+      where: {
+        id: In(rejectedStatus.motive_for_rejection),
+      },
+    });
+
+    if (!motiveOfRejection) {
+      throw new HttpException(
+        'El motivo de rechazo no es valido',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const statusRejectedFound = await this.requerimentStatusRepository.findOne({
+      where: {
+        name: RequirementStatusEnum.REJECTED,
+      },
+    });
+
+    if (!statusRejectedFound) {
+      throw new HttpException(
+        'El estado "Rechazado" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const statusRejectedId = (rejectedStatus.requirement_status =
+      statusRejectedFound.id);
+
     const requirementStatus = await this.requerimentStatusRepository.findOne({
-      where: { id: newStatusMedicalReq.requirement_status },
+      where: { id: statusRejectedId },
     });
 
     if (!requirementStatus) {
@@ -935,29 +1131,13 @@ export class MedicalReqService {
       );
     }
 
-    const requerimentStatusName = requirementStatus.name;
-
-    if (requerimentStatusName === RequirementStatusEnum.DELIVERED) {
-      const currentDate = new Date();
-
-      const sevenDaysLater = new Date();
-      sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-
-      newStatusMedicalReq.answer_date = currentDate;
-      newStatusMedicalReq.download_expiration_date = sevenDaysLater;
-
-      await this.medicalReqRepository.update(id, newStatusMedicalReq);
-    }
-
-    const updateMedicalReq = await this.medicalReqRepository.update(
-      id,
-      newStatusMedicalReq,
-    );
+    await this.medicalReqRepository.update(reqId, rejectedStatus);
 
     const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
       where: {
-        id: id,
+        id: reqId,
       },
+      relations: ['reasons_for_rejection'],
     });
 
     const sendReqTypeName =
@@ -972,23 +1152,53 @@ export class MedicalReqService {
     emailDetailsToSend.medicalReqFilingNumber =
       updatedMedicalReqFound.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
-    emailDetailsToSend.requestStatusReq = requerimentStatusName;
+    emailDetailsToSend.requestStatusReq = requirementStatus.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
-    if (updateMedicalReq.affected === 0) {
-      return new HttpException(
-        `Requerimiento médico no encontrado`,
-        HttpStatus.CONFLICT,
+    const selectedReasonsForRejection =
+      await this.reasonsForRejectionRepository.find({
+        where: { id: In(rejectedStatus.motive_for_rejection) },
+      });
+
+    updatedMedicalReqFound.reasons_for_rejection = [
+      ...updatedMedicalReqFound.reasons_for_rejection,
+      ...selectedReasonsForRejection,
+    ];
+
+    await this.medicalReqRepository.save(updatedMedicalReqFound);
+
+    return updatedMedicalReqFound;
+  }
+
+  async sendToLegalArea(
+    reqId: string,
+    sendtoLegalArea: UpdateStatusMedicalReqDto,
+  ) {
+    const requirementFound = await this.medicalReqRepository.findOne({
+      where: { id: reqId },
+    });
+
+    if (!requirementFound) {
+      throw new HttpException(
+        'Requerimiento médico no encontrado',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    return new HttpException(
-      `¡Estado cambiado correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    await (sendtoLegalArea.in_legal_area = true);
+
+    await this.medicalReqRepository.update(reqId, sendtoLegalArea);
+
+    const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: reqId,
+      },
+    });
+
+    return updatedMedicalReqFound.in_legal_area;
   }
 
   // DELETED-BAN FUNTIONS //

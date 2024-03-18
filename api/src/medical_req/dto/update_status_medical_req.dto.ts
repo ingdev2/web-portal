@@ -1,8 +1,29 @@
-import { IsNotEmpty, IsEnum, IsOptional, IsDateString } from 'class-validator';
+import {
+  IsOptional,
+  IsDateString,
+  IsNumber,
+  IsString,
+  IsArray,
+  IsBoolean,
+} from 'class-validator';
 
 export class UpdateStatusMedicalReqDto {
-  @IsNotEmpty()
+  @IsOptional()
+  @IsNumber()
   requirement_status: number;
+
+  @IsOptional()
+  @IsString()
+  response_comments: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  motive_for_rejection: number[];
+
+  @IsOptional()
+  @IsArray()
+  documents_delivered: string[];
 
   @IsOptional()
   @IsDateString()
@@ -11,4 +32,8 @@ export class UpdateStatusMedicalReqDto {
   @IsOptional()
   @IsDateString()
   download_expiration_date: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  in_legal_area: boolean;
 }
