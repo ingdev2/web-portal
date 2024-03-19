@@ -11,6 +11,10 @@ import {
 } from 'class-validator';
 
 export class CreateMedicalReqFamiliarDto {
+  @IsOptional()
+  @IsString()
+  filing_number: string;
+
   @IsNotEmpty()
   requirement_type: number;
 

@@ -22,7 +22,7 @@ export class MedicalReq {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ generated: 'uuid' })
+  @Column({ type: 'text' })
   filing_number: string;
 
   @ManyToOne(() => RequirementType, (req_type) => req_type.medical_req)

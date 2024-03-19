@@ -25,12 +25,14 @@ import { RequirementTypeService } from '../../requirement_type/services/requirem
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reasons_for_rejection.entity';
+import { generateFilingNumber } from '../helpers/generate_filing_number.helper';
 import {
   MEDICAL_REQ_CREATED,
   MEDICAL_REQ_UPDATE,
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
+import { EntityManager } from 'typeorm';
 
 const schedule = require('node-schedule');
 
@@ -69,7 +71,8 @@ export class MedicalReqService {
 
     private usersService: UsersService,
     private nodemailerService: NodemailerService,
-    private readonly requirementTypeService: RequirementTypeService,
+    private requirementTypeService: RequirementTypeService,
+    private entityManager: EntityManager,
   ) {}
 
   // CREATE FUNTIONS //
@@ -146,7 +149,11 @@ export class MedicalReqService {
       );
     }
 
+    const filingNumber = await generateFilingNumber(this.entityManager);
+
     const aplicantFamiliarDetails = new CreateMedicalReqFamiliarDto();
+
+    aplicantFamiliarDetails.filing_number = filingNumber;
 
     aplicantFamiliarDetails.familiar_id = verifiedFamiliar.id;
     aplicantFamiliarDetails.patient_name = userPatientFound.name;
@@ -158,8 +165,13 @@ export class MedicalReqService {
     aplicantFamiliarDetails.aplicant_id_number = verifiedFamiliar.id_number;
     aplicantFamiliarDetails.aplicant_email = verifiedFamiliar.email;
     aplicantFamiliarDetails.aplicant_cellphone = verifiedFamiliar.cellphone;
-    aplicantFamiliarDetails.requirement_status = reqStatusPending.id;
+    aplicantFamiliarDetails.right_petition = medicalReqFamiliar.right_petition;
     aplicantFamiliarDetails.accept_terms = true;
+    aplicantFamiliarDetails.requirement_status = reqStatusPending.id;
+    aplicantFamiliarDetails.patient_id_type = userPatientFound.user_id_type;
+    aplicantFamiliarDetails.patient_id_number = userPatientFound.id_number;
+    aplicantFamiliarDetails.requirement_type =
+      medicalReqFamiliar.requirement_type;
 
     const currentDate = new Date();
     aplicantFamiliarDetails.date_of_admission = currentDate;
@@ -333,12 +345,33 @@ export class MedicalReqService {
       );
     }
 
-    const createMedicalReqFamiliar =
-      await this.medicalReqRepository.save(medicalReqFamiliar);
+    const createMedicalReqFamiliar = await this.medicalReqRepository.save(
+      aplicantFamiliarDetails,
+    );
+
+    const documentsFamiliarDetails = new CreateMedicalReqFamiliarDto();
+
+    documentsFamiliarDetails.copy_right_petition =
+      medicalReqFamiliar?.copy_right_petition;
+    documentsFamiliarDetails.patient_class_status =
+      medicalReqFamiliar?.patient_class_status;
+    documentsFamiliarDetails.relationship_with_patient =
+      medicalReqFamiliar?.relationship_with_patient;
+    documentsFamiliarDetails.copy_applicant_citizenship_card =
+      medicalReqFamiliar?.copy_applicant_citizenship_card;
+    documentsFamiliarDetails.copy_patient_citizenship_card =
+      medicalReqFamiliar?.copy_patient_citizenship_card;
+    documentsFamiliarDetails.copy_patient_civil_registration =
+      medicalReqFamiliar?.copy_patient_civil_registration;
+    documentsFamiliarDetails.copy_parents_citizenship_card =
+      medicalReqFamiliar?.copy_parents_citizenship_card;
+    documentsFamiliarDetails.copy_marriage_certificate =
+      medicalReqFamiliar?.copy_marriage_certificate;
+    documentsFamiliarDetails.user_message = medicalReqFamiliar?.user_message;
 
     await this.medicalReqRepository.update(
       createMedicalReqFamiliar.id,
-      aplicantFamiliarDetails,
+      documentsFamiliarDetails,
     );
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
@@ -467,7 +500,11 @@ export class MedicalReqService {
       );
     }
 
+    const filingNumber = await generateFilingNumber(this.entityManager);
+
     const aplicantPatientDetails = new CreateMedicalReqPatientDto();
+
+    aplicantPatientDetails.filing_number = filingNumber;
 
     aplicantPatientDetails.aplicantId = userPatientFound.id;
     aplicantPatientDetails.patient_name = userPatientFound.name;
@@ -627,6 +664,19 @@ export class MedicalReqService {
       );
     }
 
+    const userPatientFound = await this.userRepository.findOne({
+      where: {
+        id_number: patientData.ID,
+      },
+    });
+
+    if (!userPatientFound) {
+      return new HttpException(
+        `El usuario no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
       where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
@@ -638,7 +688,11 @@ export class MedicalReqService {
       );
     }
 
+    const filingNumber = await generateFilingNumber(this.entityManager);
+
     const aplicantEpsDetails = new CreateMedicalReqEpsDto();
+
+    aplicantEpsDetails.filing_number = filingNumber;
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
     aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
@@ -654,6 +708,9 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
     aplicantEpsDetails.accept_terms = true;
     aplicantEpsDetails.requirement_status = reqStatusPending.id;
+    aplicantEpsDetails.patient_id_type = userPatientFound.user_id_type;
+    aplicantEpsDetails.patient_id_number = userPatientFound.id_number;
+    aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;
@@ -683,12 +740,7 @@ export class MedicalReqService {
     }
 
     const createMedicalReq =
-      await this.medicalReqRepository.save(medicalReqEps);
-
-    await this.medicalReqRepository.update(
-      createMedicalReq.id,
-      aplicantEpsDetails,
-    );
+      await this.medicalReqRepository.save(aplicantEpsDetails);
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
       where: {
@@ -696,6 +748,16 @@ export class MedicalReqService {
         aplicantId: userEpsFound.id,
       },
     });
+
+    if (
+      !medicalReqCompleted.patient_id_type ||
+      !medicalReqCompleted.patient_id_number
+    ) {
+      throw new HttpException(
+        'El tipo y número de documento de identidad del paciente es requerido',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const sendReqTypeName =
       await this.requirementTypeService.getRequirementTypeById(
