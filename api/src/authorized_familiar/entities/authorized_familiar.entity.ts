@@ -55,7 +55,7 @@ export class AuthorizedFamiliar {
   @Column()
   user_role: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ type: 'bigint', nullable: true })
@@ -96,7 +96,7 @@ export class AuthorizedFamiliar {
   @Column({ type: 'text', array: true, nullable: true })
   copy_familiar_citizenship_card: string[];
 
-  @Column({ type: 'uuid', unique: true })
+  @Column({ type: 'uuid' })
   patient_id: string;
 
   @Column({ nullable: true })

@@ -184,7 +184,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
     <Form
       name="normal_login"
       className="login-form"
-      style={{ maxWidth: 321 }}
+      style={{ maxWidth: 270 }}
       initialValues={{ remember: false }}
       onFinish={handleSubmit}
       layout="vertical"
@@ -192,7 +192,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
       <Form.Item
         name="patient-user-id-number"
         label="Número de identificación"
-        style={{ textAlign: "center" }}
+        style={{ marginBottom: 7 }}
         rules={[
           {
             required: true,
@@ -212,7 +212,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
       <Form.Item
         name="patient-user-password"
         label="Contraseña"
-        style={{ textAlign: "center" }}
+        style={{ marginBottom: 13 }}
         rules={[
           { required: true, message: "¡Por favor ingresa tu contraseña!" },
         ]}
@@ -228,7 +228,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
       </Form.Item>
 
       <center>
-        <Form.Item>
+        <Form.Item style={{ marginBottom: 13 }}>
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Recordar datos</Checkbox>
           </Form.Item>
@@ -242,7 +242,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
       <Form.Item>
         <center>
           <Button
-            style={{ width: 222, borderRadius: 31 }}
+            style={{ width: 137, borderRadius: 31 }}
             type="primary"
             htmlType="submit"
             className="login-form-button"
@@ -252,7 +252,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
           <p></p>
           <hr
             style={{
-              width: 222,
+              width: 173,
             }}
           />
           <a href="">Quiero registrarme</a>

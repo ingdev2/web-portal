@@ -67,13 +67,19 @@ export class AuthorizedFamiliarService {
       );
     }
 
-    const userFamiliarEmailFound = await this.userRepository.findOne({
+    const userFamiliarEmailFound = await this.familiarRepository.findOne({
       where: {
         email: familiar.email,
       },
     });
 
-    if (userFamiliarEmailFound) {
+    const userPatientEmailFound = await this.userRepository.findOne({
+      where: {
+        email: familiar.email,
+      },
+    });
+
+    if (userFamiliarEmailFound || userPatientEmailFound) {
       return new HttpException(
         `El correo electrónico ${familiar.email} ya está registrado.`,
         HttpStatus.CONFLICT,
