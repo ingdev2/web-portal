@@ -1,6 +1,7 @@
 import React from "react";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
+import { Providers } from "@/redux/providers";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import SessionAuthProvider from "@/context/SessionAuthProvider";
 
@@ -22,11 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="container">
+        <Providers>
           <AntdRegistry>
-            <SessionAuthProvider>{children}</SessionAuthProvider>
+            <SessionAuthProvider> {children}</SessionAuthProvider>
           </AntdRegistry>
-        </main>
+        </Providers>
+        <main className="container"></main>
       </body>
     </html>
   );

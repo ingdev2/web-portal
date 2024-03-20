@@ -186,6 +186,7 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
       className="login-form"
       style={{ maxWidth: 270 }}
       initialValues={{ remember: false }}
+      autoComplete="false"
       onFinish={handleSubmit}
       layout="vertical"
     >

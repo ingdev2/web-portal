@@ -2,7 +2,7 @@
 
 import PatientUsersLogin from "@/components/auth/PatientUsersLogin";
 
-const UsersLoginPage = () => {
+export default function UsersLoginPage() {
   const handleLoginSubmit = async (userData: {
     idType: string;
     idNumber: number;
@@ -16,5 +16,4 @@ const UsersLoginPage = () => {
       <PatientUsersLogin onSubmit={handleLoginSubmit} />
     </div>
   );
-};
-export default UsersLoginPage;
+}

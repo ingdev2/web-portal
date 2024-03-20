@@ -315,6 +315,26 @@ export class UsersService {
 
   // GET FUNTIONS //
 
+  async getAllUsers() {
+    const allUsers = await this.userRepository.find({
+      where: {
+        is_active: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    if (!allUsers.length) {
+      return new HttpException(
+        `No hay usuarios registrados en la base de datos`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allUsers;
+    }
+  }
+
   async getAllUsersPatient() {
     const userRolePatient = await this.userRoleRepository.findOne({
       where: {

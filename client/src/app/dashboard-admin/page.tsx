@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 
-const DashboardAdminPage = () => {
+export default function DashboardAdminPage() {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -17,5 +17,4 @@ const DashboardAdminPage = () => {
       </pre>
     </div>
   );
-};
-export default DashboardAdminPage;
+}
