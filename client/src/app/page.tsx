@@ -4,7 +4,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ButtonAuth from "@/components/auth/ButtonAuth";
 
-import { useGetAllUsersQuery, useGetUserByIdQuery } from "@/redux/api/userApi";
+import { useGetAllUsersQuery, useGetUserByIdQuery } from "@/redux/api/usersApi";
 import { Button } from "antd";
 
 export default function HomePage() {

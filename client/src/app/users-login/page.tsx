@@ -12,7 +12,14 @@ export default function UsersLoginPage() {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
       <PatientUsersLogin onSubmit={handleLoginSubmit} />
     </div>
   );

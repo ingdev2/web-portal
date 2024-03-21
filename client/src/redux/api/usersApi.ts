@@ -1,7 +1,7 @@
-import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const userApi = createApi({
-  reducerPath: "userApi",
+export const usersApi = createApi({
+  reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
   }),
@@ -15,4 +15,4 @@ export const userApi = createApi({
   }),
 });
 
-export const { useGetAllUsersQuery, useGetUserByIdQuery } = userApi;
+export const { useGetAllUsersQuery, useGetUserByIdQuery } = usersApi;

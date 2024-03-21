@@ -18,7 +18,5 @@ export class LoginDto {
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @IsString()
-  @MinLength(7)
-  @MaxLength(14)
   password: string;
 }

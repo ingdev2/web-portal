@@ -237,9 +237,7 @@ export class AuthService {
       );
 
     if (!userFound) {
-      throw new UnauthorizedException(
-        `¡El tipo o número de identificación es incorrecto!`,
-      );
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(

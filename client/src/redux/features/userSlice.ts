@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: UserState = {
+const initialState: User = {
   id: "",
   name: "",
   last_name: "",
@@ -49,6 +49,24 @@ export const userSlice = createSlice({
       state.user_role;
       state.verification_code;
     },
+    getUserPatient: (state) => {
+      state.id;
+      state.name;
+      state.last_name;
+      state.user_gender;
+      state.birthdate;
+      state.user_id_type;
+      state.id_number;
+      state.email;
+      state.cellphone;
+      state.password;
+      state.residence_department;
+      state.residence_city;
+      state.residence_address;
+      state.residence_neighborhood;
+      state.user_role;
+      state.verification_code;
+    },
     updateUserPatientData: (state) => {
       state.name;
       state.last_name;
@@ -75,6 +93,21 @@ export const userSlice = createSlice({
       state.company_area;
       state.verification_code;
     },
+    getUserEps: (state) => {
+      state.id;
+      state.name;
+      state.last_name;
+      state.user_gender;
+      state.user_id_type;
+      state.id_number;
+      state.email;
+      state.cellphone;
+      state.password;
+      state.user_role;
+      state.eps_company;
+      state.company_area;
+      state.verification_code;
+    },
     updateUserEpsData: (state) => {
       state.name;
       state.last_name;
@@ -86,8 +119,10 @@ export const userSlice = createSlice({
 
 export const {
   registerUserPatient,
+  getUserPatient,
   updateUserPatientData,
   registerUserEps,
+  getUserEps,
   updateUserEpsData,
 } = userSlice.actions;
 
