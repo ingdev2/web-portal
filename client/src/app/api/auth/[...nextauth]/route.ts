@@ -41,7 +41,7 @@ const handler = NextAuth({
 
         const user = await res.json();
 
-        console.log(user);
+        console.log("User: ", user);
 
         if (user.error) throw user;
 

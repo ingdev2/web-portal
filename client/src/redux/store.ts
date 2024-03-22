@@ -3,8 +3,8 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import userReducer from "./features/userSlice";
 import userLoginReducer from "./features/userLoginSlice";
-import { usersApi } from "./api/usersApi";
-import { idTypesApi } from "./api/idTypesApi";
+import { usersApi } from "./apis/usersApi";
+import { idTypesApi } from "./apis/idTypesApi";
 
 export const store = configureStore({
   reducer: {

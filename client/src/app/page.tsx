@@ -4,7 +4,10 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import ButtonAuth from "@/components/auth/ButtonAuth";
 
-import { useGetAllUsersQuery, useGetUserByIdQuery } from "@/redux/api/usersApi";
+import {
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+} from "@/redux/apis/usersApi";
 import { Button } from "antd";
 
 const HomePage = () => {
@@ -16,13 +19,6 @@ const HomePage = () => {
     isLoading: allUsersIsLoading,
     isFetching: allUsersIsFetching,
   } = useGetAllUsersQuery(null);
-
-  // const {
-  //   data: userData,
-  //   error: userError,
-  //   isLoading: userIsLoading,
-  //   isFetching: userIsFetching,
-  // } = useGetUserByIdQuery({ id });
 
   if (allUsersIsLoading || allUsersIsFetching) {
     return <p>Loading...</p>;

@@ -16,7 +16,7 @@ import {
   setPassword,
   setErrors,
 } from "@/redux/features/userLoginSlice";
-import { useGetAllIdTypesQuery } from "@/redux/api/idTypesApi";
+import { useGetAllIdTypesQuery } from "@/redux/apis/idTypesApi";
 
 const PatientUsersLogin: React.FC = () => {
   const router = useRouter();
