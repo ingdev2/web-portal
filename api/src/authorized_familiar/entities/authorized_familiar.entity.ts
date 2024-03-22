@@ -61,6 +61,9 @@ export class AuthorizedFamiliar {
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
 
+  @Column({ type: 'bigint', nullable: true })
+  whatsapp: number;
+
   @ManyToOne(
     () => RelWithPatient,
     (relationship_with_patient) => relationship_with_patient.familiar,

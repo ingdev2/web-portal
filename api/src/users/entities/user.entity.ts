@@ -42,6 +42,9 @@ export class User {
   @Column({ type: 'bigint', nullable: true })
   cellphone: number;
 
+  @Column({ type: 'bigint', nullable: true })
+  whatsapp: number;
+
   @Column({ select: false })
   password: string;
 

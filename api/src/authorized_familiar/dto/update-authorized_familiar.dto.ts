@@ -24,4 +24,8 @@ export class UpdateAuthorizedFamiliarDto {
   @IsOptional()
   @IsNumber()
   cellphone: number;
+
+  @IsOptional()
+  @IsNumber()
+  whatsapp: number;
 }

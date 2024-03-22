@@ -18,17 +18,7 @@ import {
 } from "@/redux/features/userLoginSlice";
 import { useGetAllIdTypesQuery } from "@/redux/api/idTypesApi";
 
-interface PatientUsersLoginProps {
-  onSubmit: (userData: {
-    idType: string;
-    idNumber: number;
-    password: string;
-  }) => void;
-}
-
-const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
-  onSubmit,
-}: any) => {
+const PatientUsersLogin: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -73,7 +63,6 @@ const PatientUsersLogin: React.FC<PatientUsersLoginProps> = ({
         setShowErrorMessage(true);
       }
 
-      onSubmit({ id_type, id_number, password });
       router.push("/dashboard-admin");
     } catch (error) {
       console.error(error);

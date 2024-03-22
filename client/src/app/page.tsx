@@ -7,7 +7,7 @@ import ButtonAuth from "@/components/auth/ButtonAuth";
 import { useGetAllUsersQuery, useGetUserByIdQuery } from "@/redux/api/usersApi";
 import { Button } from "antd";
 
-export default function HomePage() {
+const HomePage = () => {
   const dispatch = useAppDispatch();
 
   const {
@@ -49,4 +49,6 @@ export default function HomePage() {
       ))}
     </div>
   );
-}
+};
+
+export default HomePage;

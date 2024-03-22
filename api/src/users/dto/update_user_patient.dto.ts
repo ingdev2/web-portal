@@ -18,6 +18,10 @@ export class UpdateUserPatientDto {
   cellphone: number;
 
   @IsOptional()
+  @IsNumber()
+  whatsapp: number;
+
+  @IsOptional()
   @IsString()
   residence_department: string;
 

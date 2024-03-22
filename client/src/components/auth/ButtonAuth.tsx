@@ -3,7 +3,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "antd";
 
-export default function ButtonAuth() {
+const ButtonAuth = () => {
   const { data: session, status } = useSession();
 
   console.log({ session, status });
@@ -35,4 +35,6 @@ export default function ButtonAuth() {
       </Button>
     </>
   );
-}
+};
+
+export default ButtonAuth;

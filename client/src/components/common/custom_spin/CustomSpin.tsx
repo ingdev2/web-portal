@@ -2,7 +2,7 @@ import React from "react";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
-export default function CustomSpin() {
+const CustomSpin = () => {
   return (
     <div
       style={{
@@ -11,7 +11,13 @@ export default function CustomSpin() {
         alignItems: "center",
       }}
     >
-      <Spin indicator={<LoadingOutlined style={{ fontSize: 31 }} spin />} />
+      <Spin
+        indicator={
+          <LoadingOutlined style={{ fontSize: 31, color: "#017DC0" }} spin />
+        }
+      />
     </div>
   );
-}
+};
+
+export default CustomSpin;

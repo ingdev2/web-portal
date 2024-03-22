@@ -2,15 +2,7 @@
 
 import PatientUsersLogin from "@/components/auth/PatientUsersLogin";
 
-export default function UsersLoginPage() {
-  const handleLoginSubmit = async (userData: {
-    idType: string;
-    idNumber: number;
-    password: string;
-  }) => {
-    console.log(userData.idType, userData.idNumber);
-  };
-
+const UsersLoginPage = () => {
   return (
     <div
       style={{
@@ -20,7 +12,9 @@ export default function UsersLoginPage() {
         height: "100vh",
       }}
     >
-      <PatientUsersLogin onSubmit={handleLoginSubmit} />
+      <PatientUsersLogin />
     </div>
   );
-}
+};
+
+export default UsersLoginPage;

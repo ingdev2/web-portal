@@ -31,6 +31,10 @@ export class CreateAuthorizedFamiliarDto {
   cellphone: number;
 
   @IsOptional()
+  @IsNumber()
+  whatsapp: number;
+
+  @IsOptional()
   rel_with_patient: number;
 
   @IsOptional()
