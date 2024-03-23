@@ -1,17 +1,22 @@
 "use client";
 
-import React from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import React, { useEffect, useState } from "react";
 import ButtonAuth from "@/components/auth/ButtonAuth";
 
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
-} from "@/redux/apis/usersApi";
-import { Button } from "antd";
+  useGetUserByIdNumberQuery,
+} from "@/redux/apis/users/usersApi";
+import { useAppSelector } from "@/redux/hooks";
 
 const HomePage = () => {
-  const dispatch = useAppDispatch();
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const id_number = useAppSelector((state) => state.userLogin.id_number);
 
   const {
     data: allUsersData,
@@ -20,29 +25,51 @@ const HomePage = () => {
     isFetching: allUsersIsFetching,
   } = useGetAllUsersQuery(null);
 
-  if (allUsersIsLoading || allUsersIsFetching) {
-    return <p>Loading...</p>;
-  }
+  const {
+    data: userByIdNumber,
+    error: userByIdNumberError,
+    isLoading: userByIdNumberIsLoading,
+    isFetching: userByIdNumberIsFetching,
+  } = useGetUserByIdNumberQuery({ idNumber: id_number });
 
-  if (allUsersError) {
-    return <p>Some error</p>;
-  }
+  useEffect(() => {
+    if (allUsersError) {
+      setShowErrorMessage(true);
+      setErrorMessage("¡Error en la petición!");
+    }
+  }, [allUsersError]);
 
   return (
-    <div className="HomePage">
+    <div
+      className="HomePage"
+      style={{
+        height: "100vh",
+      }}
+    >
       <h2>Página de Inicio</h2>
       <ButtonAuth></ButtonAuth>
 
-      {allUsersData?.map((user) => (
-        <div key={user.id}>
-          <p>{user.name}</p>
-          <p>{user.id_number}</p>
-          <p>{user.email}</p>
-          <p>{user.cellphone}</p>
-          <p>{user.user_role}</p>
-          <p>{user.birthdate}</p>
-        </div>
-      ))}
+      {showErrorMessage && (
+        <CustomMessage
+          typeMessage="error"
+          message={errorMessage || "¡Error en la petición!"}
+        />
+      )}
+
+      {allUsersIsLoading || allUsersIsFetching ? (
+        <CustomSpin />
+      ) : (
+        allUsersData?.map((user) => (
+          <div key={user.id}>
+            <p>{user.name}</p>
+            <p>{user.id_number}</p>
+            <p>{user.email}</p>
+            <p>{user.cellphone}</p>
+            <p>{user.user_role}</p>
+            <p>{user.birthdate}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 };

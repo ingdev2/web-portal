@@ -20,6 +20,12 @@ const ButtonAuth = () => {
           type="primary"
           onClick={() => signOut()}
           className="button-signout"
+          style={{
+            paddingInline: 31,
+            borderRadius: 7,
+            backgroundColor: "#800000",
+            color: "#f2f2f2",
+          }}
         >
           Cerrar sesión
         </Button>
@@ -30,7 +36,17 @@ const ButtonAuth = () => {
     <>
       No estas registrado
       <br />
-      <Button type="primary" onClick={() => signIn()} className="button-signin">
+      <Button
+        type="primary"
+        onClick={() => signIn()}
+        className="button-signin"
+        style={{
+          paddingInline: 31,
+          borderRadius: 7,
+          backgroundColor: "#145A32",
+          color: "#f2f2f2",
+        }}
+      >
         Iniciar sesión
       </Button>
     </>

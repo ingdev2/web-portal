@@ -250,7 +250,7 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      throw new UnauthorizedException(`¡Contraseña incorrecta!`);
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);
