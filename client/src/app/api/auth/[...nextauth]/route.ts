@@ -6,34 +6,33 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        id_type: {
-          label: "Tipo de documento",
-          type: "text",
+        verification_code: {
+          label: "Código de verificación",
+          type: "number",
+          inputMode: "numeric",
+          pattern: "[0-9]*",
         },
         id_number: {
           label: "Número de identificación",
           type: "number",
-          placeholder: "123456789",
           inputMode: "numeric",
           pattern: "[0-9]*",
-        },
-        password: {
-          label: "Contraseña",
-          type: "password",
         },
       },
 
       async authorize(credentials, req) {
+        if (!credentials) {
+          throw new Error("Credenciales no definidas.");
+        }
+        const { id_number } = credentials;
+
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/loginUsers`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verifiedLoginUsers/${id_number}`,
           {
             method: "POST",
             body: JSON.stringify({
-              id_type: credentials?.id_type,
-              id_number: credentials?.id_number
-                ? parseInt(credentials?.id_number)
-                : undefined,
-              password: credentials?.password,
+              verification_code: credentials?.verification_code,
+              id_number: credentials?.id_number,
             }),
             headers: { "Content-Type": "application/json" },
           }

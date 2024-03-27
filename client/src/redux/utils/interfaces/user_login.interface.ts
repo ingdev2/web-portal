@@ -1,7 +1,9 @@
 interface UserLogin {
-  id_type: string;
+  id_type: number;
   id_number: number;
   password: string;
-  idTypeOptions: [];
-  errors: [];
+  verification_code?: number;
+  token?: string;
+  idTypeOptions?: [];
+  errors?: [];
 }

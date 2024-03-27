@@ -1,23 +1,25 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { signIn, signOut } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
+import ModalVerificationCode from "./ModalVerificationCode";
 import { Button, Card, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
+
 import {
-  setIdType,
   setIdTypeOptions,
+  setIdType,
   setIdNumber,
   setPassword,
   setErrors,
-} from "@/redux/features/userLoginSlice";
+} from "@/redux/features/login/userLoginSlice";
+import { setModalIsOpen } from "@/redux/features/modal/modalSlice";
+
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginUsersMutation } from "@/redux/apis/auth/loginUsersApi";
-import ModalVerificationCode from "./ModalVerificationCode";
 
 const PatientUsersLogin: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -25,14 +27,15 @@ const PatientUsersLogin: React.FC = () => {
   const idTypeOptions = useAppSelector(
     (state) => state.userLogin.idTypeOptions
   );
-  const id_type = useAppSelector((state) => state.userLogin.id_type);
-  const id_number = useAppSelector((state) => state.userLogin.id_number);
-  const password = useAppSelector((state) => state.userLogin.password);
-  const errors = useAppSelector((state) => state.userLogin.errors);
+  const idTypeState = useAppSelector((state) => state.userLogin.id_type);
+  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
+  const passwordState = useAppSelector((state) => state.userLogin.password);
+  const errorsState = useAppSelector((state) => state.userLogin.errors);
+
+  const modalIsOpen = useAppSelector((state) => state.modal.modalIsOpen);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const {
     data: idTypesData,
@@ -41,10 +44,12 @@ const PatientUsersLogin: React.FC = () => {
     error: idTypesError,
   } = useGetAllIdTypesQuery(null);
 
-  const {} = useLoginUsersMutation();
+  const [
+    loginUsers,
+    { data: isLogindata, isLoading: isLoginLoading, isSuccess: isLoginSuccess },
+  ] = useLoginUsersMutation({ fixedCacheKey: "loginUserData" });
 
   useEffect(() => {
-    setShowModal(false);
     if (!idTypesLoading && idTypesData) {
       dispatch(setIdTypeOptions(idTypesData));
     }
@@ -52,24 +57,26 @@ const PatientUsersLogin: React.FC = () => {
       setShowErrorMessage(true);
       dispatch(setIdTypeOptions(idTypesData));
     }
-  }, [idTypesData, idTypesLoading, idTypesError]);
+    if (isLoginSuccess && !isLoginLoading && !isSubmitting) {
+      dispatch(setModalIsOpen(true));
+    }
+  }, [idTypesData, idTypesLoading, idTypesError, isSubmitting]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmitting(true);
 
-      const responseNextAuth = await signIn("credentials", {
-        id_type,
-        id_number,
-        password,
-        redirect: false,
+      const response: any = await loginUsers({
+        id_type: idTypeState,
+        id_number: idNumberState,
+        password: passwordState,
       });
 
-      if (responseNextAuth?.error) {
-        dispatch(setErrors(responseNextAuth.error.split(",")));
+      var isLoginUserError = response.error;
+
+      if (!isLoginSuccess && !isLoginLoading && isLoginUserError) {
+        dispatch(setErrors(isLoginUserError?.data.message));
         setShowErrorMessage(true);
-      } else {
-        setShowModal(true);
       }
     } catch (error) {
       console.error(error);
@@ -79,6 +86,7 @@ const PatientUsersLogin: React.FC = () => {
   };
 
   const handleButtonClick = () => {
+    dispatch(setErrors([]));
     setShowErrorMessage(false);
   };
 
@@ -93,12 +101,12 @@ const PatientUsersLogin: React.FC = () => {
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       }}
     >
-      {showModal && <ModalVerificationCode />}
+      {modalIsOpen && <ModalVerificationCode />}
 
       {showErrorMessage && (
         <CustomMessage
           typeMessage="error"
-          message={errors.toString() || "¡Error en la petición!"}
+          message={errorsState?.toString() || "¡Error en la petición!"}
         />
       )}
 
@@ -126,7 +134,7 @@ const PatientUsersLogin: React.FC = () => {
             ]}
           >
             <Select
-              value={id_type}
+              value={idTypeState}
               placeholder="Tipo de identificación"
               onChange={(e) => dispatch(setIdType(e))}
             >
@@ -166,9 +174,10 @@ const PatientUsersLogin: React.FC = () => {
           <Input
             prefix={<IdcardOutlined className="site-form-item-icon" />}
             type="number"
-            value={id_number}
+            value={idNumberState}
             placeholder="Número de identificación"
             onChange={(e) => dispatch(setIdNumber(e.target.value))}
+            min={0}
           />
         </Form.Item>
 
@@ -195,7 +204,7 @@ const PatientUsersLogin: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={password}
+            value={passwordState}
             placeholder="Contraseña"
             onChange={(e) => dispatch(setPassword(e.target.value))}
           />
@@ -216,10 +225,11 @@ const PatientUsersLogin: React.FC = () => {
             Olvide mi contraseña
           </a>
 
-          {isSubmitting ? (
+          {isSubmitting && isLoginLoading ? (
             <CustomSpin />
           ) : (
             <Button
+              size="middle"
               style={{
                 paddingInline: 62,
                 borderRadius: 31,
@@ -227,7 +237,6 @@ const PatientUsersLogin: React.FC = () => {
                 color: "#f2f2f2",
                 marginBottom: 7,
               }}
-              type="primary"
               htmlType="submit"
               className="login-form-button"
               onClick={handleButtonClick}
@@ -248,7 +257,6 @@ const PatientUsersLogin: React.FC = () => {
               borderWidth: 1.3,
               marginTop: 7,
             }}
-            type="default"
             htmlType="button"
             className="register-button"
           >

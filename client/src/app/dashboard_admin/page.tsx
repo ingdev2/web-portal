@@ -11,18 +11,21 @@ const DashboardAdminPage = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const id_type = useAppSelector((state) => state.userLogin.id_type);
-  const id_number = useAppSelector((state) => state.userLogin.id_number);
+  const idType = useAppSelector((state) => state.userLogin.id_type);
+  const idNumber = useAppSelector((state) => state.userLogin.id_number);
   const password = useAppSelector((state) => state.userLogin.password);
+  const verificationCode = useAppSelector(
+    (state) => state.userLogin.verification_code
+  );
 
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (!id_type && !id_number && !password) {
+    if (!idType && !idNumber && !password) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error en la petición!");
     }
-  }, [id_type, id_number, password]);
+  }, [idType, idNumber, password]);
 
   return (
     <div>
@@ -33,7 +36,7 @@ const DashboardAdminPage = () => {
         />
       )}
       <h1>Dashboard</h1>
-      {!id_type || !id_number || !password ? (
+      {!idType || !idNumber || !password ? (
         <CustomSpin />
       ) : (
         <>
@@ -41,9 +44,10 @@ const DashboardAdminPage = () => {
             <code>{JSON.stringify(session, null, 2)}</code>
           </pre>
           <ol>
-            <li>{id_type}</li>
-            <li>{id_number}</li>
+            <li>{idType}</li>
+            <li>{idNumber}</li>
             <li>{password}</li>
+            <li>{verificationCode}</li>
           </ol>
         </>
       )}

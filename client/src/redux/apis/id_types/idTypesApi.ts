@@ -6,14 +6,23 @@ export const idTypesApi = createApi({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/id-types`,
   }),
   endpoints: (builder) => ({
-    createIdType: builder.mutation<IdType, null>({
-      query: () => `create`,
+    createIdType: builder.mutation<IdType, IdType>({
+      query: (newIdtype) => ({
+        url: `create`,
+        method: "POST",
+        body: newIdtype,
+      }),
     }),
     getAllIdTypes: builder.query<IdType[], null>({
       query: () => "getAll",
     }),
-    updateIdTypeById: builder.mutation<IdType, { id: string }>({
-      query: ({ id }) => `update/${id}`,
+    updateIdTypeById: builder.mutation<any, { id: number; newName: string }>({
+      query: ({ id, newName }) => ({
+        url: `update/${id}`,
+        method: "PATCH",
+        params: { id },
+        body: { newName },
+      }),
     }),
   }),
 });

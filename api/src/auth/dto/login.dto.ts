@@ -1,22 +1,15 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class LoginDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
   id_type: number;
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
   id_number: number;
 
   @Transform(({ value }) => value.trim())
-  @IsNotEmpty()
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
   @IsString()
   password: string;
 }

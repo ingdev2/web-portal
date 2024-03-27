@@ -1,5 +1,5 @@
 interface User {
-  id: string;
+  id?: string;
   name: string;
   last_name?: string;
   user_gender: number;
@@ -8,19 +8,20 @@ interface User {
   birthdate?: string;
   email: string;
   cellphone?: number;
-  password: string;
+  whatsapp?: number;
+  password?: string;
   residence_department?: string;
   residence_city?: string;
   residence_address?: string;
   residence_neighborhood?: string;
-  is_active: boolean;
-  accept_terms: boolean;
+  is_active?: boolean;
+  accept_terms?: boolean;
   eps_company?: number;
   company_area?: number;
-  user_role: number;
-  verification_code: number;
-  createdAt: string;
-  updateAt: string;
-  deletedAt: string;
-  medical_req: Array<any>;
+  user_role?: number;
+  verification_code?: number;
+  createdAt?: string;
+  updateAt?: string;
+  deletedAt?: string;
+  medical_req?: Array<any>;
 }

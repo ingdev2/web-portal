@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: UserLogin = {
-  id_type: "",
+  id_type: 0,
   id_number: 0,
   password: "",
+  verification_code: 0,
+  token: "",
   idTypeOptions: [],
   errors: [],
 };
@@ -27,6 +29,20 @@ export const userLoginSlice = createSlice({
     setErrors: (state, action) => {
       state.errors = action.payload;
     },
+    setVerificationCode: (state, action) => {
+      state.verification_code = action.payload;
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+    resetLoginState: (state) => {
+      state.id_type = initialState.id_type;
+      state.id_number = initialState.id_number;
+      state.password = initialState.password;
+      state.verification_code = initialState.verification_code;
+      state.token = initialState.token;
+      state.errors = initialState.errors;
+    },
   },
 });
 
@@ -34,8 +50,11 @@ export const {
   setIdType,
   setIdNumber,
   setPassword,
+  setVerificationCode,
+  setToken,
   setIdTypeOptions,
   setErrors,
+  resetLoginState,
 } = userLoginSlice.actions;
 
 export default userLoginSlice.reducer;
