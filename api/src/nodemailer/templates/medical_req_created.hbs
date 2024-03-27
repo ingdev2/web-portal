@@ -9,9 +9,13 @@
       padding: 20px; border: 2px solid #ccc; border-radius: 13px;
       background-color: #f7f7f7; } h1 { text-align: center; color:#015E90;
       font-weight: bold; line-height: 1.3;} p { margin: 10px 0; size: 22px; }
-      .highlight { font-weight: bold; color: #015E90; } .important {
-      font-weight: bold; }.logoProced { display: block; margin: 0 auto; height:
-      69px;}.logoBonna { display: block; margin: 0 auto; height: 88px;}
+      .highlight { font-weight: bold; color: #015E90; } .important{ font-weight:
+      bold; } .important-center { text-align: center; font-weight: bold;
+      }.logoProced { display: block; margin: 0 auto; height: 69px;}.logoBonna {
+      display: block; margin: 0 auto; height: 88px;} .button-container {
+      text-align: center; } .button { padding: 10px 20px; background-color:
+      #004d77; color: #fff; text-decoration: none; border-radius: 7px; }
+      .button:hover { background-color: #017DC0; }
     </style>
   </head>
   <body>
@@ -34,6 +38,16 @@
         <span class='highlight'>{{pacientIdNumber}}</span>
         esta solicitud se crea con número de radicado:
         <span class='highlight'>{{medicalReqFilingNumber}}</span>.</p>
+      <br />
+      <p class='important-center'>Lo invitamos a revisar los términos y
+        condiciones a tener en cuenta durante este proceso en el siguiente link:
+        <br />
+        <p class='button-container'>
+          <a href='https://clinicabonnadona.com' class='button'>Términos y
+            condiciones</a>
+        </p>
+      </p>
+      <br />
       <p>A partir de la fecha, nuestro tiempo de respuesta aproximado a su
         requerimiento es de
         <span class='important'>24 horas</span>. Agradecemos su paciencia.</p>

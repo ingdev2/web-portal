@@ -11,7 +11,7 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+// @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -25,6 +25,11 @@ export class UsersController {
     patientData: ValidatePatientDto,
   ) {
     return await this.usersService.validateThatThePatientExist(patientData);
+  }
+
+  @Get('/getAllUsers')
+  async getAllUsers() {
+    return await this.usersService.getAllUsers();
   }
 
   @Get('/getAllPatient')

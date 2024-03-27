@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
@@ -22,6 +23,9 @@ import axios from 'axios';
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+
+    @InjectRepository(AuthorizedFamiliar)
+    private familiarRepository: Repository<AuthorizedFamiliar>,
 
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
@@ -155,7 +159,13 @@ export class UsersService {
       },
     });
 
-    if (userPatientEmailFound) {
+    const userFamiliarEmailFound = await this.familiarRepository.findOne({
+      where: {
+        email: userPatient.email,
+      },
+    });
+
+    if (userPatientEmailFound || userFamiliarEmailFound) {
       return new HttpException(
         `El correo electrónico ${userPatient.email} ya está registrado.`,
         HttpStatus.CONFLICT,
@@ -304,6 +314,26 @@ export class UsersService {
   }
 
   // GET FUNTIONS //
+
+  async getAllUsers() {
+    const allUsers = await this.userRepository.find({
+      where: {
+        is_active: true,
+      },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    if (!allUsers.length) {
+      return new HttpException(
+        `No hay usuarios registrados en la base de datos`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allUsers;
+    }
+  }
 
   async getAllUsersPatient() {
     const userRolePatient = await this.userRoleRepository.findOne({

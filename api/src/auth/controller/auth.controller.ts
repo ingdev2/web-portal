@@ -69,13 +69,13 @@ export class AuthController {
     return await this.authService.loginRelatives(loginFamiliar);
   }
 
-  @Post('verifiedLoginUsers/:idNumber')
+  @Post('verifiedLoginUsers/:id_number')
   async verifyCodeAndLoginUsers(
-    @Param('idNumber') idNumber: number,
+    @Param('id_number') id_number: number,
     @Body('verification_code') verification_code: number,
   ) {
     return await this.authService.verifyCodeAndLoginUsers(
-      idNumber,
+      id_number,
       verification_code,
     );
   }

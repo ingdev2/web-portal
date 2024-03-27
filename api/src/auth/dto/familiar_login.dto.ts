@@ -5,7 +5,6 @@ export class FamiliarLoginDto {
   id_type: number;
 
   @IsNotEmpty()
-  @IsNumber()
   id_number: number;
 
   @IsNotEmpty()
@@ -13,7 +12,6 @@ export class FamiliarLoginDto {
   email: string;
 
   @IsNotEmpty()
-  @IsNumber()
   patient_id_number: number;
 
   @IsNotEmpty()

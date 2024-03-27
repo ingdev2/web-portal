@@ -7,7 +7,6 @@ import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.dto';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
-import { UUID } from 'crypto';
 
 @Injectable()
 export class AuthorizedFamiliarService {
@@ -67,13 +66,19 @@ export class AuthorizedFamiliarService {
       );
     }
 
-    const userFamiliarEmailFound = await this.userRepository.findOne({
+    const userFamiliarEmailFound = await this.familiarRepository.findOne({
       where: {
         email: familiar.email,
       },
     });
 
-    if (userFamiliarEmailFound) {
+    const userPatientEmailFound = await this.userRepository.findOne({
+      where: {
+        email: familiar.email,
+      },
+    });
+
+    if (userFamiliarEmailFound || userPatientEmailFound) {
       return new HttpException(
         `El correo electrónico ${familiar.email} ya está registrado.`,
         HttpStatus.CONFLICT,

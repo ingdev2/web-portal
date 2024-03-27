@@ -103,6 +103,7 @@ export class AuthService {
     id_number,
     email,
     cellphone,
+    whatsapp,
     password,
     residence_department,
     residence_city,
@@ -122,6 +123,7 @@ export class AuthService {
       id_number,
       email,
       cellphone,
+      whatsapp,
       password: await bcryptjs.hash(password, 10),
       residence_department,
       residence_city,
@@ -141,6 +143,7 @@ export class AuthService {
       id_number,
       email,
       cellphone,
+      whatsapp,
       user_gender,
       rel_with_patient,
       user_role,
@@ -156,6 +159,7 @@ export class AuthService {
       id_number,
       email,
       cellphone,
+      whatsapp,
       user_gender,
       rel_with_patient,
       user_role,
@@ -237,9 +241,7 @@ export class AuthService {
       );
 
     if (!userFound) {
-      throw new UnauthorizedException(
-        `¡El tipo o número de identificación es incorrecto!`,
-      );
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(
@@ -248,7 +250,7 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      throw new UnauthorizedException(`¡Contraseña incorrecta!`);
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);

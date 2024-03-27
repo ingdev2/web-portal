@@ -37,6 +37,10 @@ export class CreateUserPatientDto {
   @IsNumber()
   cellphone: number;
 
+  @IsOptional()
+  @IsNumber()
+  whatsapp: number;
+
   @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   @IsString()
