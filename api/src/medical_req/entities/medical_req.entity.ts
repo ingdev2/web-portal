@@ -2,6 +2,7 @@ import { User } from '../../users/entities/user.entity';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
 import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
 import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import {
@@ -145,8 +146,15 @@ export class MedicalReq {
   @ManyToOne(() => User, (aplicant) => aplicant.medical_req)
   aplicant: User;
 
-  @Column({ type: 'boolean', default: false })
-  in_legal_area: boolean;
+  @ManyToOne(
+    () => CompanyArea,
+    (company_user_area) => company_user_area.medical_req,
+  )
+  @JoinColumn({ name: 'currently_in_area', referencedColumnName: 'id' })
+  review_area: CompanyArea;
+
+  @Column({ nullable: true })
+  currently_in_area: number;
 
   @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
   @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })

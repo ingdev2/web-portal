@@ -80,6 +80,11 @@ export class AuthController {
     );
   }
 
+  @Post('resendVerificationCode')
+  async resendVerificationCode(@Body() loginDto: LoginDto) {
+    return await this.authService.resendVerificationCode(loginDto);
+  }
+
   @Post('verifiedLoginRelatives/:idNumber')
   async verifyCodeAndLoginRelatives(
     @Param('idNumber') idNumber: number,

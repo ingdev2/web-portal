@@ -151,12 +151,15 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/sendToLegalArea/:reqId')
-  async sendToLegalArea(
+  @Patch('/sendToAnotherArea/:reqId')
+  async forwardToAnotherArea(
     @Param('reqId') reqId: string,
     @Body() sendToLegalArea: UpdateStatusMedicalReqDto,
   ) {
-    return await this.medicalReqService.sendToLegalArea(reqId, sendToLegalArea);
+    return await this.medicalReqService.forwardToAnotherArea(
+      reqId,
+      sendToLegalArea,
+    );
   }
 
   @Auth(AdminRolType.ADMIN)

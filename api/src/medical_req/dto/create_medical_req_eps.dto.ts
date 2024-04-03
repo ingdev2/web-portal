@@ -87,6 +87,10 @@ export class CreateMedicalReqEpsDto {
   requirement_status: number;
 
   @IsOptional()
+  @IsNumber()
+  currently_in_area: number;
+
+  @IsOptional()
   @IsUUID()
   aplicantId: string;
 

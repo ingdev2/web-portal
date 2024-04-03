@@ -16,11 +16,17 @@ export const usersApi = createApi({
     getAllUsers: builder.query<User[], null>({
       query: () => "getAllUsers",
     }),
-    getUserById: builder.query<User, { id: string }>({
-      query: ({ id }) => `getUser/${id}`,
+    getAllPatients: builder.query<User[], null>({
+      query: () => "getAllPatient",
     }),
-    getUserByIdNumber: builder.query<User, { idNumber: number }>({
-      query: ({ idNumber }) => `getUserById/${idNumber}`,
+    getAllEps: builder.query<User[], null>({
+      query: () => "getAllEps",
+    }),
+    getUserById: builder.query<User, string>({
+      query: (id) => `getUser/${id}`,
+    }),
+    getUserByIdNumber: builder.query<User, number>({
+      query: (idNumber) => `getUserById/${idNumber}`,
     }),
     updateUser: builder.mutation<
       any,
@@ -39,6 +45,8 @@ export const usersApi = createApi({
 export const {
   useCreateUserMutation,
   useGetAllUsersQuery,
+  useGetAllPatientsQuery,
+  useGetAllEpsQuery,
   useGetUserByIdQuery,
   useGetUserByIdNumberQuery,
   useUpdateUserMutation,

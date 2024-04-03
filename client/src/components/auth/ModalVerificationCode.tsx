@@ -6,18 +6,19 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
-import { Button, Input, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { NumberOutlined } from "@ant-design/icons";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 
 import {
-  setVerificationCode,
   setErrors,
+  setVerificationCode,
 } from "@/redux/features/login/userLoginSlice";
 import { setModalIsOpen } from "@/redux/features/modal/modalSlice";
 
-import { useLoginUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
+import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
 
 const ModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -26,8 +27,6 @@ const ModalVerificationCode: React.FC = () => {
   const modalIsOpen = useAppSelector((state) => state.modal.modalIsOpen);
 
   const idTypeState = useAppSelector((state) => state.userLogin.id_type);
-  const passwordState = useAppSelector((state) => state.userLogin.password);
-
   const idNumberState = useAppSelector((state) => state.userLogin.id_number);
   const verificationCodeState = useAppSelector(
     (state) => state.userLogin.verification_code
@@ -36,24 +35,41 @@ const ModalVerificationCode: React.FC = () => {
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
   const [isSubmittingResendCode, setIsSubmittingResendCode] = useState(false);
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const {
+    data: isUserData,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching,
+    isError: isUserError,
+  } = useGetUserByIdNumberQuery(idNumberState);
+
   const [
-    loginUsers,
-    { data: isLogindata, isLoading: isLoginLoading, isSuccess: isLoginSuccess },
-  ] = useLoginUsersMutation({ fixedCacheKey: "loginUserData" });
+    resendUserVerificationCode,
+    {
+      data: resendCodeData,
+      isLoading: isResendCodeLoading,
+      isSuccess: isResendCodeSuccess,
+    },
+  ] = useResendUserVerificationCodeMutation({
+    fixedCacheKey: "resendUserCodeData",
+  });
 
   useEffect(() => {
     if (!idNumberState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-  }, [idNumberState]);
+    if (!isUserData && isUserError) {
+      setShowErrorMessage(true);
+      setErrorMessage("¡Usuario no encontrado!");
+    }
+  }, [idNumberState, isUserData, isUserError]);
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirm(true);
 
@@ -64,9 +80,6 @@ const ModalVerificationCode: React.FC = () => {
       const idNumber = idNumberState
         ? parseInt(idNumberState?.toString(), 10)
         : "";
-
-      console.log(typeof idNumber);
-      console.log(typeof verificationCode);
 
       const responseNextAuth = await signIn("credentials", {
         verification_code: verificationCode,
@@ -79,6 +92,7 @@ const ModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       } else {
         router.push("/dashboard_admin");
+        dispatch(setVerificationCode(""));
       }
     } catch (error) {
       console.error(error);
@@ -91,17 +105,20 @@ const ModalVerificationCode: React.FC = () => {
     try {
       setIsSubmittingResendCode(true);
 
-      const response: any = await loginUsers({
+      const response: any = await resendUserVerificationCode({
         id_type: idTypeState,
         id_number: idNumberState,
-        password: passwordState,
       });
 
-      var isLoginUserError = response.error;
+      var isResendCodeError = response.error;
 
-      if (!isLoginSuccess && !isLoginLoading && isLoginUserError) {
-        dispatch(setErrors(isLoginUserError?.data.message));
+      if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
+        dispatch(setErrors(isResendCodeError?.data.message));
         setShowErrorMessage(true);
+      }
+      if (isUserData && !isUserError) {
+        setShowSuccessMessage(true);
+        setSuccessMessage("¡Código Reenviado Correctamente!");
       }
     } catch (error) {
       console.error(error);
@@ -113,7 +130,7 @@ const ModalVerificationCode: React.FC = () => {
   const handleCancel = () => {
     <Link href="/users_login" scroll={false} />;
     dispatch(setModalIsOpen(false));
-    dispatch(setVerificationCode(0));
+    dispatch(setVerificationCode(""));
   };
 
   const handleButtonClick = () => {
@@ -129,16 +146,25 @@ const ModalVerificationCode: React.FC = () => {
           message={errorMessage || "¡Código Incorrecto!"}
         />
       )}
+      {showSuccessMessage && (
+        <CustomMessage
+          typeMessage="success"
+          message={successMessage || "¡Código Reenviado Correctamente!"}
+        />
+      )}
 
       <Modal
+        className="modal-design"
         open={modalIsOpen}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancel}
         destroyOnClose={true}
         width={321}
         footer={null}
+        maskClosable={false}
       >
         <div
+          className="content-modal"
           style={{
             textAlign: "center",
             display: "flex",
@@ -154,7 +180,7 @@ const ModalVerificationCode: React.FC = () => {
           </h2>
 
           <h4
-            className="title-modal"
+            className="subtitle-modal"
             style={{
               fontWeight: "normal",
               lineHeight: 1.3,
@@ -166,62 +192,91 @@ const ModalVerificationCode: React.FC = () => {
           </h4>
 
           <p
+            className="user-email"
             style={{
               fontWeight: "bold",
-              fontSize: 20,
+              fontSize: 15,
               lineHeight: 0.8,
-              marginTop: 7,
+              marginTop: 13,
             }}
           >
-            {verificationCodeState}
+            {isUserData?.email}
           </p>
 
-          <span style={{ fontWeight: "bold" }}>
-            <Input
-              prefix={<NumberOutlined className="input-code-item-icon" />}
-              style={{
-                width: 213,
-                fontSize: 22,
-                fontWeight: "bold",
-                marginBottom: 13,
-              }}
-              type="number"
-              value={verificationCodeState}
-              placeholder="Código"
-              onChange={(e) => dispatch(setVerificationCode(e.target.value))}
-              min={0}
-              maxLength={5}
-              required={true}
-            />
-          </span>
-
-          {isSubmittingConfirm ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              key="confirm-button"
-              size="middle"
-              style={{
-                paddingInline: 31,
-                borderRadius: 31,
-                backgroundColor: "#015E90",
-                color: "#f2f2f2",
-                marginBottom: 13,
-              }}
-              onClick={handleSubmit}
-              onMouseDown={handleButtonClick}
+          <Form
+            initialValues={{ remember: false }}
+            autoComplete="false"
+            onFinish={handleSubmit}
+          >
+            <Form.Item
+              className="user-code"
+              name={"user-code"}
+              style={{ textAlign: "center" }}
+              rules={[
+                {
+                  required: true,
+                  message: "¡Por favor ingresa código de verificación!",
+                },
+                {
+                  pattern: /^[0-9]+$/,
+                  message: "¡Por favor ingresa solo números!",
+                },
+                {
+                  min: 4,
+                  message: "¡Por favor ingresa mínimo 4 números!",
+                },
+                {
+                  max: 5,
+                  message: "¡Por favor ingresa máximo 5 números!",
+                },
+              ]}
             >
-              Confirmar código
-            </Button>
-          )}
+              <Input
+                prefix={<NumberOutlined className="input-code-item-icon" />}
+                style={{
+                  width: 173,
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  marginTop: 7,
+                  marginBottom: 2,
+                }}
+                type="number"
+                placeholder="Código"
+                value={verificationCodeState}
+                onChange={(e) => dispatch(setVerificationCode(e.target.value))}
+                min={0}
+              />
+            </Form.Item>
 
-          {isSubmittingResendCode ? (
+            {isSubmittingConfirm ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                className="confirm-code-button"
+                size="middle"
+                style={{
+                  paddingInline: 31,
+                  borderRadius: 31,
+                  backgroundColor: "#015E90",
+                  color: "#f2f2f2",
+                  marginTop: 7,
+                  marginBottom: 13,
+                }}
+                htmlType="submit"
+                onClick={handleButtonClick}
+              >
+                Confirmar código
+              </Button>
+            )}
+          </Form>
+
+          {isSubmittingResendCode && !isResendCodeSuccess ? (
             <CustomSpin />
           ) : (
             <Button
               key="resend-button"
               style={{
-                paddingInline: 22,
+                paddingInline: 13,
                 color: "#015E90",
                 borderColor: "#015E90",
                 fontWeight: "bold",

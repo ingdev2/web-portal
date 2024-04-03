@@ -3,8 +3,8 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { persistReducer } from "redux-persist";
 import storage from "./storage/storage";
 
-import userReducer from "./features/users/userSlice";
 import userLoginReducer from "./features/login/userLoginSlice";
+import userReducer from "./features/users/userSlice";
 import modalReducer from "./features/modal/modalSlice";
 
 import { usersApi } from "./apis/users/usersApi";
@@ -15,13 +15,13 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["user"],
+  whitelist: ["user", "userLogin"],
   blacklist: [],
 };
 
 const rootReducer = combineReducers({
-  user: userReducer,
   userLogin: userLoginReducer,
+  user: userReducer,
   modal: modalReducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [idTypesApi.reducerPath]: idTypesApi.reducer,

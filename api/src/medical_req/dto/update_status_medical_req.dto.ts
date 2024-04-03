@@ -4,7 +4,6 @@ import {
   IsNumber,
   IsString,
   IsArray,
-  IsBoolean,
 } from 'class-validator';
 
 export class UpdateStatusMedicalReqDto {
@@ -34,6 +33,6 @@ export class UpdateStatusMedicalReqDto {
   download_expiration_date: Date;
 
   @IsOptional()
-  @IsBoolean()
-  in_legal_area: boolean;
+  @IsNumber()
+  currently_in_area: number;
 }
