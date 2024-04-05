@@ -2,6 +2,7 @@ import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { GenderType } from '../../genders/entities/gender.entity';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { CompanyArea } from '../../company_area/entities/company_area.entity';
+import { PositionLevel } from '../../position_level/entities/position_level.entity';
 import {
   Column,
   CreateDateColumn,
@@ -78,4 +79,14 @@ export class Admin {
 
   @Column()
   company_area: number;
+
+  @ManyToOne(
+    () => PositionLevel,
+    (admin_position_level) => admin_position_level.admin,
+  )
+  @JoinColumn({ name: 'position_level', referencedColumnName: 'id' })
+  admin_position_level: PositionLevel;
+
+  @Column({ nullable: true })
+  position_level: number;
 }

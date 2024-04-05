@@ -1,5 +1,6 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
+import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
@@ -22,7 +23,7 @@ export class AuthController {
   // REGISTER
 
   @Post('registerSuperAdmin')
-  async registerSuperAdmin(@Body() registerSuperAdmin: CreateAdminDto) {
+  async registerSuperAdmin(@Body() registerSuperAdmin: CreateSuperAdminDto) {
     return await this.authService.registerSuperAdmin(registerSuperAdmin);
   }
 

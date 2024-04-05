@@ -19,4 +19,7 @@ export class UpdateAdminDto {
 
   @IsOptional()
   company_area: number;
+
+  @IsOptional()
+  position_level: number;
 }

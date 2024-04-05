@@ -29,11 +29,11 @@ export class CreateUserPatientDto {
   @IsNumber()
   id_number: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   cellphone: number;
 
@@ -47,6 +47,10 @@ export class CreateUserPatientDto {
   @MinLength(7)
   @MaxLength(14)
   password: string;
+
+  @IsOptional()
+  @IsString()
+  affiliation_eps: string;
 
   @IsOptional()
   @IsString()

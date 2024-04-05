@@ -22,7 +22,6 @@ import {
 
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
-import { UUID } from 'crypto';
 
 const schedule = require('node-schedule');
 
@@ -77,6 +76,7 @@ export class AuthService {
     corporate_email,
     password,
     company_area,
+    position_level,
     admin_role,
   }: CreateAdminDto) {
     await this.adminsService.getAdminByIdNumber(id_number);
@@ -90,6 +90,7 @@ export class AuthService {
       corporate_email,
       password: await bcryptjs.hash(password, 10),
       company_area,
+      position_level,
       admin_role,
     });
   }
@@ -105,6 +106,7 @@ export class AuthService {
     cellphone,
     whatsapp,
     password,
+    affiliation_eps,
     residence_department,
     residence_city,
     residence_address,
@@ -124,6 +126,7 @@ export class AuthService {
       email,
       cellphone,
       whatsapp,
+      affiliation_eps,
       password: await bcryptjs.hash(password, 10),
       residence_department,
       residence_city,

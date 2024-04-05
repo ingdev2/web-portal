@@ -151,7 +151,7 @@ export class MedicalReqService {
 
     if (!fileArea) {
       throw new HttpException(
-        'El área de "DEPARTAMENTO JURÍDICO" no existe.',
+        'El área de "Departamento de Archivos" no existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

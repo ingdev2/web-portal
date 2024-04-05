@@ -184,4 +184,7 @@ export class MedicalReq {
 
   @Column({ type: 'text', array: true, nullable: true })
   documents_delivered: string[];
+
+  @Column({ type: 'uuid', nullable: true })
+  delegate_id: string;
 }

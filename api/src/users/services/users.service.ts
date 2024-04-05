@@ -135,10 +135,12 @@ export class UsersService {
       );
     }
 
-    const dataToCreateUser = new CreateUserPatientDto();
-
-    dataToCreateUser.name = patientData[0]?.NOMBRE;
-    dataToCreateUser.birthdate = patientData[0]?.FECHA_NACIMIENTO;
+    userPatient.name = patientData[0]?.NOMBRE;
+    userPatient.email = patientData[0]?.CORREO;
+    userPatient.birthdate = patientData[0]?.FECHA_NACIMIENTO;
+    userPatient.residence_address = patientData[0]?.DIRECCION;
+    userPatient.affiliation_eps = patientData[0]?.EMPRESA;
+    userPatient.cellphone = patientData[0]?.CELULAR;
 
     const userPatientFound = await this.userRepository.findOne({
       where: {
@@ -191,19 +193,6 @@ export class UsersService {
       accept_terms: true,
     });
 
-    const patientLocation =
-      await this.locationService.getLocationByDepartmentAndCity({
-        department_name: userPatient.residence_department,
-        city_name: userPatient.residence_city,
-      });
-
-    if (!patientLocation) {
-      throw new HttpException(
-        'No se encontró el departamento o la ciudad ingresada.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
     const userPatientWithRole = await this.userRepository.save(
       insertRoleUserPatient,
     );
@@ -222,17 +211,6 @@ export class UsersService {
       );
     }
 
-    const insertLocationPatient = await this.userRepository.create({
-      ...userPatient,
-      residence_department: patientLocation.department_name,
-      residence_city: patientLocation.city_name,
-    });
-
-    await this.userRepository.update(userPatientWithRole.id, dataToCreateUser);
-    await this.userRepository.update(
-      userPatientWithRole.id,
-      insertLocationPatient,
-    );
     await this.userRepository.update(userPatientWithRole.id, userPatient);
 
     const newUserPatient = await this.userRepository.findOne({
