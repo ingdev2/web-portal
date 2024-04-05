@@ -42,4 +42,7 @@ export class CreateAdminDto {
 
   @IsNotEmpty()
   company_area: number;
+
+  @IsNotEmpty()
+  position_level: number;
 }

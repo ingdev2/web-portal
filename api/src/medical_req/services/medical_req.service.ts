@@ -11,6 +11,8 @@ import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
+import { CompanyArea } from '../../company_area/entities/company_area.entity';
+import { CompanyAreaEnum } from '../../common/enums/company_area.enum';
 import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
 import { PatientClassificationStatus } from '../enums/patient_classification_status.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
@@ -56,6 +58,9 @@ export class MedicalReqService {
 
     @InjectRepository(RequirementType)
     private medicalReqTypeRepository: Repository<IdTypeEntity>,
+
+    @InjectRepository(CompanyArea)
+    private companyAreaRepository: Repository<CompanyArea>,
 
     @InjectRepository(RequirementStatus)
     private requerimentStatusRepository: Repository<RequirementStatus>,
@@ -138,6 +143,19 @@ export class MedicalReqService {
       );
     }
 
+    const fileArea = await this.companyAreaRepository.findOne({
+      where: {
+        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      },
+    });
+
+    if (!fileArea) {
+      throw new HttpException(
+        'El área de "Departamento de Archivos" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
       where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
@@ -167,6 +185,7 @@ export class MedicalReqService {
     aplicantFamiliarDetails.aplicant_cellphone = verifiedFamiliar.cellphone;
     aplicantFamiliarDetails.right_petition = medicalReqFamiliar.right_petition;
     aplicantFamiliarDetails.accept_terms = true;
+    aplicantFamiliarDetails.currently_in_area = fileArea.id;
     aplicantFamiliarDetails.requirement_status = reqStatusPending.id;
     aplicantFamiliarDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantFamiliarDetails.patient_id_number = userPatientFound.id_number;
@@ -489,6 +508,19 @@ export class MedicalReqService {
       );
     }
 
+    const fileArea = await this.companyAreaRepository.findOne({
+      where: {
+        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      },
+    });
+
+    if (!fileArea) {
+      throw new HttpException(
+        'El área de "DEPARTAMENTO JURÍDICO" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
       where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
@@ -517,6 +549,7 @@ export class MedicalReqService {
     aplicantPatientDetails.aplicant_email = userPatientFound.email;
     aplicantPatientDetails.aplicant_cellphone = userPatientFound.cellphone;
     aplicantPatientDetails.accept_terms = true;
+    aplicantPatientDetails.currently_in_area = fileArea.id;
     aplicantPatientDetails.requirement_status = reqStatusPending.id;
     aplicantPatientDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantPatientDetails.patient_id_number = userPatientFound.id_number;
@@ -677,6 +710,19 @@ export class MedicalReqService {
       );
     }
 
+    const fileArea = await this.companyAreaRepository.findOne({
+      where: {
+        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      },
+    });
+
+    if (!fileArea) {
+      throw new HttpException(
+        'El área de "DEPARTAMENTO JURÍDICO" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const reqStatusPending = await this.requerimentStatusRepository.findOne({
       where: { name: RequirementStatusEnum.UNDER_REVIEW },
     });
@@ -707,6 +753,7 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_eps_company = userEpsFound.eps_company;
     aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
     aplicantEpsDetails.accept_terms = true;
+    aplicantEpsDetails.currently_in_area = fileArea.id;
     aplicantEpsDetails.requirement_status = reqStatusPending.id;
     aplicantEpsDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantEpsDetails.patient_id_number = userPatientFound.id_number;
@@ -804,9 +851,22 @@ export class MedicalReqService {
   }
 
   async getAllMedReqUsersToLegalArea() {
+    const legalArea = await this.companyAreaRepository.findOne({
+      where: {
+        name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
+      },
+    });
+
+    if (!legalArea) {
+      throw new HttpException(
+        'El área de "DEPARTAMENTO JURÍDICO" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const allMedicalReqUsersToLegalArea = await this.medicalReqRepository.find({
       where: {
-        in_legal_area: true,
+        currently_in_area: legalArea.id,
         is_deleted: false,
       },
       order: {
@@ -1054,6 +1114,13 @@ export class MedicalReqService {
       );
     }
 
+    if (!deliveredStatus.documents_delivered) {
+      throw new HttpException(
+        'Debes anexar mínimo un archivo para enviar solicitud.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const currentDate = new Date();
 
     const sevenDaysLater = new Date();
@@ -1153,6 +1220,13 @@ export class MedicalReqService {
       );
     }
 
+    if (!rejectedStatus.motive_for_rejection) {
+      throw new HttpException(
+        'Debes ingresar mínimo un motivo de rechazo.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const motiveOfRejection = await this.reasonsForRejectionRepository.findOne({
       where: {
         id: In(rejectedStatus.motive_for_rejection),
@@ -1235,9 +1309,9 @@ export class MedicalReqService {
     return updatedMedicalReqFound;
   }
 
-  async sendToLegalArea(
+  async forwardToAnotherArea(
     reqId: string,
-    sendtoLegalArea: UpdateStatusMedicalReqDto,
+    sendToOtherArea: UpdateStatusMedicalReqDto,
   ) {
     const requirementFound = await this.medicalReqRepository.findOne({
       where: { id: reqId },
@@ -1250,9 +1324,27 @@ export class MedicalReqService {
       );
     }
 
-    await (sendtoLegalArea.in_legal_area = true);
+    if (!sendToOtherArea.currently_in_area) {
+      throw new HttpException(
+        'Debes ingresar una área para reenviar solicitud.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
-    await this.medicalReqRepository.update(reqId, sendtoLegalArea);
+    const companyArea = await this.companyAreaRepository.findOne({
+      where: {
+        id: sendToOtherArea.currently_in_area,
+      },
+    });
+
+    if (!companyArea) {
+      throw new HttpException(
+        'El área seleccionada no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    await this.medicalReqRepository.update(reqId, sendToOtherArea);
 
     const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
       where: {
@@ -1260,7 +1352,7 @@ export class MedicalReqService {
       },
     });
 
-    return updatedMedicalReqFound.in_legal_area;
+    return updatedMedicalReqFound;
   }
 
   // DELETED-BAN FUNTIONS //

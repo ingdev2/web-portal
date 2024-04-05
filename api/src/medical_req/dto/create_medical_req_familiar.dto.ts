@@ -122,4 +122,8 @@ export class CreateMedicalReqFamiliarDto {
 
   @IsOptional()
   requirement_status: number;
+
+  @IsOptional()
+  @IsNumber()
+  currently_in_area: number;
 }

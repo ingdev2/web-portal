@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
+import { PositionLevel } from '../../position_level/entities/position_level.entity';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { CreateAdminDto } from '../dto/create_admin.dto';
@@ -15,8 +16,12 @@ import * as bcryptjs from 'bcryptjs';
 export class AdminsService {
   constructor(
     @InjectRepository(Admin) private adminRepository: Repository<Admin>,
+
     @InjectRepository(AdminRole)
     private adminRoleRepository: Repository<AdminRole>,
+
+    @InjectRepository(PositionLevel)
+    private positionLevelRepository: Repository<PositionLevel>,
   ) {}
 
   // CREATE FUNTIONS //
@@ -129,6 +134,19 @@ export class AdminsService {
     if (!roleAdminFound) {
       throw new HttpException(
         'El rol "Admin" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const adminPositionLevel = await this.positionLevelRepository.findOne({
+      where: {
+        id: admin.position_level,
+      },
+    });
+
+    if (!adminPositionLevel) {
+      throw new HttpException(
+        'El nivel de cargo ingresado no es valido.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

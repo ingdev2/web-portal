@@ -21,7 +21,7 @@ import { setModalIsOpen } from "@/redux/features/modal/modalSlice";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 
-const PatientUsersLogin: React.FC = () => {
+const UsersLogin: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const idTypeOptions = useAppSelector(
@@ -111,8 +111,8 @@ const PatientUsersLogin: React.FC = () => {
       )}
 
       <Form
-        name="normal_login"
-        className="login-form"
+        name="users-login-form"
+        className="users-login-form"
         style={{ width: 231 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
@@ -123,7 +123,7 @@ const PatientUsersLogin: React.FC = () => {
           <CustomSpin />
         ) : (
           <Form.Item
-            name="patient-user-id-type"
+            name="user-id-type"
             label="Tipo de identificación"
             style={{ marginBottom: 7 }}
             rules={[
@@ -148,7 +148,7 @@ const PatientUsersLogin: React.FC = () => {
         )}
 
         <Form.Item
-          name="patient-user-id-number"
+          name="user-id-number"
           label="Número de identificación"
           style={{ marginBottom: 7 }}
           rules={[
@@ -182,7 +182,7 @@ const PatientUsersLogin: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="patient-user-password"
+          name="user-password"
           label="Contraseña"
           style={{ marginBottom: 13 }}
           rules={[
@@ -212,7 +212,7 @@ const PatientUsersLogin: React.FC = () => {
 
         <Form.Item style={{ textAlign: "center" }}>
           <a
-            className="login-form-forgot-patient-user"
+            className="login-form-forgot-user"
             href=""
             style={{
               display: "flow",
@@ -283,4 +283,4 @@ const PatientUsersLogin: React.FC = () => {
   );
 };
 
-export default PatientUsersLogin;
+export default UsersLogin;

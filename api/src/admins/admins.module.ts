@@ -4,10 +4,10 @@ import { AdminsController } from './controllers/admins.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Admin } from './entities/admin.entity';
 import { AdminRole } from '../admin_roles/entities/admin_role.entity';
-import { AdminRolesModule } from '../admin_roles/admin_roles.module';
+import { PositionLevel } from '../position_level/entities/position_level.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Admin, AdminRole]), AdminRolesModule],
+  imports: [TypeOrmModule.forFeature([Admin, AdminRole, PositionLevel])],
   controllers: [AdminsController],
   providers: [AdminsService],
   exports: [AdminsService],

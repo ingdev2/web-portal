@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class LoginDto {
@@ -9,7 +9,7 @@ export class LoginDto {
   id_number: number;
 
   @Transform(({ value }) => value.trim())
-  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
+  @IsOptional({ message: '¡Datos ingresados incorrectos!' })
   @IsString()
   password: string;
 }

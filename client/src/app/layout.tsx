@@ -20,11 +20,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <AntdRegistry>
-            <SessionAuthProvider> {children}</SessionAuthProvider>
-          </AntdRegistry>
+          <main className="container">
+            <AntdRegistry>
+              <SessionAuthProvider> {children}</SessionAuthProvider>
+            </AntdRegistry>
+          </main>
         </Providers>
-        <main className="container"></main>
       </body>
     </html>
   );

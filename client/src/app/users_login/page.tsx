@@ -1,18 +1,55 @@
 "use client";
 
-import PatientUsersLogin from "@/components/auth/PatientUsersLogin";
+import UsersLogin from "@/components/auth/UsersLogin";
 
 const UsersLoginPage = () => {
   return (
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        flexDirection: "column",
         height: "100vh",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
       }}
     >
-      <PatientUsersLogin />
+      <div
+        className="background-page"
+        style={{
+          position: "fixed",
+          width: "100%",
+          height: "100%",
+          backgroundImage: "url('/background/back-healt.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.4,
+        }}
+      />
+      <div
+        className="content-page"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: 13,
+          }}
+        >
+          <img
+            src="/logos/LOGO-BONNADONA.png"
+            alt="Logo de Bonnadona"
+            style={{ height: 77 }}
+          />
+        </div>
+        <UsersLogin />
+      </div>
     </div>
   );
 };

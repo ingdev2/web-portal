@@ -48,6 +48,9 @@ export class User {
   @Column({ select: false })
   password: string;
 
+  @Column()
+  affiliation_eps: string;
+
   @Column({ nullable: true })
   residence_department: string;
 

@@ -2,30 +2,51 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
+import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
+
 const DashboardAdminPage = () => {
+  const { data: session, status } = useSession();
+
+  const idTypeState = useAppSelector((state) => state.userLogin.id_type);
+  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
+  const passwordState = useAppSelector((state) => state.userLogin.password);
+
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const idType = useAppSelector((state) => state.userLogin.id_type);
-  const idNumber = useAppSelector((state) => state.userLogin.id_number);
-  const password = useAppSelector((state) => state.userLogin.password);
-  const verificationCode = useAppSelector(
-    (state) => state.userLogin.verification_code
-  );
-
-  const { data: session, status } = useSession();
+  const {
+    data: isUserData,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching,
+    isError: isUserError,
+  } = useGetUserByIdNumberQuery(idNumberState);
 
   useEffect(() => {
-    if (!idType && !idNumber && !password) {
+    if (!idTypeState && !idNumberState && !passwordState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error en la petición!");
     }
-  }, [idType, idNumber, password]);
+    if (status === "unauthenticated") {
+      setShowErrorMessage(true);
+      setErrorMessage("¡No autenticado!");
+    }
+    if (!isUserData && isUserError) {
+      setShowErrorMessage(true);
+      setErrorMessage("¡Usuario no encontrado!");
+    }
+  }, [
+    idTypeState,
+    idNumberState,
+    passwordState,
+    isUserData,
+    isUserError,
+    session,
+  ]);
 
   return (
     <div>
@@ -35,21 +56,20 @@ const DashboardAdminPage = () => {
           message={errorMessage || "¡Error en la petición!"}
         />
       )}
-      <h1>Dashboard</h1>
-      {!idType || !idNumber || !password ? (
+      {!idNumberState || !isUserData ? (
         <CustomSpin />
       ) : (
-        <>
+        <div>
+          <h1>Dashboard</h1>
           <pre>
             <code>{JSON.stringify(session, null, 2)}</code>
           </pre>
           <ol>
-            <li>{idType}</li>
-            <li>{idNumber}</li>
-            <li>{password}</li>
-            <li>{verificationCode}</li>
+            <li>{idNumberState}</li>
+            <li>{isUserData.name}</li>
+            <li>{isUserData.email}</li>
           </ol>
-        </>
+        </div>
       )}
     </div>
   );

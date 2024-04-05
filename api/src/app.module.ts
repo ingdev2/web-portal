@@ -23,6 +23,7 @@ import { RequirementStatusModule } from './requirement_status/requirement_status
 import { EpsCompanyModule } from './eps_company/eps_company.module';
 import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module';
 import { ReasonsForRejectionModule } from './reasons_for_rejection/reasons_for_rejection.module';
+import { PositionLevelModule } from './position_level/position_level.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ReasonsForRejectionModule } from './reasons_for_rejection/reasons_for_r
     EpsCompanyModule,
     DeptsAndCitiesModule,
     ReasonsForRejectionModule,
+    PositionLevelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -22,7 +22,6 @@ import {
 
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
-import { UUID } from 'crypto';
 
 const schedule = require('node-schedule');
 
@@ -77,6 +76,7 @@ export class AuthService {
     corporate_email,
     password,
     company_area,
+    position_level,
     admin_role,
   }: CreateAdminDto) {
     await this.adminsService.getAdminByIdNumber(id_number);
@@ -90,6 +90,7 @@ export class AuthService {
       corporate_email,
       password: await bcryptjs.hash(password, 10),
       company_area,
+      position_level,
       admin_role,
     });
   }
@@ -105,6 +106,7 @@ export class AuthService {
     cellphone,
     whatsapp,
     password,
+    affiliation_eps,
     residence_department,
     residence_city,
     residence_address,
@@ -124,6 +126,7 @@ export class AuthService {
       email,
       cellphone,
       whatsapp,
+      affiliation_eps,
       password: await bcryptjs.hash(password, 10),
       residence_department,
       residence_city,
@@ -280,9 +283,7 @@ export class AuthService {
 
     schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
       await this.userRepository.update(
-        {
-          id: userFound.id,
-        },
+        { id: userFound.id },
         { verification_code: null },
       );
     });
@@ -360,6 +361,43 @@ export class AuthService {
     });
 
     return { id_type, id_number, email, patient_id_number };
+  }
+
+  async resendVerificationCode({ id_type, id_number }: LoginDto) {
+    const userFound = await this.usersService.getUserFoundByIdNumber(id_number);
+
+    if (!userFound) {
+      throw new UnauthorizedException(`Usuario no encontrado`);
+    }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.userRepository.update(
+      { id: userFound.id },
+      { verification_code: verificationCode },
+    );
+
+    const userWithCode = await this.userRepository.findOne({
+      where: { id: userFound.id },
+    });
+
+    const emailDetailsToSend = new SendEmailDto();
+    emailDetailsToSend.recipients = [userFound.email];
+    emailDetailsToSend.userName = userFound.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.verificationCode = userWithCode.verification_code;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+      await this.userRepository.update(
+        { id: userFound.id },
+        { verification_code: null },
+      );
+    });
+
+    return { id_type, id_number };
   }
 
   async verifyCodeAndLoginUsers(idNumber: number, verification_code: number) {

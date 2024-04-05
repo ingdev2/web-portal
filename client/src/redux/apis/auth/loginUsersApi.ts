@@ -24,7 +24,21 @@ export const loginUsersApi = createApi({
         params: { id_number },
       }),
     }),
+    resendUserVerificationCode: builder.mutation<
+      Partial<UserLogin>,
+      { id_type: number; id_number: number }
+    >({
+      query: ({ id_type, id_number }) => ({
+        url: `resendVerificationCode`,
+        method: "POST",
+        body: { id_type, id_number },
+      }),
+    }),
   }),
 });
 
-export const { useLoginUsersMutation } = loginUsersApi;
+export const {
+  useLoginUsersMutation,
+  useVerifyUserCodeMutation,
+  useResendUserVerificationCodeMutation,
+} = loginUsersApi;
