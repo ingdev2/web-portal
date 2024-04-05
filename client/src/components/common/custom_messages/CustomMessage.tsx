@@ -12,7 +12,7 @@ const CustomMessage: React.FC<{ message: string; typeMessage: NoticeType }> = ({
         type: typeMessage,
         content: message,
         duration: 5,
-        style: { marginTop: "2vh" },
+        style: { fontSize: 17, marginTop: "2vh" },
       });
 
       return () => {

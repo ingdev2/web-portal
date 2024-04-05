@@ -2,7 +2,7 @@
 
 import UsersLogin from "@/components/auth/UsersLogin";
 
-const UsersLoginPage = () => {
+const UsersLoginPage: React.FC = () => {
   return (
     <div
       style={{

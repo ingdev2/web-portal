@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import ModalVerificationCode from "./ModalVerificationCode";
-import { Button, Card, Form, Input, Select } from "antd";
+import { Button, Card, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
@@ -229,7 +229,7 @@ const UsersLogin: React.FC = () => {
             <CustomSpin />
           ) : (
             <Button
-              size="middle"
+              size="large"
               style={{
                 paddingInline: 62,
                 borderRadius: 31,
@@ -245,7 +245,16 @@ const UsersLogin: React.FC = () => {
             </Button>
           )}
 
-          <hr style={{ marginInline: 13 }} />
+          <Divider
+            style={{
+              fontSize: 13,
+              fontWeight: "normal",
+              marginBlock: 7,
+              borderWidth: 1.3,
+            }}
+          >
+            ¿No estas registrado?
+          </Divider>
 
           <Button
             style={{
