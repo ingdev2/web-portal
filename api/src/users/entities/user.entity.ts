@@ -18,6 +18,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
+import { AuthenticationMethod } from 'src/authentication_method/entities/authentication_method.entity';
 
 @Entity()
 export class User {
@@ -48,7 +49,7 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   affiliation_eps: string;
 
   @Column({ nullable: true })
@@ -121,6 +122,16 @@ export class User {
 
   @Column({ nullable: true })
   company_area: number;
+
+  @ManyToOne(
+    () => AuthenticationMethod,
+    (user_authentication_method) => user_authentication_method.user,
+  )
+  @JoinColumn({ name: 'authentication_method', referencedColumnName: 'id' })
+  user_authentication_method: AuthenticationMethod;
+
+  @Column({ nullable: true })
+  authentication_method: number;
 
   @ManyToMany(() => AuthorizedFamiliar, {
     eager: true,

@@ -41,11 +41,12 @@ const ButtonAuth = () => {
   if (session && idNumberState) {
     return (
       <div
+        className="content-authenticate"
         style={{
-          textAlign: "center",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          alignItems: "center",
+          marginInline: 13,
         }}
       >
         {showErrorMessage && (
@@ -57,39 +58,39 @@ const ButtonAuth = () => {
         <h4
           style={{
             textAlign: "center",
-            fontWeight: "normal",
+            fontWeight: "bold",
             lineHeight: 1.3,
+            marginBlock: 0,
           }}
         >
-          Ingresaste como:
-          {isUserData ? (
-            <p
-              style={{
-                fontWeight: "bold",
-                fontSize: 15,
-                lineHeight: 0.8,
-                marginTop: 7,
-                marginBottom: 2,
-              }}
-            >
-              {isUserData?.email}
-            </p>
-          ) : (
-            <p
-              style={{
-                fontWeight: "bold",
-                fontSize: 15,
-                lineHeight: 0.8,
-                marginTop: 7,
-                marginBottom: 2,
-                color: "#960202",
-              }}
-            >
-              ¡No autenticado o error en petición!
-            </p>
-          )}
+          Ingresaste con el correo electrónico:
         </h4>
-
+        {isUserData ? (
+          <h5
+            style={{
+              fontWeight: "bold",
+              fontSize: 10,
+              color: "#137A2B",
+              lineHeight: 1.7,
+              letterSpacing: 1.3,
+              marginBlock: 13,
+            }}
+          >
+            {isUserData?.email}
+          </h5>
+        ) : (
+          <h5
+            style={{
+              fontWeight: "bold",
+              fontSize: 13,
+              lineHeight: 0.8,
+              color: "#960202",
+              marginBlock: 4,
+            }}
+          >
+            ¡No autenticado o error en petición!
+          </h5>
+        )}
         <Button
           type="primary"
           onClick={() => signOut()}
@@ -101,7 +102,6 @@ const ButtonAuth = () => {
             borderRadius: 31,
             backgroundColor: "#800000",
             color: "#f2f2f2",
-            marginBottom: 13,
           }}
         >
           Cerrar sesión
@@ -110,31 +110,30 @@ const ButtonAuth = () => {
     );
   }
   return (
-    <>
-      <div
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Button
+        type="primary"
+        onClick={() => signIn()}
+        className="button-signin"
+        size="large"
         style={{
-          display: "flex",
-          justifyContent: "center",
+          fontWeight: "bold",
+          paddingInline: 31,
+          borderRadius: 31,
+          backgroundColor: "#015E90",
+          color: "#f2f2f2",
+          marginBottom: 13,
         }}
       >
-        <Button
-          type="primary"
-          onClick={() => signIn()}
-          className="button-signin"
-          size="large"
-          style={{
-            fontWeight: "bold",
-            paddingInline: 31,
-            borderRadius: 31,
-            backgroundColor: "#015E90",
-            color: "#f2f2f2",
-            marginBottom: 13,
-          }}
-        >
-          Ingresar al portal
-        </Button>
-      </div>
-    </>
+        Ingresar al portal
+      </Button>
+    </div>
   );
 };
 

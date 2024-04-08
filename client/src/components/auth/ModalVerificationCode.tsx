@@ -6,16 +6,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Divider, Form, Input, Modal } from "antd";
 import { NumberOutlined } from "@ant-design/icons";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 
 import {
+  resetLoginState,
   setErrors,
+  setIdType,
+  setPassword,
   setVerificationCode,
 } from "@/redux/features/login/userLoginSlice";
-import { setModalIsOpen } from "@/redux/features/modal/modalSlice";
 
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
 import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
@@ -87,11 +89,16 @@ const ModalVerificationCode: React.FC = () => {
         redirect: false,
       });
 
+      console.log(responseNextAuth);
+
       if (responseNextAuth?.error) {
         dispatch(setErrors(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
-      } else {
-        router.push("/dashboard_admin");
+      }
+      if (responseNextAuth?.status === 200) {
+        router.replace("/dashboard_admin", { scroll: false });
+        dispatch(setIdType(""));
+        dispatch(setPassword(""));
         dispatch(setVerificationCode(""));
       }
     } catch (error) {
@@ -129,8 +136,7 @@ const ModalVerificationCode: React.FC = () => {
 
   const handleCancel = () => {
     <Link href="/users_login" scroll={false} />;
-    dispatch(setModalIsOpen(false));
-    dispatch(setVerificationCode(""));
+    window.location.reload();
   };
 
   const handleButtonClick = () => {
@@ -159,7 +165,7 @@ const ModalVerificationCode: React.FC = () => {
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancel}
         destroyOnClose={true}
-        width={321}
+        width={371}
         footer={null}
         maskClosable={false}
       >
@@ -167,14 +173,19 @@ const ModalVerificationCode: React.FC = () => {
           className="content-modal"
           style={{
             textAlign: "center",
-            display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            marginBlock: 13,
+            marginInline: 7,
           }}
         >
           <h2
             className="title-modal"
-            style={{ fontWeight: "bold", lineHeight: 1.3, marginBottom: 4 }}
+            style={{
+              fontWeight: "bold",
+              lineHeight: 1.3,
+              marginTop: 27,
+            }}
           >
             Ingresar código de verificación
           </h2>
@@ -184,24 +195,25 @@ const ModalVerificationCode: React.FC = () => {
             style={{
               fontWeight: "normal",
               lineHeight: 1.3,
-              marginTop: 4,
-              marginBottom: 7,
+              marginBlock: 7,
             }}
           >
             Hemos enviado un código de ingreso al siguiente correo electrónico:
           </h4>
 
-          <p
+          <h5
             className="user-email"
             style={{
               fontWeight: "bold",
-              fontSize: 15,
-              lineHeight: 0.8,
-              marginTop: 13,
+              fontSize: 13,
+              color: "#137A2B",
+              lineHeight: 1.7,
+              letterSpacing: 1.3,
+              marginBlock: 7,
             }}
           >
             {isUserData?.email}
-          </p>
+          </h5>
 
           <Form
             initialValues={{ remember: false }}
@@ -234,11 +246,11 @@ const ModalVerificationCode: React.FC = () => {
               <Input
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
-                  width: 173,
-                  fontSize: 22,
+                  width: 183,
+                  fontSize: 27,
                   fontWeight: "bold",
-                  marginTop: 7,
-                  marginBottom: 2,
+                  borderWidth: 2,
+                  marginBottom: 4,
                 }}
                 type="number"
                 placeholder="Código"
@@ -253,13 +265,13 @@ const ModalVerificationCode: React.FC = () => {
             ) : (
               <Button
                 className="confirm-code-button"
-                size="middle"
+                size="large"
                 style={{
                   paddingInline: 31,
                   borderRadius: 31,
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
-                  marginTop: 7,
+                  marginTop: 5,
                   marginBottom: 13,
                 }}
                 htmlType="submit"
@@ -282,7 +294,6 @@ const ModalVerificationCode: React.FC = () => {
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,
-                marginBottom: 22,
               }}
               onClick={handleResendCode}
               onMouseDown={handleButtonClick}
@@ -290,6 +301,15 @@ const ModalVerificationCode: React.FC = () => {
               Reenviar código
             </Button>
           )}
+
+          <div style={{ marginInline: 54 }}>
+            <Divider
+              style={{
+                marginBlock: 17,
+                borderWidth: 2,
+              }}
+            />
+          </div>
 
           <Button
             key="cancel-button"

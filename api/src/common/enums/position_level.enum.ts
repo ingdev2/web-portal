@@ -1,5 +1,5 @@
 export enum PositionLevelEnum {
-  DIRECTOR = 'Director de Departamento',
-  COORDINATOR = 'Coordinador de Área',
-  COLLABORATOR = 'Colaborador/Auxiliar',
+  DIRECTOR = 'DIRECTOR DE DEPARTAMENTO',
+  COORDINATOR = 'COORDINADOR DE ÁREA',
+  COLLABORATOR = 'COLABORADOR/AUXILIAR',
 }

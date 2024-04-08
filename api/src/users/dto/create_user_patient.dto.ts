@@ -25,7 +25,7 @@ export class CreateUserPatientDto {
   @IsDateString()
   birthdate: Date;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   id_number: number;
 
@@ -76,6 +76,10 @@ export class CreateUserPatientDto {
 
   @IsNotEmpty()
   user_id_type: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  authentication_method: number;
 
   @IsOptional()
   @IsNumber()
