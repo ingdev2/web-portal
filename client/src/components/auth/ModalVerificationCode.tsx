@@ -12,15 +12,15 @@ import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 
 import {
-  resetLoginState,
-  setErrors,
   setIdType,
   setPassword,
   setVerificationCode,
+  setErrors,
 } from "@/redux/features/login/userLoginSlice";
 
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
 import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
+import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 const ModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,10 +42,13 @@ const ModalVerificationCode: React.FC = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [resendCodeDisable, setResendCodeDisable] = useState(true);
+
   const {
     data: isUserData,
     isLoading: isUserLoading,
     isFetching: isUserFetching,
+    isSuccess: isUserSuccess,
     isError: isUserError,
   } = useGetUserByIdNumberQuery(idNumberState);
 
@@ -55,6 +58,7 @@ const ModalVerificationCode: React.FC = () => {
       data: resendCodeData,
       isLoading: isResendCodeLoading,
       isSuccess: isResendCodeSuccess,
+      isError: isResendCodeError,
     },
   ] = useResendUserVerificationCodeMutation({
     fixedCacheKey: "resendUserCodeData",
@@ -117,6 +121,8 @@ const ModalVerificationCode: React.FC = () => {
         id_number: idNumberState,
       });
 
+      console.log(response);
+
       var isResendCodeError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
@@ -131,6 +137,7 @@ const ModalVerificationCode: React.FC = () => {
       console.error(error);
     } finally {
       setIsSubmittingResendCode(false);
+      setResendCodeDisable(true);
     }
   };
 
@@ -168,6 +175,7 @@ const ModalVerificationCode: React.FC = () => {
         width={371}
         footer={null}
         maskClosable={false}
+        centered
       >
         <div
           className="content-modal"
@@ -272,7 +280,7 @@ const ModalVerificationCode: React.FC = () => {
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
                   marginTop: 5,
-                  marginBottom: 13,
+                  marginBottom: 7,
                 }}
                 htmlType="submit"
                 onClick={handleButtonClick}
@@ -282,15 +290,22 @@ const ModalVerificationCode: React.FC = () => {
             )}
           </Form>
 
+          <CountdownTimer
+            onFinishHandler={() => setResendCodeDisable(false)}
+            showCountdown={resendCodeDisable}
+          />
+
           {isSubmittingResendCode && !isResendCodeSuccess ? (
             <CustomSpin />
           ) : (
             <Button
               key="resend-button"
+              disabled={resendCodeDisable}
               style={{
+                backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
                 paddingInline: 13,
-                color: "#015E90",
-                borderColor: "#015E90",
+                color: resendCodeDisable ? "#A0A0A0" : "#015E90",
+                borderColor: resendCodeDisable ? "#A0A0A0" : "#015E90",
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,

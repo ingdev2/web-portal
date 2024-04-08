@@ -12,7 +12,7 @@ import { idTypesApi } from "./apis/id_types/idTypesApi";
 import { loginUsersApi } from "./apis/auth/loginUsersApi";
 
 const persistConfig = {
-  key: "Auth",
+  key: "root",
   version: 1,
   storage,
   whitelist: ["user", "userLogin"],

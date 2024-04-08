@@ -14,6 +14,7 @@ import {
   setIdType,
   setIdNumber,
   setPassword,
+  setVerificationCode,
   setErrors,
 } from "@/redux/features/login/userLoginSlice";
 import { setModalIsOpen } from "@/redux/features/modal/modalSlice";
@@ -46,10 +47,21 @@ const UsersLogin: React.FC = () => {
 
   const [
     loginUsers,
-    { data: isLogindata, isLoading: isLoginLoading, isSuccess: isLoginSuccess },
+    {
+      data: isLogindata,
+      isLoading: isLoginLoading,
+      isSuccess: isLoginSuccess,
+      isError: isLoginError,
+    },
   ] = useLoginUsersMutation({ fixedCacheKey: "loginUserData" });
 
   useEffect(() => {
+    if (!isLoginSuccess && !isSubmitting && !isLoginError) {
+      dispatch(setIdType(""));
+      dispatch(setIdNumber(""));
+      dispatch(setPassword(""));
+      dispatch(setVerificationCode(""));
+    }
     if (!idTypesLoading && idTypesData) {
       dispatch(setIdTypeOptions(idTypesData));
     }
@@ -60,7 +72,7 @@ const UsersLogin: React.FC = () => {
     if (isLoginSuccess && !isLoginLoading && !isSubmitting) {
       dispatch(setModalIsOpen(true));
     }
-  }, [idTypesData, idTypesLoading, idTypesError, isSubmitting]);
+  }, [idTypesData, idTypesLoading, idTypesError, isSubmitting, isLoginError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
