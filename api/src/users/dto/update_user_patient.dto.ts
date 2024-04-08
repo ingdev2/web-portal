@@ -22,6 +22,10 @@ export class UpdateUserPatientDto {
   whatsapp: number;
 
   @IsOptional()
+  @IsNumber()
+  authentication_method: number;
+
+  @IsOptional()
   @IsString()
   residence_department: string;
 

@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { AdminsService } from '../../admins/services/admins.service';
 import { UsersService } from '../../users/services/users.service';
 import { AuthorizedFamiliarService } from '../../authorized_familiar/services/authorized_familiar.service';
+import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
+import { AuthenticationMethodEnum } from '../../common/enums/authentication_method.enum';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
@@ -30,8 +32,13 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
+
+    @InjectRepository(AuthenticationMethod)
+    private authenticationMethodRepository: Repository<AuthenticationMethod>,
+
     private readonly adminsService: AdminsService,
     private readonly usersService: UsersService,
     private readonly familiarService: AuthorizedFamiliarService,
@@ -106,6 +113,7 @@ export class AuthService {
     cellphone,
     whatsapp,
     password,
+    authentication_method,
     affiliation_eps,
     residence_department,
     residence_city,
@@ -126,6 +134,7 @@ export class AuthService {
       email,
       cellphone,
       whatsapp,
+      authentication_method,
       affiliation_eps,
       password: await bcryptjs.hash(password, 10),
       residence_department,
@@ -181,6 +190,7 @@ export class AuthService {
     email,
     cellphone,
     password,
+    authentication_method,
     user_role,
     verification_code,
   }: CreateUserEpsDto) {
@@ -197,6 +207,7 @@ export class AuthService {
       email,
       cellphone,
       password: await bcryptjs.hash(password, 10),
+      authentication_method,
       user_role,
       verification_code,
     });
@@ -265,28 +276,62 @@ export class AuthService {
       { verification_code: verificationCode },
     );
 
-    const userWithCode = await this.userRepository.findOne({
-      where: {
-        id: userFound.id,
-      },
-    });
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
 
-    const emailDetailsToSend = new SendEmailDto();
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
 
-    emailDetailsToSend.recipients = [userFound.email];
-    emailDetailsToSend.userName = userFound.name;
-    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
-    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
-    emailDetailsToSend.verificationCode = userWithCode.verification_code;
-
-    await this.nodemailerService.sendEmail(emailDetailsToSend);
-
-    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
-      await this.userRepository.update(
-        { id: userFound.id },
-        { verification_code: null },
+    if (!authenticationMethodEmailFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Email" no existe.`,
       );
-    });
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Célular" no existe.`,
+      );
+    }
+
+    if (userFound.authentication_method === authenticationMethodEmailFound.id) {
+      const userWithCode = await this.userRepository.findOne({
+        where: {
+          id: userFound.id,
+        },
+      });
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [userFound.email];
+      emailDetailsToSend.userName = userFound.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.verificationCode = userWithCode.verification_code;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.userRepository.update(
+          { id: userFound.id },
+          { verification_code: null },
+        );
+      });
+    }
+
+    if (
+      userFound.authentication_method === authenticationMethodCellphoneFound.id
+    ) {
+      // TODO: IMPLEMENTAR ENVIO DE CÓDIGO POR MENSAJE DE TEXTO
+    }
 
     return { id_type, id_number };
   }

@@ -8,6 +8,8 @@ import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { IdType } from '../../common/enums/id_type.enum';
 import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
+import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
+import { AuthenticationMethodEnum } from '../../common/enums/authentication_method.enum';
 import { DeptsAndCitiesService } from '../../depts_and_cities/services/depts_and_cities.service';
 import { CreateUserPatientDto } from '../dto/create_user_patient.dto';
 import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
@@ -32,6 +34,9 @@ export class UsersService {
 
     @InjectRepository(IdTypeEntity)
     private idTypeRepository: Repository<IdTypeEntity>,
+
+    @InjectRepository(AuthenticationMethod)
+    private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
     private locationService: DeptsAndCitiesService,
   ) {}
@@ -155,6 +160,20 @@ export class UsersService {
       );
     }
 
+    const authenticationMethodFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          id: userPatient.authentication_method,
+        },
+      });
+
+    if (!authenticationMethodFound) {
+      return new HttpException(
+        `El método de autenticación ingresado no es válido.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const userPatientEmailFound = await this.userRepository.findOne({
       where: {
         email: userPatient.email,
@@ -190,6 +209,7 @@ export class UsersService {
     const insertRoleUserPatient = await this.userRepository.create({
       ...userPatient,
       user_role: rolePatientFound.id,
+      authentication_method: authenticationMethodFound.id,
       accept_terms: true,
     });
 
@@ -247,6 +267,20 @@ export class UsersService {
       );
     }
 
+    const authenticationMethodFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    if (!authenticationMethodFound) {
+      return new HttpException(
+        `El método de autenticación "Email" no existe.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const roleEpsFound = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.EPS,
@@ -263,6 +297,7 @@ export class UsersService {
     const insertRoleUserEps = await this.userRepository.create({
       ...userEps,
       user_role: roleEpsFound.id,
+      authentication_method: authenticationMethodFound.id,
       accept_terms: true,
     });
 

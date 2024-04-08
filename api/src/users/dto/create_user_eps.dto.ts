@@ -56,5 +56,9 @@ export class CreateUserEpsDto {
 
   @IsOptional()
   @IsNumber()
+  authentication_method: number;
+
+  @IsOptional()
+  @IsNumber()
   verification_code: number;
 }

@@ -24,6 +24,7 @@ import { EpsCompanyModule } from './eps_company/eps_company.module';
 import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module';
 import { ReasonsForRejectionModule } from './reasons_for_rejection/reasons_for_rejection.module';
 import { PositionLevelModule } from './position_level/position_level.module';
+import { AuthenticationMethodModule } from './authentication_method/authentication_method.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { PositionLevelModule } from './position_level/position_level.module';
     DeptsAndCitiesModule,
     ReasonsForRejectionModule,
     PositionLevelModule,
+    AuthenticationMethodModule,
   ],
   controllers: [AppController],
   providers: [AppService],
