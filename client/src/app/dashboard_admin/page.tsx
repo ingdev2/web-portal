@@ -12,9 +12,7 @@ import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
 
-  const idTypeState = useAppSelector((state) => state.userLogin.id_type);
   const idNumberState = useAppSelector((state) => state.userLogin.id_number);
-  const passwordState = useAppSelector((state) => state.userLogin.password);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,9 +26,9 @@ const DashboardAdminPage = () => {
   } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
-    if (!idTypeState && !idNumberState && !passwordState) {
+    if (!idNumberState) {
       setShowErrorMessage(true);
-      setErrorMessage("¡Error en la petición!");
+      setErrorMessage("¡Usuario no encontrado!");
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
@@ -40,14 +38,7 @@ const DashboardAdminPage = () => {
       setShowErrorMessage(true);
       setErrorMessage("Familiares no encontrados!");
     }
-  }, [
-    idTypeState,
-    idNumberState,
-    passwordState,
-    isRelativesData,
-    isRelativesError,
-    session,
-  ]);
+  }, [idNumberState, isRelativesData, isRelativesError]);
 
   return (
     <div>
@@ -57,11 +48,11 @@ const DashboardAdminPage = () => {
           message={errorMessage || "¡Error en la petición!"}
         />
       )}
-      {!idNumberState || !isRelativesData ? (
+      {!idNumberState || !isRelativesData || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div>
-          <h1>Dashboard</h1>
+          <h1>Dashboard Admin</h1>
           <pre>
             <code>{JSON.stringify(session, null, 2)}</code>
           </pre>
@@ -76,7 +67,6 @@ const DashboardAdminPage = () => {
                   {relative.name}
                   {relative.email}
                   {relative.cellphone}
-                  {relative.whatsapp}
                 </li>
               ))}
             </ol>

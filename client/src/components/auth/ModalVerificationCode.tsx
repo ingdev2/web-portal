@@ -119,21 +119,26 @@ const ModalVerificationCode: React.FC = () => {
         id_number: idNumberState,
       });
 
-      var isResendCodeError = response.error;
+      var isResponseError = response.error;
 
-      if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
-        dispatch(setErrors(isResendCodeError?.data.message));
+      if (
+        !isResendCodeSuccess &&
+        !isResendCodeLoading &&
+        isResendCodeError &&
+        isResponseError
+      ) {
+        dispatch(setErrors(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
-      if (isUserData && !isUserError) {
+      if (response && !isResendCodeError && !isResponseError) {
         setShowSuccessMessage(true);
         setSuccessMessage("¡Código Reenviado Correctamente!");
+        setResendCodeDisable(true);
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmittingResendCode(false);
-      setResendCodeDisable(true);
     }
   };
 
