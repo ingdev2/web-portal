@@ -162,7 +162,7 @@ export class AuthService {
       verification_code,
     }: CreateAuthorizedFamiliarDto,
   ) {
-    await this.familiarService.getFamiliarByIdNumber(id_number);
+    await this.familiarService.getFamiliarCompleteByIdNumber(id_number);
 
     return await this.familiarService.createUserFamiliar(userId, {
       name,
@@ -408,7 +408,7 @@ export class AuthService {
     return { id_type, id_number, email, patient_id_number };
   }
 
-  async resendVerificationCode({ id_type, id_number }: LoginDto) {
+  async resendVerificationUserCode({ id_type, id_number }: LoginDto) {
     const userFound = await this.usersService.getUserFoundByIdNumber(id_number);
 
     if (!userFound) {
@@ -438,6 +438,61 @@ export class AuthService {
     schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
       await this.userRepository.update(
         { id: userFound.id },
+        { verification_code: null },
+      );
+    });
+
+    return { id_type, id_number };
+  }
+
+  async resendVerificationFamiliarCode({
+    id_type,
+    id_number,
+    email,
+  }: FamiliarLoginDto) {
+    const familiarFound =
+      await this.familiarService.getFamiliarFoundByIdNumber(id_number);
+
+    if (!familiarFound) {
+      throw new UnauthorizedException(`Familiar no encontrado`);
+    }
+
+    const familiarVerifiedFound = await this.familiarRepository.findOne({
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+        email: email,
+        rel_with_patient: familiarFound.rel_with_patient,
+      },
+    });
+
+    if (!familiarVerifiedFound) {
+      throw new UnauthorizedException(`Familiar no verificado`);
+    }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.familiarRepository.update(
+      { id: familiarVerifiedFound.id },
+      { verification_code: verificationCode },
+    );
+
+    const familiarWithCode = await this.familiarRepository.findOne({
+      where: { id: familiarVerifiedFound.id },
+    });
+
+    const emailDetailsToSend = new SendEmailDto();
+    emailDetailsToSend.recipients = [familiarFound.email];
+    emailDetailsToSend.userName = familiarFound.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+      await this.userRepository.update(
+        { id: familiarFound.id },
         { verification_code: null },
       );
     });

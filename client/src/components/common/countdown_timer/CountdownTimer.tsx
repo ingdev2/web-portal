@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Statistic } from "antd";
+import React, { useEffect, useRef } from "react";
+import { CountdownProps, Statistic } from "antd";
 
 const { Countdown } = Statistic;
 
@@ -7,23 +7,22 @@ const CountdownTimer: React.FC<{
   onFinishHandler: () => void;
   showCountdown: boolean;
 }> = ({ onFinishHandler, showCountdown }) => {
-  const [countdownKey, setCountdownKey] = useState(0);
+  const countdownTime = Date.now() + 30 * 1000;
+
+  const countdownTimeRef = useRef(countdownTime);
 
   useEffect(() => {
-    if (showCountdown) {
-      setCountdownKey((prevKey) => prevKey + 1);
-    }
+    countdownTimeRef.current = countdownTime;
   }, [showCountdown]);
 
-  const handleFinish = () => {
+  const onFinish: CountdownProps["onFinish"] = () => {
     onFinishHandler();
   };
 
   return (
     <Countdown
-      key={countdownKey}
-      value={showCountdown ? Date.now() + 30 * 1000 : 0}
-      onFinish={handleFinish}
+      value={showCountdown ? countdownTimeRef.current : 0}
+      onFinish={onFinish}
       format="mm:ss"
       valueStyle={{
         fontSize: 22,

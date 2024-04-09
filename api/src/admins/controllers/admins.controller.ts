@@ -54,7 +54,7 @@ export class AdminsController {
   }
 
   @Patch('/banAdmin/:id')
-  async banUsers(@Param('id') id: number) {
+  async banAdmins(@Param('id') id: number) {
     return await this.adminsService.banAdmins(id);
   }
 }

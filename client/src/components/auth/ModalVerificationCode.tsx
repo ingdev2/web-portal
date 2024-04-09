@@ -10,6 +10,7 @@ import { Button, Divider, Form, Input, Modal } from "antd";
 import { NumberOutlined } from "@ant-design/icons";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
+import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 import {
   setIdType,
@@ -20,7 +21,6 @@ import {
 
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
 import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
-import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 const ModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -93,8 +93,6 @@ const ModalVerificationCode: React.FC = () => {
         redirect: false,
       });
 
-      console.log(responseNextAuth);
-
       if (responseNextAuth?.error) {
         dispatch(setErrors(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
@@ -120,8 +118,6 @@ const ModalVerificationCode: React.FC = () => {
         id_type: idTypeState,
         id_number: idNumberState,
       });
-
-      console.log(response);
 
       var isResendCodeError = response.error;
 
@@ -320,7 +316,7 @@ const ModalVerificationCode: React.FC = () => {
           <div style={{ marginInline: 54 }}>
             <Divider
               style={{
-                marginBlock: 17,
+                marginBlock: 13,
                 borderWidth: 2,
               }}
             />

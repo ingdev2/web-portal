@@ -81,9 +81,9 @@ export class AuthController {
     );
   }
 
-  @Post('resendVerificationCode')
-  async resendVerificationCode(@Body() loginDto: LoginDto) {
-    return await this.authService.resendVerificationCode(loginDto);
+  @Post('resendVerificationUserCode')
+  async resendVerificationUserCode(@Body() loginDto: LoginDto) {
+    return await this.authService.resendVerificationUserCode(loginDto);
   }
 
   @Post('verifiedLoginRelatives/:idNumber')
@@ -94,6 +94,15 @@ export class AuthController {
     return await this.authService.verifyCodeAndLoginRelatives(
       idNumber,
       verification_code,
+    );
+  }
+
+  @Post('resendVerificationFamiliarCode')
+  async resendVerificationFamiliarCode(
+    @Body() loginFamiliarDto: FamiliarLoginDto,
+  ) {
+    return await this.authService.resendVerificationFamiliarCode(
+      loginFamiliarDto,
     );
   }
 }

@@ -6,6 +6,13 @@ export const loginUsersApi = createApi({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
   }),
   endpoints: (builder) => ({
+    createUser: builder.mutation<User, Partial<User>>({
+      query: (newUser) => ({
+        url: `registerUserPatient`,
+        method: "POST",
+        body: newUser,
+      }),
+    }),
     loginUsers: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>({
       query: (newUserLogin) => ({
         url: "loginUsers",
@@ -29,7 +36,7 @@ export const loginUsersApi = createApi({
       { id_type: number; id_number: number }
     >({
       query: ({ id_type, id_number }) => ({
-        url: `resendVerificationCode`,
+        url: `resendVerificationUserCode`,
         method: "POST",
         body: { id_type, id_number },
       }),
@@ -38,6 +45,7 @@ export const loginUsersApi = createApi({
 });
 
 export const {
+  useCreateUserMutation,
   useLoginUsersMutation,
   useVerifyUserCodeMutation,
   useResendUserVerificationCodeMutation,

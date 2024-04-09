@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: UserLogin = {
+const initialState: FamiliarLogin = {
   id_type: 0,
   id_number: 0,
-  password: "",
+  email: "",
+  patient_id_number: 0,
+  rel_with_patient: 0,
   verification_code: 0,
   idTypeOptions: [],
   errors: [],
 };
 
-export const userLoginSlice = createSlice({
-  name: "userLogin",
+export const familiarLoginSlice = createSlice({
+  name: "familiarLogin",
   initialState,
   reducers: {
     setIdTypeOptions: (state, action) => {
@@ -22,8 +24,14 @@ export const userLoginSlice = createSlice({
     setIdNumber: (state, action) => {
       state.id_number = action.payload;
     },
-    setPassword: (state, action) => {
-      state.password = action.payload;
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    setPatientIdNumber: (state, action) => {
+      state.patient_id_number = action.payload;
+    },
+    setRelationWithPatient: (state, action) => {
+      state.rel_with_patient = action.payload;
     },
     setVerificationCode: (state, action) => {
       state.verification_code = action.payload;
@@ -34,7 +42,6 @@ export const userLoginSlice = createSlice({
     resetLoginState: (state) => {
       state.id_type = initialState.id_type;
       state.id_number = initialState.id_number;
-      state.password = initialState.password;
       state.verification_code = initialState.verification_code;
       state.errors = initialState.errors;
     },
@@ -45,10 +52,12 @@ export const {
   setIdTypeOptions,
   setIdType,
   setIdNumber,
-  setPassword,
+  setEmail,
+  setPatientIdNumber,
+  setRelationWithPatient,
   setVerificationCode,
   setErrors,
   resetLoginState,
-} = userLoginSlice.actions;
+} = familiarLoginSlice.actions;
 
-export default userLoginSlice.reducer;
+export default familiarLoginSlice.reducer;

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class FamiliarLoginDto {
   @IsNotEmpty()
@@ -7,14 +7,15 @@ export class FamiliarLoginDto {
   @IsNotEmpty()
   id_number: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
+  @IsNumber()
   patient_id_number: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   rel_with_patient: number;
 }

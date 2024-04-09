@@ -234,7 +234,13 @@ export class AuthorizedFamiliarService {
     }
   }
 
-  async getFamiliarByIdNumber(idNumber: number) {
+  async getFamiliarFoundByIdNumber(idNumber: number) {
+    return await this.familiarRepository.findOneBy({
+      id_number: idNumber,
+    });
+  }
+
+  async getFamiliarCompleteByIdNumber(idNumber: number) {
     const familiarFound = await this.familiarRepository.findOne({
       where: {
         id_number: idNumber,

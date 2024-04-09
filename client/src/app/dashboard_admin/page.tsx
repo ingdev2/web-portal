@@ -7,7 +7,7 @@ import { useAppSelector } from "@/redux/hooks";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
-import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
+import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
@@ -20,11 +20,12 @@ const DashboardAdminPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: isUserData,
-    isLoading: isUserLoading,
-    isFetching: isUserFetching,
-    isError: isUserError,
-  } = useGetUserByIdNumberQuery(idNumberState);
+    data: isRelativesData,
+    isLoading: isRelativesLoading,
+    isFetching: isRelativesFetching,
+    isSuccess: isRelativesSuccess,
+    isError: isRelativesError,
+  } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
     if (!idTypeState && !idNumberState && !passwordState) {
@@ -35,16 +36,16 @@ const DashboardAdminPage = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-    if (!isUserData && isUserError) {
+    if (!isRelativesData && isRelativesError) {
       setShowErrorMessage(true);
-      setErrorMessage("¡Usuario no encontrado!");
+      setErrorMessage("Familiares no encontrados!");
     }
   }, [
     idTypeState,
     idNumberState,
     passwordState,
-    isUserData,
-    isUserError,
+    isRelativesData,
+    isRelativesError,
     session,
   ]);
 
@@ -56,7 +57,7 @@ const DashboardAdminPage = () => {
           message={errorMessage || "¡Error en la petición!"}
         />
       )}
-      {!idNumberState || !isUserData ? (
+      {!idNumberState || !isRelativesData ? (
         <CustomSpin />
       ) : (
         <div>
@@ -64,11 +65,22 @@ const DashboardAdminPage = () => {
           <pre>
             <code>{JSON.stringify(session, null, 2)}</code>
           </pre>
-          <ol>
-            <li>{idNumberState}</li>
-            <li>{isUserData.name}</li>
-            <li>{isUserData.email}</li>
-          </ol>
+          <h2>Lista de Familiares del paciente</h2>
+
+          {isRelativesFetching && isRelativesLoading && <CustomSpin />}
+
+          {isRelativesData && isRelativesSuccess && (
+            <ol>
+              {isRelativesData.map((relative) => (
+                <li key={relative.id}>
+                  {relative.name}
+                  {relative.email}
+                  {relative.cellphone}
+                  {relative.whatsapp}
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       )}
     </div>

@@ -1,18 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { useSession } from "next-auth/react";
+
+// const { data: session, status } = useSession();
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
+    // prepareHeaders(headers, { getState }) {
+    //   if (status === "authenticated") {
+    //     headers.set("authorization", `Bearer ${session?.user?.token}`);
+    //   }
+    //   return headers;
+    // },
   }),
+
   endpoints: (builder) => ({
-    createUser: builder.mutation<User, Partial<User>>({
-      query: (newUser) => ({
-        url: `create`,
-        method: "POST",
-        body: newUser,
-      }),
-    }),
     getAllUsers: builder.query<User[], null>({
       query: () => "getAllUsers",
     }),
@@ -39,11 +42,17 @@ export const usersApi = createApi({
         body: { updateUser },
       }),
     }),
+    banUser: builder.mutation<any, { id: string }>({
+      query: ({ id }) => ({
+        url: `ban/${id}`,
+        method: "PATCH",
+        params: { id },
+      }),
+    }),
   }),
 });
 
 export const {
-  useCreateUserMutation,
   useGetAllUsersQuery,
   useGetAllPatientsQuery,
   useGetAllEpsQuery,
