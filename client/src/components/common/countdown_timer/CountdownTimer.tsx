@@ -7,7 +7,7 @@ const CountdownTimer: React.FC<{
   onFinishHandler: () => void;
   showCountdown: boolean;
 }> = ({ onFinishHandler, showCountdown }) => {
-  const initialCountdownTime = 30;
+  const initialCountdownTime = Number(process.env.NEXT_PUBLIC_COUNTDOWN_TIMER);
 
   const countdownTimeRef = useRef(initialCountdownTime);
 

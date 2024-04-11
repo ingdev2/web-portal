@@ -26,7 +26,7 @@ export class CreateAuthorizedFamiliarDto {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   cellphone: number;
 
@@ -45,6 +45,10 @@ export class CreateAuthorizedFamiliarDto {
 
   @IsNotEmpty()
   user_id_type: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  authentication_method: number;
 
   @IsOptional()
   @IsNumber()

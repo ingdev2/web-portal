@@ -12,6 +12,8 @@ import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { User } from '../../users/entities/user.entity';
+import { UserRole } from '../../user_roles/entities/user_role.entity';
+import { UserRolType } from '../../common/enums/user_roles.enum';
 import { LoginDto } from '../dto/login.dto';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
@@ -35,6 +37,9 @@ export class AuthService {
 
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
+
+    @InjectRepository(UserRole)
+    private userRoleRepository: Repository<UserRole>,
 
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
@@ -122,7 +127,7 @@ export class AuthService {
     user_role,
     verification_code,
   }: CreateUserPatientDto) {
-    await this.usersService.getUsersByIdNumber(id_number);
+    await this.usersService.getPatientUserByIdNumber(id_number);
 
     return await this.usersService.createUserPatient({
       name,
@@ -159,6 +164,7 @@ export class AuthService {
       user_gender,
       rel_with_patient,
       user_role,
+      authentication_method,
       verification_code,
     }: CreateAuthorizedFamiliarDto,
   ) {
@@ -175,6 +181,7 @@ export class AuthService {
       user_gender,
       rel_with_patient,
       user_role,
+      authentication_method,
       verification_code,
     });
   }
@@ -194,7 +201,7 @@ export class AuthService {
     user_role,
     verification_code,
   }: CreateUserEpsDto) {
-    await this.usersService.getUsersByIdNumber(id_number);
+    await this.usersService.getEpsUserByIdNumber(id_number);
 
     return await this.usersService.createUserEps({
       name,
@@ -247,7 +254,26 @@ export class AuthService {
     return { token, id_number };
   }
 
-  async loginUsers({ id_type, id_number, password }: LoginDto) {
+  async loginPatientUsers({ id_type, id_number, password }: LoginDto) {
+    const patientUserRoleFound = await this.userRoleRepository.findOne({
+      where: { name: UserRolType.PATIENT },
+    });
+
+    if (!patientUserRoleFound) {
+      throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
+    }
+
+    const verifiedPatientUserRole = await this.userRepository.findOne({
+      where: {
+        id_number: id_number,
+        user_role: patientUserRoleFound.id,
+      },
+    });
+
+    if (!verifiedPatientUserRole) {
+      throw new UnauthorizedException(`¡Usuario no autorizado!`);
+    }
+
     const userFound =
       await this.usersService.getUserFoundByIdNumberWithPassword(
         id_type,
@@ -286,7 +312,115 @@ export class AuthService {
     const authenticationMethodCellphoneFound =
       await this.authenticationMethodRepository.findOne({
         where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Email" no existe.`,
+      );
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Célular" no existe.`,
+      );
+    }
+
+    if (userFound.authentication_method === authenticationMethodEmailFound.id) {
+      const userWithCode = await this.userRepository.findOne({
+        where: {
+          id: userFound.id,
+        },
+      });
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [userFound.email];
+      emailDetailsToSend.userName = userFound.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.verificationCode = userWithCode.verification_code;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.userRepository.update(
+          { id: userFound.id },
+          { verification_code: null },
+        );
+      });
+    }
+
+    if (
+      userFound.authentication_method === authenticationMethodCellphoneFound.id
+    ) {
+      // TODO: IMPLEMENTAR ENVIO DE CÓDIGO POR MENSAJE DE TEXTO
+    }
+
+    return { id_type, id_number };
+  }
+
+  async loginEpsUsers({ id_type, id_number, password }: LoginDto) {
+    const epsUserRoleFound = await this.userRoleRepository.findOne({
+      where: { name: UserRolType.EPS },
+    });
+
+    if (!epsUserRoleFound) {
+      throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
+    }
+
+    const verifiedEpsUserRole = await this.userRepository.findOne({
+      where: {
+        id_number: id_number,
+        user_role: epsUserRoleFound.id,
+      },
+    });
+
+    if (!verifiedEpsUserRole) {
+      throw new UnauthorizedException(`¡Usuario no autorizado!`);
+    }
+
+    const userFound =
+      await this.usersService.getUserFoundByIdNumberWithPassword(
+        id_type,
+        id_number,
+      );
+
+    if (!userFound) {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
+    const isCorrectPassword = await bcryptjs.compare(
+      password,
+      userFound.password,
+    );
+
+    if (!isCorrectPassword) {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.userRepository.update(
+      {
+        id: userFound.id,
+      },
+      { verification_code: verificationCode },
+    );
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
           name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
         },
       });
 
@@ -355,6 +489,14 @@ export class AuthService {
       throw new UnauthorizedException(`¡Datos de ingreso incorrectos!`);
     }
 
+    const familiarUserRoleFound = await this.userRoleRepository.findOne({
+      where: { name: UserRolType.AUTHORIZED_FAMILIAR },
+    });
+
+    if (!familiarUserRoleFound) {
+      throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
+    }
+
     const patientOfFamiliar = await this.userRepository.findOne({
       where: {
         id: familiarFound.patient_id,
@@ -367,9 +509,14 @@ export class AuthService {
         id_number: id_number,
         email: email,
         patient_id: patientOfFamiliar.id,
+        user_role: familiarUserRoleFound.id,
       },
       select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
     });
+
+    if (!familiarVerified) {
+      throw new UnauthorizedException(`¡Usuario no autorizado!`);
+    }
 
     const verificationCode = Math.floor(1000 + Math.random() * 9999);
 
@@ -380,30 +527,68 @@ export class AuthService {
       { verification_code: verificationCode },
     );
 
-    const familiarWithCode = await this.familiarRepository.findOne({
-      where: {
-        id: familiarVerified.id,
-      },
-    });
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
 
-    const emailDetailsToSend = new SendEmailDto();
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
 
-    emailDetailsToSend.recipients = [familiarVerified.email];
-    emailDetailsToSend.userName = familiarVerified.name;
-    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
-    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
-    emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
+    if (!authenticationMethodEmailFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Email" no existe.`,
+      );
+    }
 
-    await this.nodemailerService.sendEmail(emailDetailsToSend);
+    if (!authenticationMethodCellphoneFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Célular" no existe.`,
+      );
+    }
 
-    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
-      await this.familiarRepository.update(
-        {
+    if (
+      familiarVerified.authentication_method ===
+      authenticationMethodEmailFound.id
+    ) {
+      const familiarWithCode = await this.familiarRepository.findOne({
+        where: {
           id: familiarVerified.id,
         },
-        { verification_code: null },
-      );
-    });
+      });
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [familiarVerified.email];
+      emailDetailsToSend.userName = familiarVerified.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.familiarRepository.update(
+          {
+            id: familiarVerified.id,
+          },
+          { verification_code: null },
+        );
+      });
+    }
+
+    if (
+      familiarVerified.authentication_method ===
+      authenticationMethodCellphoneFound.id
+    ) {
+      // TODO: IMPLEMENTAR ENVIO DE CÓDIGO POR MENSAJE DE TEXTO
+    }
 
     return { id_type, id_number, email, patient_id_number };
   }

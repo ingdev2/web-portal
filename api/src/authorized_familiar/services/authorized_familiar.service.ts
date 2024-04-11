@@ -1,12 +1,13 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ArrayContains, DeepPartial, Raw, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AuthorizedFamiliar } from '../entities/authorized_familiar.entity';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.dto';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
+import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 
 @Injectable()
 export class AuthorizedFamiliarService {
@@ -18,6 +19,9 @@ export class AuthorizedFamiliarService {
 
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
+
+    @InjectRepository(AuthenticationMethod)
+    private authenticationMethodRepository: Repository<AuthenticationMethod>,
   ) {}
 
   // CREATE FUNTIONS //
@@ -85,6 +89,39 @@ export class AuthorizedFamiliarService {
       );
     }
 
+    const userFamiliarCellphoneFound = await this.familiarRepository.findOne({
+      where: {
+        cellphone: familiar.cellphone,
+      },
+    });
+
+    const userPatientCellphoneFound = await this.userRepository.findOne({
+      where: {
+        cellphone: familiar.cellphone,
+      },
+    });
+
+    if (userFamiliarCellphoneFound || userPatientCellphoneFound) {
+      return new HttpException(
+        `El número de celular ${familiar.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const authenticationMethodFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          id: familiar.authentication_method,
+        },
+      });
+
+    if (!authenticationMethodFound) {
+      return new HttpException(
+        `El método de autenticación ingresado no es válido.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const familiarWithAnotherPatient = await this.familiarRepository.findOne({
       where: {
         id_number: familiar.id_number,
@@ -96,6 +133,7 @@ export class AuthorizedFamiliarService {
         ...familiar,
         user_role: familiarWithAnotherPatient.user_role,
         patient_id: patientFound.id,
+        authentication_method: authenticationMethodFound.id,
         accept_terms: true,
       });
 

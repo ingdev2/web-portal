@@ -13,25 +13,31 @@ import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 import {
-  setIdType,
-  setPassword,
-  setVerificationCode,
-  setErrors,
-} from "@/redux/features/login/userLoginSlice";
+  setIdTypePatient,
+  setPasswordPatient,
+  setVerificationCodePatient,
+  setErrorsPatient,
+} from "@/redux/features/login/patientUserLoginSlice";
 
+import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
-import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
 
-const ModalVerificationCode: React.FC = () => {
+const PatientModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const modalIsOpen = useAppSelector((state) => state.modal.modalIsOpen);
+  const patientModalIsOpen = useAppSelector(
+    (state) => state.modal.patientModalIsOpen
+  );
 
-  const idTypeState = useAppSelector((state) => state.userLogin.id_type);
-  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
-  const verificationCodeState = useAppSelector(
-    (state) => state.userLogin.verification_code
+  const idTypePatientState = useAppSelector(
+    (state) => state.patientUserLogin.id_type
+  );
+  const idNumberPatientState = useAppSelector(
+    (state) => state.patientUserLogin.id_number
+  );
+  const verificationCodePatientState = useAppSelector(
+    (state) => state.patientUserLogin.verification_code
   );
 
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
@@ -45,15 +51,15 @@ const ModalVerificationCode: React.FC = () => {
   const [resendCodeDisable, setResendCodeDisable] = useState(true);
 
   const {
-    data: isUserData,
-    isLoading: isUserLoading,
-    isFetching: isUserFetching,
-    isSuccess: isUserSuccess,
-    isError: isUserError,
-  } = useGetUserByIdNumberQuery(idNumberState);
+    data: isUserPatientData,
+    isLoading: isUserPatientLoading,
+    isFetching: isUserPatientFetching,
+    isSuccess: isUserPatientSuccess,
+    isError: isUserPatientError,
+  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
 
   const [
-    resendUserVerificationCode,
+    resendUserVerificationCodePatient,
     {
       data: resendCodeData,
       isLoading: isResendCodeLoading,
@@ -61,47 +67,47 @@ const ModalVerificationCode: React.FC = () => {
       isError: isResendCodeError,
     },
   ] = useResendUserVerificationCodeMutation({
-    fixedCacheKey: "resendUserCodeData",
+    fixedCacheKey: "resendPatientCodeData",
   });
 
   useEffect(() => {
-    if (!idNumberState) {
+    if (patientModalIsOpen && !idNumberPatientState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-    if (!isUserData && isUserError) {
+    if (patientModalIsOpen && !isUserPatientData && isUserPatientError) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
     }
-  }, [idNumberState, isUserData, isUserError]);
+  }, [idNumberPatientState, isUserPatientData, isUserPatientError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirm(true);
 
-      const verificationCode = verificationCodeState
-        ? parseInt(verificationCodeState?.toString(), 10)
+      const verificationCode = verificationCodePatientState
+        ? parseInt(verificationCodePatientState?.toString(), 10)
         : "";
 
-      const idNumber = idNumberState
-        ? parseInt(idNumberState?.toString(), 10)
+      const idNumber = idNumberPatientState
+        ? parseInt(idNumberPatientState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("credentials", {
+      const responseNextAuth = await signIn("PatientAuth", {
         verification_code: verificationCode,
         id_number: idNumber,
         redirect: false,
       });
 
       if (responseNextAuth?.error) {
-        dispatch(setErrors(responseNextAuth.error.split(",")));
+        dispatch(setErrorsPatient(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
         router.replace("/dashboard_admin", { scroll: false });
-        dispatch(setIdType(""));
-        dispatch(setPassword(""));
-        dispatch(setVerificationCode(""));
+        dispatch(setIdTypePatient(""));
+        dispatch(setPasswordPatient(""));
+        dispatch(setVerificationCodePatient(""));
       }
     } catch (error) {
       console.error(error);
@@ -114,31 +120,26 @@ const ModalVerificationCode: React.FC = () => {
     try {
       setIsSubmittingResendCode(true);
 
-      const response: any = await resendUserVerificationCode({
-        id_type: idTypeState,
-        id_number: idNumberState,
+      const response: any = await resendUserVerificationCodePatient({
+        id_type: idTypePatientState,
+        id_number: idNumberPatientState,
       });
 
       var isResponseError = response.error;
 
-      if (
-        !isResendCodeSuccess &&
-        !isResendCodeLoading &&
-        isResendCodeError &&
-        isResponseError
-      ) {
-        dispatch(setErrors(isResponseError?.data.message));
+      if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
+        dispatch(setErrorsPatient(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
-      if (response && !isResendCodeError && !isResponseError) {
+      if (!isResendCodeError && !isResponseError) {
         setShowSuccessMessage(true);
         setSuccessMessage("¡Código Reenviado Correctamente!");
-        setResendCodeDisable(true);
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmittingResendCode(false);
+      setResendCodeDisable(true);
     }
   };
 
@@ -148,8 +149,9 @@ const ModalVerificationCode: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrors([]));
+    dispatch(setErrorsPatient([]));
     setShowErrorMessage(false);
+    setShowSuccessMessage(false);
   };
 
   return (
@@ -168,8 +170,8 @@ const ModalVerificationCode: React.FC = () => {
       )}
 
       <Modal
-        className="modal-design"
-        open={modalIsOpen}
+        className="modal-verification-code-patient"
+        open={patientModalIsOpen}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancel}
         destroyOnClose={true}
@@ -179,7 +181,7 @@ const ModalVerificationCode: React.FC = () => {
         centered
       >
         <div
-          className="content-modal"
+          className="content-modal-patient"
           style={{
             textAlign: "center",
             flexDirection: "column",
@@ -189,7 +191,7 @@ const ModalVerificationCode: React.FC = () => {
           }}
         >
           <h2
-            className="title-modal"
+            className="title-modal-patient"
             style={{
               fontWeight: "bold",
               lineHeight: 1.3,
@@ -200,7 +202,7 @@ const ModalVerificationCode: React.FC = () => {
           </h2>
 
           <h4
-            className="subtitle-modal"
+            className="subtitle-modal-patient"
             style={{
               fontWeight: "normal",
               lineHeight: 1.3,
@@ -211,7 +213,7 @@ const ModalVerificationCode: React.FC = () => {
           </h4>
 
           <h5
-            className="user-email"
+            className="user-email-patient"
             style={{
               fontWeight: "bold",
               fontSize: 13,
@@ -221,7 +223,7 @@ const ModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserData?.email}
+            {isUserPatientData?.email}
           </h5>
 
           <Form
@@ -230,8 +232,8 @@ const ModalVerificationCode: React.FC = () => {
             onFinish={handleSubmit}
           >
             <Form.Item
-              className="user-code"
-              name={"user-code"}
+              className="user-code-patient"
+              name={"user-code-patient"}
               style={{ textAlign: "center" }}
               rules={[
                 {
@@ -253,6 +255,7 @@ const ModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
+                id="input-code-patient"
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
                   width: 183,
@@ -263,8 +266,10 @@ const ModalVerificationCode: React.FC = () => {
                 }}
                 type="number"
                 placeholder="Código"
-                value={verificationCodeState}
-                onChange={(e) => dispatch(setVerificationCode(e.target.value))}
+                value={verificationCodePatientState}
+                onChange={(e) =>
+                  dispatch(setVerificationCodePatient(e.target.value))
+                }
                 min={0}
               />
             </Form.Item>
@@ -273,7 +278,7 @@ const ModalVerificationCode: React.FC = () => {
               <CustomSpin />
             ) : (
               <Button
-                className="confirm-code-button"
+                className="confirm-code-button-patient"
                 size="large"
                 style={{
                   paddingInline: 31,
@@ -296,11 +301,11 @@ const ModalVerificationCode: React.FC = () => {
             showCountdown={resendCodeDisable}
           />
 
-          {isSubmittingResendCode && !isResendCodeSuccess ? (
+          {isSubmittingResendCode && !resendCodeDisable ? (
             <CustomSpin />
           ) : (
             <Button
-              key="resend-button"
+              key="resend-button-patient"
               disabled={resendCodeDisable}
               style={{
                 backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
@@ -328,7 +333,7 @@ const ModalVerificationCode: React.FC = () => {
           </div>
 
           <Button
-            key="cancel-button"
+            key="cancel-button-patient"
             style={{
               paddingInline: 45,
               backgroundColor: "#8C1111",
@@ -345,4 +350,4 @@ const ModalVerificationCode: React.FC = () => {
   );
 };
 
-export default ModalVerificationCode;
+export default PatientModalVerificationCode;

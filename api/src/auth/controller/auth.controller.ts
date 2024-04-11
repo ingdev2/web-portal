@@ -60,9 +60,14 @@ export class AuthController {
     return await this.authService.loginAdmins(loginUser);
   }
 
-  @Post('loginUsers')
-  async loginUsers(@Body() loginAdmin: LoginDto) {
-    return await this.authService.loginUsers(loginAdmin);
+  @Post('loginPatientUsers')
+  async loginPatientUsers(@Body() loginAdmin: LoginDto) {
+    return await this.authService.loginPatientUsers(loginAdmin);
+  }
+
+  @Post('loginEpsUsers')
+  async loginEpsUsers(@Body() loginAdmin: LoginDto) {
+    return await this.authService.loginEpsUsers(loginAdmin);
   }
 
   @Post('loginRelatives')

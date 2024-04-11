@@ -1,23 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  modalIsOpen: false,
-  cancelModal: false,
+  patientModalIsOpen: false,
+  epsModalIsOpen: false,
 };
 
 export const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    setModalIsOpen: (state, action) => {
-      state.modalIsOpen = action.payload;
+    setPatientModalIsOpen: (state, action) => {
+      state.patientModalIsOpen = action.payload;
     },
-    setCancelModal: (state, action) => {
-      state.cancelModal = action.payload;
+    setEpsModalIsOpen: (state, action) => {
+      state.epsModalIsOpen = action.payload;
     },
   },
 });
 
-export const { setModalIsOpen, setCancelModal } = modalSlice.actions;
+export const { setPatientModalIsOpen, setEpsModalIsOpen } = modalSlice.actions;
 
 export default modalSlice.reducer;

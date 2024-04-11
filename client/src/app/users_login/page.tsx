@@ -1,6 +1,7 @@
 "use client";
 
-import UsersLogin from "@/components/auth/UsersLogin";
+import PatientUserLoginForm from "@/components/auth/PatientUserLoginForm";
+import EpsUserLoginForm from "@/components/auth/EpsUserLoginForm";
 
 const UsersLoginPage: React.FC = () => {
   return (
@@ -48,7 +49,10 @@ const UsersLoginPage: React.FC = () => {
             style={{ height: 77 }}
           />
         </div>
-        <UsersLogin />
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <PatientUserLoginForm />
+          <EpsUserLoginForm />
+        </div>
       </div>
     </div>
   );

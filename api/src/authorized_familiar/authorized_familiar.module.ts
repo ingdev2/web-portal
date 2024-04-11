@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 import { AuthorizedFamiliarService } from './services/authorized_familiar.service';
 import { AuthorizedFamiliarController } from './controllers/authorized_familiar.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthenticationMethod } from '../authentication_method/entities/authentication_method.entity';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       User,
       UserRole,
       IdTypeEntity,
+      AuthenticationMethod,
     ]),
   ],
   controllers: [AuthorizedFamiliarController],

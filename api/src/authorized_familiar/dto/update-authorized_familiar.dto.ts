@@ -28,4 +28,8 @@ export class UpdateAuthorizedFamiliarDto {
   @IsOptional()
   @IsNumber()
   whatsapp: number;
+
+  @IsOptional()
+  @IsNumber()
+  authentication_method: number;
 }

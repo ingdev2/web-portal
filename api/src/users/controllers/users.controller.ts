@@ -47,9 +47,14 @@ export class UsersController {
     return await this.usersService.getUsersById(id);
   }
 
-  @Get('/getUserById/:idNumber')
-  async getUsersByIdNumber(@Param('idNumber') idNumber: number) {
-    return await this.usersService.getUsersByIdNumber(idNumber);
+  @Get('/getPatientUserById/:idNumber')
+  async getPatientUserByIdNumber(@Param('idNumber') idNumber: number) {
+    return await this.usersService.getPatientUserByIdNumber(idNumber);
+  }
+
+  @Get('/getEpsUserById/:idNumber')
+  async getEpsUserByIdNumber(@Param('idNumber') idNumber: number) {
+    return await this.usersService.getEpsUserByIdNumber(idNumber);
   }
 
   // PATCH METHODS //

@@ -28,8 +28,11 @@ export const usersApi = createApi({
     getUserById: builder.query<User, string>({
       query: (id) => `getUser/${id}`,
     }),
-    getUserByIdNumber: builder.query<User, number>({
-      query: (idNumber) => `getUserById/${idNumber}`,
+    getUserByIdNumberPatient: builder.query<User, number>({
+      query: (idNumber) => `getPatientUserById/${idNumber}`,
+    }),
+    getUserByIdNumberEps: builder.query<User, number>({
+      query: (idNumber) => `getEpsUserById/${idNumber}`,
     }),
     updateUser: builder.mutation<
       any,
@@ -57,6 +60,8 @@ export const {
   useGetAllPatientsQuery,
   useGetAllEpsQuery,
   useGetUserByIdQuery,
-  useGetUserByIdNumberQuery,
+  useGetUserByIdNumberPatientQuery,
+  useGetUserByIdNumberEpsQuery,
   useUpdateUserMutation,
+  useBanUserMutation,
 } = usersApi;

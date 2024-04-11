@@ -9,29 +9,29 @@ const initialState: UserLogin = {
   errors: [],
 };
 
-export const userLoginSlice = createSlice({
-  name: "userLogin",
+export const epsUserLoginSlice = createSlice({
+  name: "epsUserLogin",
   initialState,
   reducers: {
-    setIdTypeOptions: (state, action) => {
+    setIdTypeOptionsEps: (state, action) => {
       state.idTypeOptions = action.payload;
     },
-    setIdType: (state, action) => {
+    setIdTypeEps: (state, action) => {
       state.id_type = action.payload;
     },
-    setIdNumber: (state, action) => {
+    setIdNumberEps: (state, action) => {
       state.id_number = action.payload;
     },
-    setPassword: (state, action) => {
+    setPasswordEps: (state, action) => {
       state.password = action.payload;
     },
-    setVerificationCode: (state, action) => {
+    setVerificationCodeEps: (state, action) => {
       state.verification_code = action.payload;
     },
-    setErrors: (state, action) => {
+    setErrorsEps: (state, action) => {
       state.errors = action.payload;
     },
-    resetLoginState: (state) => {
+    resetLoginStateEps: (state) => {
       state.id_type = initialState.id_type;
       state.id_number = initialState.id_number;
       state.password = initialState.password;
@@ -42,13 +42,13 @@ export const userLoginSlice = createSlice({
 });
 
 export const {
-  setIdTypeOptions,
-  setIdType,
-  setIdNumber,
-  setPassword,
-  setVerificationCode,
-  setErrors,
-  resetLoginState,
-} = userLoginSlice.actions;
+  setIdTypeOptionsEps,
+  setIdTypeEps,
+  setIdNumberEps,
+  setPasswordEps,
+  setVerificationCodeEps,
+  setErrorsEps,
+  resetLoginStateEps,
+} = epsUserLoginSlice.actions;
 
-export default userLoginSlice.reducer;
+export default epsUserLoginSlice.reducer;

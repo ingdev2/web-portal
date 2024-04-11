@@ -3,6 +3,7 @@ import { GenderType } from '../../genders/entities/gender.entity';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
+import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 import {
   Column,
   CreateDateColumn,
@@ -56,7 +57,7 @@ export class AuthorizedFamiliar {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'bigint', nullable: true })
+  @Column({ type: 'bigint', unique: true, nullable: true })
   cellphone: number;
 
   @Column({ type: 'bigint', nullable: true })
@@ -99,6 +100,16 @@ export class AuthorizedFamiliar {
 
   @Column({ type: 'uuid' })
   patient_id: string;
+
+  @ManyToOne(
+    () => AuthenticationMethod,
+    (familiar_authentication_method) => familiar_authentication_method.familiar,
+  )
+  @JoinColumn({ name: 'authentication_method', referencedColumnName: 'id' })
+  familiar_authentication_method: AuthenticationMethod;
+
+  @Column({ nullable: true })
+  authentication_method: number;
 
   @Column({ nullable: true })
   verification_code: number;

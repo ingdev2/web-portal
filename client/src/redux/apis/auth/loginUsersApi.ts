@@ -13,9 +13,18 @@ export const loginUsersApi = createApi({
         body: newUser,
       }),
     }),
-    loginUsers: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>({
+    loginPatientUsers: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>(
+      {
+        query: (newUserLogin) => ({
+          url: "loginPatientUsers",
+          method: "POST",
+          body: newUserLogin,
+        }),
+      }
+    ),
+    loginEpsUsers: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>({
       query: (newUserLogin) => ({
-        url: "loginUsers",
+        url: "loginEpsUsers",
         method: "POST",
         body: newUserLogin,
       }),
@@ -46,7 +55,8 @@ export const loginUsersApi = createApi({
 
 export const {
   useCreateUserMutation,
-  useLoginUsersMutation,
+  useLoginPatientUsersMutation,
+  useLoginEpsUsersMutation,
   useVerifyUserCodeMutation,
   useResendUserVerificationCodeMutation,
 } = loginUsersApi;

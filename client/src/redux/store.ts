@@ -7,7 +7,8 @@ import adminReducer from "./features/admin/adminSlice";
 import userReducer from "./features/user/userSlice";
 import familiarReducer from "./features/familiar/familiarSlice";
 import adminLoginReducer from "./features/login/adminLoginSlice";
-import userLoginReducer from "./features/login/userLoginSlice";
+import patientUserLoginReducer from "./features/login/patientUserLoginSlice";
+import epsUserLoginReducer from "./features/login/epsUserLoginSlice";
 import familiarLoginReducer from "./features/login/familiarLoginSlice";
 import modalReducer from "./features/modal/modalSlice";
 
@@ -23,13 +24,14 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["user", "userLogin"],
+  whitelist: ["user", "patientUserLogin", "epsUserLogin"],
   blacklist: [],
 };
 
 const rootReducer = combineReducers({
   adminLogin: adminLoginReducer,
-  userLogin: userLoginReducer,
+  patientUserLogin: patientUserLoginReducer,
+  epsUserLogin: epsUserLoginReducer,
   familiarLogin: familiarLoginReducer,
   admin: adminReducer,
   user: userReducer,

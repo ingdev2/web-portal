@@ -10,7 +10,7 @@ import { Admin } from '../admins/entities/admin.entity';
 import { User } from '../users/entities/user.entity';
 import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_familiar.entity';
 import { AuthenticationMethod } from '../authentication_method/entities/authentication_method.entity';
-import { UserRolesModule } from '../user_roles/user_roles.module';
+import { UserRole } from '../user_roles/entities/user_role.entity';
 import { AdminRolesModule } from '../admin_roles/admin_roles.module';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,12 +21,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       User,
       Admin,
       AuthorizedFamiliar,
+      UserRole,
       AuthenticationMethod,
     ]),
     AdminsModule,
     UsersModule,
     AuthorizedFamiliarModule,
-    UserRolesModule,
     AdminRolesModule,
     NodemailerModule,
     JwtModule.register({

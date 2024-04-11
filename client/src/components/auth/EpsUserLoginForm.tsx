@@ -3,109 +3,133 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import ModalVerificationCode from "./ModalVerificationCode";
-import { Button, Card, Divider, Form, Input, Select } from "antd";
+import EpsModalVerificationCode from "./EpsModalVerificationCode";
+import { Button, Card, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
 import {
-  setIdTypeOptions,
-  setIdType,
-  setIdNumber,
-  setPassword,
-  setVerificationCode,
-  setErrors,
-} from "@/redux/features/login/userLoginSlice";
-import { setModalIsOpen } from "@/redux/features/modal/modalSlice";
+  setIdTypeOptionsEps,
+  setIdTypeEps,
+  setIdNumberEps,
+  setPasswordEps,
+  setVerificationCodeEps,
+  setErrorsEps,
+} from "@/redux/features/login/epsUserLoginSlice";
+import { setEpsModalIsOpen } from "@/redux/features/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
-import { useLoginUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 
-const UsersLogin: React.FC = () => {
+const EpsUserLoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const idTypeOptions = useAppSelector(
-    (state) => state.userLogin.idTypeOptions
+  const idTypeOptionsEps = useAppSelector(
+    (state) => state.epsUserLogin.idTypeOptions
   );
-  const idTypeState = useAppSelector((state) => state.userLogin.id_type);
-  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
-  const passwordState = useAppSelector((state) => state.userLogin.password);
-  const errorsState = useAppSelector((state) => state.userLogin.errors);
+  const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
+  const idNumberEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
+  );
+  const passwordEpsState = useAppSelector(
+    (state) => state.epsUserLogin.password
+  );
+  const errorsEpsState = useAppSelector((state) => state.epsUserLogin.errors);
 
-  const modalIsOpen = useAppSelector((state) => state.modal.modalIsOpen);
+  const modalIsOpenEps = useAppSelector((state) => state.modal.epsModalIsOpen);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [isSubmittingEps, setIsSubmittingEps] = useState(false);
+  const [showErrorMessageEps, setShowErrorMessageEps] = useState(false);
 
   const {
-    data: idTypesData,
-    isLoading: idTypesLoading,
-    isFetching: idTypesFetching,
-    error: idTypesError,
+    data: idTypesEpsData,
+    isLoading: idTypesEpsLoading,
+    isFetching: idTypesEpsFetching,
+    error: idTypesEpsError,
   } = useGetAllIdTypesQuery(null);
 
   const [
-    loginUsers,
+    loginEpsUsers,
     {
-      data: isLogindata,
-      isLoading: isLoginLoading,
-      isSuccess: isLoginSuccess,
-      isError: isLoginError,
+      data: isLoginEpsData,
+      isLoading: isLoginEpsLoading,
+      isSuccess: isLoginEpsSuccess,
+      isError: isLoginEpsError,
     },
-  ] = useLoginUsersMutation({ fixedCacheKey: "loginUserData" });
+  ] = useLoginEpsUsersMutation({ fixedCacheKey: "loginEpsData" });
 
   useEffect(() => {
-    if (!isLoginSuccess && !isSubmitting && !isLoginError) {
-      dispatch(setIdType(""));
-      dispatch(setIdNumber(""));
-      dispatch(setPassword(""));
-      dispatch(setVerificationCode(""));
+    if (
+      !isLoginEpsSuccess &&
+      !isSubmittingEps &&
+      !isLoginEpsError &&
+      isLoginEpsData
+    ) {
+      dispatch(setIdTypeEps(""));
+      dispatch(setIdNumberEps(""));
+      dispatch(setPasswordEps(""));
+      dispatch(setVerificationCodeEps(""));
     }
-    if (!idTypesLoading && idTypesData) {
-      dispatch(setIdTypeOptions(idTypesData));
+    if (!idTypesEpsLoading && idTypesEpsData) {
+      dispatch(setIdTypeOptionsEps(idTypesEpsData));
     }
-    if (idTypesError) {
-      setShowErrorMessage(true);
-      dispatch(setIdTypeOptions(idTypesData));
+    if (idTypesEpsError) {
+      setShowErrorMessageEps(true);
+      dispatch(setIdTypeOptionsEps(idTypesEpsData));
     }
-    if (isLoginSuccess && !isLoginLoading && !isSubmitting) {
-      dispatch(setModalIsOpen(true));
+    if (isLoginEpsSuccess && !isLoginEpsLoading && !isSubmittingEps) {
+      dispatch(setEpsModalIsOpen(true));
     }
-  }, [idTypesData, idTypesLoading, idTypesError, isSubmitting, isLoginError]);
+  }, [
+    idTypesEpsData,
+    idTypesEpsLoading,
+    idTypesEpsError,
+    isSubmittingEps,
+    isLoginEpsError,
+  ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      setIsSubmitting(true);
+      setIsSubmittingEps(true);
 
-      const response: any = await loginUsers({
-        id_type: idTypeState,
-        id_number: idNumberState,
-        password: passwordState,
+      const response: any = await loginEpsUsers({
+        id_type: idTypeEpsState,
+        id_number: idNumberEpsState,
+        password: passwordEpsState,
       });
 
       var isLoginUserError = response.error;
 
-      if (!isLoginSuccess && !isLoginLoading && isLoginUserError) {
-        dispatch(setErrors(isLoginUserError?.data.message));
-        setShowErrorMessage(true);
+      if (!isLoginEpsSuccess && !isLoginEpsLoading && isLoginUserError) {
+        const errorMessage = isLoginUserError?.data.message;
+
+        if (Array.isArray(errorMessage)) {
+          dispatch(setErrorsEps(errorMessage[0]));
+          setShowErrorMessageEps(true);
+        }
+        if (typeof errorMessage === "string") {
+          dispatch(setErrorsEps(errorMessage));
+          setShowErrorMessageEps(true);
+        }
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingEps(false);
     }
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrors([]));
-    setShowErrorMessage(false);
+    dispatch(setErrorsEps([]));
+    setShowErrorMessageEps(false);
   };
 
   return (
     <Card
       style={{
         width: 270,
+        height: "min-content",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -113,29 +137,29 @@ const UsersLogin: React.FC = () => {
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
       }}
     >
-      {modalIsOpen && <ModalVerificationCode />}
+      {modalIsOpenEps && <EpsModalVerificationCode />}
 
-      {showErrorMessage && (
+      {showErrorMessageEps && (
         <CustomMessage
           typeMessage="error"
-          message={errorsState?.toString() || "¡Error en la petición!"}
+          message={errorsEpsState?.toString() || "¡Error en la petición!"}
         />
       )}
 
       <Form
-        name="users-login-form"
-        className="users-login-form"
-        style={{ width: 231 }}
+        name="eps-users-login-form"
+        className="eps-users-login-form"
+        style={{ width: 231, marginTop: 13 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
-        {idTypesLoading || idTypesFetching ? (
+        {idTypesEpsLoading || idTypesEpsFetching ? (
           <CustomSpin />
         ) : (
           <Form.Item
-            name="user-id-type"
+            name="eps-user-id-type"
             label="Tipo de identificación"
             style={{ marginBottom: 7 }}
             rules={[
@@ -146,11 +170,11 @@ const UsersLogin: React.FC = () => {
             ]}
           >
             <Select
-              value={idTypeState}
+              value={idTypeEpsState}
               placeholder="Tipo de identificación"
-              onChange={(e) => dispatch(setIdType(e))}
+              onChange={(e) => dispatch(setIdTypeEps(e))}
             >
-              {idTypeOptions?.map((option: any) => (
+              {idTypeOptionsEps?.map((option: any) => (
                 <Select.Option key={option.id} value={option.id}>
                   {option.name}
                 </Select.Option>
@@ -160,7 +184,7 @@ const UsersLogin: React.FC = () => {
         )}
 
         <Form.Item
-          name="user-id-number"
+          name="eps-user-id-number"
           label="Número de identificación"
           style={{ marginBottom: 7 }}
           rules={[
@@ -186,15 +210,15 @@ const UsersLogin: React.FC = () => {
           <Input
             prefix={<IdcardOutlined className="site-form-item-icon" />}
             type="number"
-            value={idNumberState}
+            value={idNumberEpsState}
             placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumber(e.target.value))}
+            onChange={(e) => dispatch(setIdNumberEps(e.target.value))}
             min={0}
           />
         </Form.Item>
 
         <Form.Item
-          name="user-password"
+          name="eps-user-password"
           label="Contraseña"
           style={{ marginBottom: 13 }}
           rules={[
@@ -216,15 +240,15 @@ const UsersLogin: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={passwordState}
+            value={passwordEpsState}
             placeholder="Contraseña"
-            onChange={(e) => dispatch(setPassword(e.target.value))}
+            onChange={(e) => dispatch(setPasswordEps(e.target.value))}
           />
         </Form.Item>
 
         <Form.Item style={{ textAlign: "center" }}>
           <a
-            className="login-form-forgot-user"
+            className="eps-login-form-forgot-user"
             href=""
             style={{
               display: "flow",
@@ -237,7 +261,7 @@ const UsersLogin: React.FC = () => {
             Olvide mi contraseña
           </a>
 
-          {isSubmitting && isLoginLoading ? (
+          {isSubmittingEps && isLoginEpsLoading ? (
             <CustomSpin />
           ) : (
             <Button
@@ -247,42 +271,14 @@ const UsersLogin: React.FC = () => {
                 borderRadius: 31,
                 backgroundColor: "#015E90",
                 color: "#f2f2f2",
-                marginBottom: 7,
               }}
               htmlType="submit"
-              className="login-form-button"
+              className="eps-login-form-button"
               onClick={handleButtonClick}
             >
               Ingresar
             </Button>
           )}
-
-          <Divider
-            style={{
-              fontSize: 13,
-              fontWeight: "normal",
-              marginBlock: 7,
-              borderWidth: 1.3,
-            }}
-          >
-            ¿No estas registrado?
-          </Divider>
-
-          <Button
-            style={{
-              paddingInline: 22,
-              color: "#015E90",
-              borderColor: "#015E90",
-              fontWeight: "bold",
-              borderRadius: 7,
-              borderWidth: 1.3,
-              marginTop: 7,
-            }}
-            htmlType="button"
-            className="register-button"
-          >
-            Registrarme
-          </Button>
         </Form.Item>
         {/* <Form.ErrorList
           errors={errors?.map((error) => (
@@ -304,4 +300,4 @@ const UsersLogin: React.FC = () => {
   );
 };
 
-export default UsersLogin;
+export default EpsUserLoginForm;
