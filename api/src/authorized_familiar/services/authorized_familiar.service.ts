@@ -8,6 +8,7 @@ import { UserRolType } from '../../common/enums/user_roles.enum';
 import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.dto';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
+import { AuthenticationMethodEnum } from '../../common/enums/authentication_method.enum';
 
 @Injectable()
 export class AuthorizedFamiliarService {
@@ -118,6 +119,41 @@ export class AuthorizedFamiliarService {
     if (!authenticationMethodFound) {
       return new HttpException(
         `El método de autenticación ingresado no es válido.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
+
+    if (
+      familiar.authentication_method ===
+        authenticationMethodCellphoneFound.id &&
+      !familiar.cellphone
+    ) {
+      return new HttpException(
+        `Debe ingresar un número de celular para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (
+      familiar.authentication_method === authenticationMethodEmailFound.id &&
+      familiar.email
+    ) {
+      return new HttpException(
+        `Debe ingresar un correo electrónico para activar el método de autenticación seleccionado`,
         HttpStatus.CONFLICT,
       );
     }

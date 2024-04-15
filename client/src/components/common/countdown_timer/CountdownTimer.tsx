@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { CountdownProps, Statistic } from "antd";
 
 const { Countdown } = Statistic;
@@ -9,26 +9,13 @@ const CountdownTimer: React.FC<{
 }> = ({ onFinishHandler, showCountdown }) => {
   const initialCountdownTime = Number(process.env.NEXT_PUBLIC_COUNTDOWN_TIMER);
 
-  const countdownTimeRef = useRef(initialCountdownTime);
-
-  const [countdownTime, setCountdownTime] = useState(initialCountdownTime);
-
-  useEffect(() => {
-    if (showCountdown) {
-      setCountdownTime(initialCountdownTime);
-      countdownTimeRef.current = initialCountdownTime;
-    }
-  }, [showCountdown]);
-
   const onFinish: CountdownProps["onFinish"] = () => {
     onFinishHandler();
-    setCountdownTime(initialCountdownTime);
-    countdownTimeRef.current = initialCountdownTime;
   };
 
   return (
     <Countdown
-      value={showCountdown ? Date.now() + countdownTimeRef.current * 1000 : 0}
+      value={showCountdown ? Date.now() + initialCountdownTime * 1000 : 0}
       onFinish={onFinish}
       format="mm:ss"
       valueStyle={{

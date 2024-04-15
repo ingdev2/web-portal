@@ -12,7 +12,12 @@ import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
 
-  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
+  const idNumberPatientUserState = useAppSelector(
+    (state) => state.patientUserLogin.id_number
+  );
+  const idNumberEpsUserState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
+  );
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,7 +31,7 @@ const DashboardAdminPage = () => {
   } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
-    if (!idNumberState) {
+    if (!idNumberPatientUserState || !idNumberEpsUserState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
     }
@@ -38,7 +43,12 @@ const DashboardAdminPage = () => {
       setShowErrorMessage(true);
       setErrorMessage("Familiares no encontrados!");
     }
-  }, [idNumberState, isRelativesData, isRelativesError]);
+  }, [
+    idNumberPatientUserState,
+    idNumberEpsUserState,
+    isRelativesData,
+    isRelativesError,
+  ]);
 
   return (
     <div>
@@ -48,7 +58,9 @@ const DashboardAdminPage = () => {
           message={errorMessage || "¡Error en la petición!"}
         />
       )}
-      {!idNumberState || !isRelativesData || status === "unauthenticated" ? (
+      {(!idNumberPatientUserState && !idNumberEpsUserState) ||
+      !isRelativesData ||
+      status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div>

@@ -13,6 +13,7 @@ const UsersLoginPage: React.FC = () => {
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
+        marginBlock: 31,
       }}
     >
       <div

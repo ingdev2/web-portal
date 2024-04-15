@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -71,11 +71,11 @@ const PatientModalVerificationCode: React.FC = () => {
   });
 
   useEffect(() => {
-    if (patientModalIsOpen && !idNumberPatientState) {
+    if (!idNumberPatientState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-    if (patientModalIsOpen && !isUserPatientData && isUserPatientError) {
+    if (!isUserPatientData && isUserPatientError) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
     }
@@ -255,6 +255,7 @@ const PatientModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
+                className="input-code-patient"
                 id="input-code-patient"
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
@@ -305,6 +306,7 @@ const PatientModalVerificationCode: React.FC = () => {
             <CustomSpin />
           ) : (
             <Button
+              className="resend-button-patient"
               key="resend-button-patient"
               disabled={resendCodeDisable}
               style={{

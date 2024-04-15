@@ -67,11 +67,11 @@ const EpsModalVerificationCode: React.FC = () => {
   });
 
   useEffect(() => {
-    if (epsModalIsOpen && !idNumberEpsState) {
+    if (!idNumberEpsState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-    if (epsModalIsOpen && !isUserEpsData && isUserEpsError) {
+    if (!isUserEpsData && isUserEpsError) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
     }
@@ -251,6 +251,7 @@ const EpsModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
+                className="input-code-eps"
                 id="input-code-eps"
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
@@ -301,6 +302,7 @@ const EpsModalVerificationCode: React.FC = () => {
             <CustomSpin />
           ) : (
             <Button
+              className="resend-button-eps"
               key="resend-button-eps"
               disabled={resendCodeDisable}
               style={{

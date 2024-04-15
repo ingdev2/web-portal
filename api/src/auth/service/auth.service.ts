@@ -676,7 +676,7 @@ export class AuthService {
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
-      await this.userRepository.update(
+      await this.familiarRepository.update(
         { id: familiarFound.id },
         { verification_code: null },
       );

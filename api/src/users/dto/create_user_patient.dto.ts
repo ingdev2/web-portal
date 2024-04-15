@@ -29,7 +29,7 @@ export class CreateUserPatientDto {
   @IsNumber()
   id_number: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
   email: string;
 

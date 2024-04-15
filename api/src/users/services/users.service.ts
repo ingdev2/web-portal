@@ -225,6 +225,55 @@ export class UsersService {
       );
     }
 
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new HttpException(
+        `El método de autenticación "Email" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new HttpException(
+        `El método de autenticación "Célular" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (
+      userPatient.authentication_method ===
+        authenticationMethodCellphoneFound.id &&
+      !userPatient.cellphone
+    ) {
+      return new HttpException(
+        `Debe ingresar un número de celular para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (
+      userPatient.authentication_method === authenticationMethodEmailFound.id &&
+      userPatient.email
+    ) {
+      return new HttpException(
+        `Debe ingresar un correo electrónico para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const insertRoleUserPatient = await this.userRepository.create({
       ...userPatient,
       user_role: rolePatientFound.id,
