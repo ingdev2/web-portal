@@ -134,12 +134,12 @@ const PatientModalVerificationCode: React.FC = () => {
       if (!isResendCodeError && !isResponseError) {
         setShowSuccessMessage(true);
         setSuccessMessage("¡Código Reenviado Correctamente!");
+        setResendCodeDisable(true);
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmittingResendCode(false);
-      setResendCodeDisable(true);
     }
   };
 
@@ -287,7 +287,7 @@ const PatientModalVerificationCode: React.FC = () => {
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
                   marginTop: 5,
-                  marginBottom: 7,
+                  marginBottom: 13,
                 }}
                 htmlType="submit"
                 onClick={handleButtonClick}
@@ -297,10 +297,14 @@ const PatientModalVerificationCode: React.FC = () => {
             )}
           </Form>
 
-          <CountdownTimer
-            onFinishHandler={() => setResendCodeDisable(false)}
-            showCountdown={resendCodeDisable}
-          />
+          {resendCodeDisable && (
+            <CountdownTimer
+              onFinishHandler={() => {
+                setResendCodeDisable(false);
+              }}
+              showCountdown={resendCodeDisable}
+            />
+          )}
 
           {isSubmittingResendCode && !resendCodeDisable ? (
             <CustomSpin />

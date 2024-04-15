@@ -17,7 +17,7 @@ import {
   setVerificationCodePatient,
   setErrorsPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
-import { setPatientModalIsOpen } from "@/redux/features/modal/modalSlice";
+import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";

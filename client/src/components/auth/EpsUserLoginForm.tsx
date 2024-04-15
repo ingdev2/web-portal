@@ -17,7 +17,7 @@ import {
   setVerificationCodeEps,
   setErrorsEps,
 } from "@/redux/features/login/epsUserLoginSlice";
-import { setEpsModalIsOpen } from "@/redux/features/modal/modalSlice";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";

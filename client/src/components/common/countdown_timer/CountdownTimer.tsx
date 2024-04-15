@@ -1,13 +1,17 @@
-import React from "react";
-import { CountdownProps, Statistic } from "antd";
+import React, { useRef } from "react";
 
 const { Countdown } = Statistic;
+import { CountdownProps, Statistic } from "antd";
 
 const CountdownTimer: React.FC<{
   onFinishHandler: () => void;
   showCountdown: boolean;
 }> = ({ onFinishHandler, showCountdown }) => {
-  const initialCountdownTime = Number(process.env.NEXT_PUBLIC_COUNTDOWN_TIMER);
+  const countdownTime = Number(process.env.NEXT_PUBLIC_COUNTDOWN_TIMER);
+
+  const initialCountdownTime = useRef(Date.now() + countdownTime * 1000);
+
+  const zeroTime = 0;
 
   const onFinish: CountdownProps["onFinish"] = () => {
     onFinishHandler();
@@ -15,11 +19,11 @@ const CountdownTimer: React.FC<{
 
   return (
     <Countdown
-      value={showCountdown ? Date.now() + initialCountdownTime * 1000 : 0}
+      value={showCountdown ? initialCountdownTime.current : zeroTime}
       onFinish={onFinish}
       format="mm:ss"
       valueStyle={{
-        fontSize: 22,
+        fontSize: 27,
         fontWeight: "bold",
         color: showCountdown ? "#960202" : "#137A2B",
       }}

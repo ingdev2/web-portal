@@ -10,7 +10,7 @@ import adminLoginReducer from "./features/login/adminLoginSlice";
 import patientUserLoginReducer from "./features/login/patientUserLoginSlice";
 import epsUserLoginReducer from "./features/login/epsUserLoginSlice";
 import familiarLoginReducer from "./features/login/familiarLoginSlice";
-import modalReducer from "./features/modal/modalSlice";
+import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
 import { usersApi } from "./apis/users/usersApi";
