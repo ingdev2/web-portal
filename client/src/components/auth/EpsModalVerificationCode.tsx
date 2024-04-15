@@ -21,6 +21,7 @@ import {
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const EpsModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -104,6 +105,7 @@ const EpsModalVerificationCode: React.FC = () => {
         dispatch(setIdTypeEps(""));
         dispatch(setPasswordEps(""));
         dispatch(setVerificationCodeEps(""));
+        dispatch(setEpsModalIsOpen(false));
       }
     } catch (error) {
       console.error(error);

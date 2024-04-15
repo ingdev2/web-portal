@@ -135,6 +135,7 @@ const EpsUserLoginForm: React.FC = () => {
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+        marginBottom: 31,
       }}
     >
       {modalIsOpenEps && <EpsModalVerificationCode />}
@@ -145,6 +146,18 @@ const EpsUserLoginForm: React.FC = () => {
           message={errorsEpsState?.toString() || "¡Error en la petición!"}
         />
       )}
+
+      <h2
+        className="title-login-eps"
+        style={{
+          fontWeight: "500",
+          lineHeight: 1.3,
+          marginTop: 0,
+          textAlign: "center",
+        }}
+      >
+        Ingreso de usuarios Eps
+      </h2>
 
       <Form
         name="eps-users-login-form"

@@ -149,6 +149,7 @@ const PatientUserLoginForm: React.FC = () => {
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+        marginBottom: 31,
       }}
     >
       {modalIsOpenPatient && <PatientModalVerificationCode />}
@@ -159,6 +160,18 @@ const PatientUserLoginForm: React.FC = () => {
           message={errorsPatientState?.toString() || "¡Error en la petición!"}
         />
       )}
+
+      <h2
+        className="title-login-patient"
+        style={{
+          fontWeight: "500",
+          lineHeight: 1.3,
+          marginTop: 0,
+          textAlign: "center",
+        }}
+      >
+        Ingreso de usuario Paciente
+      </h2>
 
       <Form
         name="patient-users-login-form"

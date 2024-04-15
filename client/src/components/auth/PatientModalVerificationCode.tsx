@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -21,6 +21,7 @@ import {
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
+import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const PatientModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -108,6 +109,7 @@ const PatientModalVerificationCode: React.FC = () => {
         dispatch(setIdTypePatient(""));
         dispatch(setPasswordPatient(""));
         dispatch(setVerificationCodePatient(""));
+        dispatch(setPatientModalIsOpen(false));
       }
     } catch (error) {
       console.error(error);
