@@ -83,7 +83,6 @@ const PatientModalVerificationCode: React.FC = () => {
   }, [idNumberPatientState, isUserPatientData, isUserPatientError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
     try {
       setIsSubmittingConfirm(true);
 
@@ -95,7 +94,7 @@ const PatientModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberPatientState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("patient-auth", {
+      const responseNextAuth = await signIn("users-auth", {
         verification_code: verificationCode,
         id_number: idNumber,
         redirect: false,
@@ -106,7 +105,7 @@ const PatientModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.push("/homepage_patient", { scroll: false });
+        router.replace("/homepage_patient", { scroll: false });
         dispatch(setIdTypePatient(""));
         dispatch(setPasswordPatient(""));
         dispatch(setVerificationCodePatient(""));

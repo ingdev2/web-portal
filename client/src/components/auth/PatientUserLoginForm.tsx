@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
 
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import { Button, Card, Divider, Form, Input, Select } from "antd";
@@ -24,6 +25,7 @@ import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 
 const PatientUserLoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const idTypeOptionsPatient = useAppSelector(
     (state) => state.patientUserLogin.idTypeOptions
@@ -331,6 +333,9 @@ const PatientUserLoginForm: React.FC = () => {
             }}
             htmlType="button"
             className="patient-register-button"
+            onClick={() => {
+              router.push("/patient_register", { scroll: true });
+            }}
           >
             Registrarme
           </Button>

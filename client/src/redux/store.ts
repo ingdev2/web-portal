@@ -15,6 +15,9 @@ import modalReducer from "./features/common/modal/modalSlice";
 import { adminsApi } from "./apis/admins/adminsApi";
 import { usersApi } from "./apis/users/usersApi";
 import { relativesApi } from "./apis/relatives/relativesApi";
+import { registerAdminApi } from "./apis/register/registerAdminApi";
+import { registerUsersApi } from "./apis/register/registerUsersApi";
+import { registerRelativesApi } from "./apis/register/registerRelativesApi";
 import { loginAdminApi } from "./apis/auth/loginAdminApi";
 import { loginUsersApi } from "./apis/auth/loginUsersApi";
 import { loginRelativesApi } from "./apis/auth/loginRelativesApi";
@@ -46,6 +49,9 @@ const rootReducer = combineReducers({
   [adminsApi.reducerPath]: adminsApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [relativesApi.reducerPath]: relativesApi.reducer,
+  [registerAdminApi.reducerPath]: registerAdminApi.reducer,
+  [registerUsersApi.reducerPath]: registerUsersApi.reducer,
+  [registerRelativesApi.reducerPath]: registerRelativesApi.reducer,
   [loginAdminApi.reducerPath]: loginAdminApi.reducer,
   [loginUsersApi.reducerPath]: loginUsersApi.reducer,
   [loginRelativesApi.reducerPath]: loginRelativesApi.reducer,
@@ -61,6 +67,9 @@ export const store = configureStore({
       adminsApi.middleware,
       usersApi.middleware,
       relativesApi.middleware,
+      registerAdminApi.middleware,
+      registerUsersApi.middleware,
+      registerRelativesApi.middleware,
       loginAdminApi.middleware,
       loginUsersApi.middleware,
       loginRelativesApi.middleware,

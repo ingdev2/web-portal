@@ -90,7 +90,7 @@ const EpsModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberEpsState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("patient-auth", {
+      const responseNextAuth = await signIn("users-auth", {
         verification_code: verificationCode,
         id_number: idNumber,
         redirect: false,

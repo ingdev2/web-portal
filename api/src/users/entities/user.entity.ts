@@ -18,7 +18,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
-import { AuthenticationMethod } from 'src/authentication_method/entities/authentication_method.entity';
+import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 
 @Entity()
 export class User {

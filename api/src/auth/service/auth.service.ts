@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdminsService } from '../../admins/services/admins.service';
@@ -15,6 +20,11 @@ import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { LoginDto } from '../dto/login.dto';
+import { ValidatePatientDto } from '../../users/dto/validate_patient.dto';
+import axios from 'axios';
+import { IdTypeAbbrev } from '../../users/enums/id_type_abbrev.enum';
+import { IdType } from '../../common/enums/id_type.enum';
+import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
@@ -35,6 +45,9 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
+    @InjectRepository(IdTypeEntity)
+    private idTypeRepository: Repository<IdTypeEntity>,
+
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
 
@@ -50,6 +63,64 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly nodemailerService: NodemailerService,
   ) {}
+
+  // VALIDATE PATIENT //
+
+  async validateThatThePatientExist({
+    idType,
+    idNumber,
+  }: ValidatePatientDto): Promise<any[]> {
+    try {
+      const AUTH_VALUE = process.env.X_AUTH_VALUE;
+
+      const response = await axios.get(
+        `https://apitorrecontrol.bonnadona.net/api_torre_control/hosvital/paciente/path/${idNumber}/${idType}`,
+        {
+          headers: {
+            'X-Authorization': AUTH_VALUE,
+          },
+        },
+      );
+
+      const allData = response.data;
+
+      const idTypeAbbrev = allData.data[0]?.TIPO;
+
+      const idTypeAbbreviations: Record<IdTypeAbbrev, IdType> = {
+        [IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA]: IdType.CITIZENSHIP_CARD,
+        [IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA]: IdType.FOREIGNER_ID,
+        [IdTypeAbbrev.TARJETA_DE_IDENTIDAD]: IdType.IDENTITY_CARD,
+        [IdTypeAbbrev.REGISTRO_CIVIL]: IdType.CIVIL_REGISTRATION,
+        [IdTypeAbbrev.PASAPORTE]: IdType.PASSPORT,
+        [IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA]:
+          IdType.SPECIAL_RESIDENCE_PERMIT,
+        [IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL]:
+          IdType.TEMPORARY_PROTECTION_PERMIT,
+        [IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN]:
+          IdType.MINOR_WITHOUT_IDENTIFICATION,
+        [IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN]:
+          IdType.ADULT_WITHOUT_IDENTIFICATION,
+      };
+
+      const idTypeNumberForInsert = idTypeAbbreviations[idTypeAbbrev];
+
+      const idTypeOfUserIdNumber = await this.idTypeRepository.findOne({
+        where: {
+          name: idTypeNumberForInsert,
+        },
+      });
+
+      const idTypeId = idTypeOfUserIdNumber.id;
+
+      return [allData, { 'Número de ID de tipo de documento': idTypeId }];
+    } catch (error) {
+      throw new HttpException(
+        'Hubo un error al consultar en la base de datos.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        error,
+      );
+    }
+  }
 
   // REGISTER FUNTIONS //
 

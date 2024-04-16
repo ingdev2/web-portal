@@ -156,7 +156,7 @@ const EpsUserLoginForm: React.FC = () => {
           textAlign: "center",
         }}
       >
-        Ingreso de usuarios Eps
+        Ingreso de usuario Eps
       </h2>
 
       <Form

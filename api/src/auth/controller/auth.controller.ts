@@ -5,6 +5,7 @@ import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
+import { ValidatePatientDto } from '../../users/dto/validate_patient.dto';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { LoginDto } from '../dto/login.dto';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
@@ -18,7 +19,15 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // POST METHODS //
+  // VALIDATE PATIENT
+
+  @Post('/validatePatient')
+  async validateThatThePatientExist(
+    @Body()
+    patientData: ValidatePatientDto,
+  ) {
+    return await this.authService.validateThatThePatientExist(patientData);
+  }
 
   // REGISTER
 

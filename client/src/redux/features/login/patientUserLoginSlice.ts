@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: UserLogin = {
   id_type: 0,
+  id_type_abbrev: "",
   id_number: 0,
   password: "",
   verification_code: 0,
@@ -18,6 +19,9 @@ export const patientUserLoginSlice = createSlice({
     },
     setIdTypePatient: (state, action) => {
       state.id_type = action.payload;
+    },
+    setIdTypeAbbrevPatient: (state, action) => {
+      state.id_type_abbrev = action.payload;
     },
     setIdNumberPatient: (state, action) => {
       state.id_number = action.payload;
@@ -44,6 +48,7 @@ export const patientUserLoginSlice = createSlice({
 export const {
   setIdTypeOptionsPatient,
   setIdTypePatient,
+  setIdTypeAbbrevPatient,
   setIdNumberPatient,
   setPasswordPatient,
   setVerificationCodePatient,

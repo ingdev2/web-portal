@@ -6,9 +6,11 @@ interface User {
   user_id_type: number;
   id_number: number;
   birthdate?: string;
+  affiliation_eps: string;
   email: string;
   cellphone?: number;
   whatsapp?: number;
+  auth_method?: number;
   password?: string;
   residence_department?: string;
   residence_city?: string;
