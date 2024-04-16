@@ -24,7 +24,13 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["user", "patientUserLogin", "epsUserLogin"],
+  whitelist: [
+    "user",
+    "adminLogin",
+    "patientUserLogin",
+    "epsUserLogin",
+    "familiarLogin",
+  ],
   blacklist: [],
 };
 

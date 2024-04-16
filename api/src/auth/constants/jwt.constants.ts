@@ -1,3 +1,3 @@
 export const jwtConstants = {
-  secret: 'NO USAR ESTA PALABRA EN PRODUCCIÓN',
+  secret: 'NO_USAR_ESTA_PALABRA_EN_PRODUCCIÓN',
 };

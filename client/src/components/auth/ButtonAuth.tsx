@@ -42,13 +42,17 @@ const ButtonAuth = () => {
   } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
   useEffect(() => {
-    if ((!isUserPatientData && isUserPatientError) || !idNumberPatientState) {
-      setShowErrorMessage(true);
-      setErrorMessage("¡Usuario no encontrado!");
+    if (isUserPatientData && idNumberPatientState) {
+      if (isUserPatientError) {
+        setShowErrorMessage(true);
+        setErrorMessage("¡Usuario no encontrado!");
+      }
     }
-    if ((!isUserEpsData && isUserEpsError) || !idNumberEpsState) {
-      setShowErrorMessage(true);
-      setErrorMessage("¡Usuario no encontrado!");
+    if (isUserEpsData && idNumberEpsState) {
+      if (isUserEpsError) {
+        setShowErrorMessage(true);
+        setErrorMessage("¡Usuario no encontrado!");
+      }
     }
   }, [
     isUserPatientData,

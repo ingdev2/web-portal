@@ -90,7 +90,7 @@ const EpsModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberEpsState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("PatientAuth", {
+      const responseNextAuth = await signIn("patient-auth", {
         verification_code: verificationCode,
         id_number: idNumber,
         redirect: false,
@@ -101,7 +101,7 @@ const EpsModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.replace("/dashboard_admin", { scroll: false });
+        router.replace("/homepage_eps", { scroll: false });
         dispatch(setIdTypeEps(""));
         dispatch(setPasswordEps(""));
         dispatch(setVerificationCodeEps(""));
