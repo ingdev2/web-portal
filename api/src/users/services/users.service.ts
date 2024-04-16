@@ -193,6 +193,25 @@ export class UsersService {
       );
     }
 
+    const userPatientCellphoneFound = await this.userRepository.findOne({
+      where: {
+        cellphone: userPatient.cellphone,
+      },
+    });
+
+    const userFamiliarCellphoneFound = await this.familiarRepository.findOne({
+      where: {
+        cellphone: userPatient.cellphone,
+      },
+    });
+
+    if (userPatientCellphoneFound || userFamiliarCellphoneFound) {
+      return new HttpException(
+        `El número de celular ${userPatient.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const rolePatientFound = await this.userRoleRepository.findOne({
       where: {
         name: UserRolType.PATIENT,
@@ -203,6 +222,55 @@ export class UsersService {
       throw new HttpException(
         'El rol "Paciente" no existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new HttpException(
+        `El método de autenticación "Email" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new HttpException(
+        `El método de autenticación "Célular" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (
+      userPatient.authentication_method ===
+        authenticationMethodCellphoneFound.id &&
+      !userPatient.cellphone
+    ) {
+      return new HttpException(
+        `Debe ingresar un número de celular para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (
+      userPatient.authentication_method === authenticationMethodEmailFound.id &&
+      userPatient.email
+    ) {
+      return new HttpException(
+        `Debe ingresar un correo electrónico para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -435,21 +503,67 @@ export class UsersService {
     }
   }
 
-  async getUsersByIdNumber(idNumber: number) {
-    const userFound = await this.userRepository.findOne({
+  async getPatientUserByIdNumber(idNumber: number) {
+    const userRolePatient = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.PATIENT,
+      },
+    });
+
+    if (!userRolePatient) {
+      throw new HttpException(
+        'El rol "Paciente" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const patientUserFound = await this.userRepository.findOne({
       where: {
         id_number: idNumber,
+        user_role: userRolePatient.id,
         is_active: true,
       },
     });
 
-    if (!userFound) {
+    if (!patientUserFound) {
       return new HttpException(
-        `El usuario con número de identificación personal: ${idNumber} no esta registrado.`,
+        `El usuario paciente con número de identificación personal: ${idNumber} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
-      return userFound;
+      return patientUserFound;
+    }
+  }
+
+  async getEpsUserByIdNumber(idNumber: number) {
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.EPS,
+      },
+    });
+
+    if (!userRoleEps) {
+      throw new HttpException(
+        'El rol "Eps" no existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const epsUserFound = await this.userRepository.findOne({
+      where: {
+        id_number: idNumber,
+        user_role: userRoleEps.id,
+        is_active: true,
+      },
+    });
+
+    if (!epsUserFound) {
+      return new HttpException(
+        `El usuario eps con número de identificación personal: ${idNumber} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return epsUserFound;
     }
   }
 

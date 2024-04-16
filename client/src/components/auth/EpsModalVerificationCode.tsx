@@ -10,28 +10,31 @@ import { Button, Divider, Form, Input, Modal } from "antd";
 import { NumberOutlined } from "@ant-design/icons";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
+import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 import {
-  resetLoginState,
-  setErrors,
-  setIdType,
-  setPassword,
-  setVerificationCode,
-} from "@/redux/features/login/userLoginSlice";
+  setIdTypeEps,
+  setPasswordEps,
+  setVerificationCodeEps,
+  setErrorsEps,
+} from "@/redux/features/login/epsUserLoginSlice";
 
+import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
-import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
-const ModalVerificationCode: React.FC = () => {
+const EpsModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const modalIsOpen = useAppSelector((state) => state.modal.modalIsOpen);
+  const epsModalIsOpen = useAppSelector((state) => state.modal.epsModalIsOpen);
 
-  const idTypeState = useAppSelector((state) => state.userLogin.id_type);
-  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
-  const verificationCodeState = useAppSelector(
-    (state) => state.userLogin.verification_code
+  const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
+  const idNumberEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
+  );
+  const verificationCodeEpsState = useAppSelector(
+    (state) => state.epsUserLogin.verification_code
   );
 
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
@@ -42,64 +45,67 @@ const ModalVerificationCode: React.FC = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [resendCodeDisable, setResendCodeDisable] = useState(true);
+
   const {
-    data: isUserData,
-    isLoading: isUserLoading,
-    isFetching: isUserFetching,
-    isError: isUserError,
-  } = useGetUserByIdNumberQuery(idNumberState);
+    data: isUserEpsData,
+    isLoading: isUserEpsLoading,
+    isFetching: isUserEpsFetching,
+    isSuccess: isUserEpsSuccess,
+    isError: isUserEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
   const [
-    resendUserVerificationCode,
+    resendUserVerificationCodeEps,
     {
       data: resendCodeData,
       isLoading: isResendCodeLoading,
       isSuccess: isResendCodeSuccess,
+      isError: isResendCodeError,
     },
   ] = useResendUserVerificationCodeMutation({
-    fixedCacheKey: "resendUserCodeData",
+    fixedCacheKey: "resendEpsCodeData",
   });
 
   useEffect(() => {
-    if (!idNumberState) {
+    if (!idNumberEpsState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-    if (!isUserData && isUserError) {
+    if (!isUserEpsData && isUserEpsError) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
     }
-  }, [idNumberState, isUserData, isUserError]);
+  }, [idNumberEpsState, isUserEpsData, isUserEpsError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirm(true);
 
-      const verificationCode = verificationCodeState
-        ? parseInt(verificationCodeState?.toString(), 10)
+      const verificationCode = verificationCodeEpsState
+        ? parseInt(verificationCodeEpsState?.toString(), 10)
         : "";
 
-      const idNumber = idNumberState
-        ? parseInt(idNumberState?.toString(), 10)
+      const idNumber = idNumberEpsState
+        ? parseInt(idNumberEpsState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("credentials", {
+      const responseNextAuth = await signIn("patient-auth", {
         verification_code: verificationCode,
         id_number: idNumber,
         redirect: false,
       });
 
-      console.log(responseNextAuth);
-
       if (responseNextAuth?.error) {
-        dispatch(setErrors(responseNextAuth.error.split(",")));
+        dispatch(setErrorsEps(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.replace("/dashboard_admin", { scroll: false });
-        dispatch(setIdType(""));
-        dispatch(setPassword(""));
-        dispatch(setVerificationCode(""));
+        router.replace("/homepage_eps", { scroll: false });
+        dispatch(setIdTypeEps(""));
+        dispatch(setPasswordEps(""));
+        dispatch(setVerificationCodeEps(""));
+        dispatch(setEpsModalIsOpen(false));
       }
     } catch (error) {
       console.error(error);
@@ -112,20 +118,21 @@ const ModalVerificationCode: React.FC = () => {
     try {
       setIsSubmittingResendCode(true);
 
-      const response: any = await resendUserVerificationCode({
-        id_type: idTypeState,
-        id_number: idNumberState,
+      const response: any = await resendUserVerificationCodeEps({
+        id_type: idTypeEpsState,
+        id_number: idNumberEpsState,
       });
 
-      var isResendCodeError = response.error;
+      var isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
-        dispatch(setErrors(isResendCodeError?.data.message));
+        dispatch(setErrorsEps(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
-      if (isUserData && !isUserError) {
+      if (!isResendCodeError && !isResponseError) {
         setShowSuccessMessage(true);
         setSuccessMessage("¡Código Reenviado Correctamente!");
+        setResendCodeDisable(true);
       }
     } catch (error) {
       console.error(error);
@@ -140,8 +147,9 @@ const ModalVerificationCode: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrors([]));
+    dispatch(setErrorsEps([]));
     setShowErrorMessage(false);
+    setShowSuccessMessage(false);
   };
 
   return (
@@ -160,17 +168,18 @@ const ModalVerificationCode: React.FC = () => {
       )}
 
       <Modal
-        className="modal-design"
-        open={modalIsOpen}
+        className="modal-verification-code-eps"
+        open={epsModalIsOpen}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancel}
         destroyOnClose={true}
         width={371}
         footer={null}
         maskClosable={false}
+        centered
       >
         <div
-          className="content-modal"
+          className="content-modal-eps"
           style={{
             textAlign: "center",
             flexDirection: "column",
@@ -180,7 +189,7 @@ const ModalVerificationCode: React.FC = () => {
           }}
         >
           <h2
-            className="title-modal"
+            className="title-modal-eps"
             style={{
               fontWeight: "bold",
               lineHeight: 1.3,
@@ -191,7 +200,7 @@ const ModalVerificationCode: React.FC = () => {
           </h2>
 
           <h4
-            className="subtitle-modal"
+            className="subtitle-modal-eps"
             style={{
               fontWeight: "normal",
               lineHeight: 1.3,
@@ -202,7 +211,7 @@ const ModalVerificationCode: React.FC = () => {
           </h4>
 
           <h5
-            className="user-email"
+            className="user-email-eps"
             style={{
               fontWeight: "bold",
               fontSize: 13,
@@ -212,7 +221,7 @@ const ModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserData?.email}
+            {isUserEpsData?.email}
           </h5>
 
           <Form
@@ -221,8 +230,8 @@ const ModalVerificationCode: React.FC = () => {
             onFinish={handleSubmit}
           >
             <Form.Item
-              className="user-code"
-              name={"user-code"}
+              className="user-code-eps"
+              name={"user-code-eps"}
               style={{ textAlign: "center" }}
               rules={[
                 {
@@ -244,6 +253,8 @@ const ModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
+                className="input-code-eps"
+                id="input-code-eps"
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
                   width: 183,
@@ -254,8 +265,10 @@ const ModalVerificationCode: React.FC = () => {
                 }}
                 type="number"
                 placeholder="Código"
-                value={verificationCodeState}
-                onChange={(e) => dispatch(setVerificationCode(e.target.value))}
+                value={verificationCodeEpsState}
+                onChange={(e) =>
+                  dispatch(setVerificationCodeEps(e.target.value))
+                }
                 min={0}
               />
             </Form.Item>
@@ -264,7 +277,7 @@ const ModalVerificationCode: React.FC = () => {
               <CustomSpin />
             ) : (
               <Button
-                className="confirm-code-button"
+                className="confirm-code-button-eps"
                 size="large"
                 style={{
                   paddingInline: 31,
@@ -282,15 +295,27 @@ const ModalVerificationCode: React.FC = () => {
             )}
           </Form>
 
-          {isSubmittingResendCode && !isResendCodeSuccess ? (
+          {resendCodeDisable && (
+            <CountdownTimer
+              onFinishHandler={() => {
+                setResendCodeDisable(false);
+              }}
+              showCountdown={resendCodeDisable}
+            />
+          )}
+
+          {isSubmittingResendCode && !resendCodeDisable ? (
             <CustomSpin />
           ) : (
             <Button
-              key="resend-button"
+              className="resend-button-eps"
+              key="resend-button-eps"
+              disabled={resendCodeDisable}
               style={{
+                backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
                 paddingInline: 13,
-                color: "#015E90",
-                borderColor: "#015E90",
+                color: resendCodeDisable ? "#A0A0A0" : "#015E90",
+                borderColor: resendCodeDisable ? "#A0A0A0" : "#015E90",
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,
@@ -305,14 +330,14 @@ const ModalVerificationCode: React.FC = () => {
           <div style={{ marginInline: 54 }}>
             <Divider
               style={{
-                marginBlock: 17,
+                marginBlock: 13,
                 borderWidth: 2,
               }}
             />
           </div>
 
           <Button
-            key="cancel-button"
+            key="cancel-button-eps"
             style={{
               paddingInline: 45,
               backgroundColor: "#8C1111",
@@ -329,4 +354,4 @@ const ModalVerificationCode: React.FC = () => {
   );
 };
 
-export default ModalVerificationCode;
+export default EpsModalVerificationCode;

@@ -4,16 +4,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      id: "patient-auth",
+      name: "patient-auth",
       credentials: {
-        verification_code: {
-          label: "Código de verificación",
+        id_number: {
+          label: "Número de identificación",
           type: "number",
           inputMode: "numeric",
           pattern: "[0-9]*",
         },
-        id_number: {
-          label: "Número de identificación",
+        verification_code: {
+          label: "Código de verificación",
           type: "number",
           inputMode: "numeric",
           pattern: "[0-9]*",
@@ -60,6 +61,7 @@ const handler = NextAuth({
   pages: {
     signIn: "/users_login",
   },
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };

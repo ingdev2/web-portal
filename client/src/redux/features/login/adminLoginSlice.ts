@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: UserLogin = {
+const initialState: AdminLogin = {
   id_type: 0,
   id_number: 0,
   password: "",
-  verification_code: 0,
-  token: "",
   idTypeOptions: [],
   errors: [],
 };
 
-export const userLoginSlice = createSlice({
-  name: "userLogin",
+export const adminLoginSlice = createSlice({
+  name: "adminLogin",
   initialState,
   reducers: {
+    setIdTypeOptions: (state, action) => {
+      state.idTypeOptions = action.payload;
+    },
     setIdType: (state, action) => {
       state.id_type = action.payload;
     },
@@ -23,38 +24,25 @@ export const userLoginSlice = createSlice({
     setPassword: (state, action) => {
       state.password = action.payload;
     },
-    setIdTypeOptions: (state, action) => {
-      state.idTypeOptions = action.payload;
-    },
     setErrors: (state, action) => {
       state.errors = action.payload;
-    },
-    setVerificationCode: (state, action) => {
-      state.verification_code = action.payload;
-    },
-    setToken: (state, action) => {
-      state.token = action.payload;
     },
     resetLoginState: (state) => {
       state.id_type = initialState.id_type;
       state.id_number = initialState.id_number;
       state.password = initialState.password;
-      state.verification_code = initialState.verification_code;
-      state.token = initialState.token;
       state.errors = initialState.errors;
     },
   },
 });
 
 export const {
+  setIdTypeOptions,
   setIdType,
   setIdNumber,
   setPassword,
-  setVerificationCode,
-  setToken,
-  setIdTypeOptions,
   setErrors,
   resetLoginState,
-} = userLoginSlice.actions;
+} = adminLoginSlice.actions;
 
-export default userLoginSlice.reducer;
+export default adminLoginSlice.reducer;

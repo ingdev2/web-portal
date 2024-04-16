@@ -40,7 +40,9 @@ export class AuthorizedFamiliarController {
   @Auth(UserRolType.PATIENT)
   @Get('/getFamiliarById/:idNumber')
   async getFamiliarByIdNumber(@Param('idNumber') idNumber: number) {
-    return await this.authorizedFamiliarService.getFamiliarByIdNumber(idNumber);
+    return await this.authorizedFamiliarService.getFamiliarCompleteByIdNumber(
+      idNumber,
+    );
   }
 
   // PATCH METHODS //

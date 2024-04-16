@@ -8,29 +8,60 @@ import { Button } from "antd";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
-import { useGetUserByIdNumberQuery } from "@/redux/apis/users/usersApi";
+import {
+  useGetUserByIdNumberPatientQuery,
+  useGetUserByIdNumberEpsQuery,
+} from "@/redux/apis/users/usersApi";
 
 const ButtonAuth = () => {
   const { data: session, status } = useSession();
 
-  const idNumberState = useAppSelector((state) => state.userLogin.id_number);
+  const idNumberPatientState = useAppSelector(
+    (state) => state.patientUserLogin.id_number
+  );
+
+  const idNumberEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
+  );
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: isUserData,
-    isLoading: isUserLoading,
-    isFetching: isUserFetching,
-    isError: isUserError,
-  } = useGetUserByIdNumberQuery(idNumberState);
+    data: isUserPatientData,
+    isLoading: isUserPatientLoading,
+    isFetching: isUserPatientFetching,
+    isError: isUserPatientError,
+  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
+
+  const {
+    data: isUserEpsData,
+    isLoading: isUserEpsLoading,
+    isFetching: isUserEpsFetching,
+    isError: isUserEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
   useEffect(() => {
-    if ((!isUserData && isUserError) || !idNumberState) {
-      setShowErrorMessage(true);
-      setErrorMessage("¡Usuario no encontrado!");
+    if (isUserPatientData && idNumberPatientState) {
+      if (isUserPatientError) {
+        setShowErrorMessage(true);
+        setErrorMessage("¡Usuario no encontrado!");
+      }
     }
-  }, [isUserData, isUserError, idNumberState]);
+    if (isUserEpsData && idNumberEpsState) {
+      if (isUserEpsError) {
+        setShowErrorMessage(true);
+        setErrorMessage("¡Usuario no encontrado!");
+      }
+    }
+  }, [
+    isUserPatientData,
+    isUserPatientError,
+    idNumberPatientState,
+    isUserEpsData,
+    isUserEpsError,
+    idNumberEpsState,
+  ]);
 
   console.log({ session, status });
 
@@ -38,7 +69,7 @@ const ButtonAuth = () => {
     return <CustomSpin />;
   }
 
-  if (session && idNumberState) {
+  if (session && status === "authenticated") {
     return (
       <div
         className="content-authenticate"
@@ -65,7 +96,7 @@ const ButtonAuth = () => {
         >
           Ingresaste con el correo electrónico:
         </h4>
-        {isUserData ? (
+        {isUserPatientData || isUserEpsData ? (
           <h5
             style={{
               fontWeight: "bold",
@@ -76,7 +107,8 @@ const ButtonAuth = () => {
               marginBlock: 13,
             }}
           >
-            {isUserData?.email}
+            {isUserPatientData ? isUserPatientData?.email : null}
+            {isUserEpsData ? isUserEpsData?.email : null}
           </h5>
         ) : (
           <h5
