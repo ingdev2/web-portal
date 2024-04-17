@@ -90,6 +90,22 @@ export const patientSlice = createSlice({
     setErrorsUserPatient: (state, action) => {
       state.medical_req = action.payload;
     },
+    setDefaultValuesUserPatient: (state) => {
+      state.name = "";
+      state.last_name = "";
+      state.user_gender = 0;
+      state.user_id_type = 0;
+      state.id_type_abbrev = "";
+      state.id_number = 0;
+      state.birthdate = "";
+      state.affiliation_eps = "";
+      state.email = "";
+      state.cellphone = 0;
+      state.whatsapp = 0;
+      state.auth_method = 0;
+      state.password = "";
+      state.residence_address = "";
+    },
   },
 });
 
@@ -112,6 +128,7 @@ export const {
   setRoleUserPatient,
   setMedicalReqUserPatient,
   setErrorsUserPatient,
+  setDefaultValuesUserPatient,
 } = patientSlice.actions;
 
 export default patientSlice.reducer;

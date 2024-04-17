@@ -1,11 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Divider, Form, Input, Select } from "antd";
-import { IdcardOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Checkbox,
+  CheckboxProps,
+  Divider,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Space,
+} from "antd";
+import { IdcardOutlined, LockOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
@@ -25,7 +36,8 @@ import {
   setErrorsUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
-import { useValidateThatThePatientExistMutation } from "@/redux/apis/register/registerUsersApi";
+import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
+import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 
@@ -67,66 +79,80 @@ const RegisterPatientForm: React.FC = () => {
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
-  const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
+  const {
+    data: gendersData,
+    isLoading: gendersLoading,
+    isFetching: gendersFetching,
+    error: gendersError,
+  } = useGetAllGendersQuery(null);
+  const {
+    data: authMethodData,
+    isLoading: authMethodLoading,
+    isFetching: authMethodFetching,
+    error: authMethodError,
+  } = useGetAllAuthMethodsQuery(null);
+
+  const [allGendersData, setAllGendersData]: any = useState([]);
+  const [allAuthMethodsData, setAllAuthMethodsData]: any = useState([]);
+
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [isSubmittingConfirmData, setIsSubmittingConfirmData] = useState(false);
+  const [isSubmittingIncorrectData, setIsSubmittingIncorrectData] =
+    useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
-  const [
-    validatePatient,
-    {
-      data: isValidatePatientData,
-      isLoading: isValidatePatientLoading,
-      isSuccess: isValidatePatientSuccess,
-      isError: isValidatePatientError,
-    },
-  ] = useValidateThatThePatientExistMutation({
-    fixedCacheKey: "validatePatientData",
-  });
+  useEffect(() => {
+    console.log(namePatientState);
 
-  const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!gendersLoading && !gendersFetching && gendersData) {
+      setAllGendersData(gendersData);
+    }
+    if (gendersError) {
+      dispatch(setErrorsUserPatient("¡No se pudo obtener los tipos de sexo!"));
+      setShowErrorMessagePatient(true);
+      setAllGendersData(gendersData);
+    }
+    if (!authMethodLoading && !authMethodFetching && authMethodData) {
+      setAllAuthMethodsData(authMethodData);
+    }
+    if (authMethodError) {
+      dispatch(
+        setErrorsUserPatient(
+          "¡No se pudo obtener los métodos de autenticación!"
+        )
+      );
+      setShowErrorMessagePatient(true);
+      setAllAuthMethodsData(authMethodData);
+    }
+  }, [
+    gendersLoading,
+    gendersFetching,
+    gendersData,
+    gendersError,
+    authMethodLoading,
+    authMethodFetching,
+    authMethodData,
+    authMethodError,
+  ]);
+
+  const handleConfirmData = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      setIsSubmittingPatient(true);
-
-      const response: any = await validatePatient({
-        idType: idTypeAbbrevPatientState,
-        idNumber: idNumberPatientState,
-      });
-
-      var validationPatientData = response.data?.[0].count;
-
-      if (validationPatientData === 0) {
-        const errorMessage =
-          "El paciente no se encuentra registrado en la clínica";
-
-        dispatch(setErrorsUserPatient(errorMessage));
-        setShowErrorMessagePatient(true);
-      } else {
-        var patientData = response.data?.[0].data?.[0];
-
-        dispatch(setNameUserPatient(patientData.NOMBRE));
-        dispatch(setIdTypeUserPatient(patientData.TIPO));
-        dispatch(setIdNumberUserPatient(patientData.ID));
-        dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
-        dispatch(setEmailUserPatient(patientData.CORREO));
-        dispatch(setCellphoneUserPatient(patientData.CELULAR));
-        dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
-        dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
-      }
+      setIsSubmittingConfirmData(true);
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingPatient(false);
+      setIsSubmittingConfirmData(false);
     }
   };
 
-  const handleIdTypeChange = (value: string | undefined) => {
-    if (value) {
-      var idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
-      dispatch(setIdTypeAbbrevUserPatient(idTypeAbbrevPatientString));
+  const handleIncorrectData = async (e: React.MouseEvent<HTMLFormElement>) => {
+    try {
+      setIsSubmittingIncorrectData(true);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmittingIncorrectData(false);
     }
-  };
-
-  const handleGoToUserLogin = () => {
-    router.push("/users_login", { scroll: true });
   };
 
   const handleButtonClick = () => {
@@ -134,10 +160,22 @@ const RegisterPatientForm: React.FC = () => {
     setShowErrorMessagePatient(false);
   };
 
+  const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxChecked(e.target.checked);
+  };
+
+  const customCheckboxValidator = async (_: any, value: boolean) => {
+    if (!value) {
+      throw new Error(
+        "¡Para continuar debes aceptar las políticas de tratamientos de datos!"
+      );
+    }
+  };
+
   return (
     <Card
       style={{
-        width: 270,
+        width: 321,
         height: "min-content",
         display: "flex",
         alignItems: "center",
@@ -154,49 +192,111 @@ const RegisterPatientForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-register-patient"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 0,
-          textAlign: "center",
-        }}
+      <Form
+        name="patient-form-data-hosvital"
+        className="patient-form-data-hosvital"
+        style={{ width: 270 }}
+        layout="vertical"
+        disabled
       >
-        Registro de usuario Paciente
-      </h2>
+        <h2
+          className="title-register-patient"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginTop: 0,
+            marginBottom: 13,
+            textAlign: "center",
+          }}
+        >
+          Confirmar datos
+        </h2>
+
+        <Form.Item
+          name="patient-name-hosvital"
+          label="Nombre completo"
+          style={{ marginBottom: 7 }}
+        >
+          <Input value={namePatientState} />
+        </Form.Item>
+
+        <Form.Item
+          name="patient-id-type-hosvital"
+          label="Tipo de documento"
+          style={{ marginBottom: 7 }}
+        >
+          <Input value={idTypePatientState} />
+        </Form.Item>
+
+        <Form.Item
+          name="patient-id-number-hosvital"
+          label="Número de documento"
+          style={{ marginBottom: 7 }}
+        >
+          <Input value={idNumberPatientState} />
+        </Form.Item>
+
+        <Form.Item
+          name="patient-birthdate-hosvital"
+          label="Fecha de nacimiento"
+          style={{ marginBottom: 7 }}
+        >
+          <Input value={birthdatePatientState} />
+        </Form.Item>
+
+        <Form.Item
+          name="patient-email-hosvital"
+          label="Correo electrónico"
+          style={{ marginBottom: 2 }}
+        >
+          <Input value={emailPatientState} />
+        </Form.Item>
+      </Form>
 
       <Form
         name="patient-user-register-form"
         className="patient-user-register-form"
-        style={{ width: 231, marginTop: 13 }}
-        onFinish={handleValidatePatient}
+        style={{ width: 270, marginTop: 2 }}
+        onFinish={handleConfirmData}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
-        {!idTypeAbbrevPatientState ? (
+        <h2
+          className="title-register-patient"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginBottom: 13,
+            textAlign: "center",
+          }}
+        >
+          Registrar datos adicionales
+        </h2>
+
+        {gendersLoading || gendersFetching ? (
           <CustomSpin />
         ) : (
           <Form.Item
-            name="patient-user-id-type-register"
-            label="Tipo de identificación"
-            style={{ marginBottom: 7 }}
+            name="patient-user-gender-register"
+            label="Sexo descrito en documento de identidad"
+            style={{ marginBottom: 22 }}
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingresa tu tipo de identificación!",
+                message:
+                  "¡Por favor ingresa el tipo de género que aparece en tu documento de identidad!",
               },
             ]}
           >
             <Select
-              value={idTypeAbbrevPatientState}
-              placeholder="Tipo de identificación"
-              onChange={handleIdTypeChange}
+              value={allGendersData}
+              placeholder="Seleccionar el sexo"
+              onChange={(e) => dispatch(setGenderUserPatient(e))}
             >
-              {Object.entries(IdTypeAbbrev).map(([key, value]) => (
-                <Select.Option key={value} value={value}>
-                  {key}
+              {allGendersData?.map((option: any) => (
+                <Select.Option key={option.id} value={option.id}>
+                  {option.name}
                 </Select.Option>
               ))}
             </Select>
@@ -204,88 +304,129 @@ const RegisterPatientForm: React.FC = () => {
         )}
 
         <Form.Item
-          name="patient-user-id-number-register"
-          label="Número de identificación"
-          style={{ marginBottom: 7 }}
+          name="radio-select-auth-method"
+          label="Método de autenticación"
+          style={{ marginBottom: 22 }}
           rules={[
             {
               required: true,
-              message: "¡Por favor ingresa tu número de identificación!",
-            },
-            {
-              pattern: /^[0-9]+$/,
-              message:
-                "¡Por favor ingresa número de identificación sin puntos!",
-            },
-            {
-              min: 7,
-              message: "¡Por favor ingresa mínimo 7 números!",
-            },
-            {
-              max: 11,
-              message: "¡Por favor ingresa máximo 11 números!",
+              message: "¡Por favor selecciona un método de autenticación!",
             },
           ]}
         >
-          <Input
-            prefix={<IdcardOutlined className="site-form-item-icon" />}
-            type="number"
-            value={idNumberPatientState}
-            placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumberUserPatient(e.target.value))}
-            min={0}
+          <Radio.Group
+            value={authMethodPatientState}
+            onChange={(e) => dispatch(setAuthMethodUserPatient(e.target.value))}
+          >
+            <Space direction="vertical">
+              {allAuthMethodsData?.map((option: any) => (
+                <Radio key={option.id} value={option.id}>
+                  {option.name}
+                </Radio>
+              ))}
+            </Space>
+          </Radio.Group>
+        </Form.Item>
+
+        <Form.Item
+          name="patient-user-password-register"
+          label="Contraseña"
+          style={{ marginBottom: 22 }}
+          rules={[
+            {
+              required: true,
+              message: "¡Por favor ingresa tu contraseña!",
+            },
+            {
+              min: 7,
+              message: "¡La contraseña debe tener mínimo 7 caracteres!",
+            },
+            {
+              max: 14,
+              message: "¡La contraseña debe tener máximo 14 caracteres!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            value={passwordPatientState}
+            placeholder="Contraseña"
+            onChange={(e) => dispatch(setPasswordUserPatient(e.target.value))}
           />
         </Form.Item>
 
+        <Form.Item
+          name="checkbox-data-autorization"
+          valuePropName="checked"
+          style={{ textAlign: "center", marginBottom: 13 }}
+          rules={[
+            {
+              validator: customCheckboxValidator,
+            },
+          ]}
+        >
+          <div style={{ marginBlock: 7 }}>
+            <div style={{ marginBottom: 13 }}>
+              <a
+                className="data-processing-autorization-link"
+                href={process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK}
+                target="_blank"
+                style={{ textDecoration: "underline" }}
+              >
+                Leer Política de Tratamiento de Datos
+              </a>
+            </div>
+            <Checkbox
+              checked={isCheckboxChecked}
+              onChange={handleCheckboxChange}
+            >
+              Acepto las políticas de tratamiento de datos personales
+            </Checkbox>
+          </div>
+        </Form.Item>
+
         <Form.Item style={{ textAlign: "center" }}>
-          {isSubmittingPatient ? (
+          {isSubmittingConfirmData ? (
             <CustomSpin />
           ) : (
             <Button
               size="large"
               style={{
-                paddingInline: 45,
+                paddingInline: 31,
                 borderRadius: 31,
                 backgroundColor: "#015E90",
                 color: "#f2f2f2",
                 marginBlock: 7,
               }}
               htmlType="submit"
-              className="patient-register-form-button"
+              className="patient-confirm-data-button"
               onClick={handleButtonClick}
+              onMouseDown={handleButtonClick}
             >
-              Validar Paciente
+              Datos Correctos
             </Button>
           )}
-
-          <Divider
-            style={{
-              fontSize: 13,
-              fontWeight: "normal",
-              marginBlock: 4,
-              borderWidth: 1.3,
-            }}
-          >
-            ¿Ya tienes cuenta?
-          </Divider>
-
-          <Button
-            style={{
-              paddingInline: 22,
-              color: "#015E90",
-              borderColor: "#015E90",
-              fontWeight: "bold",
-              borderRadius: 7,
-              borderWidth: 1.3,
-              marginTop: 7,
-            }}
-            htmlType="button"
-            className="patient-register-button"
-            onClick={handleGoToUserLogin}
-            onMouseDown={handleButtonClick}
-          >
-            Ingresar con mi cuenta
-          </Button>
+          {isSubmittingIncorrectData ? (
+            <CustomSpin />
+          ) : (
+            <Button
+              size="large"
+              style={{
+                paddingInline: 31,
+                borderRadius: 31,
+                backgroundColor: "#8C1111",
+                color: "#f2f2f2",
+                marginTop: 7,
+              }}
+              className="patient-incorrect-data-button"
+              onClick={handleIncorrectData}
+              onMouseDown={handleButtonClick}
+            >
+              Datos Incorrectos
+            </Button>
+          )}
         </Form.Item>
       </Form>
     </Card>

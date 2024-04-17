@@ -1,6 +1,7 @@
 "use client";
 
 import ValidatePatientExistForm from "@/components/register/ValidatePatientExistForm";
+import RegisterPatientForm from "@/components/register/RegisterPatientForm";
 
 import { Tabs } from "antd";
 import { FaUser } from "react-icons/fa";
@@ -71,13 +72,13 @@ const RegisterPatientPage: React.FC = () => {
                 icon: <FaUser />,
                 children: <ValidatePatientExistForm />,
               },
-              //   {
-              //     className: "eps-card",
-              //     key: "2",
-              //     children: <PatientUserRegisterForm />,
-              //     label: "Eps",
-              //     icon: <IoIosBusiness />,
-              //   },
+              {
+                className: "eps-card",
+                key: "2",
+                label: "Eps",
+                icon: <IoIosBusiness />,
+                children: <RegisterPatientForm />,
+              },
             ]}
           />
         </div>

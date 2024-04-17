@@ -147,27 +147,27 @@ const EpsUserLoginForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-login-eps"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 0,
-          textAlign: "center",
-        }}
-      >
-        Ingreso de usuario Eps
-      </h2>
-
       <Form
         name="eps-users-login-form"
         className="eps-users-login-form"
-        style={{ width: 231, marginTop: 13 }}
+        style={{ width: 231 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
+        <h2
+          className="title-login-eps"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginTop: 0,
+            textAlign: "center",
+          }}
+        >
+          Ingreso de usuario Eps
+        </h2>
+
         {idTypesEpsLoading || idTypesEpsFetching ? (
           <CustomSpin />
         ) : (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +23,7 @@ import {
   setResidenceAddressUserPatient,
   setAffiliationEpsUserPatient,
   setErrorsUserPatient,
+  setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
 import { useValidateThatThePatientExistMutation } from "@/redux/apis/register/registerUsersApi";
@@ -58,6 +59,12 @@ const ValidatePatientExistForm: React.FC = () => {
     fixedCacheKey: "validatePatientData",
   });
 
+  useEffect(() => {
+    if (!isValidatePatientData && isValidatePatientError) {
+      dispatch(setDefaultValuesUserPatient());
+    }
+  }, [isValidatePatientError]);
+
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
@@ -75,7 +82,13 @@ const ValidatePatientExistForm: React.FC = () => {
 
         dispatch(setErrorsUserPatient(errorMessage));
         setShowErrorMessagePatient(true);
-      } else {
+
+        console.log(validationPatientData);
+        console.log(errorsPatientState);
+        console.log(showErrorMessagePatient);
+        console.log(typeof validationPatientData);
+      }
+      if (validationPatientData === 1) {
         var patientData = response.data?.[0].data?.[0];
 
         dispatch(setNameUserPatient(patientData.NOMBRE));
@@ -115,7 +128,7 @@ const ValidatePatientExistForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 270,
+        width: 321,
         height: "min-content",
         display: "flex",
         alignItems: "center",
@@ -132,57 +145,56 @@ const ValidatePatientExistForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-register-patient"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 0,
-          textAlign: "center",
-        }}
-      >
-        Registro de usuario Paciente
-      </h2>
-
       <Form
-        name="patient-user-register-form"
-        className="patient-user-register-form"
-        style={{ width: 231, marginTop: 13 }}
+        name="patient-user-validate-form"
+        className="patient-user-validate-form"
+        style={{
+          width: 270,
+        }}
         onFinish={handleValidatePatient}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
-        {idTypeAbbrevPatientState ? (
-          <CustomSpin />
-        ) : (
-          <Form.Item
-            name="patient-user-id-type-register"
-            label="Tipo de identificación"
-            style={{ marginBottom: 7 }}
-            rules={[
-              {
-                required: true,
-                message: "¡Por favor ingresa tu tipo de identificación!",
-              },
-            ]}
-          >
-            <Select
-              value={idTypeAbbrevPatientState}
-              placeholder="Tipo de identificación"
-              onChange={handleIdTypeChange}
-            >
-              {Object.entries(IdTypeAbbrev).map(([key, value]) => (
-                <Select.Option key={value} value={value}>
-                  {key}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        )}
+        <h2
+          className="title-validate-patient"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginTop: 0,
+            marginBottom: 13,
+            textAlign: "center",
+          }}
+        >
+          Registro de usuario Paciente
+        </h2>
 
         <Form.Item
-          name="patient-user-id-number-register"
+          name="patient-user-id-type-validate"
+          label="Tipo de identificación"
+          style={{ marginBottom: 7 }}
+          rules={[
+            {
+              required: true,
+              message: "¡Por favor ingresa tu tipo de identificación!",
+            },
+          ]}
+        >
+          <Select
+            value={idTypeAbbrevPatientState}
+            placeholder="Tipo de identificación"
+            onChange={handleIdTypeChange}
+          >
+            {Object.entries(IdTypeAbbrev).map(([key, value]) => (
+              <Select.Option key={value} value={value}>
+                {key}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="patient-user-id-number-validate"
           label="Número de identificación"
           style={{ marginBottom: 7 }}
           rules={[
@@ -229,8 +241,7 @@ const ValidatePatientExistForm: React.FC = () => {
                 marginBlock: 7,
               }}
               htmlType="submit"
-              className="patient-register-form-button"
-              onClick={handleButtonClick}
+              className="patient-validate-form-button"
             >
               Validar Paciente
             </Button>
@@ -258,7 +269,7 @@ const ValidatePatientExistForm: React.FC = () => {
               marginTop: 7,
             }}
             htmlType="button"
-            className="patient-register-button"
+            className="patient-validate-button"
             onClick={handleGoToUserLogin}
             onMouseDown={handleButtonClick}
           >

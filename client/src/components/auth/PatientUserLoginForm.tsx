@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import { Button, Card, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
+import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
@@ -83,6 +83,11 @@ const PatientUserLoginForm: React.FC = () => {
       dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
     if (idTypesPatientError) {
+      dispatch(
+        setErrorsLoginPatient(
+          "¡No se pudo obtener los tipos de identificación!"
+        )
+      );
       setShowErrorMessagePatient(true);
       dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
@@ -163,27 +168,27 @@ const PatientUserLoginForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-login-patient"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 0,
-          textAlign: "center",
-        }}
-      >
-        Ingreso de usuario Paciente
-      </h2>
-
       <Form
         name="patient-users-login-form"
         className="patient-users-login-form"
-        style={{ width: 231, marginTop: 13 }}
+        style={{ width: 231 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
+        <h2
+          className="title-login-patient"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginTop: 0,
+            textAlign: "center",
+          }}
+        >
+          Ingreso de usuario Paciente
+        </h2>
+
         {idTypesPatientLoading || idTypesPatientFetching ? (
           <CustomSpin />
         ) : (

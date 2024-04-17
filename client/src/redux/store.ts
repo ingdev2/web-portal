@@ -23,6 +23,8 @@ import { loginAdminApi } from "./apis/auth/loginAdminApi";
 import { loginUsersApi } from "./apis/auth/loginUsersApi";
 import { loginRelativesApi } from "./apis/auth/loginRelativesApi";
 import { idTypesApi } from "./apis/id_types/idTypesApi";
+import { gendersApi } from "./apis/genders/gendersApi";
+import { authMethodApi } from "./apis/auth_method/authMethodApi";
 
 const persistConfig = {
   key: "root",
@@ -58,6 +60,8 @@ const rootReducer = combineReducers({
   [loginUsersApi.reducerPath]: loginUsersApi.reducer,
   [loginRelativesApi.reducerPath]: loginRelativesApi.reducer,
   [idTypesApi.reducerPath]: idTypesApi.reducer,
+  [gendersApi.reducerPath]: gendersApi.reducer,
+  [authMethodApi.reducerPath]: authMethodApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -76,6 +80,8 @@ export const store = configureStore({
       loginUsersApi.middleware,
       loginRelativesApi.middleware,
       idTypesApi.middleware,
+      gendersApi.middleware,
+      authMethodApi.middleware,
     ]),
 });
 
