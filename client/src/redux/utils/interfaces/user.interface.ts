@@ -4,6 +4,7 @@ interface User {
   last_name?: string;
   user_gender: number;
   user_id_type: number;
+  id_type_abbrev: string;
   id_number: number;
   birthdate?: string;
   affiliation_eps: string;
@@ -26,4 +27,5 @@ interface User {
   updateAt?: string;
   deletedAt?: string;
   medical_req?: Array<any>;
+  errors?: [];
 }

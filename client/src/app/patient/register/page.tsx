@@ -6,7 +6,7 @@ import { Tabs } from "antd";
 import { FaUser } from "react-icons/fa";
 import { IoIosBusiness } from "react-icons/io";
 
-const PatientRegisterPage: React.FC = () => {
+const RegisterPatientPage: React.FC = () => {
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -86,4 +86,4 @@ const PatientRegisterPage: React.FC = () => {
   );
 };
 
-export default PatientRegisterPage;
+export default RegisterPatientPage;

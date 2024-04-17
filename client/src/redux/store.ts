@@ -4,7 +4,8 @@ import { persistReducer } from "redux-persist";
 import storage from "./storage/storage";
 
 import adminReducer from "./features/admin/adminSlice";
-import userReducer from "./features/user/userSlice";
+import patientReducer from "./features/patient/patientSlice";
+import epsReducer from "./features/eps/epsSlice";
 import familiarReducer from "./features/familiar/familiarSlice";
 import adminLoginReducer from "./features/login/adminLoginSlice";
 import patientUserLoginReducer from "./features/login/patientUserLoginSlice";
@@ -28,7 +29,7 @@ const persistConfig = {
   version: 1,
   storage,
   whitelist: [
-    "user",
+    "patient",
     "adminLogin",
     "patientUserLogin",
     "epsUserLogin",
@@ -43,7 +44,8 @@ const rootReducer = combineReducers({
   epsUserLogin: epsUserLoginReducer,
   familiarLogin: familiarLoginReducer,
   admin: adminReducer,
-  user: userReducer,
+  patient: patientReducer,
+  eps: epsReducer,
   familiar: familiarReducer,
   modal: modalReducer,
   [adminsApi.reducerPath]: adminsApi.reducer,

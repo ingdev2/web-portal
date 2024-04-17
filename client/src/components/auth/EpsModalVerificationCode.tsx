@@ -13,10 +13,10 @@ import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 import {
-  setIdTypeEps,
-  setPasswordEps,
-  setVerificationCodeEps,
-  setErrorsEps,
+  setIdTypeLoginEps,
+  setPasswordLoginEps,
+  setVerificationCodeLoginEps,
+  setErrorsLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
@@ -97,14 +97,14 @@ const EpsModalVerificationCode: React.FC = () => {
       });
 
       if (responseNextAuth?.error) {
-        dispatch(setErrorsEps(responseNextAuth.error.split(",")));
+        dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.replace("/homepage_eps", { scroll: false });
-        dispatch(setIdTypeEps(""));
-        dispatch(setPasswordEps(""));
-        dispatch(setVerificationCodeEps(""));
+        router.replace("eps/homepage", { scroll: false });
+        dispatch(setIdTypeLoginEps(""));
+        dispatch(setPasswordLoginEps(""));
+        dispatch(setVerificationCodeLoginEps(""));
         dispatch(setEpsModalIsOpen(false));
       }
     } catch (error) {
@@ -126,7 +126,7 @@ const EpsModalVerificationCode: React.FC = () => {
       var isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
-        dispatch(setErrorsEps(isResponseError?.data.message));
+        dispatch(setErrorsLoginEps(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
       if (!isResendCodeError && !isResponseError) {
@@ -147,7 +147,7 @@ const EpsModalVerificationCode: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsEps([]));
+    dispatch(setErrorsLoginEps([]));
     setShowErrorMessage(false);
     setShowSuccessMessage(false);
   };
@@ -267,7 +267,7 @@ const EpsModalVerificationCode: React.FC = () => {
                 placeholder="Código"
                 value={verificationCodeEpsState}
                 onChange={(e) =>
-                  dispatch(setVerificationCodeEps(e.target.value))
+                  dispatch(setVerificationCodeLoginEps(e.target.value))
                 }
                 min={0}
               />

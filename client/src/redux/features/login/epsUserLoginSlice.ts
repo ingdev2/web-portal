@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: UserLogin = {
   id_type: 0,
+  id_type_abbrev: "",
   id_number: 0,
   password: "",
   verification_code: 0,
@@ -13,25 +14,25 @@ export const epsUserLoginSlice = createSlice({
   name: "epsUserLogin",
   initialState,
   reducers: {
-    setIdTypeOptionsEps: (state, action) => {
+    setIdTypeOptionsLoginEps: (state, action) => {
       state.idTypeOptions = action.payload;
     },
-    setIdTypeEps: (state, action) => {
+    setIdTypeLoginEps: (state, action) => {
       state.id_type = action.payload;
     },
-    setIdNumberEps: (state, action) => {
+    setIdNumberLoginEps: (state, action) => {
       state.id_number = action.payload;
     },
-    setPasswordEps: (state, action) => {
+    setPasswordLoginEps: (state, action) => {
       state.password = action.payload;
     },
-    setVerificationCodeEps: (state, action) => {
+    setVerificationCodeLoginEps: (state, action) => {
       state.verification_code = action.payload;
     },
-    setErrorsEps: (state, action) => {
+    setErrorsLoginEps: (state, action) => {
       state.errors = action.payload;
     },
-    resetLoginStateEps: (state) => {
+    resetLoginStateLoginEps: (state) => {
       state.id_type = initialState.id_type;
       state.id_number = initialState.id_number;
       state.password = initialState.password;
@@ -42,13 +43,13 @@ export const epsUserLoginSlice = createSlice({
 });
 
 export const {
-  setIdTypeOptionsEps,
-  setIdTypeEps,
-  setIdNumberEps,
-  setPasswordEps,
-  setVerificationCodeEps,
-  setErrorsEps,
-  resetLoginStateEps,
+  setIdTypeOptionsLoginEps,
+  setIdTypeLoginEps,
+  setIdNumberLoginEps,
+  setPasswordLoginEps,
+  setVerificationCodeLoginEps,
+  setErrorsLoginEps,
+  resetLoginStateLoginEps,
 } = epsUserLoginSlice.actions;
 
 export default epsUserLoginSlice.reducer;

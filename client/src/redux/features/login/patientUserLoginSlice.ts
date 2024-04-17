@@ -14,25 +14,25 @@ export const patientUserLoginSlice = createSlice({
   name: "patientUserLogin",
   initialState,
   reducers: {
-    setIdTypeOptionsPatient: (state, action) => {
+    setIdTypeOptionsLoginPatient: (state, action) => {
       state.idTypeOptions = action.payload;
     },
-    setIdTypePatient: (state, action) => {
+    setIdTypeLoginPatient: (state, action) => {
       state.id_type = action.payload;
     },
-    setIdTypeAbbrevPatient: (state, action) => {
+    setIdTypeAbbrevLoginPatient: (state, action) => {
       state.id_type_abbrev = action.payload;
     },
-    setIdNumberPatient: (state, action) => {
+    setIdNumberLoginPatient: (state, action) => {
       state.id_number = action.payload;
     },
-    setPasswordPatient: (state, action) => {
+    setPasswordLoginPatient: (state, action) => {
       state.password = action.payload;
     },
-    setVerificationCodePatient: (state, action) => {
+    setVerificationCodeLoginPatient: (state, action) => {
       state.verification_code = action.payload;
     },
-    setErrorsPatient: (state, action) => {
+    setErrorsLoginPatient: (state, action) => {
       state.errors = action.payload;
     },
     resetLoginStatePatient: (state) => {
@@ -46,13 +46,13 @@ export const patientUserLoginSlice = createSlice({
 });
 
 export const {
-  setIdTypeOptionsPatient,
-  setIdTypePatient,
-  setIdTypeAbbrevPatient,
-  setIdNumberPatient,
-  setPasswordPatient,
-  setVerificationCodePatient,
-  setErrorsPatient,
+  setIdTypeOptionsLoginPatient,
+  setIdTypeLoginPatient,
+  setIdTypeAbbrevLoginPatient,
+  setIdNumberLoginPatient,
+  setPasswordLoginPatient,
+  setVerificationCodeLoginPatient,
+  setErrorsLoginPatient,
   resetLoginStatePatient,
 } = patientUserLoginSlice.actions;
 

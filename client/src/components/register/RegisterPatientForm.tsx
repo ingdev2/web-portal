@@ -29,19 +29,43 @@ import { useValidateThatThePatientExistMutation } from "@/redux/apis/register/re
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 
-const ValidatePatientExistForm: React.FC = () => {
+const RegisterPatientForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const namePatientState = useAppSelector((state) => state.patient.name);
+  const idTypePatientState = useAppSelector(
+    (state) => state.patient.user_id_type
+  );
   const idTypeAbbrevPatientState = useAppSelector(
     (state) => state.patient.id_type_abbrev
   );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
   );
+  const genderPatientState = useAppSelector(
+    (state) => state.patient.user_gender
+  );
+  const passwordPatientState = useAppSelector(
+    (state) => state.patient.password
+  );
+  const birthdatePatientState = useAppSelector(
+    (state) => state.patient.birthdate
+  );
+  const emailPatientState = useAppSelector((state) => state.patient.email);
+  const cellphonePatientState = useAppSelector(
+    (state) => state.patient.cellphone
+  );
+  const authMethodPatientState = useAppSelector(
+    (state) => state.patient.auth_method
+  );
+  const affiliationEpsPatientState = useAppSelector(
+    (state) => state.patient.affiliation_eps
+  );
+  const residenceAddressPatientState = useAppSelector(
+    (state) => state.patient.residence_address
+  );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
-
-  const [showConfirmRegisterForm, setShowConfirmRegisterForm] = useState(false);
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
@@ -86,8 +110,6 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setCellphoneUserPatient(patientData.CELULAR));
         dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
         dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
-
-        setShowConfirmRegisterForm(true);
       }
     } catch (error) {
       console.error(error);
@@ -153,7 +175,7 @@ const ValidatePatientExistForm: React.FC = () => {
         autoComplete="false"
         layout="vertical"
       >
-        {idTypeAbbrevPatientState ? (
+        {!idTypeAbbrevPatientState ? (
           <CustomSpin />
         ) : (
           <Form.Item
@@ -270,4 +292,4 @@ const ValidatePatientExistForm: React.FC = () => {
   );
 };
 
-export default ValidatePatientExistForm;
+export default RegisterPatientForm;
