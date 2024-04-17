@@ -8,6 +8,7 @@ interface Familiar {
   email: string;
   cellphone?: number;
   whatsapp?: number;
+  auth_method?: number;
   is_active?: boolean;
   accept_terms?: boolean;
   user_role?: number;
@@ -19,4 +20,5 @@ interface Familiar {
   deletedAt?: string;
   copy_familiar_citizenship_card?: string[];
   medical_req?: Array<any>;
+  errors?: [];
 }

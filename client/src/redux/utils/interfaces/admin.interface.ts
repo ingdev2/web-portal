@@ -9,8 +9,8 @@ interface Admin {
   password: string;
   is_active?: boolean;
   company_area: number;
-  admin_role?: number;
   position_level?: number;
+  admin_role?: number;
   createdAt?: string;
   updateAt?: string;
   deletedAt?: string;
