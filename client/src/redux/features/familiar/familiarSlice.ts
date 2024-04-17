@@ -78,7 +78,7 @@ export const familiarSlice = createSlice({
       state.medical_req = action.payload;
     },
     setErrorsUserFamiliar: (state, action) => {
-      state.medical_req = action.payload;
+      state.errors = action.payload;
     },
   },
 });

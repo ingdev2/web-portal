@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
@@ -8,6 +8,7 @@ import { Button, Card, Divider, Form, Input, Select } from "antd";
 import { IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
+import RegisterPatientForm from "./RegisterPatientForm";
 
 import {
   setNameUserPatient,
@@ -59,15 +60,10 @@ const ValidatePatientExistForm: React.FC = () => {
     fixedCacheKey: "validatePatientData",
   });
 
-  useEffect(() => {
-    if (!isValidatePatientData && isValidatePatientError) {
-      dispatch(setDefaultValuesUserPatient());
-    }
-  }, [isValidatePatientError]);
-
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
+      setShowConfirmRegisterForm(false);
 
       const response: any = await validatePatient({
         idType: idTypeAbbrevPatientState,
@@ -82,11 +78,6 @@ const ValidatePatientExistForm: React.FC = () => {
 
         dispatch(setErrorsUserPatient(errorMessage));
         setShowErrorMessagePatient(true);
-
-        console.log(validationPatientData);
-        console.log(errorsPatientState);
-        console.log(showErrorMessagePatient);
-        console.log(typeof validationPatientData);
       }
       if (validationPatientData === 1) {
         var patientData = response.data?.[0].data?.[0];
@@ -118,6 +109,7 @@ const ValidatePatientExistForm: React.FC = () => {
 
   const handleGoToUserLogin = () => {
     router.push("/users_login", { scroll: true });
+    dispatch(setDefaultValuesUserPatient());
   };
 
   const handleButtonClick = () => {
@@ -146,6 +138,7 @@ const ValidatePatientExistForm: React.FC = () => {
       )}
 
       <Form
+        id="patient-user-validate-form"
         name="patient-user-validate-form"
         className="patient-user-validate-form"
         style={{
@@ -242,39 +235,53 @@ const ValidatePatientExistForm: React.FC = () => {
               }}
               htmlType="submit"
               className="patient-validate-form-button"
+              onClick={handleButtonClick}
             >
               Validar Paciente
             </Button>
           )}
 
-          <Divider
-            style={{
-              fontSize: 13,
-              fontWeight: "normal",
-              marginBlock: 4,
-              borderWidth: 1.3,
-            }}
-          >
-            ¿Ya tienes cuenta?
-          </Divider>
+          {showConfirmRegisterForm && (
+            <CustomMessage
+              typeMessage="success"
+              message={"¡Paciente encontrado!"}
+            />
+          )}
 
-          <Button
-            style={{
-              paddingInline: 22,
-              color: "#015E90",
-              borderColor: "#015E90",
-              fontWeight: "bold",
-              borderRadius: 7,
-              borderWidth: 1.3,
-              marginTop: 7,
-            }}
-            htmlType="button"
-            className="patient-validate-button"
-            onClick={handleGoToUserLogin}
-            onMouseDown={handleButtonClick}
-          >
-            Ingresar con mi cuenta
-          </Button>
+          {showConfirmRegisterForm && <RegisterPatientForm />}
+
+          {!showConfirmRegisterForm && (
+            <>
+              <Divider
+                style={{
+                  fontSize: 13,
+                  fontWeight: "normal",
+                  marginBlock: 4,
+                  borderWidth: 1.3,
+                }}
+              >
+                ¿Ya tienes cuenta?
+              </Divider>
+
+              <Button
+                style={{
+                  paddingInline: 22,
+                  color: "#015E90",
+                  borderColor: "#015E90",
+                  fontWeight: "bold",
+                  borderRadius: 7,
+                  borderWidth: 1.3,
+                  marginTop: 7,
+                }}
+                htmlType="button"
+                className="patient-validate-button"
+                onClick={handleGoToUserLogin}
+                onMouseDown={handleButtonClick}
+              >
+                Ingresar con mi cuenta
+              </Button>
+            </>
+          )}
         </Form.Item>
       </Form>
     </Card>

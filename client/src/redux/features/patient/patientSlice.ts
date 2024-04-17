@@ -55,7 +55,9 @@ export const patientSlice = createSlice({
       state.id_number = action.payload;
     },
     setBirthdateUserPatient: (state, action) => {
-      state.birthdate = action.payload;
+      const newBirthdate = action.payload;
+
+      state.birthdate = newBirthdate.substring(0, 11);
     },
     setAffiliationEpsUserPatient: (state, action) => {
       state.affiliation_eps = action.payload;
@@ -88,7 +90,7 @@ export const patientSlice = createSlice({
       state.medical_req = action.payload;
     },
     setErrorsUserPatient: (state, action) => {
-      state.medical_req = action.payload;
+      state.errors = action.payload;
     },
     setDefaultValuesUserPatient: (state) => {
       state.name = "";

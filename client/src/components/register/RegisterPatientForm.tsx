@@ -5,18 +5,18 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import {
-  Button,
   Card,
+  Form,
+  Button,
   Checkbox,
   CheckboxProps,
-  Divider,
-  Form,
   Input,
   Radio,
   Select,
   Space,
+  Typography,
 } from "antd";
-import { IdcardOutlined, LockOutlined } from "@ant-design/icons";
+import { LockOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
@@ -102,8 +102,6 @@ const RegisterPatientForm: React.FC = () => {
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
   useEffect(() => {
-    console.log(namePatientState);
-
     if (!gendersLoading && !gendersFetching && gendersData) {
       setAllGendersData(gendersData);
     }
@@ -192,71 +190,112 @@ const RegisterPatientForm: React.FC = () => {
         />
       )}
 
-      <Form
-        name="patient-form-data-hosvital"
-        className="patient-form-data-hosvital"
-        style={{ width: 270 }}
-        layout="vertical"
-        disabled
+      <h2
+        className="title-register-patient"
+        style={{
+          fontWeight: "500",
+          lineHeight: 1.3,
+          marginTop: 7,
+          marginBottom: 7,
+          textAlign: "center",
+        }}
       >
-        <h2
-          className="title-register-patient"
-          style={{
-            fontWeight: "500",
-            lineHeight: 1.3,
-            marginTop: 0,
-            marginBottom: 13,
-            textAlign: "center",
-          }}
-        >
-          Confirmar datos
-        </h2>
+        Confirmar datos
+      </h2>
 
-        <Form.Item
-          name="patient-name-hosvital"
-          label="Nombre completo"
-          style={{ marginBottom: 7 }}
-        >
-          <Input value={namePatientState} />
-        </Form.Item>
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Nombre de paciente:
+        </Typography.Title>
+        <Input id="name-patient-auto-input" value={namePatientState} disabled />
+      </div>
 
-        <Form.Item
-          name="patient-id-type-hosvital"
-          label="Tipo de documento"
-          style={{ marginBottom: 7 }}
-        >
-          <Input value={idTypePatientState} />
-        </Form.Item>
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Tipo de documento:
+        </Typography.Title>
+        <Input
+          id="id-type-patient-auto-input"
+          value={idTypePatientState}
+          disabled
+        />
+      </div>
 
-        <Form.Item
-          name="patient-id-number-hosvital"
-          label="Número de documento"
-          style={{ marginBottom: 7 }}
-        >
-          <Input value={idNumberPatientState} />
-        </Form.Item>
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Número de documento:
+        </Typography.Title>
+        <Input
+          id="patient-id-number-hosvital"
+          value={idNumberPatientState}
+          disabled
+        />
+      </div>
 
-        <Form.Item
-          name="patient-birthdate-hosvital"
-          label="Fecha de nacimiento"
-          style={{ marginBottom: 7 }}
-        >
-          <Input value={birthdatePatientState} />
-        </Form.Item>
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Fecha de nacimiento:
+        </Typography.Title>
+        <Input
+          id="patient-birthdate-hosvital"
+          value={birthdatePatientState}
+          disabled
+        />
+      </div>
 
-        <Form.Item
-          name="patient-email-hosvital"
-          label="Correo electrónico"
-          style={{ marginBottom: 2 }}
-        >
-          <Input value={emailPatientState} />
-        </Form.Item>
-      </Form>
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Correo electrónico:
+        </Typography.Title>
+        <Input
+          id="patient-email-hosvital"
+          value={emailPatientState}
+          size="large"
+          style={{ fontSize: 8 }}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Número de celular:
+        </Typography.Title>
+        <Input
+          id="patient-cellphone-hosvital"
+          value={cellphonePatientState}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Afiliado a EPS:
+        </Typography.Title>
+        <Input
+          id="patient-affiliationeps-hosvital"
+          value={affiliationEpsPatientState}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Dirección de residencia:
+        </Typography.Title>
+        <Input
+          id="patient-residenceaddress-hosvital"
+          value={residenceAddressPatientState}
+          size="large"
+          style={{ fontSize: 8 }}
+          disabled
+        />
+      </div>
 
       <Form
+        id="patient-user-register-form"
         name="patient-user-register-form"
         className="patient-user-register-form"
-        style={{ width: 270, marginTop: 2 }}
+        style={{ width: 270, marginTop: 13 }}
         onFinish={handleConfirmData}
         initialValues={{ remember: false }}
         autoComplete="false"
@@ -271,7 +310,7 @@ const RegisterPatientForm: React.FC = () => {
             textAlign: "center",
           }}
         >
-          Registrar datos adicionales
+          Ingresar datos adicionales
         </h2>
 
         {gendersLoading || gendersFetching ? (
@@ -280,7 +319,7 @@ const RegisterPatientForm: React.FC = () => {
           <Form.Item
             name="patient-user-gender-register"
             label="Sexo descrito en documento de identidad"
-            style={{ marginBottom: 22 }}
+            style={{ marginBottom: 22, textAlign: "start" }}
             rules={[
               {
                 required: true,
@@ -317,8 +356,9 @@ const RegisterPatientForm: React.FC = () => {
           <Radio.Group
             value={authMethodPatientState}
             onChange={(e) => dispatch(setAuthMethodUserPatient(e.target.value))}
+            style={{ textAlign: "start" }}
           >
-            <Space direction="vertical">
+            <Space size={"small"} direction="horizontal">
               {allAuthMethodsData?.map((option: any) => (
                 <Radio key={option.id} value={option.id}>
                   {option.name}
