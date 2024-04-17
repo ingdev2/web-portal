@@ -6,16 +6,6 @@ export const loginRelativesApi = createApi({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
   }),
   endpoints: (builder) => ({
-    createFamiliar: builder.mutation<
-      Familiar,
-      { newFamiliar: Partial<Familiar>; idPatient: string }
-    >({
-      query: ({ newFamiliar, idPatient }) => ({
-        url: `${idPatient}/registerFamiliar`,
-        method: "POST",
-        body: newFamiliar,
-      }),
-    }),
     loginRelatives: builder.mutation<
       Partial<FamiliarLogin>,
       Partial<FamiliarLogin>
@@ -51,7 +41,6 @@ export const loginRelativesApi = createApi({
 });
 
 export const {
-  useCreateFamiliarMutation,
   useLoginRelativesMutation,
   useVerifyFamiliarCodeMutation,
   useResendFamiliarVerificationCodeMutation,

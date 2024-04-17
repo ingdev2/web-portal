@@ -2,20 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
 
-import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import { Button, Card, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
+import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
 import {
-  setIdTypeOptionsPatient,
-  setIdTypePatient,
-  setIdNumberPatient,
-  setPasswordPatient,
-  setVerificationCodePatient,
-  setErrorsPatient,
+  setIdTypeOptionsLoginPatient,
+  setIdTypeLoginPatient,
+  setIdNumberLoginPatient,
+  setPasswordLoginPatient,
+  setVerificationCodeLoginPatient,
+  setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
@@ -24,6 +25,7 @@ import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 
 const PatientUserLoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const idTypeOptionsPatient = useAppSelector(
     (state) => state.patientUserLogin.idTypeOptions
@@ -72,17 +74,22 @@ const PatientUserLoginForm: React.FC = () => {
       !isLoginPatientError &&
       isLoginPatientData
     ) {
-      dispatch(setIdTypePatient(""));
-      dispatch(setIdNumberPatient(""));
-      dispatch(setPasswordPatient(""));
-      dispatch(setVerificationCodePatient(""));
+      dispatch(setIdTypeLoginPatient(""));
+      dispatch(setIdNumberLoginPatient(""));
+      dispatch(setPasswordLoginPatient(""));
+      dispatch(setVerificationCodeLoginPatient(""));
     }
     if (!idTypesPatientLoading && idTypesPatientData) {
-      dispatch(setIdTypeOptionsPatient(idTypesPatientData));
+      dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
     if (idTypesPatientError) {
+      dispatch(
+        setErrorsLoginPatient(
+          "¡No se pudo obtener los tipos de identificación!"
+        )
+      );
       setShowErrorMessagePatient(true);
-      dispatch(setIdTypeOptionsPatient(idTypesPatientData));
+      dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
     if (
       isLoginPatientSuccess &&
@@ -119,11 +126,11 @@ const PatientUserLoginForm: React.FC = () => {
         const errorMessage = isLoginUserError?.data.message;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsPatient(errorMessage[0]));
+          dispatch(setErrorsLoginPatient(errorMessage[0]));
           setShowErrorMessagePatient(true);
         }
         if (typeof errorMessage === "string") {
-          dispatch(setErrorsPatient(errorMessage));
+          dispatch(setErrorsLoginPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
       }
@@ -135,7 +142,7 @@ const PatientUserLoginForm: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsPatient([]));
+    dispatch(setErrorsLoginPatient([]));
     setShowErrorMessagePatient(false);
   };
 
@@ -161,27 +168,27 @@ const PatientUserLoginForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-login-patient"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 0,
-          textAlign: "center",
-        }}
-      >
-        Ingreso de usuario Paciente
-      </h2>
-
       <Form
         name="patient-users-login-form"
         className="patient-users-login-form"
-        style={{ width: 231, marginTop: 13 }}
+        style={{ width: 231 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
+        <h2
+          className="title-login-patient"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginTop: 0,
+            textAlign: "center",
+          }}
+        >
+          Ingreso de usuario Paciente
+        </h2>
+
         {idTypesPatientLoading || idTypesPatientFetching ? (
           <CustomSpin />
         ) : (
@@ -199,7 +206,7 @@ const PatientUserLoginForm: React.FC = () => {
             <Select
               value={idTypePatientState}
               placeholder="Tipo de identificación"
-              onChange={(e) => dispatch(setIdTypePatient(e))}
+              onChange={(e) => dispatch(setIdTypeLoginPatient(e))}
             >
               {idTypeOptionsPatient?.map((option: any) => (
                 <Select.Option key={option.id} value={option.id}>
@@ -239,7 +246,7 @@ const PatientUserLoginForm: React.FC = () => {
             type="number"
             value={idNumberPatientState}
             placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumberPatient(e.target.value))}
+            onChange={(e) => dispatch(setIdNumberLoginPatient(e.target.value))}
             min={0}
           />
         </Form.Item>
@@ -269,7 +276,7 @@ const PatientUserLoginForm: React.FC = () => {
             type="password"
             value={passwordPatientState}
             placeholder="Contraseña"
-            onChange={(e) => dispatch(setPasswordPatient(e.target.value))}
+            onChange={(e) => dispatch(setPasswordLoginPatient(e.target.value))}
           />
         </Form.Item>
 
@@ -331,6 +338,9 @@ const PatientUserLoginForm: React.FC = () => {
             }}
             htmlType="button"
             className="patient-register-button"
+            onClick={() => {
+              router.push("patient/register", { scroll: true });
+            }}
           >
             Registrarme
           </Button>

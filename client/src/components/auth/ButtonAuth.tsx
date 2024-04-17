@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 
 import { Button } from "antd";
 import CustomSpin from "../common/custom_spin/CustomSpin";
@@ -14,7 +14,7 @@ import {
 } from "@/redux/apis/users/usersApi";
 
 const ButtonAuth = () => {
-  const { data: session, status } = useSession();
+  const { data: session, status }: any = useSession();
 
   const idNumberPatientState = useAppSelector(
     (state) => state.patientUserLogin.id_number
@@ -107,8 +107,13 @@ const ButtonAuth = () => {
               marginBlock: 13,
             }}
           >
-            {isUserPatientData ? isUserPatientData?.email : null}
-            {isUserEpsData ? isUserEpsData?.email : null}
+            {session?.user?.id_number === isUserPatientData?.id_number
+              ? isUserPatientData?.email
+              : null}
+
+            {session?.user?.id_number === isUserEpsData?.id_number
+              ? isUserEpsData?.email
+              : null}
           </h5>
         ) : (
           <h5

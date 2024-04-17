@@ -10,12 +10,12 @@ import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
 import {
-  setIdTypeOptionsEps,
-  setIdTypeEps,
-  setIdNumberEps,
-  setPasswordEps,
-  setVerificationCodeEps,
-  setErrorsEps,
+  setIdTypeOptionsLoginEps,
+  setIdTypeLoginEps,
+  setIdNumberLoginEps,
+  setPasswordLoginEps,
+  setVerificationCodeLoginEps,
+  setErrorsLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
 import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
@@ -66,17 +66,17 @@ const EpsUserLoginForm: React.FC = () => {
       !isLoginEpsError &&
       isLoginEpsData
     ) {
-      dispatch(setIdTypeEps(""));
-      dispatch(setIdNumberEps(""));
-      dispatch(setPasswordEps(""));
-      dispatch(setVerificationCodeEps(""));
+      dispatch(setIdTypeLoginEps(""));
+      dispatch(setIdNumberLoginEps(""));
+      dispatch(setPasswordLoginEps(""));
+      dispatch(setVerificationCodeLoginEps(""));
     }
     if (!idTypesEpsLoading && idTypesEpsData) {
-      dispatch(setIdTypeOptionsEps(idTypesEpsData));
+      dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
     if (idTypesEpsError) {
       setShowErrorMessageEps(true);
-      dispatch(setIdTypeOptionsEps(idTypesEpsData));
+      dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
     if (isLoginEpsSuccess && !isLoginEpsLoading && !isSubmittingEps) {
       dispatch(setEpsModalIsOpen(true));
@@ -105,11 +105,11 @@ const EpsUserLoginForm: React.FC = () => {
         const errorMessage = isLoginUserError?.data.message;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsEps(errorMessage[0]));
+          dispatch(setErrorsLoginEps(errorMessage[0]));
           setShowErrorMessageEps(true);
         }
         if (typeof errorMessage === "string") {
-          dispatch(setErrorsEps(errorMessage));
+          dispatch(setErrorsLoginEps(errorMessage));
           setShowErrorMessageEps(true);
         }
       }
@@ -121,7 +121,7 @@ const EpsUserLoginForm: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsEps([]));
+    dispatch(setErrorsLoginEps([]));
     setShowErrorMessageEps(false);
   };
 
@@ -147,27 +147,27 @@ const EpsUserLoginForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-login-eps"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 0,
-          textAlign: "center",
-        }}
-      >
-        Ingreso de usuarios Eps
-      </h2>
-
       <Form
         name="eps-users-login-form"
         className="eps-users-login-form"
-        style={{ width: 231, marginTop: 13 }}
+        style={{ width: 231 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
+        <h2
+          className="title-login-eps"
+          style={{
+            fontWeight: "500",
+            lineHeight: 1.3,
+            marginTop: 0,
+            textAlign: "center",
+          }}
+        >
+          Ingreso de usuario Eps
+        </h2>
+
         {idTypesEpsLoading || idTypesEpsFetching ? (
           <CustomSpin />
         ) : (
@@ -185,7 +185,7 @@ const EpsUserLoginForm: React.FC = () => {
             <Select
               value={idTypeEpsState}
               placeholder="Tipo de identificación"
-              onChange={(e) => dispatch(setIdTypeEps(e))}
+              onChange={(e) => dispatch(setIdTypeLoginEps(e))}
             >
               {idTypeOptionsEps?.map((option: any) => (
                 <Select.Option key={option.id} value={option.id}>
@@ -225,7 +225,7 @@ const EpsUserLoginForm: React.FC = () => {
             type="number"
             value={idNumberEpsState}
             placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumberEps(e.target.value))}
+            onChange={(e) => dispatch(setIdNumberLoginEps(e.target.value))}
             min={0}
           />
         </Form.Item>
@@ -255,7 +255,7 @@ const EpsUserLoginForm: React.FC = () => {
             type="password"
             value={passwordEpsState}
             placeholder="Contraseña"
-            onChange={(e) => dispatch(setPasswordEps(e.target.value))}
+            onChange={(e) => dispatch(setPasswordLoginEps(e.target.value))}
           />
         </Form.Item>
 

@@ -24,6 +24,7 @@ export class AuthenticationMethodController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createAuthenticationMethod(
     @Body() createAuthenticationMethod: CreateAuthenticationMethodDto,
@@ -35,7 +36,6 @@ export class AuthenticationMethodController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Get('/getAll')
   getAllAuthenticationMethods() {
     return this.authenticationMethodService.getAllAuthenticationMethods();

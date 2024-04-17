@@ -4,8 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      id: "patient-auth",
-      name: "patient-auth",
+      id: "users-auth",
+      name: "users-auth",
       credentials: {
         id_number: {
           label: "Número de identificación",

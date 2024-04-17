@@ -141,11 +141,11 @@ export class UsersService {
     }
 
     userPatient.name = patientData[0]?.NOMBRE;
-    userPatient.email = patientData[0]?.CORREO;
     userPatient.birthdate = patientData[0]?.FECHA_NACIMIENTO;
-    userPatient.residence_address = patientData[0]?.DIRECCION;
-    userPatient.affiliation_eps = patientData[0]?.EMPRESA;
+    userPatient.email = patientData[0]?.CORREO;
     userPatient.cellphone = patientData[0]?.CELULAR;
+    userPatient.affiliation_eps = patientData[0]?.EMPRESA;
+    userPatient.residence_address = patientData[0]?.DIRECCION;
 
     const userPatientFound = await this.userRepository.findOne({
       where: {

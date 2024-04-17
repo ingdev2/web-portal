@@ -22,62 +22,58 @@ export const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
-    setRegisterAdmin: (state, action) => {
+    setIdAdmin: (state, action) => {
       state.id = action.payload;
+    },
+    setNameAdmin: (state, action) => {
       state.name = action.payload;
+    },
+    setLastNameAdmin: (state, action) => {
       state.last_name = action.payload;
+    },
+    setGenderAdmin: (state, action) => {
       state.user_gender = action.payload;
+    },
+    setIdTypeAdmin: (state, action) => {
       state.user_id_type = action.payload;
+    },
+    setIdNumberAdmin: (state, action) => {
       state.id_number = action.payload;
+    },
+    setCorporateEmailAdmin: (state, action) => {
       state.corporate_email = action.payload;
+    },
+    setPasswordAdmin: (state, action) => {
       state.password = action.payload;
-      state.company_area = action.payload;
-      state.position_level = action.payload;
-      state.admin_role = action.payload;
-      state.is_active = action.payload;
     },
-    setGetAdmin: (state, action) => {
-      state.id = action.payload;
-      state.name = action.payload;
-      state.last_name = action.payload;
-      state.user_gender = action.payload;
-      state.user_id_type = action.payload;
-      state.id_number = action.payload;
-      state.corporate_email = action.payload;
-      state.password = action.payload;
+    setCompanyAreaAdmin: (state, action) => {
       state.company_area = action.payload;
-      state.position_level = action.payload;
-      state.admin_role = action.payload;
-      state.is_active = action.payload;
     },
-    setUpdateAdminData: (state, action) => {
-      state.name = action.payload;
-      state.last_name = action.payload;
-      state.id_number = action.payload;
-      state.corporate_email = action.payload;
-      state.company_area = action.payload;
+    setPositionLevelAdmin: (state, action) => {
       state.position_level = action.payload;
     },
-    setGetSuperAdmin: (state, action) => {
-      state.id = action.payload;
-      state.name = action.payload;
-      state.last_name = action.payload;
-      state.user_gender = action.payload;
-      state.user_id_type = action.payload;
-      state.id_number = action.payload;
-      state.corporate_email = action.payload;
-      state.company_area = action.payload;
+    setRoleAdmin: (state, action) => {
       state.admin_role = action.payload;
+    },
+    setIsActiveAdmin: (state, action) => {
       state.is_active = action.payload;
     },
   },
 });
 
 export const {
-  setRegisterAdmin,
-  setGetAdmin,
-  setUpdateAdminData,
-  setGetSuperAdmin,
+  setIdAdmin,
+  setNameAdmin,
+  setLastNameAdmin,
+  setGenderAdmin,
+  setIdTypeAdmin,
+  setIdNumberAdmin,
+  setCorporateEmailAdmin,
+  setPasswordAdmin,
+  setCompanyAreaAdmin,
+  setPositionLevelAdmin,
+  setRoleAdmin,
+  setIsActiveAdmin,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

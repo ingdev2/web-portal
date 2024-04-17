@@ -15,28 +15,28 @@ export const familiarLoginSlice = createSlice({
   name: "familiarLogin",
   initialState,
   reducers: {
-    setIdTypeOptions: (state, action) => {
+    setIdTypeOptionsLoginFamiliar: (state, action) => {
       state.idTypeOptions = action.payload;
     },
-    setIdType: (state, action) => {
+    setIdTypeLoginFamiliar: (state, action) => {
       state.id_type = action.payload;
     },
-    setIdNumber: (state, action) => {
+    setIdNumberLoginFamiliar: (state, action) => {
       state.id_number = action.payload;
     },
-    setEmail: (state, action) => {
+    setEmailLoginFamiliar: (state, action) => {
       state.email = action.payload;
     },
-    setPatientIdNumber: (state, action) => {
+    setPatientIdNumberLoginFamiliar: (state, action) => {
       state.patient_id_number = action.payload;
     },
-    setRelationWithPatient: (state, action) => {
+    setRelationWithPatientLoginFamiliar: (state, action) => {
       state.rel_with_patient = action.payload;
     },
-    setVerificationCode: (state, action) => {
+    setVerificationCodeLoginFamiliar: (state, action) => {
       state.verification_code = action.payload;
     },
-    setErrors: (state, action) => {
+    setErrorsLoginFamiliar: (state, action) => {
       state.errors = action.payload;
     },
     resetLoginState: (state) => {
@@ -49,14 +49,14 @@ export const familiarLoginSlice = createSlice({
 });
 
 export const {
-  setIdTypeOptions,
-  setIdType,
-  setIdNumber,
-  setEmail,
-  setPatientIdNumber,
-  setRelationWithPatient,
-  setVerificationCode,
-  setErrors,
+  setIdTypeOptionsLoginFamiliar,
+  setIdTypeLoginFamiliar,
+  setIdNumberLoginFamiliar,
+  setEmailLoginFamiliar,
+  setPatientIdNumberLoginFamiliar,
+  setRelationWithPatientLoginFamiliar,
+  setVerificationCodeLoginFamiliar,
+  setErrorsLoginFamiliar,
   resetLoginState,
 } = familiarLoginSlice.actions;
 

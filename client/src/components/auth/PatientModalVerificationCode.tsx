@@ -13,10 +13,10 @@ import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 
 import {
-  setIdTypePatient,
-  setPasswordPatient,
-  setVerificationCodePatient,
-  setErrorsPatient,
+  setIdTypeLoginPatient,
+  setPasswordLoginPatient,
+  setVerificationCodeLoginPatient,
+  setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
@@ -83,7 +83,6 @@ const PatientModalVerificationCode: React.FC = () => {
   }, [idNumberPatientState, isUserPatientData, isUserPatientError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // e.preventDefault();
     try {
       setIsSubmittingConfirm(true);
 
@@ -95,21 +94,21 @@ const PatientModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberPatientState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("patient-auth", {
+      const responseNextAuth = await signIn("users-auth", {
         verification_code: verificationCode,
         id_number: idNumber,
         redirect: false,
       });
 
       if (responseNextAuth?.error) {
-        dispatch(setErrorsPatient(responseNextAuth.error.split(",")));
+        dispatch(setErrorsLoginPatient(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.push("/homepage_patient", { scroll: false });
-        dispatch(setIdTypePatient(""));
-        dispatch(setPasswordPatient(""));
-        dispatch(setVerificationCodePatient(""));
+        router.replace("patient/homepage", { scroll: false });
+        dispatch(setIdTypeLoginPatient(""));
+        dispatch(setPasswordLoginPatient(""));
+        dispatch(setVerificationCodeLoginPatient(""));
         dispatch(setPatientModalIsOpen(false));
       }
     } catch (error) {
@@ -131,7 +130,7 @@ const PatientModalVerificationCode: React.FC = () => {
       var isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
-        dispatch(setErrorsPatient(isResponseError?.data.message));
+        dispatch(setErrorsLoginPatient(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
       if (!isResendCodeError && !isResponseError) {
@@ -152,7 +151,7 @@ const PatientModalVerificationCode: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsPatient([]));
+    dispatch(setErrorsLoginPatient([]));
     setShowErrorMessage(false);
     setShowSuccessMessage(false);
   };
@@ -272,7 +271,7 @@ const PatientModalVerificationCode: React.FC = () => {
                 placeholder="Código"
                 value={verificationCodePatientState}
                 onChange={(e) =>
-                  dispatch(setVerificationCodePatient(e.target.value))
+                  dispatch(setVerificationCodeLoginPatient(e.target.value))
                 }
                 min={0}
               />

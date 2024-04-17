@@ -6,6 +6,5 @@ export class ValidatePatientDto {
   idType: string;
 
   @IsNotEmpty()
-  @IsNumber()
   idNumber: number;
 }
