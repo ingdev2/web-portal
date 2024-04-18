@@ -128,7 +128,7 @@ const EpsUserLoginForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 270,
+        width: 321,
         height: "min-content",
         display: "flex",
         alignItems: "center",
@@ -150,7 +150,7 @@ const EpsUserLoginForm: React.FC = () => {
       <Form
         name="eps-users-login-form"
         className="eps-users-login-form"
-        style={{ width: 231 }}
+        style={{ width: 270 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"

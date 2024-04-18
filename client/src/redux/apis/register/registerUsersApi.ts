@@ -16,6 +16,13 @@ export const registerUsersApi = createApi({
         body: { idType, idNumber },
       }),
     }),
+    validatePatientRegister: builder.mutation<[], { id_number: Number }>({
+      query: ({ id_number }) => ({
+        url: `validatePatientRegister`,
+        method: "POST",
+        body: { id_number },
+      }),
+    }),
     createUserPatient: builder.mutation<User, Partial<User>>({
       query: (newUser) => ({
         url: `registerUserPatient`,
@@ -35,6 +42,7 @@ export const registerUsersApi = createApi({
 
 export const {
   useValidateThatThePatientExistMutation,
+  useValidatePatientRegisterMutation,
   useCreateUserPatientMutation,
   useCreateUserEpsMutation,
 } = registerUsersApi;

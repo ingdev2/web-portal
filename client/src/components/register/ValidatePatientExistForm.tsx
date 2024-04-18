@@ -8,7 +8,6 @@ import { Button, Card, Divider, Form, Input, Select } from "antd";
 import { IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
-import RegisterPatientForm from "./RegisterPatientForm";
 
 import {
   setNameUserPatient,
@@ -27,7 +26,10 @@ import {
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
-import { useValidateThatThePatientExistMutation } from "@/redux/apis/register/registerUsersApi";
+import {
+  useValidateThatThePatientExistMutation,
+  useValidatePatientRegisterMutation,
+} from "@/redux/apis/register/registerUsersApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 
@@ -43,7 +45,7 @@ const ValidatePatientExistForm: React.FC = () => {
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
-  const [showConfirmRegisterForm, setShowConfirmRegisterForm] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
@@ -60,11 +62,36 @@ const ValidatePatientExistForm: React.FC = () => {
     fixedCacheKey: "validatePatientData",
   });
 
+  const [
+    validatePatientRegister,
+    {
+      data: isValidatePatientRegisterData,
+      isLoading: isValidatePatientRegisterLoading,
+      isSuccess: isValidatePatientRegisterSuccess,
+      isError: isValidatePatientRegisterError,
+    },
+  ] = useValidatePatientRegisterMutation({
+    fixedCacheKey: "validatePatientRegisterData",
+  });
+
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
-      setShowConfirmRegisterForm(false);
+      setDefaultValuesUserPatient();
 
+      // const searchPatientUser: any = await validatePatientRegister({
+      //   id_number: idNumberPatientState,
+      // });
+
+      // var validationPatientRegisterData = searchPatientUser?.data;
+
+      // if (validationPatientRegisterData?.status === 409) {
+      //   const errorMessage = validationPatientRegisterData?.message;
+
+      //   dispatch(setErrorsUserPatient(errorMessage));
+      //   setShowErrorMessagePatient(true);
+      // }
+      // if (validationPatientRegisterData?.status === 200) {
       const response: any = await validatePatient({
         idType: idTypeAbbrevPatientState,
         idNumber: idNumberPatientState,
@@ -91,8 +118,11 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
         dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
 
-        setShowConfirmRegisterForm(true);
+        setShowSuccessMessage(true);
+
+        router.push("register/validate_data", { scroll: true });
       }
+      // }
     } catch (error) {
       console.error(error);
     } finally {
@@ -108,13 +138,14 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = () => {
-    router.push("/users_login", { scroll: true });
+    router.push("users_login", { scroll: true });
     dispatch(setDefaultValuesUserPatient());
   };
 
   const handleButtonClick = () => {
     dispatch(setErrorsUserPatient([]));
     setShowErrorMessagePatient(false);
+    setShowSuccessMessage(false);
   };
 
   return (
@@ -137,13 +168,17 @@ const ValidatePatientExistForm: React.FC = () => {
         />
       )}
 
+      {showSuccessMessage && (
+        <CustomMessage
+          typeMessage="success"
+          message={"¡Paciente encontrado!"}
+        />
+      )}
+
       <Form
         id="patient-user-validate-form"
         name="patient-user-validate-form"
         className="patient-user-validate-form"
-        style={{
-          width: 270,
-        }}
         onFinish={handleValidatePatient}
         initialValues={{ remember: false }}
         autoComplete="false"
@@ -241,47 +276,34 @@ const ValidatePatientExistForm: React.FC = () => {
             </Button>
           )}
 
-          {showConfirmRegisterForm && (
-            <CustomMessage
-              typeMessage="success"
-              message={"¡Paciente encontrado!"}
-            />
-          )}
+          <Divider
+            style={{
+              fontSize: 13,
+              fontWeight: "normal",
+              marginBlock: 4,
+              borderWidth: 1.3,
+            }}
+          >
+            ¿Ya tienes cuenta?
+          </Divider>
 
-          {showConfirmRegisterForm && <RegisterPatientForm />}
-
-          {!showConfirmRegisterForm && (
-            <>
-              <Divider
-                style={{
-                  fontSize: 13,
-                  fontWeight: "normal",
-                  marginBlock: 4,
-                  borderWidth: 1.3,
-                }}
-              >
-                ¿Ya tienes cuenta?
-              </Divider>
-
-              <Button
-                style={{
-                  paddingInline: 22,
-                  color: "#015E90",
-                  borderColor: "#015E90",
-                  fontWeight: "bold",
-                  borderRadius: 7,
-                  borderWidth: 1.3,
-                  marginTop: 7,
-                }}
-                htmlType="button"
-                className="patient-validate-button"
-                onClick={handleGoToUserLogin}
-                onMouseDown={handleButtonClick}
-              >
-                Ingresar con mi cuenta
-              </Button>
-            </>
-          )}
+          <Button
+            style={{
+              paddingInline: 22,
+              color: "#015E90",
+              borderColor: "#015E90",
+              fontWeight: "bold",
+              borderRadius: 7,
+              borderWidth: 1.3,
+              marginTop: 7,
+            }}
+            htmlType="button"
+            className="patient-validate-button"
+            onClick={handleGoToUserLogin}
+            onMouseDown={handleButtonClick}
+          >
+            Ingresar con mi cuenta
+          </Button>
         </Form.Item>
       </Form>
     </Card>

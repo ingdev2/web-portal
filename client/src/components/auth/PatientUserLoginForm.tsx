@@ -79,7 +79,11 @@ const PatientUserLoginForm: React.FC = () => {
       dispatch(setPasswordLoginPatient(""));
       dispatch(setVerificationCodeLoginPatient(""));
     }
-    if (!idTypesPatientLoading && idTypesPatientData) {
+    if (
+      !idTypesPatientLoading &&
+      !idTypesPatientFetching &&
+      idTypesPatientData
+    ) {
       dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
     if (idTypesPatientError) {
@@ -149,7 +153,7 @@ const PatientUserLoginForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 270,
+        width: 321,
         height: "min-content",
         display: "flex",
         alignItems: "center",
@@ -171,7 +175,7 @@ const PatientUserLoginForm: React.FC = () => {
       <Form
         name="patient-users-login-form"
         className="patient-users-login-form"
-        style={{ width: 231 }}
+        style={{ width: 270 }}
         onFinish={handleSubmit}
         initialValues={{ remember: false }}
         autoComplete="false"

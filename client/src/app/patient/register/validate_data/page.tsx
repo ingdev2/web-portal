@@ -3,11 +3,11 @@
 import React from "react";
 
 import { Tabs } from "antd";
-import { FaUser } from "react-icons/fa";
+import { IoIosBusiness } from "react-icons/io";
 
-import ValidatePatientExistForm from "@/components/register/ValidatePatientExistForm";
+import RegisterPatientForm from "@/components/register/RegisterPatientForm";
 
-const RegisterPatientPage: React.FC = () => {
+const ValidateDataPage: React.FC = () => {
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -66,11 +66,11 @@ const RegisterPatientPage: React.FC = () => {
             tabBarStyle={{ marginBottom: 13 }}
             items={[
               {
-                className: "patient-card-register",
+                className: "validate-data-card-register",
                 key: "1",
-                label: "Pacientes",
-                icon: <FaUser />,
-                children: <ValidatePatientExistForm />,
+                children: <RegisterPatientForm />,
+                label: "Validar Datos Del Paciente",
+                icon: <IoIosBusiness />,
               },
             ]}
           />
@@ -80,4 +80,4 @@ const RegisterPatientPage: React.FC = () => {
   );
 };
 
-export default RegisterPatientPage;
+export default ValidateDataPage;

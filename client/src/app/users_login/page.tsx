@@ -66,14 +66,14 @@ const UsersLoginPage: React.FC = () => {
             tabBarStyle={{ marginBottom: 13 }}
             items={[
               {
-                className: "patient-card",
+                className: "patient-card-login",
                 key: "1",
                 label: "Pacientes",
                 icon: <FaUser />,
                 children: <PatientUserLoginForm />,
               },
               {
-                className: "eps-card",
+                className: "eps-card-login",
                 key: "2",
                 children: <EpsUserLoginForm />,
                 label: "Eps",

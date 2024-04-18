@@ -15,8 +15,10 @@ import {
   Select,
   Space,
   Typography,
+  Col,
+  Row,
 } from "antd";
-import { LockOutlined } from "@ant-design/icons";
+import { LockOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
@@ -34,6 +36,8 @@ import {
   setResidenceAddressUserPatient,
   setAffiliationEpsUserPatient,
   setErrorsUserPatient,
+  setWhatsappUserPatient,
+  setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
@@ -67,6 +71,9 @@ const RegisterPatientForm: React.FC = () => {
   const emailPatientState = useAppSelector((state) => state.patient.email);
   const cellphonePatientState = useAppSelector(
     (state) => state.patient.cellphone
+  );
+  const whatsappPatientState = useAppSelector(
+    (state) => state.patient.whatsapp
   );
   const authMethodPatientState = useAppSelector(
     (state) => state.patient.auth_method
@@ -136,6 +143,8 @@ const RegisterPatientForm: React.FC = () => {
   const handleConfirmData = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirmData(true);
+
+      // TODO --> CREAR USUARIO PACIENTE O REDIRECCIONAR A MODAL
     } catch (error) {
       console.error(error);
     } finally {
@@ -146,6 +155,9 @@ const RegisterPatientForm: React.FC = () => {
   const handleIncorrectData = async (e: React.MouseEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingIncorrectData(true);
+
+      dispatch(setDefaultValuesUserPatient());
+      router.push("/users_login", { scroll: false });
     } catch (error) {
       console.error(error);
     } finally {
@@ -173,9 +185,10 @@ const RegisterPatientForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 321,
+        width: 720,
         height: "min-content",
         display: "flex",
+        flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
@@ -190,285 +203,360 @@ const RegisterPatientForm: React.FC = () => {
         />
       )}
 
-      <h2
-        className="title-register-patient"
-        style={{
-          fontWeight: "500",
-          lineHeight: 1.3,
-          marginTop: 7,
-          marginBottom: 7,
-          textAlign: "center",
-        }}
-      >
-        Confirmar datos
-      </h2>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Nombre de paciente:
-        </Typography.Title>
-        <Input id="name-patient-auto-input" value={namePatientState} disabled />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Tipo de documento:
-        </Typography.Title>
-        <Input
-          id="id-type-patient-auto-input"
-          value={idTypePatientState}
-          disabled
-        />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Número de documento:
-        </Typography.Title>
-        <Input
-          id="patient-id-number-hosvital"
-          value={idNumberPatientState}
-          disabled
-        />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Fecha de nacimiento:
-        </Typography.Title>
-        <Input
-          id="patient-birthdate-hosvital"
-          value={birthdatePatientState}
-          disabled
-        />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Correo electrónico:
-        </Typography.Title>
-        <Input
-          id="patient-email-hosvital"
-          value={emailPatientState}
-          size="large"
-          style={{ fontSize: 8 }}
-          disabled
-        />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Número de celular:
-        </Typography.Title>
-        <Input
-          id="patient-cellphone-hosvital"
-          value={cellphonePatientState}
-          disabled
-        />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Afiliado a EPS:
-        </Typography.Title>
-        <Input
-          id="patient-affiliationeps-hosvital"
-          value={affiliationEpsPatientState}
-          disabled
-        />
-      </div>
-
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Dirección de residencia:
-        </Typography.Title>
-        <Input
-          id="patient-residenceaddress-hosvital"
-          value={residenceAddressPatientState}
-          size="large"
-          style={{ fontSize: 8 }}
-          disabled
-        />
-      </div>
-
-      <Form
-        id="patient-user-register-form"
-        name="patient-user-register-form"
-        className="patient-user-register-form"
-        style={{ width: 270, marginTop: 13 }}
-        onFinish={handleConfirmData}
-        initialValues={{ remember: false }}
-        autoComplete="false"
-        layout="vertical"
-      >
-        <h2
-          className="title-register-patient"
-          style={{
-            fontWeight: "500",
-            lineHeight: 1.3,
-            marginBottom: 13,
-            textAlign: "center",
-          }}
-        >
-          Ingresar datos adicionales
-        </h2>
-
-        {gendersLoading || gendersFetching ? (
-          <CustomSpin />
-        ) : (
-          <Form.Item
-            name="patient-user-gender-register"
-            label="Sexo descrito en documento de identidad"
-            style={{ marginBottom: 22, textAlign: "start" }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor ingresa el tipo de género que aparece en tu documento de identidad!",
-              },
-            ]}
+      <Row gutter={14}>
+        <Col span={12} style={{ padding: "0 13px" }}>
+          <h2
+            className="title-register-patient"
+            style={{
+              fontWeight: "500",
+              lineHeight: 1.3,
+              marginTop: 2,
+              marginBottom: 7,
+              textAlign: "center",
+            }}
           >
-            <Select
-              value={allGendersData}
-              placeholder="Seleccionar el sexo"
-              onChange={(e) => dispatch(setGenderUserPatient(e))}
-            >
-              {allGendersData?.map((option: any) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        )}
+            Verificar datos
+          </h2>
 
-        <Form.Item
-          name="radio-select-auth-method"
-          label="Método de autenticación"
-          style={{ marginBottom: 22 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor selecciona un método de autenticación!",
-            },
-          ]}
-        >
-          <Radio.Group
-            value={authMethodPatientState}
-            onChange={(e) => dispatch(setAuthMethodUserPatient(e.target.value))}
-            style={{ textAlign: "start" }}
+          <p
+            className="warning-message-verify-data"
+            style={{
+              display: "flow",
+              color: "#960202",
+              fontWeight: 500,
+              textAlign: "center",
+            }}
           >
-            <Space size={"small"} direction="horizontal">
-              {allAuthMethodsData?.map((option: any) => (
-                <Radio key={option.id} value={option.id}>
-                  {option.name}
-                </Radio>
-              ))}
-            </Space>
-          </Radio.Group>
-        </Form.Item>
+            Por favor, verifique todos sus datos si son correctos, de lo
+            contrario debe acercarse a nuestra sede principal en Barranquilla
+            para realizar la actualización de sus datos personales.
+          </p>
 
-        <Form.Item
-          name="patient-user-password-register"
-          label="Contraseña"
-          style={{ marginBottom: 22 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu contraseña!",
-            },
-            {
-              min: 7,
-              message: "¡La contraseña debe tener mínimo 7 caracteres!",
-            },
-            {
-              max: 14,
-              message: "¡La contraseña debe tener máximo 14 caracteres!",
-            },
-          ]}
-          hasFeedback
-        >
-          <Input.Password
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            value={passwordPatientState}
-            placeholder="Contraseña"
-            onChange={(e) => dispatch(setPasswordUserPatient(e.target.value))}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="checkbox-data-autorization"
-          valuePropName="checked"
-          style={{ textAlign: "center", marginBottom: 13 }}
-          rules={[
-            {
-              validator: customCheckboxValidator,
-            },
-          ]}
-        >
-          <div style={{ marginBlock: 7 }}>
-            <div style={{ marginBottom: 13 }}>
-              <a
-                className="data-processing-autorization-link"
-                href={process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK}
-                target="_blank"
-                style={{ textDecoration: "underline" }}
-              >
-                Leer Política de Tratamiento de Datos
-              </a>
-            </div>
-            <Checkbox
-              checked={isCheckboxChecked}
-              onChange={handleCheckboxChange}
-            >
-              Acepto las políticas de tratamiento de datos personales
-            </Checkbox>
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Nombre de paciente:
+            </Typography.Title>
+            <Input
+              id="name-patient-auto-input"
+              value={namePatientState}
+              disabled
+            />
           </div>
-        </Form.Item>
 
-        <Form.Item style={{ textAlign: "center" }}>
-          {isSubmittingConfirmData ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              size="large"
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Tipo de documento:
+            </Typography.Title>
+            <Input
+              id="id-type-patient-auto-input"
+              value={idTypePatientState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Número de documento:
+            </Typography.Title>
+            <Input
+              id="patient-id-number-hosvital"
+              value={idNumberPatientState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Fecha de nacimiento:
+            </Typography.Title>
+            <Input
+              id="patient-birthdate-hosvital"
+              value={birthdatePatientState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Afiliado a EPS:
+            </Typography.Title>
+            <Input
+              id="patient-affiliationeps-hosvital"
+              value={affiliationEpsPatientState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Dirección de residencia:
+            </Typography.Title>
+            <Input
+              id="patient-residenceaddress-hosvital"
+              value={residenceAddressPatientState}
+              disabled
+            />
+          </div>
+
+          <p
+            className="warning-message-auth-method"
+            style={{
+              display: "flow",
+              color: "#960202",
+              fontWeight: 500,
+              textAlign: "center",
+            }}
+          >
+            El correo electrónico y el número de celular que se muestran a
+            continuación serán los canales autorizados que se tomarán para
+            realizar el método de autenticación que usted seleccione para cada
+            vez que quiera ingresar a su cuenta de usuario.
+          </p>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Correo electrónico:
+            </Typography.Title>
+            <Input
+              id="patient-email-hosvital"
+              value={emailPatientState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Número de celular:
+            </Typography.Title>
+            <Input
+              id="patient-cellphone-hosvital"
+              value={cellphonePatientState}
+              disabled
+            />
+          </div>
+        </Col>
+
+        <Col span={12} style={{ padding: "0 13px" }}>
+          <Form
+            id="patient-user-register-form"
+            name="patient-user-register-form"
+            className="patient-user-register-form"
+            onFinish={handleConfirmData}
+            initialValues={{ remember: false }}
+            autoComplete="false"
+            layout="vertical"
+          >
+            <h2
+              className="title-register-patient"
               style={{
-                paddingInline: 31,
-                borderRadius: 31,
-                backgroundColor: "#015E90",
-                color: "#f2f2f2",
-                marginBlock: 7,
+                fontWeight: "500",
+                lineHeight: 1.3,
+                marginBottom: 13,
+                textAlign: "center",
               }}
-              htmlType="submit"
-              className="patient-confirm-data-button"
-              onClick={handleButtonClick}
-              onMouseDown={handleButtonClick}
             >
-              Datos Correctos
-            </Button>
-          )}
-          {isSubmittingIncorrectData ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              size="large"
-              style={{
-                paddingInline: 31,
-                borderRadius: 31,
-                backgroundColor: "#8C1111",
-                color: "#f2f2f2",
-                marginTop: 7,
-              }}
-              className="patient-incorrect-data-button"
-              onClick={handleIncorrectData}
-              onMouseDown={handleButtonClick}
+              Ingresar datos adicionales
+            </h2>
+
+            {gendersLoading || gendersFetching ? (
+              <CustomSpin />
+            ) : (
+              <Form.Item
+                name="patient-user-gender-register"
+                label="Sexo descrito en documento de identidad"
+                style={{ marginBottom: 22, textAlign: "start" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor ingresa el tipo de género que aparece en tu documento de identidad!",
+                  },
+                ]}
+              >
+                <Select
+                  value={genderPatientState}
+                  placeholder="Seleccionar el sexo"
+                  onChange={(e) => dispatch(setGenderUserPatient(e))}
+                >
+                  {allGendersData?.map((option: any) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+
+            <Form.Item
+              name="radio-select-auth-method"
+              label="Método de autenticación"
+              style={{ marginBottom: 22 }}
+              rules={[
+                {
+                  required: true,
+                  message: "¡Por favor selecciona un método de autenticación!",
+                },
+              ]}
             >
-              Datos Incorrectos
-            </Button>
-          )}
-        </Form.Item>
-      </Form>
+              <Radio.Group
+                value={authMethodPatientState}
+                onChange={(e) =>
+                  dispatch(setAuthMethodUserPatient(e.target.value))
+                }
+                style={{ textAlign: "start" }}
+              >
+                <Space size={"small"} direction="horizontal">
+                  {allAuthMethodsData?.map((option: any) => (
+                    <Radio key={option.id} value={option.id}>
+                      {option.name}
+                    </Radio>
+                  ))}
+                </Space>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              name="patient-user-whatsapp-register"
+              label="WhatsApp"
+              style={{ marginBottom: 13 }}
+              rules={[
+                {
+                  required: false,
+                },
+                {
+                  pattern: /^[0-9]+$/,
+                  message:
+                    "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
+                },
+                {
+                  min: 7,
+                  message: "¡Por favor ingresa mínimo 7 números!",
+                },
+                {
+                  max: 11,
+                  message: "¡Por favor ingresa máximo 11 números!",
+                },
+              ]}
+            >
+              <Input
+                prefix={<WhatsAppOutlined className="site-form-item-icon" />}
+                type="number"
+                value={whatsappPatientState}
+                placeholder="Número de WhatsApp"
+                onChange={(e) =>
+                  dispatch(setWhatsappUserPatient(e.target.value))
+                }
+                min={0}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="patient-user-password-register"
+              label="Contraseña"
+              style={{ marginBottom: 22 }}
+              rules={[
+                {
+                  required: true,
+                  message: "¡Por favor ingresa tu contraseña!",
+                },
+                {
+                  min: 7,
+                  message: "¡La contraseña debe tener mínimo 7 caracteres!",
+                },
+                {
+                  max: 14,
+                  message: "¡La contraseña debe tener máximo 14 caracteres!",
+                },
+              ]}
+              hasFeedback
+            >
+              <Input.Password
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                value={passwordPatientState}
+                placeholder="Contraseña"
+                onChange={(e) =>
+                  dispatch(setPasswordUserPatient(e.target.value))
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="checkbox-data-autorization"
+              valuePropName="checked"
+              style={{ textAlign: "center", marginBottom: 13 }}
+              rules={[
+                {
+                  validator: customCheckboxValidator,
+                },
+              ]}
+            >
+              <div style={{ marginBlock: 7 }}>
+                <div style={{ marginBottom: 13 }}>
+                  <a
+                    className="data-processing-autorization-link"
+                    href={
+                      process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK
+                    }
+                    target="_blank"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Leer Política de Tratamiento de Datos
+                  </a>
+                </div>
+                <Checkbox
+                  checked={isCheckboxChecked}
+                  onChange={handleCheckboxChange}
+                >
+                  Acepto las políticas de tratamiento de datos personales
+                </Checkbox>
+              </div>
+            </Form.Item>
+
+            <Form.Item style={{ textAlign: "center" }}>
+              {isSubmittingConfirmData ? (
+                <CustomSpin />
+              ) : (
+                <Button
+                  size="large"
+                  style={{
+                    paddingInline: 31,
+                    borderRadius: 31,
+                    backgroundColor: "#015E90",
+                    color: "#f2f2f2",
+                    marginBlock: 7,
+                  }}
+                  htmlType="submit"
+                  className="patient-confirm-data-button"
+                  onClick={handleButtonClick}
+                  onMouseDown={handleButtonClick}
+                >
+                  Datos Correctos
+                </Button>
+              )}
+              {isSubmittingIncorrectData ? (
+                <CustomSpin />
+              ) : (
+                <Button
+                  size="large"
+                  style={{
+                    paddingInline: 31,
+                    borderRadius: 31,
+                    backgroundColor: "#8C1111",
+                    color: "#f2f2f2",
+                    marginTop: 7,
+                  }}
+                  className="patient-incorrect-data-button"
+                  onClick={handleIncorrectData}
+                  onMouseDown={handleButtonClick}
+                >
+                  Datos Incorrectos
+                </Button>
+              )}
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
     </Card>
   );
 };
