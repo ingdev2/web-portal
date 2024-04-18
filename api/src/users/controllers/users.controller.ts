@@ -27,12 +27,20 @@ export class UsersController {
     return await this.usersService.validateThatThePatientExist(patientData);
   }
 
-  @Post('/transformIdType')
-  async transformIdType(
+  @Post('/transformIdTypeName')
+  async transformIdTypeName(
     @Body('idTypeAbbrev')
     idTypeAbbrev: string,
   ) {
-    return await this.usersService.transformIdType(idTypeAbbrev);
+    return await this.usersService.transformIdTypeName(idTypeAbbrev);
+  }
+
+  @Post('/transformIdTypeNumber')
+  async transformIdTypeNumber(
+    @Body('idTypeAbbrev')
+    idTypeAbbrev: string,
+  ) {
+    return await this.usersService.transformIdTypeNumber(idTypeAbbrev);
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

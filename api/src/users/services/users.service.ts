@@ -99,7 +99,7 @@ export class UsersService {
     }
   }
 
-  transformIdType(idTypeAbbrev: string): string {
+  transformIdTypeName(idTypeAbbrev: string): IdType {
     const abbreviatedId = idTypeAbbrev;
 
     const idTypeAbbrevValues = Object.values(IdTypeAbbrev);
@@ -125,10 +125,31 @@ export class UsersService {
         return IdType.ADULT_WITHOUT_IDENTIFICATION;
       default:
         throw new HttpException(
-          `Tipo de identificación ingresado no válido`,
+          `Tipo de identificación ingresado no válido.`,
           HttpStatus.NOT_FOUND,
         );
     }
+  }
+
+  async transformIdTypeNumber(idTypeName: string): Promise<number> {
+    const idTypeNameString = this.transformIdTypeName(idTypeName);
+
+    const idTypeOfUser = await this.idTypeRepository.findOne({
+      where: {
+        name: idTypeNameString,
+      },
+    });
+
+    if (!idTypeOfUser) {
+      throw new HttpException(
+        `Tipo de identificación no encontrado.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const idTypeId = idTypeOfUser.id;
+
+    return idTypeId;
   }
 
   async createUserPatient(userPatient: CreateUserPatientDto) {

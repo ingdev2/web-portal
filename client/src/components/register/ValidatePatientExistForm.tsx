@@ -30,7 +30,10 @@ import {
   useValidateThatThePatientExistMutation,
   useValidatePatientRegisterMutation,
 } from "@/redux/apis/register/registerUsersApi";
-import { useTransformIdTypeMutation } from "@/redux/apis/users/usersApi";
+import {
+  useTransformIdTypeNameMutation,
+  useTransformIdTypeNumberMutation,
+} from "@/redux/apis/users/usersApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 
@@ -82,15 +85,26 @@ const ValidatePatientExistForm: React.FC = () => {
   });
 
   const [
-    transformIdType,
+    transformIdTypeName,
     {
-      data: isTransformIdTypeData,
-      isLoading: isTransformIdTypeLoading,
-      isSuccess: isTransformIdTypeSuccess,
-      isError: isTransformIdTypeError,
+      data: isTransformIdTypeNameData,
+      isLoading: isTransformIdTypeNameLoading,
+      isSuccess: isTransformIdTypeNameSuccess,
+      isError: isTransformIdTypeNameError,
     },
-  ] = useTransformIdTypeMutation({
-    fixedCacheKey: "transformIdTypeData",
+  ] = useTransformIdTypeNameMutation({
+    fixedCacheKey: "transformIdTypeNameData",
+  });
+  const [
+    transformIdTypeNumber,
+    {
+      data: isTransformIdTypeNumberData,
+      isLoading: isTransformIdTypeNumberLoading,
+      isSuccess: isTransformIdTypeNumberSuccess,
+      isError: isTransformIdTypeNumberError,
+    },
+  ] = useTransformIdTypeNumberMutation({
+    fixedCacheKey: "transformIdTypeNumberData",
   });
 
   useEffect(() => {
@@ -151,13 +165,21 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
         dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
 
-        const responseIdType: any = await transformIdType({
+        const responseIdTypeName: any = await transformIdTypeName({
           idTypeAbbrev: idTypeAbbrevPatientState,
         });
 
-        const idTypeName = responseIdType?.error?.data;
+        const idTypeName = responseIdTypeName?.error?.data;
 
         dispatch(setIdTypeAbbrevUserPatient(idTypeName));
+
+        const responseIdTypeNumber: any = await transformIdTypeNumber({
+          idTypeAbbrev: idTypeAbbrevPatientState,
+        });
+
+        const idTypeNumber = responseIdTypeNumber?.data;
+
+        dispatch(setIdTypeUserPatient(idTypeNumber));
 
         setShowSuccessMessage(true);
 
