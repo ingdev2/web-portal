@@ -16,6 +16,13 @@ export const usersApi = createApi({
   }),
 
   endpoints: (builder) => ({
+    transformIdType: builder.mutation<null, { idTypeAbbrev: string }>({
+      query: ({ idTypeAbbrev }) => ({
+        url: `transformIdType`,
+        method: "POST",
+        body: { idTypeAbbrev },
+      }),
+    }),
     getAllUsers: builder.query<User[], null>({
       query: () => "getAllUsers",
     }),
@@ -56,6 +63,7 @@ export const usersApi = createApi({
 });
 
 export const {
+  useTransformIdTypeMutation,
   useGetAllUsersQuery,
   useGetAllPatientsQuery,
   useGetAllEpsQuery,

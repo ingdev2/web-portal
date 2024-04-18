@@ -68,9 +68,9 @@ const ValidateDataPage: React.FC = () => {
               {
                 className: "validate-data-card-register",
                 key: "1",
-                children: <RegisterPatientForm />,
                 label: "Validar Datos Del Paciente",
                 icon: <IoIosBusiness />,
+                children: <RegisterPatientForm />,
               },
             ]}
           />

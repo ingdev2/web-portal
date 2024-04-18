@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
@@ -30,6 +30,7 @@ import {
   useValidateThatThePatientExistMutation,
   useValidatePatientRegisterMutation,
 } from "@/redux/apis/register/registerUsersApi";
+import { useTransformIdTypeMutation } from "@/redux/apis/users/usersApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 
@@ -40,8 +41,14 @@ const ValidatePatientExistForm: React.FC = () => {
   const idTypeAbbrevPatientState = useAppSelector(
     (state) => state.patient.id_type_abbrev
   );
+  const idTypePatientState = useAppSelector(
+    (state) => state.patient.user_id_type
+  );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
+  );
+  const affiliationEpsPatientState = useAppSelector(
+    (state) => state.patient.affiliation_eps
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
@@ -73,6 +80,32 @@ const ValidatePatientExistForm: React.FC = () => {
   ] = useValidatePatientRegisterMutation({
     fixedCacheKey: "validatePatientRegisterData",
   });
+
+  const [
+    transformIdType,
+    {
+      data: isTransformIdTypeData,
+      isLoading: isTransformIdTypeLoading,
+      isSuccess: isTransformIdTypeSuccess,
+      isError: isTransformIdTypeError,
+    },
+  ] = useTransformIdTypeMutation({
+    fixedCacheKey: "transformIdTypeData",
+  });
+
+  useEffect(() => {
+    if (
+      affiliationEpsPatientState &&
+      !isValidatePatientData &&
+      !isValidatePatientRegisterData
+    ) {
+      dispatch(setDefaultValuesUserPatient());
+    }
+  }, [
+    affiliationEpsPatientState,
+    isValidatePatientData,
+    isValidatePatientRegisterData,
+  ]);
 
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -110,13 +143,21 @@ const ValidatePatientExistForm: React.FC = () => {
         var patientData = response.data?.[0].data?.[0];
 
         dispatch(setNameUserPatient(patientData.NOMBRE));
-        dispatch(setIdTypeUserPatient(patientData.TIPO));
+        dispatch(setIdTypeAbbrevUserPatient(patientData.TIPO));
         dispatch(setIdNumberUserPatient(patientData.ID));
         dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
         dispatch(setEmailUserPatient(patientData.CORREO));
         dispatch(setCellphoneUserPatient(patientData.CELULAR));
         dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
         dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
+
+        const responseIdType: any = await transformIdType({
+          idTypeAbbrev: idTypeAbbrevPatientState,
+        });
+
+        const idTypeName = responseIdType?.error?.data;
+
+        dispatch(setIdTypeAbbrevUserPatient(idTypeName));
 
         setShowSuccessMessage(true);
 
@@ -138,7 +179,7 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = () => {
-    router.push("users_login", { scroll: true });
+    router.push("/users_login", { scroll: true });
     dispatch(setDefaultValuesUserPatient());
   };
 
@@ -214,7 +255,7 @@ const ValidatePatientExistForm: React.FC = () => {
             onChange={handleIdTypeChange}
           >
             {Object.entries(IdTypeAbbrev).map(([key, value]) => (
-              <Select.Option key={value} value={value}>
+              <Select.Option key={key} value={value}>
                 {key}
               </Select.Option>
             ))}

@@ -40,6 +40,7 @@ import {
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
+import { useCreateUserPatientMutation } from "@/redux/apis/register/registerUsersApi";
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
@@ -108,6 +109,18 @@ const RegisterPatientForm: React.FC = () => {
     useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
+  const [
+    createUserPatient,
+    {
+      data: isCreateUserPatientData,
+      isLoading: isCreateUserPatientLoading,
+      isSuccess: isCreateUserPatientSuccess,
+      isError: isCreateUserPatientError,
+    },
+  ] = useCreateUserPatientMutation({
+    fixedCacheKey: "createUserPatientData",
+  });
+
   useEffect(() => {
     if (!gendersLoading && !gendersFetching && gendersData) {
       setAllGendersData(gendersData);
@@ -138,13 +151,16 @@ const RegisterPatientForm: React.FC = () => {
     authMethodFetching,
     authMethodData,
     authMethodError,
+    affiliationEpsPatientState,
   ]);
 
   const handleConfirmData = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirmData(true);
 
-      // TODO --> CREAR USUARIO PACIENTE O REDIRECCIONAR A MODAL
+      // const response: any = await createUserPatient({
+
+      // });
     } catch (error) {
       console.error(error);
     } finally {
@@ -185,15 +201,17 @@ const RegisterPatientForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 720,
+        width: "100%",
+        maxWidth: 720,
         height: "min-content",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         marginBottom: 31,
+        padding: 7,
       }}
     >
       {showErrorMessagePatient && (
@@ -203,8 +221,8 @@ const RegisterPatientForm: React.FC = () => {
         />
       )}
 
-      <Row gutter={14}>
-        <Col span={12} style={{ padding: "0 13px" }}>
+      <Row>
+        <Col xs={24} md={12} style={{ padding: "0 13px" }}>
           <h2
             className="title-register-patient"
             style={{
@@ -227,9 +245,9 @@ const RegisterPatientForm: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Por favor, verifique todos sus datos si son correctos, de lo
-            contrario debe acercarse a nuestra sede principal en Barranquilla
-            para realizar la actualización de sus datos personales.
+            Por favor, verifique si todos sus datos estan correctos, de lo
+            contrario debe acercarse a nuestra sede en Barranquilla para
+            realizar la actualización de sus datos personales.
           </p>
 
           <div style={{ textAlign: "start" }}>
@@ -249,7 +267,7 @@ const RegisterPatientForm: React.FC = () => {
             </Typography.Title>
             <Input
               id="id-type-patient-auto-input"
-              value={idTypePatientState}
+              value={idTypeAbbrevPatientState}
               disabled
             />
           </div>
@@ -261,6 +279,42 @@ const RegisterPatientForm: React.FC = () => {
             <Input
               id="patient-id-number-hosvital"
               value={idNumberPatientState}
+              disabled
+            />
+          </div>
+
+          <p
+            className="warning-message-auth-method"
+            style={{
+              display: "flow",
+              color: "#960202",
+              fontWeight: 500,
+              textAlign: "center",
+            }}
+          >
+            El correo electrónico y el número de celular que se muestran a
+            continuación serán los canales autorizados que se tomarán para
+            realizar el método de autenticación.
+          </p>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Correo electrónico:
+            </Typography.Title>
+            <Input
+              id="patient-email-hosvital"
+              value={emailPatientState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Número de celular:
+            </Typography.Title>
+            <Input
+              id="patient-cellphone-hosvital"
+              value={cellphonePatientState}
               disabled
             />
           </div>
@@ -297,46 +351,9 @@ const RegisterPatientForm: React.FC = () => {
               disabled
             />
           </div>
-
-          <p
-            className="warning-message-auth-method"
-            style={{
-              display: "flow",
-              color: "#960202",
-              fontWeight: 500,
-              textAlign: "center",
-            }}
-          >
-            El correo electrónico y el número de celular que se muestran a
-            continuación serán los canales autorizados que se tomarán para
-            realizar el método de autenticación que usted seleccione para cada
-            vez que quiera ingresar a su cuenta de usuario.
-          </p>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Correo electrónico:
-            </Typography.Title>
-            <Input
-              id="patient-email-hosvital"
-              value={emailPatientState}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Número de celular:
-            </Typography.Title>
-            <Input
-              id="patient-cellphone-hosvital"
-              value={cellphonePatientState}
-              disabled
-            />
-          </div>
         </Col>
 
-        <Col span={12} style={{ padding: "0 13px" }}>
+        <Col xs={24} md={12} style={{ padding: "0 13px" }}>
           <Form
             id="patient-user-register-form"
             name="patient-user-register-form"
@@ -525,6 +542,7 @@ const RegisterPatientForm: React.FC = () => {
                     backgroundColor: "#015E90",
                     color: "#f2f2f2",
                     marginBlock: 7,
+                    marginInline: 7,
                   }}
                   htmlType="submit"
                   className="patient-confirm-data-button"
@@ -534,7 +552,7 @@ const RegisterPatientForm: React.FC = () => {
                   Datos Correctos
                 </Button>
               )}
-              {isSubmittingIncorrectData ? (
+              {isSubmittingIncorrectData && affiliationEpsPatientState ? (
                 <CustomSpin />
               ) : (
                 <Button
@@ -545,6 +563,7 @@ const RegisterPatientForm: React.FC = () => {
                     backgroundColor: "#8C1111",
                     color: "#f2f2f2",
                     marginTop: 7,
+                    marginInline: 7,
                   }}
                   className="patient-incorrect-data-button"
                   onClick={handleIncorrectData}

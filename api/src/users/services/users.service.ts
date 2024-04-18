@@ -99,6 +99,38 @@ export class UsersService {
     }
   }
 
+  transformIdType(idTypeAbbrev: string): string {
+    const abbreviatedId = idTypeAbbrev;
+
+    const idTypeAbbrevValues = Object.values(IdTypeAbbrev);
+
+    switch (abbreviatedId) {
+      case idTypeAbbrevValues[0]:
+        return IdType.CITIZENSHIP_CARD;
+      case idTypeAbbrevValues[1]:
+        return IdType.FOREIGNER_ID;
+      case idTypeAbbrevValues[2]:
+        return IdType.IDENTITY_CARD;
+      case idTypeAbbrevValues[3]:
+        return IdType.CIVIL_REGISTRATION;
+      case idTypeAbbrevValues[4]:
+        return IdType.PASSPORT;
+      case idTypeAbbrevValues[5]:
+        return IdType.SPECIAL_RESIDENCE_PERMIT;
+      case idTypeAbbrevValues[6]:
+        return IdType.TEMPORARY_PROTECTION_PERMIT;
+      case idTypeAbbrevValues[7]:
+        return IdType.MINOR_WITHOUT_IDENTIFICATION;
+      case idTypeAbbrevValues[8]:
+        return IdType.ADULT_WITHOUT_IDENTIFICATION;
+      default:
+        throw new HttpException(
+          `Tipo de identificación ingresado no válido`,
+          HttpStatus.NOT_FOUND,
+        );
+    }
+  }
+
   async createUserPatient(userPatient: CreateUserPatientDto) {
     const idTypeOfUser = await this.idTypeRepository.findOne({
       where: {
