@@ -8,6 +8,7 @@ import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { ValidatePatientDto } from '../../users/dto/validate_patient.dto';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { LoginDto } from '../dto/login.dto';
+import { IdNumberDto } from '../dto/id_number.dto';
 import { AdminRolType } from '../../common/enums/admin_roles.enum';
 import { UserRolType } from '../../common/enums/user_roles.enum';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -40,6 +41,11 @@ export class AuthController {
   @Post('registerAdmin')
   async registerAdmin(@Body() registerAdmin: CreateAdminDto) {
     return await this.authService.registerAdmin(registerAdmin);
+  }
+
+  @Post('validatePatientRegister')
+  async validatePatientRegister(@Body() id_number: IdNumberDto) {
+    return await this.authService.validatePatientRegister(id_number);
   }
 
   @Post('registerUserPatient')

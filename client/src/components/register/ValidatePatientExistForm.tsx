@@ -27,7 +27,10 @@ import {
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
-import { useValidateThatThePatientExistMutation } from "@/redux/apis/register/registerUsersApi";
+import {
+  useValidateThatThePatientExistMutation,
+  useValidatePatientRegisterMutation,
+} from "@/redux/apis/register/registerUsersApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 
@@ -60,37 +63,67 @@ const ValidatePatientExistForm: React.FC = () => {
     fixedCacheKey: "validatePatientData",
   });
 
+  const [
+    validatePatientRegister,
+    {
+      data: isValidatePatientRegisterData,
+      isLoading: isValidatePatientRegisterLoading,
+      isSuccess: isValidatePatientRegisterSuccess,
+      isError: isValidatePatientRegisterError,
+    },
+  ] = useValidatePatientRegisterMutation({
+    fixedCacheKey: "validatePatientRegisterData",
+  });
+
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
 
-      const response: any = await validatePatient({
-        idType: idTypeAbbrevPatientState,
-        idNumber: idNumberPatientState,
+      const searchPatientUser: any = await validatePatientRegister({
+        id_number: idNumberPatientState,
       });
 
-      var validationPatientData = response.data?.[0].count;
+      var validationPatientRegisterData = searchPatientUser?.data;
 
-      if (validationPatientData === 0) {
-        const errorMessage =
-          "El paciente no se encuentra registrado en la clínica";
+      console.log(validationPatientRegisterData);
+
+      if (validationPatientRegisterData?.status === 409) {
+        const errorMessage = validationPatientRegisterData?.message;
+
+        console.log("ENTRO VALIDACION:", validationPatientRegisterData);
 
         dispatch(setErrorsUserPatient(errorMessage));
         setShowErrorMessagePatient(true);
       }
-      if (validationPatientData === 1) {
-        var patientData = response.data?.[0].data?.[0];
+      if (validationPatientRegisterData?.status === 200) {
+        const response: any = await validatePatient({
+          idType: idTypeAbbrevPatientState,
+          idNumber: idNumberPatientState,
+        });
 
-        dispatch(setNameUserPatient(patientData.NOMBRE));
-        dispatch(setIdTypeUserPatient(patientData.TIPO));
-        dispatch(setIdNumberUserPatient(patientData.ID));
-        dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
-        dispatch(setEmailUserPatient(patientData.CORREO));
-        dispatch(setCellphoneUserPatient(patientData.CELULAR));
-        dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
-        dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
+        var validationPatientData = response.data?.[0].count;
 
-        setShowSuccessMessage(true);
+        if (validationPatientData === 0) {
+          const errorMessage =
+            "El paciente no se encuentra registrado en la clínica";
+
+          dispatch(setErrorsUserPatient(errorMessage));
+          setShowErrorMessagePatient(true);
+        }
+        if (validationPatientData === 1) {
+          var patientData = response.data?.[0].data?.[0];
+
+          dispatch(setNameUserPatient(patientData.NOMBRE));
+          dispatch(setIdTypeUserPatient(patientData.TIPO));
+          dispatch(setIdNumberUserPatient(patientData.ID));
+          dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
+          dispatch(setEmailUserPatient(patientData.CORREO));
+          dispatch(setCellphoneUserPatient(patientData.CELULAR));
+          dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
+          dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
+
+          setShowSuccessMessage(true);
+        }
       }
     } catch (error) {
       console.error(error);

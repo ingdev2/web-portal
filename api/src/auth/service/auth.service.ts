@@ -27,6 +27,7 @@ import { IdType } from '../../common/enums/id_type.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
+import { IdNumberDto } from '../dto/id_number.dto';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import {
@@ -176,6 +177,24 @@ export class AuthService {
       position_level,
       admin_role,
     });
+  }
+
+  async validatePatientRegister({ id_number }: IdNumberDto) {
+    const patientUserFound = await this.userRepository.findOne({
+      where: { id_number: id_number },
+    });
+
+    if (patientUserFound) {
+      return new HttpException(
+        `¡El paciente ya tiene cuenta creada!`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return new HttpException(
+        `¡El paciente no tiene cuenta creada!`,
+        HttpStatus.OK,
+      );
+    }
   }
 
   async registerUserPatient({
