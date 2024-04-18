@@ -266,7 +266,7 @@ export class UsersService {
 
     if (
       userPatient.authentication_method === authenticationMethodEmailFound.id &&
-      userPatient.email
+      !userPatient.email
     ) {
       return new HttpException(
         `Debe ingresar un correo electrónico para activar el método de autenticación seleccionado`,

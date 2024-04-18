@@ -43,7 +43,7 @@ const ValidatePatientExistForm: React.FC = () => {
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
-  const [showConfirmRegisterForm, setShowConfirmRegisterForm] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
@@ -63,7 +63,6 @@ const ValidatePatientExistForm: React.FC = () => {
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
-      setShowConfirmRegisterForm(false);
 
       const response: any = await validatePatient({
         idType: idTypeAbbrevPatientState,
@@ -91,7 +90,7 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
         dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
 
-        setShowConfirmRegisterForm(true);
+        setShowSuccessMessage(true);
       }
     } catch (error) {
       console.error(error);
@@ -115,6 +114,7 @@ const ValidatePatientExistForm: React.FC = () => {
   const handleButtonClick = () => {
     dispatch(setErrorsUserPatient([]));
     setShowErrorMessagePatient(false);
+    setShowSuccessMessage(false);
   };
 
   return (
@@ -134,6 +134,13 @@ const ValidatePatientExistForm: React.FC = () => {
         <CustomMessage
           typeMessage="error"
           message={errorsPatientState?.toString() || "¡Error en la petición!"}
+        />
+      )}
+
+      {showSuccessMessage && (
+        <CustomMessage
+          typeMessage="success"
+          message={"¡Paciente encontrado!"}
         />
       )}
 
@@ -241,47 +248,34 @@ const ValidatePatientExistForm: React.FC = () => {
             </Button>
           )}
 
-          {showConfirmRegisterForm && (
-            <CustomMessage
-              typeMessage="success"
-              message={"¡Paciente encontrado!"}
-            />
-          )}
+          <Divider
+            style={{
+              fontSize: 13,
+              fontWeight: "normal",
+              marginBlock: 4,
+              borderWidth: 1.3,
+            }}
+          >
+            ¿Ya tienes cuenta?
+          </Divider>
 
-          {showConfirmRegisterForm && <RegisterPatientForm />}
-
-          {!showConfirmRegisterForm && (
-            <>
-              <Divider
-                style={{
-                  fontSize: 13,
-                  fontWeight: "normal",
-                  marginBlock: 4,
-                  borderWidth: 1.3,
-                }}
-              >
-                ¿Ya tienes cuenta?
-              </Divider>
-
-              <Button
-                style={{
-                  paddingInline: 22,
-                  color: "#015E90",
-                  borderColor: "#015E90",
-                  fontWeight: "bold",
-                  borderRadius: 7,
-                  borderWidth: 1.3,
-                  marginTop: 7,
-                }}
-                htmlType="button"
-                className="patient-validate-button"
-                onClick={handleGoToUserLogin}
-                onMouseDown={handleButtonClick}
-              >
-                Ingresar con mi cuenta
-              </Button>
-            </>
-          )}
+          <Button
+            style={{
+              paddingInline: 22,
+              color: "#015E90",
+              borderColor: "#015E90",
+              fontWeight: "bold",
+              borderRadius: 7,
+              borderWidth: 1.3,
+              marginTop: 7,
+            }}
+            htmlType="button"
+            className="patient-validate-button"
+            onClick={handleGoToUserLogin}
+            onMouseDown={handleButtonClick}
+          >
+            Ingresar con mi cuenta
+          </Button>
         </Form.Item>
       </Form>
     </Card>
