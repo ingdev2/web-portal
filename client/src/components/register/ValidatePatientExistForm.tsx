@@ -8,7 +8,6 @@ import { Button, Card, Divider, Form, Input, Select } from "antd";
 import { IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
-import RegisterPatientForm from "./RegisterPatientForm";
 
 import {
   setNameUserPatient,
@@ -78,53 +77,52 @@ const ValidatePatientExistForm: React.FC = () => {
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
+      setDefaultValuesUserPatient();
 
-      const searchPatientUser: any = await validatePatientRegister({
-        id_number: idNumberPatientState,
+      // const searchPatientUser: any = await validatePatientRegister({
+      //   id_number: idNumberPatientState,
+      // });
+
+      // var validationPatientRegisterData = searchPatientUser?.data;
+
+      // if (validationPatientRegisterData?.status === 409) {
+      //   const errorMessage = validationPatientRegisterData?.message;
+
+      //   dispatch(setErrorsUserPatient(errorMessage));
+      //   setShowErrorMessagePatient(true);
+      // }
+      // if (validationPatientRegisterData?.status === 200) {
+      const response: any = await validatePatient({
+        idType: idTypeAbbrevPatientState,
+        idNumber: idNumberPatientState,
       });
 
-      var validationPatientRegisterData = searchPatientUser?.data;
+      var validationPatientData = response.data?.[0].count;
 
-      console.log(validationPatientRegisterData);
-
-      if (validationPatientRegisterData?.status === 409) {
-        const errorMessage = validationPatientRegisterData?.message;
-
-        console.log("ENTRO VALIDACION:", validationPatientRegisterData);
+      if (validationPatientData === 0) {
+        const errorMessage =
+          "El paciente no se encuentra registrado en la clínica";
 
         dispatch(setErrorsUserPatient(errorMessage));
         setShowErrorMessagePatient(true);
       }
-      if (validationPatientRegisterData?.status === 200) {
-        const response: any = await validatePatient({
-          idType: idTypeAbbrevPatientState,
-          idNumber: idNumberPatientState,
-        });
+      if (validationPatientData === 1) {
+        var patientData = response.data?.[0].data?.[0];
 
-        var validationPatientData = response.data?.[0].count;
+        dispatch(setNameUserPatient(patientData.NOMBRE));
+        dispatch(setIdTypeUserPatient(patientData.TIPO));
+        dispatch(setIdNumberUserPatient(patientData.ID));
+        dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
+        dispatch(setEmailUserPatient(patientData.CORREO));
+        dispatch(setCellphoneUserPatient(patientData.CELULAR));
+        dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
+        dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
 
-        if (validationPatientData === 0) {
-          const errorMessage =
-            "El paciente no se encuentra registrado en la clínica";
+        setShowSuccessMessage(true);
 
-          dispatch(setErrorsUserPatient(errorMessage));
-          setShowErrorMessagePatient(true);
-        }
-        if (validationPatientData === 1) {
-          var patientData = response.data?.[0].data?.[0];
-
-          dispatch(setNameUserPatient(patientData.NOMBRE));
-          dispatch(setIdTypeUserPatient(patientData.TIPO));
-          dispatch(setIdNumberUserPatient(patientData.ID));
-          dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
-          dispatch(setEmailUserPatient(patientData.CORREO));
-          dispatch(setCellphoneUserPatient(patientData.CELULAR));
-          dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
-          dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
-
-          setShowSuccessMessage(true);
-        }
+        router.push("register/validate_data", { scroll: true });
       }
+      // }
     } catch (error) {
       console.error(error);
     } finally {
@@ -140,7 +138,7 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = () => {
-    router.push("/users_login", { scroll: true });
+    router.push("users_login", { scroll: true });
     dispatch(setDefaultValuesUserPatient());
   };
 
@@ -181,9 +179,6 @@ const ValidatePatientExistForm: React.FC = () => {
         id="patient-user-validate-form"
         name="patient-user-validate-form"
         className="patient-user-validate-form"
-        style={{
-          width: 270,
-        }}
         onFinish={handleValidatePatient}
         initialValues={{ remember: false }}
         autoComplete="false"
