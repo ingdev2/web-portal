@@ -105,7 +105,7 @@ const PatientModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.replace("patient/homepage", { scroll: false });
+        await router.replace("patient/homepage", { scroll: false });
         dispatch(setIdTypeLoginPatient(""));
         dispatch(setPasswordLoginPatient(""));
         dispatch(setVerificationCodeLoginPatient(""));

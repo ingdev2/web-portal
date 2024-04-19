@@ -3,7 +3,7 @@ interface UserLogin {
   id_type_abbrev: string;
   id_number: number;
   password: string;
-  verification_code?: number;
-  idTypeOptions?: [];
-  errors?: [];
+  verification_code: number;
+  idTypeOptions: [];
+  errors: [];
 }

@@ -101,7 +101,7 @@ const EpsModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        router.replace("eps/homepage", { scroll: false });
+        await router.replace("eps/homepage", { scroll: false });
         dispatch(setIdTypeLoginEps(""));
         dispatch(setPasswordLoginEps(""));
         dispatch(setVerificationCodeLoginEps(""));

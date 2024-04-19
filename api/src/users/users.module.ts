@@ -6,6 +6,7 @@ import { AuthorizedFamiliarModule } from '../authorized_familiar/authorized_fami
 import { AuthenticationMethod } from '../authentication_method/entities/authentication_method.entity';
 import { IdTypesModule } from '../id_types/id_types.module';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
+import { GenderType } from '../genders/entities/gender.entity';
 import { DeptsAndCitiesModule } from '../depts_and_cities/depts_and_cities.module';
 import { Module } from '@nestjs/common';
 import { UsersController } from './controllers/users.controller';
@@ -18,6 +19,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       User,
       UserRole,
       IdTypeEntity,
+      GenderType,
       AuthenticationMethod,
       AuthorizedFamiliar,
     ]),

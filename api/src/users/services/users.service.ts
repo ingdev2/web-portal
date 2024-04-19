@@ -8,6 +8,8 @@ import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { IdType } from '../../common/enums/id_type.enum';
 import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { Gender } from '../../common/enums/gender.enum';
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 import { AuthenticationMethodEnum } from '../../common/enums/authentication_method.enum';
 import { DeptsAndCitiesService } from '../../depts_and_cities/services/depts_and_cities.service';
@@ -34,6 +36,9 @@ export class UsersService {
 
     @InjectRepository(IdTypeEntity)
     private idTypeRepository: Repository<IdTypeEntity>,
+
+    @InjectRepository(GenderType)
+    private genderRepository: Repository<GenderType>,
 
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
@@ -97,6 +102,96 @@ export class UsersService {
         error,
       );
     }
+  }
+
+  transformIdTypeName(idTypeAbbrev: string): IdType {
+    const abbreviatedId = idTypeAbbrev;
+
+    const idTypeAbbrevValues = Object.values(IdTypeAbbrev);
+
+    switch (abbreviatedId) {
+      case idTypeAbbrevValues[0]:
+        return IdType.CITIZENSHIP_CARD;
+      case idTypeAbbrevValues[1]:
+        return IdType.FOREIGNER_ID;
+      case idTypeAbbrevValues[2]:
+        return IdType.IDENTITY_CARD;
+      case idTypeAbbrevValues[3]:
+        return IdType.CIVIL_REGISTRATION;
+      case idTypeAbbrevValues[4]:
+        return IdType.PASSPORT;
+      case idTypeAbbrevValues[5]:
+        return IdType.SPECIAL_RESIDENCE_PERMIT;
+      case idTypeAbbrevValues[6]:
+        return IdType.TEMPORARY_PROTECTION_PERMIT;
+      case idTypeAbbrevValues[7]:
+        return IdType.MINOR_WITHOUT_IDENTIFICATION;
+      case idTypeAbbrevValues[8]:
+        return IdType.ADULT_WITHOUT_IDENTIFICATION;
+      default:
+        throw new HttpException(
+          `Tipo de identificación ingresado no válido.`,
+          HttpStatus.NOT_FOUND,
+        );
+    }
+  }
+
+  async transformIdTypeNumber(idTypeName: string): Promise<number> {
+    const idTypeNameString = this.transformIdTypeName(idTypeName);
+
+    const idTypeOfUser = await this.idTypeRepository.findOne({
+      where: {
+        name: idTypeNameString,
+      },
+    });
+
+    if (!idTypeOfUser) {
+      throw new HttpException(
+        `Tipo de identificación no encontrado.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const idTypeId = idTypeOfUser.id;
+
+    return idTypeId;
+  }
+
+  transformGenderName(genderAbbrev: string): Gender {
+    const abbreviatedId = genderAbbrev;
+
+    switch (abbreviatedId) {
+      case 'M':
+        return Gender.MALE;
+      case 'F':
+        return Gender.FEMALE;
+      default:
+        throw new HttpException(
+          `Tipo de sexo ingresado no válido.`,
+          HttpStatus.NOT_FOUND,
+        );
+    }
+  }
+
+  async transformGenderNumber(genderName: string): Promise<number> {
+    const genderNameString = this.transformGenderName(genderName);
+
+    const genderOfUser = await this.genderRepository.findOne({
+      where: {
+        name: genderNameString,
+      },
+    });
+
+    if (!genderOfUser) {
+      throw new HttpException(
+        `Tipo de sexo no encontrado.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const idTypeId = genderOfUser.id;
+
+    return idTypeId;
   }
 
   async createUserPatient(userPatient: CreateUserPatientDto) {
