@@ -43,6 +43,22 @@ export class UsersController {
     return await this.usersService.transformIdTypeNumber(idTypeAbbrev);
   }
 
+  @Post('/transformGenderName')
+  async transformGenderName(
+    @Body('genderAbbrev')
+    genderAbbrev: string,
+  ) {
+    return await this.usersService.transformGenderName(genderAbbrev);
+  }
+
+  @Post('/transformGenderNumber')
+  async transformGenderNumber(
+    @Body('genderAbbrev')
+    genderAbbrev: string,
+  ) {
+    return await this.usersService.transformGenderNumber(genderAbbrev);
+  }
+
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAllUsers')
   async getAllUsers() {

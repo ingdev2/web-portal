@@ -30,6 +30,20 @@ export const usersApi = createApi({
         body: { idTypeAbbrev },
       }),
     }),
+    transformGenderName: builder.mutation<null, { genderAbbrev: string }>({
+      query: ({ genderAbbrev }) => ({
+        url: `transformGenderName`,
+        method: "POST",
+        body: { genderAbbrev },
+      }),
+    }),
+    transformGenderNumber: builder.mutation<null, { genderAbbrev: string }>({
+      query: ({ genderAbbrev }) => ({
+        url: `transformGenderNumber`,
+        method: "POST",
+        body: { genderAbbrev },
+      }),
+    }),
     getAllUsers: builder.query<User[], null>({
       query: () => "getAllUsers",
     }),
@@ -72,6 +86,8 @@ export const usersApi = createApi({
 export const {
   useTransformIdTypeNameMutation,
   useTransformIdTypeNumberMutation,
+  useTransformGenderNameMutation,
+  useTransformGenderNumberMutation,
   useGetAllUsersQuery,
   useGetAllPatientsQuery,
   useGetAllEpsQuery,

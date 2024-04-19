@@ -5,6 +5,7 @@ const initialState: User = {
   name: "",
   last_name: "",
   user_gender: 0,
+  user_gender_abbrev: "",
   user_id_type: 0,
   id_type_abbrev: "",
   id_number: 0,
@@ -42,8 +43,14 @@ export const patientSlice = createSlice({
     setNameUserPatient: (state, action) => {
       state.name = action.payload;
     },
+    setLastNameUserPatient: (state, action) => {
+      state.last_name = action.payload;
+    },
     setGenderUserPatient: (state, action) => {
       state.user_gender = action.payload;
+    },
+    setGenderAbbrevUserPatient: (state, action) => {
+      state.user_gender_abbrev = action.payload;
     },
     setIdTypeUserPatient: (state, action) => {
       state.user_id_type = action.payload;
@@ -96,6 +103,7 @@ export const patientSlice = createSlice({
       state.name = "";
       state.last_name = "";
       state.user_gender = 0;
+      state.user_gender_abbrev = "";
       state.user_id_type = 0;
       state.id_type_abbrev = "";
       state.id_number = 0;
@@ -114,7 +122,9 @@ export const patientSlice = createSlice({
 export const {
   setIdUserPatient,
   setNameUserPatient,
+  setLastNameUserPatient,
   setGenderUserPatient,
+  setGenderAbbrevUserPatient,
   setIdTypeUserPatient,
   setIdTypeAbbrevUserPatient,
   setIdNumberUserPatient,

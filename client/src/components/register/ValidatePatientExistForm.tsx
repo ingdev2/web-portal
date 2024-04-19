@@ -11,10 +11,12 @@ import CustomMessage from "../common/custom_messages/CustomMessage";
 
 import {
   setNameUserPatient,
+  setLastNameUserPatient,
   setIdTypeUserPatient,
   setIdTypeAbbrevUserPatient,
   setIdNumberUserPatient,
   setGenderUserPatient,
+  setGenderAbbrevUserPatient,
   setBirthdateUserPatient,
   setEmailUserPatient,
   setCellphoneUserPatient,
@@ -33,6 +35,8 @@ import {
 import {
   useTransformIdTypeNameMutation,
   useTransformIdTypeNumberMutation,
+  useTransformGenderNameMutation,
+  useTransformGenderNumberMutation,
 } from "@/redux/apis/users/usersApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
@@ -44,16 +48,20 @@ const ValidatePatientExistForm: React.FC = () => {
   const idTypeAbbrevPatientState = useAppSelector(
     (state) => state.patient.id_type_abbrev
   );
-  const idTypePatientState = useAppSelector(
-    (state) => state.patient.user_id_type
-  );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
+  );
+  const genderAbbrevPatientState = useAppSelector(
+    (state) => state.patient.user_gender_abbrev
   );
   const affiliationEpsPatientState = useAppSelector(
     (state) => state.patient.affiliation_eps
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
+
+  const [formEmpty, setFormEmpty] = useState(true);
+  const [idTypeAbbrevLocalState, setIdTypeAbbrevLocalState] = useState("");
+  const [idNumberLocalState, setIdNumberLocalState] = useState("");
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -107,101 +115,181 @@ const ValidatePatientExistForm: React.FC = () => {
     fixedCacheKey: "transformIdTypeNumberData",
   });
 
+  const [
+    transformGenderName,
+    {
+      data: isTransformGenderNameData,
+      isLoading: isTransformGenderNameLoading,
+      isSuccess: isTransformGenderNameSuccess,
+      isError: isTransformGenderNameError,
+    },
+  ] = useTransformGenderNameMutation({
+    fixedCacheKey: "transformGenderNameData",
+  });
+  const [
+    transformGenderNumber,
+    {
+      data: isTransformGenderNumberData,
+      isLoading: isTransformGenderNumberLoading,
+      isSuccess: isTransformGenderNumberSuccess,
+      isError: isTransformGenderNumberError,
+    },
+  ] = useTransformGenderNumberMutation({
+    fixedCacheKey: "transformGenderNumberData",
+  });
+
   useEffect(() => {
+    console.log(isValidatePatientData);
+    console.log(isValidatePatientRegisterData);
+    console.log(affiliationEpsPatientState);
+    console.log(formEmpty);
     if (
       affiliationEpsPatientState &&
-      !isValidatePatientData &&
-      !isValidatePatientRegisterData
+      formEmpty &&
+      !idTypeAbbrevLocalState &&
+      !idNumberLocalState
     ) {
       dispatch(setDefaultValuesUserPatient());
     }
+    if (!affiliationEpsPatientState && !formEmpty) {
+      setFormEmpty(true);
+    }
   }, [
     affiliationEpsPatientState,
-    isValidatePatientData,
-    isValidatePatientRegisterData,
+    formEmpty,
+    idTypeAbbrevLocalState,
+    idNumberLocalState,
   ]);
 
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
-      setDefaultValuesUserPatient();
+      dispatch(setDefaultValuesUserPatient());
 
-      // const searchPatientUser: any = await validatePatientRegister({
-      //   id_number: idNumberPatientState,
-      // });
+      if (idTypeAbbrevPatientState && idNumberPatientState) {
+        // const searchPatientUser: any = await validatePatientRegister({
+        //   id_number: idNumberPatientState,
+        // });
 
-      // var validationPatientRegisterData = searchPatientUser?.data;
+        // var validationPatientRegisterData = searchPatientUser?.data;
 
-      // if (validationPatientRegisterData?.status === 409) {
-      //   const errorMessage = validationPatientRegisterData?.message;
+        // if (validationPatientRegisterData?.status === 409) {
+        //   const errorMessage = validationPatientRegisterData?.message;
 
-      //   dispatch(setErrorsUserPatient(errorMessage));
-      //   setShowErrorMessagePatient(true);
-      // }
-      // if (validationPatientRegisterData?.status === 200) {
-      const response: any = await validatePatient({
-        idType: idTypeAbbrevPatientState,
-        idNumber: idNumberPatientState,
-      });
+        //   dispatch(setErrorsUserPatient(errorMessage));
+        //   setShowErrorMessagePatient(true);
+        // }
+        // if (validationPatientRegisterData?.status === 200) {
+        const response: any = await validatePatient({
+          idType: idTypeAbbrevPatientState,
+          idNumber: idNumberPatientState,
+        });
 
-      var validationPatientData = response.data?.[0].count;
+        var validationPatientData = response.data?.[0].count;
 
-      if (validationPatientData === 0) {
-        const errorMessage =
-          "El paciente no se encuentra registrado en la clínica";
+        console.log(isValidatePatientData);
 
-        dispatch(setErrorsUserPatient(errorMessage));
+        if (validationPatientData === 0) {
+          const errorMessage =
+            "El paciente no se encuentra registrado en la clínica";
+
+          dispatch(setErrorsUserPatient(errorMessage));
+          setShowErrorMessagePatient(true);
+        }
+        if (validationPatientData === 1) {
+          var patientData = response.data?.[0].data?.[0];
+
+          if (patientData) {
+            setIdTypeAbbrevLocalState("");
+            setIdNumberLocalState("");
+
+            let namePatient: string = patientData.NOMBRE ?? "NO REGISTRA";
+            let idTypePatient: string = patientData.TIPO ?? "NO REGISTRA";
+            let idNumberPatient: string = patientData.ID ?? "NO REGISTRA";
+            let genderPatient: string = patientData.SEXO ?? "NO REGISTRA";
+            let birthDatePatient: string =
+              patientData.FECHA_NACIMIENTO ?? "NO REGISTRA";
+            let emailPatient: string = patientData.CORREO ?? "NO REGISTRA";
+            let cellPhonePatient: string = patientData.CELULAR ?? "NO REGISTRA";
+            let affiliationEpsPatient: string =
+              patientData.EMPRESA ?? "NO REGISTRA";
+            let residenceAddressPatient: string =
+              patientData.DIRECCION ?? "NO REGISTRA";
+
+            dispatch(setNameUserPatient(namePatient));
+            dispatch(setIdTypeAbbrevUserPatient(idTypeAbbrevLocalState));
+            dispatch(setIdNumberUserPatient(idNumberLocalState));
+            dispatch(setGenderAbbrevUserPatient(genderPatient));
+            dispatch(setBirthdateUserPatient(birthDatePatient));
+            dispatch(setEmailUserPatient(emailPatient));
+            dispatch(setCellphoneUserPatient(cellPhonePatient));
+            dispatch(setAffiliationEpsUserPatient(affiliationEpsPatient));
+            dispatch(setResidenceAddressUserPatient(residenceAddressPatient));
+
+            console.log("HOSVITAL", patientData?.SEXO);
+
+            console.log("ENTRA", genderAbbrevPatientState);
+
+            // if (idTypeAbbrevPatientState) {
+            //   const responseIdTypeName: any = await transformIdTypeName({
+            //     idTypeAbbrev: idTypeAbbrevPatientState,
+            //   });
+
+            //   var idTypeName = responseIdTypeName?.error?.data;
+
+            //   dispatch(setIdTypeAbbrevUserPatient(idTypeName));
+
+            //   const responseIdTypeNumber: any = await transformIdTypeNumber({
+            //     idTypeAbbrev: idTypeAbbrevPatientState,
+            //   });
+
+            //   var idTypeNumber = responseIdTypeNumber?.data;
+
+            //   dispatch(setIdTypeUserPatient(idTypeNumber));
+            // }
+            // if (genderAbbrevPatientState) {
+            //   const responseGenderName: any = await transformGenderName({
+            //     genderAbbrev: genderAbbrevPatientState,
+            //   });
+
+            //   var genderName = responseGenderName?.error?.data;
+
+            //   dispatch(setGenderAbbrevUserPatient(genderName));
+
+            //   console.log("SALE", genderAbbrevPatientState);
+            // }
+
+            setShowSuccessMessage(true);
+            setFormEmpty(false);
+
+            // await router.push("register/validate_data", {
+            //   scroll: true,
+            // });
+          }
+        }
+        // }
+      } else {
+        dispatch(setErrorsUserPatient("Datos del paciente no encontrados"));
         setShowErrorMessagePatient(true);
       }
-      if (validationPatientData === 1) {
-        var patientData = response.data?.[0].data?.[0];
-
-        dispatch(setNameUserPatient(patientData.NOMBRE));
-        dispatch(setIdTypeAbbrevUserPatient(patientData.TIPO));
-        dispatch(setIdNumberUserPatient(patientData.ID));
-        dispatch(setBirthdateUserPatient(patientData.FECHA_NACIMIENTO));
-        dispatch(setEmailUserPatient(patientData.CORREO));
-        dispatch(setCellphoneUserPatient(patientData.CELULAR));
-        dispatch(setAffiliationEpsUserPatient(patientData.EMPRESA));
-        dispatch(setResidenceAddressUserPatient(patientData.DIRECCION));
-
-        const responseIdTypeName: any = await transformIdTypeName({
-          idTypeAbbrev: idTypeAbbrevPatientState,
-        });
-
-        const idTypeName = responseIdTypeName?.error?.data;
-
-        dispatch(setIdTypeAbbrevUserPatient(idTypeName));
-
-        const responseIdTypeNumber: any = await transformIdTypeNumber({
-          idTypeAbbrev: idTypeAbbrevPatientState,
-        });
-
-        const idTypeNumber = responseIdTypeNumber?.data;
-
-        dispatch(setIdTypeUserPatient(idTypeNumber));
-
-        setShowSuccessMessage(true);
-
-        router.push("register/validate_data", { scroll: true });
-      }
-      // }
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmittingPatient(false);
+      console.log(idNumberPatientState);
+      console.log(affiliationEpsPatientState);
     }
   };
 
   const handleIdTypeChange = (value: string | undefined) => {
     if (value) {
       var idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
-      dispatch(setIdTypeAbbrevUserPatient(idTypeAbbrevPatientString));
+      setIdTypeAbbrevLocalState(idTypeAbbrevPatientString);
     }
   };
 
-  const handleGoToUserLogin = () => {
-    router.push("/users_login", { scroll: true });
+  const handleGoToUserLogin = async () => {
+    await router.push("/users_login", { scroll: true });
     dispatch(setDefaultValuesUserPatient());
   };
 
@@ -272,7 +360,7 @@ const ValidatePatientExistForm: React.FC = () => {
           ]}
         >
           <Select
-            value={idTypeAbbrevPatientState}
+            value={idTypeAbbrevLocalState}
             placeholder="Tipo de identificación"
             onChange={handleIdTypeChange}
           >
@@ -311,9 +399,9 @@ const ValidatePatientExistForm: React.FC = () => {
           <Input
             prefix={<IdcardOutlined className="site-form-item-icon" />}
             type="number"
-            value={idNumberPatientState}
+            value={idNumberLocalState}
             placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumberUserPatient(e.target.value))}
+            onChange={(e) => setIdNumberLocalState(e.target.value)}
             min={0}
           />
         </Form.Item>

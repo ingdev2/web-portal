@@ -71,7 +71,7 @@ export class CreateUserPatientDto {
   @IsOptional()
   user_role: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   user_gender: number;
 
   @IsNotEmpty()

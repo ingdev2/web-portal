@@ -4,7 +4,7 @@ interface FamiliarLogin {
   email: string;
   patient_id_number: number;
   rel_with_patient: number;
-  verification_code?: number;
-  idTypeOptions?: [];
-  errors?: [];
+  verification_code: number;
+  idTypeOptions: [];
+  errors: [];
 }

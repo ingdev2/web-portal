@@ -1,4 +1,4 @@
 interface Gender {
-  id?: number;
+  id: number;
   name: string;
 }

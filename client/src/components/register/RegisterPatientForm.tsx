@@ -63,6 +63,9 @@ const RegisterPatientForm: React.FC = () => {
   const genderPatientState = useAppSelector(
     (state) => state.patient.user_gender
   );
+  const genderPatientAbbrevState = useAppSelector(
+    (state) => state.patient.user_gender_abbrev
+  );
   const passwordPatientState = useAppSelector(
     (state) => state.patient.password
   );
@@ -88,19 +91,12 @@ const RegisterPatientForm: React.FC = () => {
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
   const {
-    data: gendersData,
-    isLoading: gendersLoading,
-    isFetching: gendersFetching,
-    error: gendersError,
-  } = useGetAllGendersQuery(null);
-  const {
     data: authMethodData,
     isLoading: authMethodLoading,
     isFetching: authMethodFetching,
     error: authMethodError,
   } = useGetAllAuthMethodsQuery(null);
 
-  const [allGendersData, setAllGendersData]: any = useState([]);
   const [allAuthMethodsData, setAllAuthMethodsData]: any = useState([]);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
@@ -122,13 +118,12 @@ const RegisterPatientForm: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!gendersLoading && !gendersFetching && gendersData) {
-      setAllGendersData(gendersData);
+    if (!idTypeAbbrevPatientState && !idNumberPatientState) {
+      router.back();
     }
-    if (gendersError) {
-      dispatch(setErrorsUserPatient("¡No se pudo obtener los tipos de sexo!"));
+    if (!idTypeAbbrevPatientState && !idNumberPatientState) {
+      dispatch(setErrorsUserPatient("¡Datos de paciente no encontrados!"));
       setShowErrorMessagePatient(true);
-      setAllGendersData(gendersData);
     }
     if (!authMethodLoading && !authMethodFetching && authMethodData) {
       setAllAuthMethodsData(authMethodData);
@@ -143,15 +138,12 @@ const RegisterPatientForm: React.FC = () => {
       setAllAuthMethodsData(authMethodData);
     }
   }, [
-    gendersLoading,
-    gendersFetching,
-    gendersData,
-    gendersError,
+    idTypeAbbrevPatientState,
+    idNumberPatientState,
     authMethodLoading,
     authMethodFetching,
     authMethodData,
     authMethodError,
-    affiliationEpsPatientState,
   ]);
 
   const handleConfirmData = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -321,6 +313,17 @@ const RegisterPatientForm: React.FC = () => {
 
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Sexo:
+            </Typography.Title>
+            <Input
+              id="patient-gender-hosvital"
+              value={genderPatientAbbrevState}
+              disabled
+            />
+          </div>
+
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
               Fecha de nacimiento:
             </Typography.Title>
             <Input
@@ -374,35 +377,6 @@ const RegisterPatientForm: React.FC = () => {
             >
               Ingresar datos adicionales
             </h2>
-
-            {gendersLoading || gendersFetching ? (
-              <CustomSpin />
-            ) : (
-              <Form.Item
-                name="patient-user-gender-register"
-                label="Sexo descrito en documento de identidad"
-                style={{ marginBottom: 22, textAlign: "start" }}
-                rules={[
-                  {
-                    required: true,
-                    message:
-                      "¡Por favor ingresa el tipo de género que aparece en tu documento de identidad!",
-                  },
-                ]}
-              >
-                <Select
-                  value={genderPatientState}
-                  placeholder="Seleccionar el sexo"
-                  onChange={(e) => dispatch(setGenderUserPatient(e))}
-                >
-                  {allGendersData?.map((option: any) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            )}
 
             <Form.Item
               name="radio-select-auth-method"

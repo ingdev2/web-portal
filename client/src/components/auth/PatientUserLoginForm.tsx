@@ -47,6 +47,8 @@ const PatientUserLoginForm: React.FC = () => {
     (state) => state.modal.patientModalIsOpen
   );
 
+  const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
+    useState(false);
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
@@ -330,24 +332,30 @@ const PatientUserLoginForm: React.FC = () => {
             ¿No estas registrado?
           </Divider>
 
-          <Button
-            style={{
-              paddingInline: 22,
-              color: "#015E90",
-              borderColor: "#015E90",
-              fontWeight: "bold",
-              borderRadius: 7,
-              borderWidth: 1.3,
-              marginTop: 7,
-            }}
-            htmlType="button"
-            className="patient-register-button"
-            onClick={() => {
-              router.push("patient/register", { scroll: true });
-            }}
-          >
-            Registrarme
-          </Button>
+          {isSubmittingRegisterPagePatient ? (
+            <CustomSpin />
+          ) : (
+            <Button
+              style={{
+                paddingInline: 22,
+                color: "#015E90",
+                borderColor: "#015E90",
+                fontWeight: "bold",
+                borderRadius: 7,
+                borderWidth: 1.3,
+                marginTop: 7,
+              }}
+              htmlType="button"
+              className="patient-register-button"
+              onClick={async () => {
+                setIsSubmittingRegisterPagePatient(true);
+                await router.push("patient/register", { scroll: true });
+                setIsSubmittingRegisterPagePatient(false);
+              }}
+            >
+              Registrarme
+            </Button>
+          )}
         </Form.Item>
         {/* <Form.ErrorList
           errors={errors?.map((error) => (

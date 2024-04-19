@@ -8,6 +8,8 @@ import { UserRolType } from '../../common/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { IdType } from '../../common/enums/id_type.enum';
 import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
+import { GenderType } from '../../genders/entities/gender.entity';
+import { Gender } from '../../common/enums/gender.enum';
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 import { AuthenticationMethodEnum } from '../../common/enums/authentication_method.enum';
 import { DeptsAndCitiesService } from '../../depts_and_cities/services/depts_and_cities.service';
@@ -34,6 +36,9 @@ export class UsersService {
 
     @InjectRepository(IdTypeEntity)
     private idTypeRepository: Repository<IdTypeEntity>,
+
+    @InjectRepository(GenderType)
+    private genderRepository: Repository<GenderType>,
 
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
@@ -148,6 +153,43 @@ export class UsersService {
     }
 
     const idTypeId = idTypeOfUser.id;
+
+    return idTypeId;
+  }
+
+  transformGenderName(genderAbbrev: string): Gender {
+    const abbreviatedId = genderAbbrev;
+
+    switch (abbreviatedId) {
+      case 'M':
+        return Gender.MALE;
+      case 'F':
+        return Gender.FEMALE;
+      default:
+        throw new HttpException(
+          `Tipo de sexo ingresado no válido.`,
+          HttpStatus.NOT_FOUND,
+        );
+    }
+  }
+
+  async transformGenderNumber(genderName: string): Promise<number> {
+    const genderNameString = this.transformGenderName(genderName);
+
+    const genderOfUser = await this.genderRepository.findOne({
+      where: {
+        name: genderNameString,
+      },
+    });
+
+    if (!genderOfUser) {
+      throw new HttpException(
+        `Tipo de sexo no encontrado.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const idTypeId = genderOfUser.id;
 
     return idTypeId;
   }
