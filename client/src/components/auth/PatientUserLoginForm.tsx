@@ -18,6 +18,7 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
+import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
@@ -104,6 +105,7 @@ const PatientUserLoginForm: React.FC = () => {
     ) {
       dispatch(setPatientModalIsOpen(true));
     }
+    dispatch(setDefaultValuesUserPatient());
   }, [
     idTypesPatientData,
     idTypesPatientLoading,
@@ -329,7 +331,7 @@ const PatientUserLoginForm: React.FC = () => {
               borderWidth: 1.3,
             }}
           >
-            ¿No estas registrado?
+            ¿No tienes cuenta?
           </Divider>
 
           {isSubmittingRegisterPagePatient ? (
@@ -353,7 +355,7 @@ const PatientUserLoginForm: React.FC = () => {
                 setIsSubmittingRegisterPagePatient(false);
               }}
             >
-              Registrarme
+              Activar cuenta
             </Button>
           )}
         </Form.Item>
