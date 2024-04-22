@@ -353,6 +353,16 @@ export class AuthService {
       throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
     }
 
+    const userFound =
+      await this.usersService.getUserFoundByIdNumberWithPassword(
+        id_type,
+        id_number,
+      );
+
+    if (!userFound) {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
     const verifiedPatientUserRole = await this.userRepository.findOne({
       where: {
         id_number: id_number,
@@ -362,16 +372,6 @@ export class AuthService {
 
     if (!verifiedPatientUserRole) {
       throw new UnauthorizedException(`¡Usuario no autorizado!`);
-    }
-
-    const userFound =
-      await this.usersService.getUserFoundByIdNumberWithPassword(
-        id_type,
-        id_number,
-      );
-
-    if (!userFound) {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(
@@ -461,6 +461,16 @@ export class AuthService {
       throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
     }
 
+    const userFound =
+      await this.usersService.getUserFoundByIdNumberWithPassword(
+        id_type,
+        id_number,
+      );
+
+    if (!userFound) {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
     const verifiedEpsUserRole = await this.userRepository.findOne({
       where: {
         id_number: id_number,
@@ -470,16 +480,6 @@ export class AuthService {
 
     if (!verifiedEpsUserRole) {
       throw new UnauthorizedException(`¡Usuario no autorizado!`);
-    }
-
-    const userFound =
-      await this.usersService.getUserFoundByIdNumberWithPassword(
-        id_type,
-        id_number,
-      );
-
-    if (!userFound) {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(

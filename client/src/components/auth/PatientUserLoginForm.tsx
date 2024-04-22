@@ -103,6 +103,8 @@ const PatientUserLoginForm: React.FC = () => {
       !isLoginPatientLoading &&
       !isSubmittingPatient
     ) {
+      dispatch(setErrorsLoginPatient([]));
+      setShowErrorMessagePatient(false);
       dispatch(setPatientModalIsOpen(true));
     }
     dispatch(setDefaultValuesUserPatient());
@@ -126,11 +128,7 @@ const PatientUserLoginForm: React.FC = () => {
 
       var isLoginUserError = response.error;
 
-      if (
-        !isLoginPatientSuccess &&
-        !isLoginPatientLoading &&
-        isLoginUserError
-      ) {
+      if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
 
         if (Array.isArray(errorMessage)) {
@@ -351,7 +349,10 @@ const PatientUserLoginForm: React.FC = () => {
               className="patient-register-button"
               onClick={async () => {
                 setIsSubmittingRegisterPagePatient(true);
-                await router.push("patient/register", { scroll: true });
+                await router.push("/register", {
+                  scroll: true,
+                });
+
                 setIsSubmittingRegisterPagePatient(false);
               }}
             >

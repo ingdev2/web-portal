@@ -59,7 +59,7 @@ const handler = NextAuth({
     },
   },
   pages: {
-    signIn: "/users_login",
+    signIn: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
 });

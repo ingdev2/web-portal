@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import {
   Card,
@@ -48,7 +49,7 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
-import CustomModal from "../common/custom_modal/CustomModal";
+import CustomModalTwoOptions from "../common/custom_modal_two_options/CustomModalTwoOptions";
 
 const RegisterPatientForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -199,8 +200,13 @@ const RegisterPatientForm: React.FC = () => {
     try {
       setIsSubmittingIncorrectData(true);
 
+      await new Promise((resolve) => setTimeout(resolve, 700));
+
+      await router.replace("/login", {
+        scroll: false,
+      });
+
       dispatch(setDefaultValuesUserPatient());
-      await router.push("/users_login", { scroll: false });
     } catch (error) {
       console.error(error);
     } finally {
@@ -228,7 +234,7 @@ const RegisterPatientForm: React.FC = () => {
   return (
     <div>
       {showCustomConfirmModal && (
-        <CustomModal
+        <CustomModalTwoOptions
           key={"custom-confirm-modal"}
           iconCustomModal={<FcInfo size={77} />}
           openCustomModalState={showCustomConfirmModal}
@@ -237,20 +243,20 @@ const RegisterPatientForm: React.FC = () => {
           handleCancelCustomModal={() => setShowCustomConfirmModal(false)}
           handleConfirmCustomModal={handleConfirmConfirmDataModal}
           isSubmittingConfirm={isSubmittingConfirmData}
-        ></CustomModal>
+        ></CustomModalTwoOptions>
       )}
 
       {showCustomCancelModal && (
-        <CustomModal
+        <CustomModalTwoOptions
           key={"custom-cancel-modal"}
           iconCustomModal={<FcHighPriority size={77} />}
           openCustomModalState={showCustomCancelModal}
           titleCustomModal="¿Tus datos son incorrectos?"
-          subtitleCustomModal="Si tus datos no son correctos, te recomendamos no activar tu cuenta y acercarte a nuestras oficinas para realizar la actualización de datos personales."
+          subtitleCustomModal="Si tus datos no son correctos, te recomendamos no activar tu cuenta y comunicarte a nuestra línea de PBX para realizar la actualización de tus datos personales."
           handleCancelCustomModal={() => setShowCustomCancelModal(false)}
           handleConfirmCustomModal={handleConfirmIncorrectDataModal}
           isSubmittingConfirm={isSubmittingIncorrectData}
-        ></CustomModal>
+        ></CustomModalTwoOptions>
       )}
 
       <Card
@@ -299,8 +305,8 @@ const RegisterPatientForm: React.FC = () => {
                 textAlign: "center",
               }}
             >
-              Por favor, verifique si todos sus datos estan correctos, de lo
-              contrario debe acercarse a nuestra sede en Barranquilla para
+              Por favor, verifique si todos sus datos están correctos, de lo
+              contrario debe comunicarse a nuestra línea PBX: (601)3770055 para
               realizar la actualización de sus datos personales.
             </p>
 

@@ -79,6 +79,8 @@ const EpsUserLoginForm: React.FC = () => {
       dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
     if (isLoginEpsSuccess && !isLoginEpsLoading && !isSubmittingEps) {
+      dispatch(setErrorsLoginEps([]));
+      setShowErrorMessageEps(false);
       dispatch(setEpsModalIsOpen(true));
     }
   }, [
@@ -101,7 +103,7 @@ const EpsUserLoginForm: React.FC = () => {
 
       var isLoginUserError = response.error;
 
-      if (!isLoginEpsSuccess && !isLoginEpsLoading && isLoginUserError) {
+      if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
 
         if (Array.isArray(errorMessage)) {

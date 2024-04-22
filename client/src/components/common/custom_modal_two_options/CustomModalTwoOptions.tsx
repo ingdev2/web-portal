@@ -6,7 +6,7 @@ import { Modal, Button, Space } from "antd";
 
 import CustomSpin from "../custom_spin/CustomSpin";
 
-const CustomModal: React.FC<{
+const CustomModalTwoOptions: React.FC<{
   iconCustomModal: ReactNode;
   titleCustomModal: string;
   subtitleCustomModal: string;
@@ -108,6 +108,7 @@ const CustomModal: React.FC<{
                   }}
                   htmlType="submit"
                   onClick={handleConfirmCustomModal}
+                  onMouseDown={handleConfirmCustomModal}
                 >
                   Confirmar
                 </Button>
@@ -124,6 +125,7 @@ const CustomModal: React.FC<{
                   color: "#f2f2f2",
                 }}
                 onClick={handleCancelCustomModal}
+                onMouseDown={handleCancelCustomModal}
               >
                 Cancelar
               </Button>
@@ -135,4 +137,4 @@ const CustomModal: React.FC<{
   );
 };
 
-export default CustomModal;
+export default CustomModalTwoOptions;

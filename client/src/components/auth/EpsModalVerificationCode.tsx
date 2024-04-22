@@ -72,11 +72,7 @@ const EpsModalVerificationCode: React.FC = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-    if (!isUserEpsData && isUserEpsError) {
-      setShowErrorMessage(true);
-      setErrorMessage("¡Usuario no encontrado!");
-    }
-  }, [idNumberEpsState, isUserEpsData, isUserEpsError]);
+  }, [idNumberEpsState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -101,7 +97,9 @@ const EpsModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        await router.replace("eps/homepage", { scroll: false });
+        await router.replace("/eps/homepage", {
+          scroll: false,
+        });
         dispatch(setIdTypeLoginEps(""));
         dispatch(setPasswordLoginEps(""));
         dispatch(setVerificationCodeLoginEps(""));
@@ -142,7 +140,7 @@ const EpsModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
-    <Link href="/users_login" scroll={false} />;
+    <Link href="/login" scroll={false} />;
     window.location.reload();
   };
 

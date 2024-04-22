@@ -258,7 +258,7 @@ const ValidatePatientExistForm: React.FC = () => {
 
           setShowSuccessMessage(true);
 
-          await router.push("register/validate_data", {
+          await router.push("/register/validate_data", {
             scroll: true,
           });
         }
@@ -282,7 +282,7 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = async () => {
-    await router.push("/users_login", { scroll: true });
+    await router.push("/login", { scroll: true });
     dispatch(setDefaultValuesUserPatient());
   };
 
