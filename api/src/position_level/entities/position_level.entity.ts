@@ -1,6 +1,6 @@
 import { Admin } from '../../admins/entities/admin.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { PositionLevelEnum } from '../../common/enums/position_level.enum';
+import { PositionLevelEnum } from '../../utils/enums/position_level.enum';
 
 @Entity()
 export class PositionLevel {

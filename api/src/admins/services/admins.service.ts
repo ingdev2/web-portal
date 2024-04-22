@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { CreateAdminDto } from '../dto/create_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';

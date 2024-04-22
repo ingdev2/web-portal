@@ -10,7 +10,7 @@ import {
 import { RelWithPatientService } from '../services/rel_with_patient.service';
 import { CreateRelWithPatientDto } from '../dto/create-rel_with_patient.dto';
 import { UpdateRelWithPatientDto } from '../dto/update-rel_with_patient.dto';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 

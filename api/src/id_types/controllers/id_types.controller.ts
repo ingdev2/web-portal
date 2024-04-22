@@ -12,7 +12,7 @@ import { CreateIdTypeDto } from '../dto/create-id_type.dto';
 import { UpdateIdTypeDto } from '../dto/update-id_type.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('id-types')
 @ApiBearerAuth()
