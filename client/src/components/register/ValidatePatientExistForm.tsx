@@ -59,13 +59,14 @@ const ValidatePatientExistForm: React.FC = () => {
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
-  const [formEmpty, setFormEmpty] = useState(true);
   const [idTypeAbbrevLocalState, setIdTypeAbbrevLocalState] = useState("");
-  const [idNumberLocalState, setIdNumberLocalState] = useState("");
+  const [idNumberLocalState, setIdNumberLocalState] = useState(0);
 
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [idTypePatientLocalState, setIdTypePatientLocalState] = useState("");
+  const [genderPatientLocalState, setGenderPatientLocalState] = useState("");
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
   const [
@@ -139,36 +140,71 @@ const ValidatePatientExistForm: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log(isValidatePatientData);
-    console.log(isValidatePatientRegisterData);
-    console.log(affiliationEpsPatientState);
-    console.log(formEmpty);
-    if (
-      affiliationEpsPatientState &&
-      formEmpty &&
-      !idTypeAbbrevLocalState &&
-      !idNumberLocalState
-    ) {
-      dispatch(setDefaultValuesUserPatient());
-    }
-    if (!affiliationEpsPatientState && !formEmpty) {
-      setFormEmpty(true);
-    }
+    const fetchData = async () => {
+      if (
+        affiliationEpsPatientState &&
+        !idTypeAbbrevLocalState &&
+        !idNumberLocalState
+      ) {
+        dispatch(setDefaultValuesUserPatient());
+      }
+
+      if (idTypePatientLocalState) {
+        const responseIdTypeName: any = await transformIdTypeName({
+          idTypeAbbrev: idTypePatientLocalState,
+        });
+
+        var idTypeName = responseIdTypeName?.error?.data;
+
+        dispatch(setIdTypeAbbrevUserPatient(idTypeName));
+
+        const responseIdTypeNumber: any = await transformIdTypeNumber({
+          idTypeAbbrev: idTypePatientLocalState,
+        });
+
+        var idTypeNumber = responseIdTypeNumber?.data;
+
+        dispatch(setIdTypeUserPatient(idTypeNumber));
+      }
+
+      if (genderPatientLocalState) {
+        const responseGenderName: any = await transformGenderName({
+          genderAbbrev: genderPatientLocalState,
+        });
+
+        var genderName = responseGenderName?.error?.data;
+
+        dispatch(setGenderAbbrevUserPatient(genderName));
+
+        const responseGenderNumber: any = await transformGenderNumber({
+          genderAbbrev: genderPatientLocalState,
+        });
+
+        var genderNumber = responseGenderNumber?.data;
+
+        dispatch(setGenderUserPatient(genderNumber));
+      }
+    };
+
+    fetchData();
   }, [
     affiliationEpsPatientState,
-    formEmpty,
     idTypeAbbrevLocalState,
     idNumberLocalState,
+    idTypePatientLocalState,
+    genderPatientLocalState,
   ]);
 
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
       dispatch(setDefaultValuesUserPatient());
+      setIdTypePatientLocalState("");
+      setGenderPatientLocalState("");
 
-      if (idTypeAbbrevPatientState && idNumberPatientState) {
+      if (idTypeAbbrevLocalState && idNumberLocalState) {
         // const searchPatientUser: any = await validatePatientRegister({
-        //   id_number: idNumberPatientState,
+        //   id_number: idNumberLocalState,
         // });
 
         // var validationPatientRegisterData = searchPatientUser?.data;
@@ -181,13 +217,11 @@ const ValidatePatientExistForm: React.FC = () => {
         // }
         // if (validationPatientRegisterData?.status === 200) {
         const response: any = await validatePatient({
-          idType: idTypeAbbrevPatientState,
-          idNumber: idNumberPatientState,
+          idType: idTypeAbbrevLocalState,
+          idNumber: idNumberLocalState,
         });
 
         var validationPatientData = response.data?.[0].count;
-
-        console.log(isValidatePatientData);
 
         if (validationPatientData === 0) {
           const errorMessage =
@@ -196,76 +230,37 @@ const ValidatePatientExistForm: React.FC = () => {
           dispatch(setErrorsUserPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
-        if (validationPatientData === 1) {
-          var patientData = response.data?.[0].data?.[0];
+        if (validationPatientData === 1 && response.data?.[0].data?.[0]) {
+          const patientData = response.data[0].data[0];
 
-          if (patientData) {
-            setIdTypeAbbrevLocalState("");
-            setIdNumberLocalState("");
+          const {
+            NOMBRE: name = "NO REGISTRA",
+            TIPO: idType = "NO REGISTRA",
+            ID: idNumber = "NO REGISTRA",
+            SEXO: gender = "NO REGISTRA",
+            FECHA_NACIMIENTO: birthDate = "NO REGISTRA",
+            CORREO: email = "NO REGISTRA",
+            CELULAR: cellPhone = "NO REGISTRA",
+            EMPRESA: affiliationEps = "NO REGISTRA",
+            DIRECCION: residenceAddress = "NO REGISTRA",
+          } = patientData;
 
-            let namePatient: string = patientData.NOMBRE ?? "NO REGISTRA";
-            let idTypePatient: string = patientData.TIPO ?? "NO REGISTRA";
-            let idNumberPatient: string = patientData.ID ?? "NO REGISTRA";
-            let genderPatient: string = patientData.SEXO ?? "NO REGISTRA";
-            let birthDatePatient: string =
-              patientData.FECHA_NACIMIENTO ?? "NO REGISTRA";
-            let emailPatient: string = patientData.CORREO ?? "NO REGISTRA";
-            let cellPhonePatient: string = patientData.CELULAR ?? "NO REGISTRA";
-            let affiliationEpsPatient: string =
-              patientData.EMPRESA ?? "NO REGISTRA";
-            let residenceAddressPatient: string =
-              patientData.DIRECCION ?? "NO REGISTRA";
+          setIdTypePatientLocalState(idType);
+          setGenderPatientLocalState(gender);
 
-            dispatch(setNameUserPatient(namePatient));
-            dispatch(setIdTypeAbbrevUserPatient(idTypeAbbrevLocalState));
-            dispatch(setIdNumberUserPatient(idNumberLocalState));
-            dispatch(setGenderAbbrevUserPatient(genderPatient));
-            dispatch(setBirthdateUserPatient(birthDatePatient));
-            dispatch(setEmailUserPatient(emailPatient));
-            dispatch(setCellphoneUserPatient(cellPhonePatient));
-            dispatch(setAffiliationEpsUserPatient(affiliationEpsPatient));
-            dispatch(setResidenceAddressUserPatient(residenceAddressPatient));
+          dispatch(setNameUserPatient(name));
+          dispatch(setIdNumberUserPatient(idNumber));
+          dispatch(setBirthdateUserPatient(birthDate));
+          dispatch(setEmailUserPatient(email));
+          dispatch(setCellphoneUserPatient(cellPhone));
+          dispatch(setAffiliationEpsUserPatient(affiliationEps));
+          dispatch(setResidenceAddressUserPatient(residenceAddress));
 
-            console.log("HOSVITAL", patientData?.SEXO);
+          setShowSuccessMessage(true);
 
-            console.log("ENTRA", genderAbbrevPatientState);
-
-            // if (idTypeAbbrevPatientState) {
-            //   const responseIdTypeName: any = await transformIdTypeName({
-            //     idTypeAbbrev: idTypeAbbrevPatientState,
-            //   });
-
-            //   var idTypeName = responseIdTypeName?.error?.data;
-
-            //   dispatch(setIdTypeAbbrevUserPatient(idTypeName));
-
-            //   const responseIdTypeNumber: any = await transformIdTypeNumber({
-            //     idTypeAbbrev: idTypeAbbrevPatientState,
-            //   });
-
-            //   var idTypeNumber = responseIdTypeNumber?.data;
-
-            //   dispatch(setIdTypeUserPatient(idTypeNumber));
-            // }
-            // if (genderAbbrevPatientState) {
-            //   const responseGenderName: any = await transformGenderName({
-            //     genderAbbrev: genderAbbrevPatientState,
-            //   });
-
-            //   var genderName = responseGenderName?.error?.data;
-
-            //   dispatch(setGenderAbbrevUserPatient(genderName));
-
-            //   console.log("SALE", genderAbbrevPatientState);
-            // }
-
-            setShowSuccessMessage(true);
-            setFormEmpty(false);
-
-            // await router.push("register/validate_data", {
-            //   scroll: true,
-            // });
-          }
+          await router.push("register/validate_data", {
+            scroll: true,
+          });
         }
         // }
       } else {
@@ -276,8 +271,6 @@ const ValidatePatientExistForm: React.FC = () => {
       console.error(error);
     } finally {
       setIsSubmittingPatient(false);
-      console.log(idNumberPatientState);
-      console.log(affiliationEpsPatientState);
     }
   };
 
@@ -345,7 +338,7 @@ const ValidatePatientExistForm: React.FC = () => {
             textAlign: "center",
           }}
         >
-          Registro de usuario Paciente
+          Activación de usuario Paciente
         </h2>
 
         <Form.Item
@@ -401,7 +394,7 @@ const ValidatePatientExistForm: React.FC = () => {
             type="number"
             value={idNumberLocalState}
             placeholder="Número de identificación"
-            onChange={(e) => setIdNumberLocalState(e.target.value)}
+            onChange={(e) => setIdNumberLocalState(e.target.valueAsNumber)}
             min={0}
           />
         </Form.Item>
