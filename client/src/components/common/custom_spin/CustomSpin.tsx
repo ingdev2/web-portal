@@ -7,6 +7,7 @@ const CustomSpin: React.FC = () => {
     <div
       style={{
         display: "flex",
+        alignContent: "center",
         justifyContent: "center",
         alignItems: "center",
       }}

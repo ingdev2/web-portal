@@ -234,6 +234,7 @@ const PatientModalVerificationCode: React.FC = () => {
             onFinish={handleSubmit}
           >
             <Form.Item
+              id="user-code-patient"
               className="user-code-patient"
               name={"user-code-patient"}
               style={{ textAlign: "center" }}
@@ -257,8 +258,8 @@ const PatientModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
-                className="input-code-patient"
                 id="input-code-patient"
+                className="input-code-patient"
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
                   width: 183,
@@ -281,6 +282,7 @@ const PatientModalVerificationCode: React.FC = () => {
               <CustomSpin />
             ) : (
               <Button
+                key={"confirm-code-button-patient"}
                 className="confirm-code-button-patient"
                 size="large"
                 style={{
@@ -312,8 +314,8 @@ const PatientModalVerificationCode: React.FC = () => {
             <CustomSpin />
           ) : (
             <Button
-              className="resend-button-patient"
               key="resend-button-patient"
+              className="resend-button-patient"
               disabled={resendCodeDisable}
               style={{
                 backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
@@ -342,6 +344,7 @@ const PatientModalVerificationCode: React.FC = () => {
 
           <Button
             key="cancel-button-patient"
+            className="cancel-button-patient"
             style={{
               paddingInline: 45,
               backgroundColor: "#8C1111",

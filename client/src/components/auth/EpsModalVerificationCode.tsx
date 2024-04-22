@@ -230,6 +230,7 @@ const EpsModalVerificationCode: React.FC = () => {
             onFinish={handleSubmit}
           >
             <Form.Item
+              id="user-code-eps"
               className="user-code-eps"
               name={"user-code-eps"}
               style={{ textAlign: "center" }}
@@ -253,8 +254,8 @@ const EpsModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
-                className="input-code-eps"
                 id="input-code-eps"
+                className="input-code-eps"
                 prefix={<NumberOutlined className="input-code-item-icon" />}
                 style={{
                   width: 183,
@@ -277,6 +278,7 @@ const EpsModalVerificationCode: React.FC = () => {
               <CustomSpin />
             ) : (
               <Button
+                key="confirm-code-button-eps"
                 className="confirm-code-button-eps"
                 size="large"
                 style={{
@@ -308,8 +310,8 @@ const EpsModalVerificationCode: React.FC = () => {
             <CustomSpin />
           ) : (
             <Button
-              className="resend-button-eps"
               key="resend-button-eps"
+              className="resend-button-eps"
               disabled={resendCodeDisable}
               style={{
                 backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
@@ -338,6 +340,7 @@ const EpsModalVerificationCode: React.FC = () => {
 
           <Button
             key="cancel-button-eps"
+            className="cancel-button-eps"
             style={{
               paddingInline: 45,
               backgroundColor: "#8C1111",
