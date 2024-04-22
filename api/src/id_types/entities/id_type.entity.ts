@@ -1,6 +1,6 @@
 import { Admin } from '../..//admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
-import { IdType } from '../../common/enums/id_type.enum';
+import { IdType } from '../../utils/enums/id_type.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

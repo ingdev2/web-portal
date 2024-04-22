@@ -12,7 +12,7 @@ import { CreateCompanyAreaDto } from '../dto/create-company_area.dto';
 import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('company-area')
 @ApiBearerAuth()

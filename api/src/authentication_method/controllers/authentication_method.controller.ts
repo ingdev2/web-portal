@@ -12,7 +12,7 @@ import { CreateAuthenticationMethodDto } from '../dto/create-authentication_meth
 import { UpdateAuthenticationMethodDto } from '../dto/update-authentication_method.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('authentication-method')
 @ApiBearerAuth()

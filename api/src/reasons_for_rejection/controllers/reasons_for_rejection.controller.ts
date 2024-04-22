@@ -10,7 +10,7 @@ import {
 import { ReasonsForRejectionService } from '../services/reasons_for_rejection.service';
 import { CreateReasonsForRejectionDto } from '../dto/create-reasons_for_rejection.dto';
 import { UpdateReasonsForRejectionDto } from '../dto/update-reasons_for_rejection.dto';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 

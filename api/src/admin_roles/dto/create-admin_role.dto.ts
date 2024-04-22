@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 export class CreateAdminRoleDto {
   @IsNotEmpty()

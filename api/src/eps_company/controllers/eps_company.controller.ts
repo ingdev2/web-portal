@@ -12,7 +12,7 @@ import { CreateEpsCompanyDto } from '../dto/create-eps_company.dto';
 import { UpdateEpsCompanyDto } from '../dto/update-eps_company.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('eps-company')
 @ApiBearerAuth()

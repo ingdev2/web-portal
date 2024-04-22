@@ -1,6 +1,6 @@
 import { User } from '../../users/entities/user.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
-import { UserRolType } from '../../common/enums/user_roles.enum';
+import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

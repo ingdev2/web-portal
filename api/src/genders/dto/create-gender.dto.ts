@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { Gender } from '../../common/enums/gender.enum';
+import { Gender } from '../../utils/enums/gender.enum';
 
 export class CreateGenderTypeDto {
   @IsNotEmpty()

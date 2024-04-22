@@ -10,7 +10,7 @@ import {
 import { RequirementTypeService } from '../services/requirement_type.service';
 import { CreateRequirementTypeDto } from '../dto/create-requirement_type.dto';
 import { UpdateRequirementTypeDto } from '../dto/update-requirement_type.dto';
-import { AdminRolType } from '../../common/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 

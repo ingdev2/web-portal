@@ -4,11 +4,11 @@ import { Repository } from 'typeorm';
 import { AuthorizedFamiliar } from '../entities/authorized_familiar.entity';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { UserRolType } from '../../common/enums/user_roles.enum';
+import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.dto';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
-import { AuthenticationMethodEnum } from '../../common/enums/authentication_method.enum';
+import { AuthenticationMethodEnum } from '../../utils/enums/authentication_method.enum';
 
 @Injectable()
 export class AuthorizedFamiliarService {
