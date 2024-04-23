@@ -45,10 +45,8 @@ import {
 } from "@/redux/features/patient/patientSlice";
 
 import { useCreateUserPatientMutation } from "@/redux/apis/register/registerUsersApi";
-import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
 import CustomModalTwoOptions from "../common/custom_modal_two_options/CustomModalTwoOptions";
 
 const RegisterPatientForm: React.FC = () => {
@@ -85,7 +83,7 @@ const RegisterPatientForm: React.FC = () => {
     (state) => state.patient.whatsapp
   );
   const authMethodPatientState = useAppSelector(
-    (state) => state.patient.auth_method
+    (state) => state.patient.authentication_method
   );
   const affiliationEpsPatientState = useAppSelector(
     (state) => state.patient.affiliation_eps
@@ -172,11 +170,24 @@ const RegisterPatientForm: React.FC = () => {
     try {
       setIsSubmittingConfirmData(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response: any = await createUserPatient({
+        name: namePatientState,
+        user_id_type: idTypePatientState,
+        id_number: idNumberPatientState,
+        user_gender: genderPatientState,
+        birthdate: birthdatePatientState,
+        email: emailPatientState,
+        cellphone: cellphonePatientState,
+        whatsapp: whatsappPatientState,
+        password: passwordPatientState,
+        affiliation_eps: affiliationEpsPatientState,
+        residence_address: residenceAddressPatientState,
+        authentication_method: authMethodPatientState,
+      });
 
-      // const response: any = await createUserPatient({
+      var createUserPatientData = response;
 
-      // });
+      console.log(response);
     } catch (error) {
       console.error(error);
     } finally {
@@ -261,8 +272,8 @@ const RegisterPatientForm: React.FC = () => {
 
       <Card
         style={{
-          width: "100%",
           maxWidth: 720,
+          width: "100%",
           height: "min-content",
           display: "flex",
           flexDirection: "column",
@@ -282,7 +293,7 @@ const RegisterPatientForm: React.FC = () => {
         )}
 
         <Row>
-          <Col xs={24} md={12} style={{ padding: "0 13px" }}>
+          <Col xs={24} md={12} lg={12} style={{ padding: "0 7px" }}>
             <h2
               className="title-register-patient"
               style={{

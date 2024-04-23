@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import EpsModalVerificationCode from "./EpsModalVerificationCode";
-import { Button, Card, Form, Input, Select } from "antd";
+import { Button, Card, Col, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
@@ -130,9 +130,10 @@ const EpsUserLoginForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 321,
-        height: "min-content",
+        width: "max-content",
+        height: "max-content",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
@@ -149,153 +150,160 @@ const EpsUserLoginForm: React.FC = () => {
         />
       )}
 
-      <Form
-        name="eps-users-login-form"
-        className="eps-users-login-form"
-        style={{ width: 270 }}
-        onFinish={handleSubmit}
-        initialValues={{ remember: false }}
-        autoComplete="false"
-        layout="vertical"
+      <Col
+        xs={24}
+        md={24}
+        lg={24}
+        style={{ padding: "0 2px", width: "100vw", maxWidth: 321 }}
       >
-        <h2
-          className="title-login-eps"
-          style={{
-            fontWeight: "500",
-            lineHeight: 1.3,
-            marginTop: 0,
-            textAlign: "center",
-          }}
+        <Form
+          id="eps-users-login-form"
+          name="eps-users-login-form"
+          className="eps-users-login-form"
+          onFinish={handleSubmit}
+          initialValues={{ remember: false }}
+          autoComplete="false"
+          layout="vertical"
         >
-          Ingreso de usuario Eps
-        </h2>
+          <h2
+            className="title-login-eps"
+            style={{
+              fontWeight: "500",
+              lineHeight: 1.3,
+              marginTop: 0,
+              textAlign: "center",
+            }}
+          >
+            Ingreso de usuario <br />
+            Eps
+          </h2>
 
-        {idTypesEpsLoading || idTypesEpsFetching ? (
-          <CustomSpin />
-        ) : (
+          {idTypesEpsLoading || idTypesEpsFetching ? (
+            <CustomSpin />
+          ) : (
+            <Form.Item
+              name="eps-user-id-type"
+              label="Tipo de identificación"
+              style={{ marginBottom: 7 }}
+              rules={[
+                {
+                  required: true,
+                  message: "¡Por favor ingresa tu tipo de identificación!",
+                },
+              ]}
+            >
+              <Select
+                value={idTypeEpsState}
+                placeholder="Tipo de identificación"
+                onChange={(e) => dispatch(setIdTypeLoginEps(e))}
+              >
+                {idTypeOptionsEps?.map((option: any) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
           <Form.Item
-            name="eps-user-id-type"
-            label="Tipo de identificación"
+            name="eps-user-id-number"
+            label="Número de identificación"
             style={{ marginBottom: 7 }}
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingresa tu tipo de identificación!",
+                message: "¡Por favor ingresa tu número de identificación!",
+              },
+              {
+                pattern: /^[0-9]+$/,
+                message:
+                  "¡Por favor ingresa número de identificación sin puntos!",
+              },
+              {
+                min: 7,
+                message: "¡Por favor ingresa mínimo 7 números!",
+              },
+              {
+                max: 11,
+                message: "¡Por favor ingresa máximo 11 números!",
               },
             ]}
           >
-            <Select
-              value={idTypeEpsState}
-              placeholder="Tipo de identificación"
-              onChange={(e) => dispatch(setIdTypeLoginEps(e))}
-            >
-              {idTypeOptionsEps?.map((option: any) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
+            <Input
+              prefix={<IdcardOutlined className="site-form-item-icon" />}
+              type="number"
+              value={idNumberEpsState}
+              placeholder="Número de identificación"
+              onChange={(e) => dispatch(setIdNumberLoginEps(e.target.value))}
+              min={0}
+            />
           </Form.Item>
-        )}
 
-        <Form.Item
-          name="eps-user-id-number"
-          label="Número de identificación"
-          style={{ marginBottom: 7 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu número de identificación!",
-            },
-            {
-              pattern: /^[0-9]+$/,
-              message:
-                "¡Por favor ingresa número de identificación sin puntos!",
-            },
-            {
-              min: 7,
-              message: "¡Por favor ingresa mínimo 7 números!",
-            },
-            {
-              max: 11,
-              message: "¡Por favor ingresa máximo 11 números!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<IdcardOutlined className="site-form-item-icon" />}
-            type="number"
-            value={idNumberEpsState}
-            placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumberLoginEps(e.target.value))}
-            min={0}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="eps-user-password"
-          label="Contraseña"
-          style={{ marginBottom: 13 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu contraseña!",
-            },
-            {
-              min: 7,
-              message: "¡La contraseña debe tener mínimo 7 caracteres!",
-            },
-            {
-              max: 14,
-              message: "¡La contraseña debe tener máximo 14 caracteres!",
-            },
-          ]}
-          hasFeedback
-        >
-          <Input.Password
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            value={passwordEpsState}
-            placeholder="Contraseña"
-            onChange={(e) => dispatch(setPasswordLoginEps(e.target.value))}
-          />
-        </Form.Item>
-
-        <Form.Item style={{ textAlign: "center" }}>
-          <a
-            className="eps-login-form-forgot-user"
-            href=""
-            style={{
-              display: "flow",
-              color: "#960202",
-              textDecorationLine: "underline",
-              fontWeight: 500,
-              marginBottom: 13,
-            }}
+          <Form.Item
+            name="eps-user-password"
+            label="Contraseña"
+            style={{ marginBottom: 13 }}
+            rules={[
+              {
+                required: true,
+                message: "¡Por favor ingresa tu contraseña!",
+              },
+              {
+                min: 7,
+                message: "¡La contraseña debe tener mínimo 7 caracteres!",
+              },
+              {
+                max: 14,
+                message: "¡La contraseña debe tener máximo 14 caracteres!",
+              },
+            ]}
+            hasFeedback
           >
-            Olvide mi contraseña
-          </a>
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              value={passwordEpsState}
+              placeholder="Contraseña"
+              onChange={(e) => dispatch(setPasswordLoginEps(e.target.value))}
+            />
+          </Form.Item>
 
-          {isSubmittingEps && isLoginEpsLoading ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              size="large"
+          <Form.Item style={{ textAlign: "center" }}>
+            <a
+              className="eps-login-form-forgot-user"
+              href=""
               style={{
-                paddingInline: 62,
-                borderRadius: 31,
-                backgroundColor: "#015E90",
-                color: "#f2f2f2",
+                display: "flow",
+                color: "#960202",
+                textDecorationLine: "underline",
+                fontWeight: 500,
+                marginBottom: 13,
               }}
-              htmlType="submit"
-              className="eps-login-form-button"
-              onClick={handleButtonClick}
             >
-              Ingresar
-            </Button>
-          )}
-        </Form.Item>
-        {/* <Form.ErrorList
+              Olvide mi contraseña
+            </a>
+
+            {isSubmittingEps && isLoginEpsLoading ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                size="large"
+                style={{
+                  paddingInline: 62,
+                  borderRadius: 31,
+                  backgroundColor: "#015E90",
+                  color: "#f2f2f2",
+                }}
+                htmlType="submit"
+                className="eps-login-form-button"
+                onClick={handleButtonClick}
+              >
+                Ingresar
+              </Button>
+            )}
+          </Form.Item>
+          {/* <Form.ErrorList
           errors={errors?.map((error) => (
             <div
               key={error}
@@ -310,7 +318,8 @@ const EpsUserLoginForm: React.FC = () => {
             </div>
           ))}
         /> */}
-      </Form>
+        </Form>
+      </Col>
     </Card>
   );
 };

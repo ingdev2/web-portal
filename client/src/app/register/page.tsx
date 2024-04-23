@@ -14,6 +14,7 @@ const RegisterPatientPage: React.FC = () => {
 
   return (
     <div
+      className="register-user-page"
       style={{
         display: "flex",
         flexDirection: "column",

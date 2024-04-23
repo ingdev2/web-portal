@@ -5,6 +5,7 @@ const initialState: User = {
   name: "",
   last_name: "",
   user_gender: 0,
+  user_gender_abbrev: "",
   user_id_type: 0,
   id_type_abbrev: "",
   id_number: 0,
@@ -13,7 +14,7 @@ const initialState: User = {
   email: "",
   cellphone: 0,
   whatsapp: 0,
-  auth_method: 0,
+  authentication_method: 0,
   password: "",
   residence_department: "",
   residence_city: "",
@@ -62,6 +63,9 @@ export const patientSlice = createSlice({
     },
     setCellphoneUserEps: (state, action) => {
       state.cellphone = action.payload;
+    },
+    setAuthMethodUserPatient: (state, action) => {
+      state.authentication_method = action.payload;
     },
     setPasswordUserEps: (state, action) => {
       state.password = action.payload;

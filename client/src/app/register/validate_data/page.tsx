@@ -14,6 +14,7 @@ const ValidateDataPage: React.FC = () => {
 
   return (
     <div
+      className="validate-data-page"
       style={{
         display: "flex",
         flexDirection: "column",

@@ -10,7 +10,7 @@ const initialState: Familiar = {
   email: "",
   cellphone: 0,
   whatsapp: 0,
-  auth_method: 0,
+  authentication_method: 0,
   patient_id: "",
   rel_with_patient: 0,
   user_role: 0,
@@ -57,7 +57,7 @@ export const familiarSlice = createSlice({
       state.whatsapp = action.payload;
     },
     setAuthMethodUserFamiliar: (state, action) => {
-      state.auth_method = action.payload;
+      state.authentication_method = action.payload;
     },
     setPatientIdFamiliar: (state, action) => {
       state.patient_id = action.payload;

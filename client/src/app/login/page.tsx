@@ -62,6 +62,10 @@ const UsersLoginPage: React.FC = () => {
             onChange={onChange}
             type="card"
             centered
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
             tabBarGutter={13}
             tabBarStyle={{ marginBottom: 13 }}
             items={[
