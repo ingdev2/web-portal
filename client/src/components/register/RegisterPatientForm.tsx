@@ -170,7 +170,7 @@ const RegisterPatientForm: React.FC = () => {
     try {
       setIsSubmittingConfirmData(true);
 
-      const response: any = await createUserPatient({
+      const patientData: any = {
         name: namePatientState,
         user_id_type: idTypePatientState,
         id_number: idNumberPatientState,
@@ -178,16 +178,30 @@ const RegisterPatientForm: React.FC = () => {
         birthdate: birthdatePatientState,
         email: emailPatientState,
         cellphone: cellphonePatientState,
-        whatsapp: whatsappPatientState,
         password: passwordPatientState,
         affiliation_eps: affiliationEpsPatientState,
         residence_address: residenceAddressPatientState,
         authentication_method: authMethodPatientState,
-      });
+      };
+
+      if (whatsappPatientState) {
+        patientData.whatsapp = whatsappPatientState;
+      }
+
+      const response: any = await createUserPatient(patientData);
 
       var createUserPatientData = response;
 
-      console.log(response);
+      var errorMessage = response.data?.message;
+
+      if (createUserPatientData?.data?.status === 409) {
+        dispatch(setErrorsUserPatient(errorMessage));
+        setShowErrorMessagePatient(true);
+      } else {
+        await router.push("/login", {
+          scroll: false,
+        });
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -253,6 +267,7 @@ const RegisterPatientForm: React.FC = () => {
           subtitleCustomModal="Tu cuenta se activará inmediatamente con el correo electrónico y celular que observaste en la pantalla anterior, si no tienes acceso a ninguno de esos medios de comunicación no podrás ingresar a tu cuenta."
           handleCancelCustomModal={() => setShowCustomConfirmModal(false)}
           handleConfirmCustomModal={handleConfirmConfirmDataModal}
+          handleClickCustomModal={handleButtonClick}
           isSubmittingConfirm={isSubmittingConfirmData}
         ></CustomModalTwoOptions>
       )}
@@ -266,6 +281,7 @@ const RegisterPatientForm: React.FC = () => {
           subtitleCustomModal="Si tus datos no son correctos, te recomendamos no activar tu cuenta y comunicarte a nuestra línea de PBX para realizar la actualización de tus datos personales."
           handleCancelCustomModal={() => setShowCustomCancelModal(false)}
           handleConfirmCustomModal={handleConfirmIncorrectDataModal}
+          handleClickCustomModal={handleButtonClick}
           isSubmittingConfirm={isSubmittingIncorrectData}
         ></CustomModalTwoOptions>
       )}
@@ -547,7 +563,7 @@ const RegisterPatientForm: React.FC = () => {
                   value={passwordPatientState}
                   placeholder="Contraseña"
                   onChange={(e) =>
-                    dispatch(setPasswordUserPatient(e.target.value))
+                    dispatch(setPasswordUserPatient(e.target.value.trim()))
                   }
                 />
               </Form.Item>
@@ -582,7 +598,7 @@ const RegisterPatientForm: React.FC = () => {
                   type="password"
                   value={passwordVerify}
                   placeholder="Verificar contraseña"
-                  onChange={(e) => setPasswordVerify(e.target.value)}
+                  onChange={(e) => setPasswordVerify(e.target.value.trim())}
                 />
               </Form.Item>
 

@@ -18,7 +18,6 @@ export class CreateSuperAdminDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsNumber()
   id_number: number;
 
   @IsNotEmpty()

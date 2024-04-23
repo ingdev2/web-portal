@@ -13,6 +13,7 @@ const CustomModalTwoOptions: React.FC<{
   openCustomModalState: boolean;
   handleCancelCustomModal: () => void;
   handleConfirmCustomModal: (e: React.MouseEvent<any>) => Promise<void>;
+  handleClickCustomModal: () => void;
   isSubmittingConfirm: boolean;
 }> = ({
   iconCustomModal,
@@ -21,6 +22,7 @@ const CustomModalTwoOptions: React.FC<{
   openCustomModalState,
   handleCancelCustomModal,
   handleConfirmCustomModal,
+  handleClickCustomModal,
   isSubmittingConfirm,
 }) => {
   return (
@@ -108,7 +110,7 @@ const CustomModalTwoOptions: React.FC<{
                   }}
                   htmlType="submit"
                   onClick={handleConfirmCustomModal}
-                  onMouseDown={handleConfirmCustomModal}
+                  onMouseDown={handleClickCustomModal}
                 >
                   Confirmar
                 </Button>
@@ -125,7 +127,7 @@ const CustomModalTwoOptions: React.FC<{
                   color: "#f2f2f2",
                 }}
                 onClick={handleCancelCustomModal}
-                onMouseDown={handleCancelCustomModal}
+                onMouseDown={handleClickCustomModal}
               >
                 Cancelar
               </Button>

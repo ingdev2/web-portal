@@ -18,7 +18,6 @@ export class CreateAdminDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsNumber()
   id_number: number;
 
   @IsNotEmpty()
