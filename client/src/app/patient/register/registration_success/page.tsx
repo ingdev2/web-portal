@@ -24,7 +24,7 @@ const RegistrationSuccessPage: React.FC = () => {
     if (!authMethodPatientState && !passwordPatientState) {
       router.back();
     }
-  }, [, authMethodPatientState, passwordPatientState]);
+  }, [authMethodPatientState, passwordPatientState]);
 
   const handleGoToLogin = async () => {
     try {
@@ -90,6 +90,7 @@ const RegistrationSuccessPage: React.FC = () => {
         </div>
         <div>
           <Card
+            key={"registration-success-content"}
             className="registration-success-content"
             style={{
               width: "max-content",

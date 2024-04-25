@@ -198,71 +198,71 @@ const ValidatePatientExistForm: React.FC = () => {
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
-      dispatch(setDefaultValuesUserPatient());
-      setIdTypePatientLocalState("");
-      setGenderPatientLocalState("");
 
       if (idTypeAbbrevLocalState && idNumberLocalState) {
-        // const searchPatientUser: any = await validatePatientRegister({
-        //   id_number: idNumberLocalState,
-        // });
-
-        // var validationPatientRegisterData = searchPatientUser?.data;
-
-        // if (validationPatientRegisterData?.status === 409) {
-        //   const errorMessage = validationPatientRegisterData?.message;
-
-        //   dispatch(setErrorsUserPatient(errorMessage));
-        //   setShowErrorMessagePatient(true);
-        // }
-        // if (validationPatientRegisterData?.status === 200) {
-        const response: any = await validatePatient({
-          idType: idTypeAbbrevLocalState,
-          idNumber: idNumberLocalState,
+        const searchPatientUser: any = await validatePatientRegister({
+          id_number: idNumberLocalState,
         });
 
-        var validationPatientData = response.data?.[0].count;
+        var validationPatientRegisterData = searchPatientUser?.data;
 
-        if (validationPatientData === 0) {
-          const errorMessage =
-            "El paciente no se encuentra registrado en la clínica";
+        if (validationPatientRegisterData?.status === 409) {
+          const errorMessage = validationPatientRegisterData?.message;
 
           dispatch(setErrorsUserPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
-        if (validationPatientData === 1 && response.data?.[0].data?.[0]) {
-          const patientData = response.data[0].data[0];
-
-          const {
-            NOMBRE: name = "NO REGISTRA",
-            TIPO: idType = "NO REGISTRA",
-            ID: idNumber = "NO REGISTRA",
-            SEXO: gender = "NO REGISTRA",
-            FECHA_NACIMIENTO: birthDate = "NO REGISTRA",
-            CORREO: email = "NO REGISTRA",
-            CELULAR: cellPhone = "NO REGISTRA",
-            EMPRESA: affiliationEps = "NO REGISTRA",
-            DIRECCION: residenceAddress = "NO REGISTRA",
-          } = patientData;
-
-          setIdTypePatientLocalState(idType);
-          setGenderPatientLocalState(gender);
-
-          dispatch(setNameUserPatient(name));
-          dispatch(setIdNumberUserPatient(idNumber));
-          dispatch(setBirthdateUserPatient(birthDate));
-          dispatch(setEmailUserPatient(email));
-          dispatch(setCellphoneUserPatient(cellPhone));
-          dispatch(setAffiliationEpsUserPatient(affiliationEps));
-          dispatch(setResidenceAddressUserPatient(residenceAddress));
-
-          setShowSuccessMessage(true);
-
-          await router.push("register/validate_data", {
-            scroll: true,
+        if (validationPatientRegisterData?.status === 200) {
+          const response: any = await validatePatient({
+            idType: idTypeAbbrevLocalState,
+            idNumber: idNumberLocalState,
           });
+
+          var validationPatientData = response.data?.[0].count;
+
+          if (validationPatientData === 0) {
+            const errorMessage =
+              "El paciente no se encuentra registrado en la clínica";
+
+            dispatch(setErrorsUserPatient(errorMessage));
+            setShowErrorMessagePatient(true);
+          }
+          if (validationPatientData === 1 && response.data?.[0].data?.[0]) {
+            setIdTypePatientLocalState("");
+            setGenderPatientLocalState("");
+
+            const patientData = response.data[0].data[0];
+
+            const {
+              NOMBRE: name = "NO REGISTRA",
+              TIPO: idType = "NO REGISTRA",
+              ID: idNumber = "NO REGISTRA",
+              SEXO: gender = "NO REGISTRA",
+              FECHA_NACIMIENTO: birthDate = "NO REGISTRA",
+              CORREO: email = "NO REGISTRA",
+              CELULAR: cellPhone = "NO REGISTRA",
+              EMPRESA: affiliationEps = "NO REGISTRA",
+              DIRECCION: residenceAddress = "NO REGISTRA",
+            } = patientData;
+
+            setIdTypePatientLocalState(idType);
+            setGenderPatientLocalState(gender);
+
+            dispatch(setNameUserPatient(name));
+            dispatch(setIdNumberUserPatient(idNumber));
+            dispatch(setBirthdateUserPatient(birthDate));
+            dispatch(setEmailUserPatient(email));
+            dispatch(setCellphoneUserPatient(cellPhone));
+            dispatch(setAffiliationEpsUserPatient(affiliationEps));
+            dispatch(setResidenceAddressUserPatient(residenceAddress));
+
+            setShowSuccessMessage(true);
+
+            await router.push("register/validate_data", {
+              scroll: true,
+            });
+          }
         }
-        // }
       } else {
         dispatch(setErrorsUserPatient("Datos del paciente no encontrados"));
         setShowErrorMessagePatient(true);

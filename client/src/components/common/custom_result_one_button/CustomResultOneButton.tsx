@@ -23,6 +23,7 @@ const CustomResultOneButton: React.FC<{
 }) => {
   return (
     <Result
+      key={"custom-result-one-button"}
       className="custom-result-one-button"
       status={statusTypeResult}
       title={titleCustomResult}

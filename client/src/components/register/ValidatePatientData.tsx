@@ -67,9 +67,6 @@ const ValidatePatientData: React.FC = () => {
   const genderPatientAbbrevState = useAppSelector(
     (state) => state.patient.user_gender_abbrev
   );
-  const passwordPatientState = useAppSelector(
-    (state) => state.patient.password
-  );
   const birthdatePatientState = useAppSelector(
     (state) => state.patient.birthdate
   );
@@ -79,9 +76,6 @@ const ValidatePatientData: React.FC = () => {
   );
   const whatsappPatientState = useAppSelector(
     (state) => state.patient.whatsapp
-  );
-  const authMethodPatientState = useAppSelector(
-    (state) => state.patient.authentication_method
   );
   const affiliationEpsPatientState = useAppSelector(
     (state) => state.patient.affiliation_eps
@@ -101,12 +95,12 @@ const ValidatePatientData: React.FC = () => {
   const [showCustomCancelModal, setShowCustomCancelModal] = useState(false);
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
+  const [allAuthMethodsData, setAllAuthMethodsData]: any = useState([]);
+
   const [passwordUserPatientLocalState, setPasswordUserPatientLocalState] =
     useState("");
   const [authMethodUserPatientLocalState, setAuthMethodUserPatientLocalState] =
     useState(0);
-
-  const [allAuthMethodsData, setAllAuthMethodsData]: any = useState([]);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [isSubmittingConfirmData, setIsSubmittingConfirmData] = useState(false);
@@ -127,9 +121,6 @@ const ValidatePatientData: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log(authMethodPatientState);
-    console.log(passwordPatientState);
-
     if (!idTypeAbbrevPatientState && !idNumberPatientState) {
       router.back();
     }
