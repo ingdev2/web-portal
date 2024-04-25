@@ -258,7 +258,7 @@ const ValidatePatientExistForm: React.FC = () => {
 
           setShowSuccessMessage(true);
 
-          await router.push("/register/validate_data", {
+          await router.push("register/validate_data", {
             scroll: true,
           });
         }
@@ -304,6 +304,7 @@ const ValidatePatientExistForm: React.FC = () => {
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         marginBottom: 31,
+        marginInline: 31,
       }}
     >
       {showErrorMessagePatient && (

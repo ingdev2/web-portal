@@ -18,11 +18,11 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
-import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 
 const PatientUserLoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +39,9 @@ const PatientUserLoginForm: React.FC = () => {
   );
   const passwordPatientState = useAppSelector(
     (state) => state.patientUserLogin.password
+  );
+  const affiliationEpsPatientState = useAppSelector(
+    (state) => state.patient.affiliation_eps
   );
   const errorsPatientState = useAppSelector(
     (state) => state.patientUserLogin.errors
@@ -82,6 +85,9 @@ const PatientUserLoginForm: React.FC = () => {
       dispatch(setPasswordLoginPatient(""));
       dispatch(setVerificationCodeLoginPatient(""));
     }
+    if (affiliationEpsPatientState) {
+      dispatch(setDefaultValuesUserPatient());
+    }
     if (
       !idTypesPatientLoading &&
       !idTypesPatientFetching &&
@@ -98,16 +104,6 @@ const PatientUserLoginForm: React.FC = () => {
       setShowErrorMessagePatient(true);
       dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
-    if (
-      isLoginPatientSuccess &&
-      !isLoginPatientLoading &&
-      !isSubmittingPatient
-    ) {
-      dispatch(setErrorsLoginPatient([]));
-      setShowErrorMessagePatient(false);
-      dispatch(setPatientModalIsOpen(true));
-    }
-    dispatch(setDefaultValuesUserPatient());
   }, [
     idTypesPatientData,
     idTypesPatientLoading,
@@ -128,6 +124,8 @@ const PatientUserLoginForm: React.FC = () => {
 
       var isLoginUserError = response.error;
 
+      var isLoginUserSuccess = response.data;
+
       if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
 
@@ -139,6 +137,12 @@ const PatientUserLoginForm: React.FC = () => {
           dispatch(setErrorsLoginPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
+      }
+
+      if (isLoginUserSuccess) {
+        dispatch(setErrorsLoginPatient([]));
+        setShowErrorMessagePatient(false);
+        dispatch(setPatientModalIsOpen(true));
       }
     } catch (error) {
       console.error(error);
@@ -164,6 +168,7 @@ const PatientUserLoginForm: React.FC = () => {
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         marginBottom: 31,
+        marginInline: 31,
       }}
     >
       {modalIsOpenPatient && <PatientModalVerificationCode />}
@@ -360,7 +365,7 @@ const PatientUserLoginForm: React.FC = () => {
                 className="patient-register-button"
                 onClick={async () => {
                   setIsSubmittingRegisterPagePatient(true);
-                  await router.push("/register", {
+                  await router.push("/patient/register", {
                     scroll: true,
                   });
 

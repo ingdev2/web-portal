@@ -71,18 +71,18 @@ export class AuthController {
   // LOGIN
 
   @Post('loginAdmins')
-  async loginAdmins(@Body() loginUser: LoginDto) {
-    return await this.authService.loginAdmins(loginUser);
+  async loginAdmins(@Body() loginAdmin: LoginDto) {
+    return await this.authService.loginAdmins(loginAdmin);
   }
 
   @Post('loginPatientUsers')
-  async loginPatientUsers(@Body() loginAdmin: LoginDto) {
-    return await this.authService.loginPatientUsers(loginAdmin);
+  async loginPatientUsers(@Body() loginPatient: LoginDto) {
+    return await this.authService.loginPatientUsers(loginPatient);
   }
 
   @Post('loginEpsUsers')
-  async loginEpsUsers(@Body() loginAdmin: LoginDto) {
-    return await this.authService.loginEpsUsers(loginAdmin);
+  async loginEpsUsers(@Body() loginEps: LoginDto) {
+    return await this.authService.loginEpsUsers(loginEps);
   }
 
   @Post('loginRelatives')

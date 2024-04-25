@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useEffect } from "react";
+
 import { message as messageAntd } from "antd";
 import { NoticeType } from "antd/es/message/interface";
 

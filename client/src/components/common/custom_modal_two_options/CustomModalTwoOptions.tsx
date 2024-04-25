@@ -28,7 +28,7 @@ const CustomModalTwoOptions: React.FC<{
   return (
     <div>
       <Modal
-        className="custom-modal"
+        className="custom-modal-two-options"
         open={openCustomModalState}
         onOk={handleConfirmCustomModal}
         confirmLoading={isSubmittingConfirm}

@@ -3,18 +3,18 @@
 import React from "react";
 
 import { Tabs } from "antd";
-import { FaUser } from "react-icons/fa";
+import { RiPassValidLine } from "react-icons/ri";
 
-import ValidatePatientExistForm from "@/components/register/ValidatePatientExistForm";
+import ValidatePatientData from "@/components/register/ValidatePatientData";
 
-const RegisterPatientPage: React.FC = () => {
+const ValidateDataPage: React.FC = () => {
   const onChange = (key: string) => {
     console.log(key);
   };
 
   return (
     <div
-      className="register-user-page"
+      className="validate-data-page"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -22,6 +22,7 @@ const RegisterPatientPage: React.FC = () => {
         alignContent: "center",
         alignItems: "center",
         marginBlock: 31,
+        marginInline: 13,
       }}
     >
       <div
@@ -67,11 +68,11 @@ const RegisterPatientPage: React.FC = () => {
             tabBarStyle={{ marginBottom: 13 }}
             items={[
               {
-                className: "patient-card-register",
+                className: "validate-data-card-register",
                 key: "1",
-                label: "Pacientes",
-                icon: <FaUser />,
-                children: <ValidatePatientExistForm />,
+                label: "Validar Datos Del Paciente",
+                icon: <RiPassValidLine />,
+                children: <ValidatePatientData />,
               },
             ]}
           />
@@ -81,4 +82,4 @@ const RegisterPatientPage: React.FC = () => {
   );
 };
 
-export default RegisterPatientPage;
+export default ValidateDataPage;

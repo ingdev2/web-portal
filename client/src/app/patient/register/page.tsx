@@ -3,18 +3,18 @@
 import React from "react";
 
 import { Tabs } from "antd";
-import { IoIosBusiness } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
 
-import RegisterPatientForm from "@/components/register/RegisterPatientForm";
+import ValidatePatientExistForm from "@/components/register/ValidatePatientExistForm";
 
-const ValidateDataPage: React.FC = () => {
+const RegisterPatientPage: React.FC = () => {
   const onChange = (key: string) => {
     console.log(key);
   };
 
   return (
     <div
-      className="validate-data-page"
+      className="register-user-page"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -36,6 +36,7 @@ const ValidateDataPage: React.FC = () => {
           opacity: 0.4,
         }}
       />
+
       <div
         className="content-page"
         style={{
@@ -58,6 +59,7 @@ const ValidateDataPage: React.FC = () => {
             style={{ height: 77 }}
           />
         </div>
+
         <div>
           <Tabs
             onChange={onChange}
@@ -67,11 +69,11 @@ const ValidateDataPage: React.FC = () => {
             tabBarStyle={{ marginBottom: 13 }}
             items={[
               {
-                className: "validate-data-card-register",
+                className: "patient-card-register",
                 key: "1",
-                label: "Validar Datos Del Paciente",
-                icon: <IoIosBusiness />,
-                children: <RegisterPatientForm />,
+                label: "Pacientes",
+                icon: <FaUser />,
+                children: <ValidatePatientExistForm />,
               },
             ]}
           />
@@ -81,4 +83,4 @@ const ValidateDataPage: React.FC = () => {
   );
 };
 
-export default ValidateDataPage;
+export default RegisterPatientPage;

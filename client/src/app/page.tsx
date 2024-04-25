@@ -40,7 +40,6 @@ const HomePage = () => {
           height: "100vh",
           alignContent: "center",
           alignItems: "center",
-          marginBlock: 31,
         }}
       >
         <div
@@ -62,9 +61,8 @@ const HomePage = () => {
           <Card
             className="content-card"
             style={{
-              width: "100%",
-              maxWidth: 321,
-              height: "min-content",
+              width: "max-content",
+              height: "max-content",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -72,10 +70,16 @@ const HomePage = () => {
               backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
               marginBottom: 31,
+              marginInline: 31,
               padding: 2,
             }}
           >
-            <Col xs={24} md={32} style={{ padding: "0 7px" }}>
+            <Col
+              xs={24}
+              md={24}
+              lg={24}
+              style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
+            >
               <div
                 className="proced-logo"
                 style={{

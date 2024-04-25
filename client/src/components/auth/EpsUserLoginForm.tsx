@@ -21,6 +21,7 @@ import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
 
 const EpsUserLoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ const EpsUserLoginForm: React.FC = () => {
   const passwordEpsState = useAppSelector(
     (state) => state.epsUserLogin.password
   );
+  const epsCompanyUserEps = useAppSelector((state) => state.eps.eps_company);
   const errorsEpsState = useAppSelector((state) => state.epsUserLogin.errors);
 
   const modalIsOpenEps = useAppSelector((state) => state.modal.epsModalIsOpen);
@@ -71,17 +73,18 @@ const EpsUserLoginForm: React.FC = () => {
       dispatch(setPasswordLoginEps(""));
       dispatch(setVerificationCodeLoginEps(""));
     }
-    if (!idTypesEpsLoading && idTypesEpsData) {
+    if (epsCompanyUserEps) {
+      dispatch(setDefaultValuesUserEps());
+    }
+    if (!idTypesEpsLoading && !idTypesEpsFetching && idTypesEpsData) {
       dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
     if (idTypesEpsError) {
+      dispatch(
+        setErrorsLoginEps("¡No se pudo obtener los tipos de identificación!")
+      );
       setShowErrorMessageEps(true);
       dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
-    }
-    if (isLoginEpsSuccess && !isLoginEpsLoading && !isSubmittingEps) {
-      dispatch(setErrorsLoginEps([]));
-      setShowErrorMessageEps(false);
-      dispatch(setEpsModalIsOpen(true));
     }
   }, [
     idTypesEpsData,
@@ -103,6 +106,8 @@ const EpsUserLoginForm: React.FC = () => {
 
       var isLoginUserError = response.error;
 
+      var isLoginUserSuccess = response.data;
+
       if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
 
@@ -114,6 +119,12 @@ const EpsUserLoginForm: React.FC = () => {
           dispatch(setErrorsLoginEps(errorMessage));
           setShowErrorMessageEps(true);
         }
+      }
+
+      if (isLoginUserSuccess) {
+        dispatch(setErrorsLoginEps([]));
+        setShowErrorMessageEps(false);
+        dispatch(setEpsModalIsOpen(true));
       }
     } catch (error) {
       console.error(error);
@@ -139,6 +150,7 @@ const EpsUserLoginForm: React.FC = () => {
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         marginBottom: 31,
+        marginInline: 31,
       }}
     >
       {modalIsOpenEps && <EpsModalVerificationCode />}

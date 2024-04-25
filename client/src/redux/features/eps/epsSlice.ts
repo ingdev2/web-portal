@@ -88,6 +88,21 @@ export const patientSlice = createSlice({
     setErrorsUserEps: (state, action) => {
       state.errors = action.payload;
     },
+    setDefaultValuesUserEps: (state) => {
+      state.name = "";
+      state.last_name = "";
+      state.user_gender = 0;
+      state.user_gender_abbrev = "";
+      state.user_id_type = 0;
+      state.id_type_abbrev = "";
+      state.id_number = 0;
+      state.email = "";
+      state.cellphone = 0;
+      state.authentication_method = 0;
+      state.password = "";
+      state.company_area = 0;
+      state.eps_company = 0;
+    },
   },
 });
 
@@ -101,6 +116,7 @@ export const {
   setIdNumberUserEps,
   setEmailUserEps,
   setCellphoneUserEps,
+  setAuthMethodUserPatient,
   setPasswordUserEps,
   setIsActiveUserEps,
   setRoleUserEps,
@@ -108,6 +124,7 @@ export const {
   setEpsCompanyUserEps,
   setMedicalReqUserEps,
   setErrorsUserEps,
+  setDefaultValuesUserEps,
 } = patientSlice.actions;
 
 export default patientSlice.reducer;
