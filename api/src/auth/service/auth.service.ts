@@ -787,6 +787,11 @@ export class AuthService {
     return { id_type, id_number };
   }
 
+  private getExpirationInSeconds(expiresIn: string): number {
+    const expiresInInSeconds = parseInt(expiresIn, 10) * 60;
+    return expiresInInSeconds;
+  }
+
   private async generateTokens(user): Promise<Tokens> {
     const jwtUserPayload = {
       sub: user.id,
@@ -797,24 +802,28 @@ export class AuthService {
       role: user.role,
     };
 
-    const [accessToken, refreshToken] = await Promise.all([
-      await this.jwtService.signAsync(jwtUserPayload, {
-        secret: jwtConstants.secret,
-        expiresIn: '5m',
-      }),
-      await this.jwtService.signAsync(jwtUserPayload, {
-        secret: jwtConstants.secret,
-        expiresIn: '10m',
-      }),
-    ]);
+    const [accessToken, refreshToken, accessTokenExpiresIn] = await Promise.all(
+      [
+        await this.jwtService.signAsync(jwtUserPayload, {
+          secret: jwtConstants.secret,
+          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+        }),
+        await this.jwtService.signAsync(jwtUserPayload, {
+          secret: jwtConstants.secret,
+          expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+        }),
+        await this.getExpirationInSeconds(process.env.ACCESS_TOKEN_EXPIRES_IN),
+      ],
+    );
 
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
+      access_token_expires_in: accessTokenExpiresIn,
     };
   }
 
-  async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string): Promise<any> {
     try {
       const user = this.jwtService.verify(refreshToken, {
         secret: jwtConstants.secret,
@@ -829,12 +838,13 @@ export class AuthService {
         role: user.role,
       };
 
-      const { access_token, refresh_token } =
+      const { access_token, refresh_token, access_token_expires_in } =
         await this.generateTokens(payload);
 
       return {
         access_token,
         refresh_token,
+        access_token_expires_in,
         status: HttpStatus.CREATED,
         message: '¡Refresh Token Successfully!',
       };
@@ -869,11 +879,13 @@ export class AuthService {
       role: userFound.role,
     };
 
-    const { access_token, refresh_token } = await this.generateTokens(payload);
+    const { access_token, refresh_token, access_token_expires_in } =
+      await this.generateTokens(payload);
 
     return {
       access_token,
       refresh_token,
+      access_token_expires_in,
       id_type: userFound.user_id_type,
       id_number: userFound.id_number,
       role: userFound.role.name,
@@ -910,11 +922,13 @@ export class AuthService {
       role: familiarFound.role,
     };
 
-    const { access_token, refresh_token } = await this.generateTokens(payload);
+    const { access_token, refresh_token, access_token_expires_in } =
+      await this.generateTokens(payload);
 
     return {
       access_token,
       refresh_token,
+      access_token_expires_in,
       id_type: familiarFound.user_id_type,
       id_number: familiarFound.id_number,
       role: familiarFound.role.name,

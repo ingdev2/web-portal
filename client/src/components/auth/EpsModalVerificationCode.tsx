@@ -97,13 +97,13 @@ const EpsModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        await router.replace("/eps/homepage", {
-          scroll: false,
-        });
         dispatch(setIdTypeLoginEps(""));
         dispatch(setPasswordLoginEps(""));
         dispatch(setVerificationCodeLoginEps(""));
         dispatch(setEpsModalIsOpen(false));
+        await router.replace("/eps/homepage", {
+          scroll: false,
+        });
       }
     } catch (error) {
       console.error(error);

@@ -101,11 +101,11 @@ const PatientModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        await router.replace("/patient/homepage", { scroll: false });
         dispatch(setIdTypeLoginPatient(""));
         dispatch(setPasswordLoginPatient(""));
         dispatch(setVerificationCodeLoginPatient(""));
         dispatch(setPatientModalIsOpen(false));
+        await router.replace("/patient/homepage", { scroll: false });
       }
     } catch (error) {
       console.error(error);
