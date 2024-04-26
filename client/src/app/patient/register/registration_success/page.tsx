@@ -2,13 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import { Card, Col } from "antd";
 
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 
 const RegistrationSuccessPage: React.FC = () => {
+  const { data: session, status } = useSession();
+
   const router = useRouter();
 
   const authMethodPatientState = useAppSelector(
@@ -21,10 +24,13 @@ const RegistrationSuccessPage: React.FC = () => {
   const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
 
   useEffect(() => {
-    if (!authMethodPatientState && !passwordPatientState) {
-      router.back();
+    if (status === "authenticated") {
+      redirect("/patient/homepage");
     }
-  }, [authMethodPatientState, passwordPatientState]);
+    if (!authMethodPatientState && !passwordPatientState) {
+      redirect("/login");
+    }
+  }, [status, authMethodPatientState, passwordPatientState]);
 
   const handleGoToLogin = async () => {
     try {

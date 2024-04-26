@@ -26,7 +26,7 @@ const HomePagePatient = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [idNumberUserPatientState]);
+  }, [status, idNumberUserPatientState]);
 
   return (
     <div>

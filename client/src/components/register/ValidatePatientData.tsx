@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import {
   Card,
@@ -48,6 +49,8 @@ import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodAp
 import CustomModalTwoOptions from "../common/custom_modal_two_options/CustomModalTwoOptions";
 
 const ValidatePatientData: React.FC = () => {
+  const { data: session, status } = useSession();
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -121,8 +124,11 @@ const ValidatePatientData: React.FC = () => {
   });
 
   useEffect(() => {
+    if (status === "authenticated") {
+      redirect("/patient/homepage");
+    }
     if (!idTypeAbbrevPatientState && !idNumberPatientState) {
-      router.back();
+      redirect("/login");
     }
     if (!idTypeAbbrevPatientState && !idNumberPatientState) {
       dispatch(setErrorsUserPatient("¡Datos de paciente no encontrados!"));
@@ -141,6 +147,7 @@ const ValidatePatientData: React.FC = () => {
       setAllAuthMethodsData(authMethodData);
     }
   }, [
+    status,
     idTypeAbbrevPatientState,
     idNumberPatientState,
     authMethodLoading,

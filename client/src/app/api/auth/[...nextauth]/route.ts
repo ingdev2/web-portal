@@ -60,8 +60,13 @@ const handler = NextAuth({
   },
   pages: {
     signIn: "/login",
+    signOut: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 1 * 60,
+  },
 });
 
 export { handler as GET, handler as POST };

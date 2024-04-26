@@ -5,7 +5,7 @@ import { AdminsModule } from '../admins/admins.module';
 import { UsersModule } from '../users/users.module';
 import { AuthorizedFamiliarModule } from '../authorized_familiar/authorized_familiar.module';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from './constants/jwt.constants';
 import { Admin } from '../admins/entities/admin.entity';
 import { User } from '../users/entities/user.entity';

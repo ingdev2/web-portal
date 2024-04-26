@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
@@ -69,6 +69,13 @@ export class AuthController {
   }
 
   // LOGIN
+
+  @Post('refreshToken')
+  async refreshToken(@Req() request: Request) {
+    const [type, token] = request.headers['authorization']?.split(' ') || [];
+
+    return this.authService.refreshToken(token);
+  }
 
   @Post('loginAdmins')
   async loginAdmins(@Body() loginAdmin: LoginDto) {

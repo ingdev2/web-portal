@@ -1,5 +1,9 @@
 "use client";
 
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+
 import PatientUserLoginForm from "@/components/auth/PatientUserLoginForm";
 import EpsUserLoginForm from "@/components/auth/EpsUserLoginForm";
 
@@ -8,6 +12,14 @@ import { FaUser } from "react-icons/fa";
 import { IoIosBusiness } from "react-icons/io";
 
 const UsersLoginPage: React.FC = () => {
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      redirect("/patient/homepage");
+    }
+  }, [status]);
+
   const onChange = (key: string) => {
     console.log(key);
   };
