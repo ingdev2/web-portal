@@ -36,6 +36,8 @@ import {
 } from '../../nodemailer/constants/email_config.constant';
 
 import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from '../constants/jwt.constants';
+import { Tokens } from '../interfaces/tokens.interface';
 import * as bcryptjs from 'bcryptjs';
 
 const schedule = require('node-schedule');
@@ -335,13 +337,23 @@ export class AuthService {
     }
 
     const payload = {
+      sub: adminFound.id,
+      name: adminFound.name,
+      email: adminFound.corporate_email,
+      id_type: adminFound.id_type,
       id_number: adminFound.id_number,
       role: adminFound.role,
     };
 
-    const token = await this.jwtService.signAsync(payload);
+    const { access_token, refresh_token } = await this.generateTokens(payload);
 
-    return { token, id_number };
+    return {
+      access_token,
+      refresh_token,
+      id_type: adminFound.admin_id_type,
+      id_number: adminFound.id_number,
+      role: adminFound.role.name,
+    };
   }
 
   async loginPatientUsers({ id_type, id_number, password }: LoginDto) {
@@ -353,6 +365,16 @@ export class AuthService {
       throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
     }
 
+    const userFound =
+      await this.usersService.getUserFoundByIdNumberWithPassword(
+        id_type,
+        id_number,
+      );
+
+    if (!userFound) {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
     const verifiedPatientUserRole = await this.userRepository.findOne({
       where: {
         id_number: id_number,
@@ -362,16 +384,6 @@ export class AuthService {
 
     if (!verifiedPatientUserRole) {
       throw new UnauthorizedException(`¡Usuario no autorizado!`);
-    }
-
-    const userFound =
-      await this.usersService.getUserFoundByIdNumberWithPassword(
-        id_type,
-        id_number,
-      );
-
-    if (!userFound) {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(
@@ -461,6 +473,16 @@ export class AuthService {
       throw new UnauthorizedException(`¡Role de usuario no encontrado!`);
     }
 
+    const userFound =
+      await this.usersService.getUserFoundByIdNumberWithPassword(
+        id_type,
+        id_number,
+      );
+
+    if (!userFound) {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
     const verifiedEpsUserRole = await this.userRepository.findOne({
       where: {
         id_number: id_number,
@@ -470,16 +492,6 @@ export class AuthService {
 
     if (!verifiedEpsUserRole) {
       throw new UnauthorizedException(`¡Usuario no autorizado!`);
-    }
-
-    const userFound =
-      await this.usersService.getUserFoundByIdNumberWithPassword(
-        id_type,
-        id_number,
-      );
-
-    if (!userFound) {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(
@@ -775,6 +787,72 @@ export class AuthService {
     return { id_type, id_number };
   }
 
+  private getExpirationInSeconds(expiresIn: string): number {
+    const expiresInInSeconds = parseInt(expiresIn, 10) * 60;
+    return expiresInInSeconds;
+  }
+
+  private async generateTokens(user): Promise<Tokens> {
+    const jwtUserPayload = {
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+      id_type: user.user_id_type,
+      id_number: user.id_number,
+      role: user.role,
+    };
+
+    const [accessToken, refreshToken, accessTokenExpiresIn] = await Promise.all(
+      [
+        await this.jwtService.signAsync(jwtUserPayload, {
+          secret: jwtConstants.secret,
+          expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+        }),
+        await this.jwtService.signAsync(jwtUserPayload, {
+          secret: jwtConstants.secret,
+          expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+        }),
+        await this.getExpirationInSeconds(process.env.ACCESS_TOKEN_EXPIRES_IN),
+      ],
+    );
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      access_token_expires_in: accessTokenExpiresIn,
+    };
+  }
+
+  async refreshToken(refreshToken: string): Promise<any> {
+    try {
+      const user = this.jwtService.verify(refreshToken, {
+        secret: jwtConstants.secret,
+      });
+
+      const payload = {
+        sub: user.id,
+        name: user.name,
+        email: user.email,
+        id_type: user.user_id_type,
+        id_number: user.id_number,
+        role: user.role,
+      };
+
+      const { access_token, refresh_token, access_token_expires_in } =
+        await this.generateTokens(payload);
+
+      return {
+        access_token,
+        refresh_token,
+        access_token_expires_in,
+        status: HttpStatus.CREATED,
+        message: '¡Refresh Token Successfully!',
+      };
+    } catch (error) {
+      throw new UnauthorizedException(`¡Refresh Token Failed!`);
+    }
+  }
+
   async verifyCodeAndLoginUsers(idNumber: number, verification_code: number) {
     const userFound = await this.usersService.getUserFoundByIdAndCode(
       idNumber,
@@ -785,14 +863,6 @@ export class AuthService {
       throw new UnauthorizedException(`¡Código de verificación incorrecto!`);
     }
 
-    const payload = {
-      id_type: userFound.user_id_type,
-      id_number: userFound.id_number,
-      role: userFound.role,
-    };
-
-    const token = await this.jwtService.signAsync(payload);
-
     await this.userRepository.update(
       {
         id: userFound.id,
@@ -800,10 +870,25 @@ export class AuthService {
       { verification_code: null },
     );
 
-    return {
-      token,
+    const payload = {
+      sub: userFound.id,
+      name: userFound.name,
+      email: userFound.email,
       id_type: userFound.user_id_type,
       id_number: userFound.id_number,
+      role: userFound.role,
+    };
+
+    const { access_token, refresh_token, access_token_expires_in } =
+      await this.generateTokens(payload);
+
+    return {
+      access_token,
+      refresh_token,
+      access_token_expires_in,
+      id_type: userFound.user_id_type,
+      id_number: userFound.id_number,
+      role: userFound.role.name,
     };
   }
 
@@ -821,14 +906,6 @@ export class AuthService {
       throw new UnauthorizedException(`¡Código de verificación incorrecto!`);
     }
 
-    const payload = {
-      id_type: familiarFound.user_id_type,
-      id_number: familiarFound.id_number,
-      role: familiarFound.role,
-    };
-
-    const token = await this.jwtService.signAsync(payload);
-
     await this.familiarRepository.update(
       {
         id: familiarFound.id,
@@ -836,11 +913,25 @@ export class AuthService {
       { verification_code: null },
     );
 
-    return {
-      token,
+    const payload = {
+      sub: familiarFound.id,
+      name: familiarFound.name,
+      email: familiarFound.email,
       id_type: familiarFound.user_id_type,
       id_number: familiarFound.id_number,
-      patientIdNumber: familiarFound.patient_id,
+      role: familiarFound.role,
+    };
+
+    const { access_token, refresh_token, access_token_expires_in } =
+      await this.generateTokens(payload);
+
+    return {
+      access_token,
+      refresh_token,
+      access_token_expires_in,
+      id_type: familiarFound.user_id_type,
+      id_number: familiarFound.id_number,
+      role: familiarFound.role.name,
     };
   }
 

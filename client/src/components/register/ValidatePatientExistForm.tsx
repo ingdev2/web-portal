@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Divider, Form, Input, Select } from "antd";
+import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
@@ -198,71 +198,71 @@ const ValidatePatientExistForm: React.FC = () => {
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
-      dispatch(setDefaultValuesUserPatient());
-      setIdTypePatientLocalState("");
-      setGenderPatientLocalState("");
 
       if (idTypeAbbrevLocalState && idNumberLocalState) {
-        // const searchPatientUser: any = await validatePatientRegister({
-        //   id_number: idNumberLocalState,
-        // });
-
-        // var validationPatientRegisterData = searchPatientUser?.data;
-
-        // if (validationPatientRegisterData?.status === 409) {
-        //   const errorMessage = validationPatientRegisterData?.message;
-
-        //   dispatch(setErrorsUserPatient(errorMessage));
-        //   setShowErrorMessagePatient(true);
-        // }
-        // if (validationPatientRegisterData?.status === 200) {
-        const response: any = await validatePatient({
-          idType: idTypeAbbrevLocalState,
-          idNumber: idNumberLocalState,
+        const searchPatientUser: any = await validatePatientRegister({
+          id_number: idNumberLocalState,
         });
 
-        var validationPatientData = response.data?.[0].count;
+        var validationPatientRegisterData = searchPatientUser?.data;
 
-        if (validationPatientData === 0) {
-          const errorMessage =
-            "El paciente no se encuentra registrado en la clínica";
+        if (validationPatientRegisterData?.status === 409) {
+          const errorMessage = validationPatientRegisterData?.message;
 
           dispatch(setErrorsUserPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
-        if (validationPatientData === 1 && response.data?.[0].data?.[0]) {
-          const patientData = response.data[0].data[0];
-
-          const {
-            NOMBRE: name = "NO REGISTRA",
-            TIPO: idType = "NO REGISTRA",
-            ID: idNumber = "NO REGISTRA",
-            SEXO: gender = "NO REGISTRA",
-            FECHA_NACIMIENTO: birthDate = "NO REGISTRA",
-            CORREO: email = "NO REGISTRA",
-            CELULAR: cellPhone = "NO REGISTRA",
-            EMPRESA: affiliationEps = "NO REGISTRA",
-            DIRECCION: residenceAddress = "NO REGISTRA",
-          } = patientData;
-
-          setIdTypePatientLocalState(idType);
-          setGenderPatientLocalState(gender);
-
-          dispatch(setNameUserPatient(name));
-          dispatch(setIdNumberUserPatient(idNumber));
-          dispatch(setBirthdateUserPatient(birthDate));
-          dispatch(setEmailUserPatient(email));
-          dispatch(setCellphoneUserPatient(cellPhone));
-          dispatch(setAffiliationEpsUserPatient(affiliationEps));
-          dispatch(setResidenceAddressUserPatient(residenceAddress));
-
-          setShowSuccessMessage(true);
-
-          await router.push("register/validate_data", {
-            scroll: true,
+        if (validationPatientRegisterData?.status === 200) {
+          const response: any = await validatePatient({
+            idType: idTypeAbbrevLocalState,
+            idNumber: idNumberLocalState,
           });
+
+          var validationPatientData = response.data?.[0].count;
+
+          if (validationPatientData === 0) {
+            const errorMessage =
+              "El paciente no se encuentra registrado en la clínica";
+
+            dispatch(setErrorsUserPatient(errorMessage));
+            setShowErrorMessagePatient(true);
+          }
+          if (validationPatientData === 1 && response.data?.[0].data?.[0]) {
+            setIdTypePatientLocalState("");
+            setGenderPatientLocalState("");
+
+            const patientData = response.data[0].data[0];
+
+            const {
+              NOMBRE: name = "NO REGISTRA",
+              TIPO: idType = "NO REGISTRA",
+              ID: idNumber = "NO REGISTRA",
+              SEXO: gender = "NO REGISTRA",
+              FECHA_NACIMIENTO: birthDate = "NO REGISTRA",
+              CORREO: email = "NO REGISTRA",
+              CELULAR: cellPhone = "NO REGISTRA",
+              EMPRESA: affiliationEps = "NO REGISTRA",
+              DIRECCION: residenceAddress = "NO REGISTRA",
+            } = patientData;
+
+            setIdTypePatientLocalState(idType);
+            setGenderPatientLocalState(gender);
+
+            dispatch(setNameUserPatient(name));
+            dispatch(setIdNumberUserPatient(idNumber));
+            dispatch(setBirthdateUserPatient(birthDate));
+            dispatch(setEmailUserPatient(email));
+            dispatch(setCellphoneUserPatient(cellPhone));
+            dispatch(setAffiliationEpsUserPatient(affiliationEps));
+            dispatch(setResidenceAddressUserPatient(residenceAddress));
+
+            setShowSuccessMessage(true);
+
+            await router.push("register/validate_data", {
+              scroll: true,
+            });
+          }
         }
-        // }
       } else {
         dispatch(setErrorsUserPatient("Datos del paciente no encontrados"));
         setShowErrorMessagePatient(true);
@@ -282,7 +282,7 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = async () => {
-    await router.push("/users_login", { scroll: true });
+    await router.push("/login", { scroll: true });
     dispatch(setDefaultValuesUserPatient());
   };
 
@@ -295,14 +295,16 @@ const ValidatePatientExistForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: 321,
-        height: "min-content",
+        width: "max-content",
+        height: "max-content",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         marginBottom: 31,
+        marginInline: 31,
       }}
     >
       {showErrorMessagePatient && (
@@ -319,137 +321,148 @@ const ValidatePatientExistForm: React.FC = () => {
         />
       )}
 
-      <Form
-        id="patient-user-validate-form"
-        name="patient-user-validate-form"
-        className="patient-user-validate-form"
-        onFinish={handleValidatePatient}
-        initialValues={{ remember: false }}
-        autoComplete="false"
-        layout="vertical"
+      <Col
+        xs={24}
+        md={24}
+        lg={24}
+        style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
       >
-        <h2
-          className="title-validate-patient"
-          style={{
-            fontWeight: "500",
-            lineHeight: 1.3,
-            marginTop: 0,
-            marginBottom: 13,
-            textAlign: "center",
-          }}
+        <Form
+          id="patient-user-validate-form"
+          name="patient-user-validate-form"
+          className="patient-user-validate-form"
+          onFinish={handleValidatePatient}
+          initialValues={{ remember: false }}
+          autoComplete="false"
+          layout="vertical"
         >
-          Activación de usuario Paciente
-        </h2>
-
-        <Form.Item
-          name="patient-user-id-type-validate"
-          label="Tipo de identificación"
-          style={{ marginBottom: 7 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu tipo de identificación!",
-            },
-          ]}
-        >
-          <Select
-            value={idTypeAbbrevLocalState}
-            placeholder="Tipo de identificación"
-            onChange={handleIdTypeChange}
+          <h2
+            className="title-validate-patient"
+            style={{
+              fontWeight: "500",
+              lineHeight: 1.3,
+              marginTop: 0,
+              marginBottom: 13,
+              textAlign: "center",
+            }}
           >
-            {Object.entries(IdTypeAbbrev).map(([key, value]) => (
-              <Select.Option key={key} value={value}>
-                {key}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+            Activación de usuario Paciente
+          </h2>
 
-        <Form.Item
-          name="patient-user-id-number-validate"
-          label="Número de identificación"
-          style={{ marginBottom: 7 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu número de identificación!",
-            },
-            {
-              pattern: /^[0-9]+$/,
-              message:
-                "¡Por favor ingresa número de identificación sin puntos!",
-            },
-            {
-              min: 7,
-              message: "¡Por favor ingresa mínimo 7 números!",
-            },
-            {
-              max: 11,
-              message: "¡Por favor ingresa máximo 11 números!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<IdcardOutlined className="site-form-item-icon" />}
-            type="number"
-            value={idNumberLocalState}
-            placeholder="Número de identificación"
-            onChange={(e) => setIdNumberLocalState(e.target.valueAsNumber)}
-            min={0}
-          />
-        </Form.Item>
-
-        <Form.Item style={{ textAlign: "center" }}>
-          {isSubmittingPatient ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              size="large"
-              style={{
-                paddingInline: 45,
-                borderRadius: 31,
-                backgroundColor: "#015E90",
-                color: "#f2f2f2",
-                marginBlock: 7,
-              }}
-              htmlType="submit"
-              className="patient-validate-form-button"
-              onClick={handleButtonClick}
+          <Form.Item
+            name="patient-user-id-type-validate"
+            label="Tipo de identificación"
+            style={{ marginBottom: 7 }}
+            rules={[
+              {
+                required: true,
+                message: "¡Por favor ingresa tu tipo de identificación!",
+              },
+            ]}
+          >
+            <Select
+              value={idTypeAbbrevLocalState}
+              placeholder="Tipo de identificación"
+              onChange={handleIdTypeChange}
             >
-              Validar Paciente
+              {Object.entries(IdTypeAbbrev).map(([key, value]) => (
+                <Select.Option key={key} value={value}>
+                  {key}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="patient-user-id-number-validate"
+            label="Número de identificación"
+            style={{ marginBottom: 7 }}
+            rules={[
+              {
+                required: true,
+                message: "¡Por favor ingresa tu número de identificación!",
+              },
+              {
+                pattern: /^[0-9]+$/,
+                message:
+                  "¡Por favor ingresa número de identificación sin puntos!",
+              },
+              {
+                min: 7,
+                message: "¡Por favor ingresa mínimo 7 números!",
+              },
+              {
+                max: 11,
+                message: "¡Por favor ingresa máximo 11 números!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<IdcardOutlined className="site-form-item-icon" />}
+              type="number"
+              value={idNumberLocalState}
+              placeholder="Número de identificación"
+              onChange={(e) => setIdNumberLocalState(e.target.valueAsNumber)}
+              min={0}
+            />
+          </Form.Item>
+
+          <Form.Item
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {isSubmittingPatient ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                size="large"
+                style={{
+                  paddingInline: 45,
+                  borderRadius: 31,
+                  backgroundColor: "#015E90",
+                  color: "#f2f2f2",
+                  marginBlock: 7,
+                }}
+                htmlType="submit"
+                className="patient-validate-form-button"
+                onClick={handleButtonClick}
+              >
+                Validar Paciente
+              </Button>
+            )}
+
+            <Divider
+              style={{
+                fontSize: 13,
+                fontWeight: "normal",
+                marginBlock: 4,
+                borderWidth: 1.3,
+              }}
+            >
+              ¿Ya tienes cuenta?
+            </Divider>
+
+            <Button
+              style={{
+                paddingInline: 22,
+                color: "#015E90",
+                borderColor: "#015E90",
+                fontWeight: "bold",
+                borderRadius: 7,
+                borderWidth: 1.3,
+                marginTop: 7,
+              }}
+              htmlType="button"
+              className="patient-validate-button"
+              onClick={handleGoToUserLogin}
+              onMouseDown={handleButtonClick}
+            >
+              Ingresar con mi cuenta
             </Button>
-          )}
-
-          <Divider
-            style={{
-              fontSize: 13,
-              fontWeight: "normal",
-              marginBlock: 4,
-              borderWidth: 1.3,
-            }}
-          >
-            ¿Ya tienes cuenta?
-          </Divider>
-
-          <Button
-            style={{
-              paddingInline: 22,
-              color: "#015E90",
-              borderColor: "#015E90",
-              fontWeight: "bold",
-              borderRadius: 7,
-              borderWidth: 1.3,
-              marginTop: 7,
-            }}
-            htmlType="button"
-            className="patient-validate-button"
-            onClick={handleGoToUserLogin}
-            onMouseDown={handleButtonClick}
-          >
-            Ingresar con mi cuenta
-          </Button>
-        </Form.Item>
-      </Form>
+          </Form.Item>
+        </Form>
+      </Col>
     </Card>
   );
 };

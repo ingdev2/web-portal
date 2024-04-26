@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 import { Tabs } from "antd";
 import { FaUser } from "react-icons/fa";
@@ -8,12 +10,21 @@ import { FaUser } from "react-icons/fa";
 import ValidatePatientExistForm from "@/components/register/ValidatePatientExistForm";
 
 const RegisterPatientPage: React.FC = () => {
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      redirect("/patient/homepage");
+    }
+  }, [status]);
+
   const onChange = (key: string) => {
     console.log(key);
   };
 
   return (
     <div
+      className="register-user-page"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -35,6 +46,7 @@ const RegisterPatientPage: React.FC = () => {
           opacity: 0.4,
         }}
       />
+
       <div
         className="content-page"
         style={{
@@ -57,6 +69,7 @@ const RegisterPatientPage: React.FC = () => {
             style={{ height: 77 }}
           />
         </div>
+
         <div>
           <Tabs
             onChange={onChange}

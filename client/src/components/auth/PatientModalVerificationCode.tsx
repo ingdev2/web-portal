@@ -76,11 +76,7 @@ const PatientModalVerificationCode: React.FC = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-    if (!isUserPatientData && isUserPatientError) {
-      setShowErrorMessage(true);
-      setErrorMessage("¡Usuario no encontrado!");
-    }
-  }, [idNumberPatientState, isUserPatientData, isUserPatientError]);
+  }, [idNumberPatientState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -105,11 +101,11 @@ const PatientModalVerificationCode: React.FC = () => {
         setShowErrorMessage(true);
       }
       if (responseNextAuth?.status === 200) {
-        await router.replace("patient/homepage", { scroll: false });
         dispatch(setIdTypeLoginPatient(""));
         dispatch(setPasswordLoginPatient(""));
         dispatch(setVerificationCodeLoginPatient(""));
         dispatch(setPatientModalIsOpen(false));
+        await router.replace("/patient/homepage", { scroll: false });
       }
     } catch (error) {
       console.error(error);
@@ -146,7 +142,7 @@ const PatientModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
-    <Link href="/users_login" scroll={false} />;
+    <Link href="/login" scroll={false} />;
     window.location.reload();
   };
 

@@ -7,6 +7,8 @@ import { useAppSelector } from "@/redux/hooks";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
+import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
+
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
 
@@ -17,6 +19,14 @@ const HomePagePatient = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const {
+    data: isRelativesData,
+    isLoading: isRelativesLoading,
+    isFetching: isRelativesFetching,
+    isSuccess: isRelativesSuccess,
+    isError: isRelativesError,
+  } = useGetAllRelativesQuery(null);
+
   useEffect(() => {
     if (!idNumberUserPatientState) {
       setShowErrorMessage(true);
@@ -26,7 +36,7 @@ const HomePagePatient = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [idNumberUserPatientState]);
+  }, [status, idNumberUserPatientState]);
 
   return (
     <div>
@@ -46,6 +56,21 @@ const HomePagePatient = () => {
           <pre>
             <code>{JSON.stringify(session, null, 2)}</code>
           </pre>
+          <h2>Lista de Familiares del paciente</h2>
+
+          {isRelativesFetching && isRelativesLoading && <CustomSpin />}
+
+          {isRelativesData && isRelativesSuccess && (
+            <ol>
+              {isRelativesData.map((relative) => (
+                <li key={relative.id}>
+                  {relative.name}
+                  {relative.email}
+                  {relative.cellphone}
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       )}
     </div>

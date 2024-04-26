@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
@@ -70,19 +70,26 @@ export class AuthController {
 
   // LOGIN
 
+  @Post('refreshToken')
+  async refreshToken(@Req() request: Request) {
+    const [type, token] = request.headers['authorization']?.split(' ') || [];
+
+    return this.authService.refreshToken(token);
+  }
+
   @Post('loginAdmins')
-  async loginAdmins(@Body() loginUser: LoginDto) {
-    return await this.authService.loginAdmins(loginUser);
+  async loginAdmins(@Body() loginAdmin: LoginDto) {
+    return await this.authService.loginAdmins(loginAdmin);
   }
 
   @Post('loginPatientUsers')
-  async loginPatientUsers(@Body() loginAdmin: LoginDto) {
-    return await this.authService.loginPatientUsers(loginAdmin);
+  async loginPatientUsers(@Body() loginPatient: LoginDto) {
+    return await this.authService.loginPatientUsers(loginPatient);
   }
 
   @Post('loginEpsUsers')
-  async loginEpsUsers(@Body() loginAdmin: LoginDto) {
-    return await this.authService.loginEpsUsers(loginAdmin);
+  async loginEpsUsers(@Body() loginEps: LoginDto) {
+    return await this.authService.loginEpsUsers(loginEps);
   }
 
   @Post('loginRelatives')

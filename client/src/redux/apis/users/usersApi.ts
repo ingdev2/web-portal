@@ -1,18 +1,23 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
-// const { data: session, status } = useSession();
+const addTokenToRequest = async (headers: any, { getState }: any) => {
+  const session: any = await getSession();
+
+  if (session?.user?.access_token) {
+    headers.set("Authorization", `Bearer ${session.user.access_token}`);
+  }
+  return headers;
+};
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
+
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
-    // prepareHeaders(headers, { getState }) {
-    //   if (status === "authenticated") {
-    //     headers.set("authorization", `Bearer ${session?.user?.token}`);
-    //   }
-    //   return headers;
-    // },
+    prepareHeaders(headers, { getState }) {
+      return addTokenToRequest(headers, { getState });
+    },
   }),
 
   endpoints: (builder) => ({

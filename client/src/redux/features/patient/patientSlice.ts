@@ -14,7 +14,7 @@ const initialState: User = {
   email: "",
   cellphone: 0,
   whatsapp: 0,
-  auth_method: 0,
+  authentication_method: 0,
   password: "",
   residence_department: "",
   residence_city: "",
@@ -79,7 +79,7 @@ export const patientSlice = createSlice({
       state.whatsapp = action.payload;
     },
     setAuthMethodUserPatient: (state, action) => {
-      state.auth_method = action.payload;
+      state.authentication_method = action.payload;
     },
     setPasswordUserPatient: (state, action) => {
       state.password = action.payload;
@@ -112,7 +112,7 @@ export const patientSlice = createSlice({
       state.email = "";
       state.cellphone = 0;
       state.whatsapp = 0;
-      state.auth_method = 0;
+      state.authentication_method = 0;
       state.password = "";
       state.residence_address = "";
     },

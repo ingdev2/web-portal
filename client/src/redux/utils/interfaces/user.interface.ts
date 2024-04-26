@@ -7,12 +7,12 @@ interface User {
   user_id_type: number;
   id_type_abbrev: string;
   id_number: number;
-  birthdate?: string;
+  birthdate: string;
   affiliation_eps: string;
   email: string;
   cellphone: number;
   whatsapp: number;
-  auth_method: number;
+  authentication_method: number;
   password: string;
   residence_department: string;
   residence_city: string;

@@ -10,7 +10,6 @@ export class UpdateAdminDto {
   last_name: string;
 
   @IsOptional()
-  @IsNumber()
   id_number: number;
 
   @IsOptional()

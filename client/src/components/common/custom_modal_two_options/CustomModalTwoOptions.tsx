@@ -6,13 +6,14 @@ import { Modal, Button, Space } from "antd";
 
 import CustomSpin from "../custom_spin/CustomSpin";
 
-const CustomModal: React.FC<{
+const CustomModalTwoOptions: React.FC<{
   iconCustomModal: ReactNode;
   titleCustomModal: string;
   subtitleCustomModal: string;
   openCustomModalState: boolean;
   handleCancelCustomModal: () => void;
   handleConfirmCustomModal: (e: React.MouseEvent<any>) => Promise<void>;
+  handleClickCustomModal: () => void;
   isSubmittingConfirm: boolean;
 }> = ({
   iconCustomModal,
@@ -21,12 +22,13 @@ const CustomModal: React.FC<{
   openCustomModalState,
   handleCancelCustomModal,
   handleConfirmCustomModal,
+  handleClickCustomModal,
   isSubmittingConfirm,
 }) => {
   return (
     <div>
       <Modal
-        className="custom-modal"
+        className="custom-modal-two-options"
         open={openCustomModalState}
         onOk={handleConfirmCustomModal}
         confirmLoading={isSubmittingConfirm}
@@ -108,6 +110,7 @@ const CustomModal: React.FC<{
                   }}
                   htmlType="submit"
                   onClick={handleConfirmCustomModal}
+                  onMouseDown={handleClickCustomModal}
                 >
                   Confirmar
                 </Button>
@@ -124,6 +127,7 @@ const CustomModal: React.FC<{
                   color: "#f2f2f2",
                 }}
                 onClick={handleCancelCustomModal}
+                onMouseDown={handleClickCustomModal}
               >
                 Cancelar
               </Button>
@@ -135,4 +139,4 @@ const CustomModal: React.FC<{
   );
 };
 
-export default CustomModal;
+export default CustomModalTwoOptions;

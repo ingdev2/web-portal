@@ -2,12 +2,12 @@
 
 import React from "react";
 import ButtonAuth from "@/components/auth/ButtonAuth";
-import { Card } from "antd";
+import { Card, Col } from "antd";
 
 const HomePage = () => {
   return (
     <div
-      className="HomePage"
+      className="homepage"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -15,7 +15,7 @@ const HomePage = () => {
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
-        padding: 0,
+        marginBlock: 31,
       }}
     >
       <div
@@ -32,9 +32,14 @@ const HomePage = () => {
       />
 
       <div
-        className="content-page"
+        className="content-homepage"
         style={{
           zIndex: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          alignContent: "center",
+          alignItems: "center",
         }}
       >
         <div
@@ -56,53 +61,65 @@ const HomePage = () => {
           <Card
             className="content-card"
             style={{
-              width: 321,
+              width: "max-content",
+              height: "max-content",
               display: "flex",
               flexDirection: "column",
+              alignItems: "center",
               justifyContent: "center",
               backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+              marginBottom: 31,
+              marginInline: 31,
+              padding: 2,
             }}
           >
-            <div
-              className="proced-logo"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBlock: 13,
-              }}
+            <Col
+              xs={24}
+              md={24}
+              lg={24}
+              style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
             >
-              <img
-                src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
-                alt="Logo de Proced"
-                style={{ height: 62 }}
-              />
-            </div>
+              <div
+                className="proced-logo"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBlock: 13,
+                }}
+              >
+                <img
+                  src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
+                  alt="Logo de Proced"
+                  style={{ height: 62 }}
+                />
+              </div>
 
-            <div className="text-card">
-              <h3
-                className="presentation-text"
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  lineHeight: 1.3,
-                }}
-              >
-                Portal web para pacientes, familiares y entidades aliadas.
-              </h3>
-              <h3
-                className="presentation-text"
-                style={{
-                  textAlign: "center",
-                  fontWeight: "normal",
-                  lineHeight: 1.3,
-                }}
-              >
-                Trámites en línea para hacer más fácil y ágil tus solicitudes
-                con nosotros, a un solo clic de distancia.
-              </h3>
-              <ButtonAuth />
-            </div>
+              <div className="text-card">
+                <h3
+                  className="presentation-text"
+                  style={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  Portal web para pacientes, familiares y entidades aliadas.
+                </h3>
+                <h3
+                  className="presentation-text"
+                  style={{
+                    textAlign: "center",
+                    fontWeight: "normal",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  Trámites en línea para hacer más fácil y ágil tus solicitudes
+                  con nosotros, a un solo clic de distancia.
+                </h3>
+                <ButtonAuth />
+              </div>
+            </Col>
           </Card>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsNumber,
   IsOptional,
   IsString,
   IsDateString,
@@ -26,7 +25,6 @@ export class CreateUserPatientDto {
   birthdate: Date;
 
   @IsNotEmpty()
-  @IsNumber()
   id_number: number;
 
   @IsOptional()
@@ -34,11 +32,9 @@ export class CreateUserPatientDto {
   email: string;
 
   @IsOptional()
-  @IsNumber()
   cellphone: number;
 
   @IsOptional()
-  @IsNumber()
   whatsapp: number;
 
   @Transform(({ value }) => value.trim())
@@ -78,10 +74,8 @@ export class CreateUserPatientDto {
   user_id_type: number;
 
   @IsNotEmpty()
-  @IsNumber()
   authentication_method: number;
 
   @IsOptional()
-  @IsNumber()
   verification_code: number;
 }

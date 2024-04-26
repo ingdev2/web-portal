@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsNumber,
   IsString,
   MinLength,
   MaxLength,
@@ -21,7 +20,6 @@ export class CreateUserEpsDto {
   last_name: string;
 
   @IsNotEmpty()
-  @IsNumber()
   id_number: number;
 
   @IsNotEmpty()
@@ -29,7 +27,6 @@ export class CreateUserEpsDto {
   email: string;
 
   @IsNotEmpty()
-  @IsNumber()
   cellphone: number;
 
   @Transform(({ value }) => value.trim())
@@ -55,10 +52,8 @@ export class CreateUserEpsDto {
   company_area: number;
 
   @IsOptional()
-  @IsNumber()
   authentication_method: number;
 
   @IsOptional()
-  @IsNumber()
   verification_code: number;
 }

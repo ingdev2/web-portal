@@ -8,7 +8,7 @@ interface Familiar {
   email: string;
   cellphone: number;
   whatsapp: number;
-  auth_method: number;
+  authentication_method: number;
   is_active: boolean;
   accept_terms: boolean;
   user_role: number;

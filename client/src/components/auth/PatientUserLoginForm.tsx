@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Divider, Form, Input, Select } from "antd";
+import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import CustomSpin from "../common/custom_spin/CustomSpin";
@@ -18,11 +18,11 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
-import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 
 const PatientUserLoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +39,9 @@ const PatientUserLoginForm: React.FC = () => {
   );
   const passwordPatientState = useAppSelector(
     (state) => state.patientUserLogin.password
+  );
+  const affiliationEpsPatientState = useAppSelector(
+    (state) => state.patient.affiliation_eps
   );
   const errorsPatientState = useAppSelector(
     (state) => state.patientUserLogin.errors
@@ -82,6 +85,9 @@ const PatientUserLoginForm: React.FC = () => {
       dispatch(setPasswordLoginPatient(""));
       dispatch(setVerificationCodeLoginPatient(""));
     }
+    if (affiliationEpsPatientState) {
+      dispatch(setDefaultValuesUserPatient());
+    }
     if (
       !idTypesPatientLoading &&
       !idTypesPatientFetching &&
@@ -98,14 +104,6 @@ const PatientUserLoginForm: React.FC = () => {
       setShowErrorMessagePatient(true);
       dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
     }
-    if (
-      isLoginPatientSuccess &&
-      !isLoginPatientLoading &&
-      !isSubmittingPatient
-    ) {
-      dispatch(setPatientModalIsOpen(true));
-    }
-    dispatch(setDefaultValuesUserPatient());
   }, [
     idTypesPatientData,
     idTypesPatientLoading,
@@ -126,11 +124,9 @@ const PatientUserLoginForm: React.FC = () => {
 
       var isLoginUserError = response.error;
 
-      if (
-        !isLoginPatientSuccess &&
-        !isLoginPatientLoading &&
-        isLoginUserError
-      ) {
+      var isLoginUserSuccess = response.data;
+
+      if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
 
         if (Array.isArray(errorMessage)) {
@@ -141,6 +137,12 @@ const PatientUserLoginForm: React.FC = () => {
           dispatch(setErrorsLoginPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
+      }
+
+      if (isLoginUserSuccess) {
+        dispatch(setErrorsLoginPatient([]));
+        setShowErrorMessagePatient(false);
+        dispatch(setPatientModalIsOpen(true));
       }
     } catch (error) {
       console.error(error);
@@ -156,15 +158,18 @@ const PatientUserLoginForm: React.FC = () => {
 
   return (
     <Card
+      key={"card-patient-user-login-form"}
       style={{
-        width: 321,
-        height: "min-content",
+        width: "max-content",
+        height: "max-content",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         marginBottom: 31,
+        marginInline: 31,
       }}
     >
       {modalIsOpenPatient && <PatientModalVerificationCode />}
@@ -176,190 +181,203 @@ const PatientUserLoginForm: React.FC = () => {
         />
       )}
 
-      <Form
-        name="patient-users-login-form"
-        className="patient-users-login-form"
-        style={{ width: 270 }}
-        onFinish={handleSubmit}
-        initialValues={{ remember: false }}
-        autoComplete="false"
-        layout="vertical"
+      <Col
+        xs={24}
+        md={24}
+        lg={24}
+        style={{ padding: "0 2px", width: "100vw", maxWidth: 321 }}
       >
-        <h2
-          className="title-login-patient"
-          style={{
-            fontWeight: "500",
-            lineHeight: 1.3,
-            marginTop: 0,
-            textAlign: "center",
-          }}
+        <Form
+          id="patient-users-login-form"
+          name="patient-users-login-form"
+          className="patient-users-login-form"
+          onFinish={handleSubmit}
+          initialValues={{ remember: false }}
+          autoComplete="false"
+          layout="vertical"
         >
-          Ingreso de usuario Paciente
-        </h2>
+          <h2
+            className="title-login-patient"
+            style={{
+              fontWeight: "500",
+              lineHeight: 1.3,
+              marginTop: 0,
+              textAlign: "center",
+            }}
+          >
+            Ingreso de usuario <br /> Paciente
+          </h2>
 
-        {idTypesPatientLoading || idTypesPatientFetching ? (
-          <CustomSpin />
-        ) : (
+          {idTypesPatientLoading || idTypesPatientFetching ? (
+            <CustomSpin />
+          ) : (
+            <Form.Item
+              name="patient-user-id-type"
+              label="Tipo de identificación"
+              style={{ marginBottom: 7 }}
+              rules={[
+                {
+                  required: true,
+                  message: "¡Por favor ingresa tu tipo de identificación!",
+                },
+              ]}
+            >
+              <Select
+                value={idTypePatientState}
+                placeholder="Tipo de identificación"
+                onChange={(e) => dispatch(setIdTypeLoginPatient(e))}
+              >
+                {idTypeOptionsPatient?.map((option: any) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
           <Form.Item
-            name="patient-user-id-type"
-            label="Tipo de identificación"
+            name="patient-user-id-number"
+            label="Número de identificación"
             style={{ marginBottom: 7 }}
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingresa tu tipo de identificación!",
+                message: "¡Por favor ingresa tu número de identificación!",
+              },
+              {
+                pattern: /^[0-9]+$/,
+                message:
+                  "¡Por favor ingresa número de identificación sin puntos!",
+              },
+              {
+                min: 7,
+                message: "¡Por favor ingresa mínimo 7 números!",
+              },
+              {
+                max: 11,
+                message: "¡Por favor ingresa máximo 11 números!",
               },
             ]}
           >
-            <Select
-              value={idTypePatientState}
-              placeholder="Tipo de identificación"
-              onChange={(e) => dispatch(setIdTypeLoginPatient(e))}
-            >
-              {idTypeOptionsPatient?.map((option: any) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
+            <Input
+              prefix={<IdcardOutlined className="site-form-item-icon" />}
+              type="number"
+              value={idNumberPatientState}
+              placeholder="Número de identificación"
+              onChange={(e) =>
+                dispatch(setIdNumberLoginPatient(e.target.value))
+              }
+              min={0}
+            />
           </Form.Item>
-        )}
 
-        <Form.Item
-          name="patient-user-id-number"
-          label="Número de identificación"
-          style={{ marginBottom: 7 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu número de identificación!",
-            },
-            {
-              pattern: /^[0-9]+$/,
-              message:
-                "¡Por favor ingresa número de identificación sin puntos!",
-            },
-            {
-              min: 7,
-              message: "¡Por favor ingresa mínimo 7 números!",
-            },
-            {
-              max: 11,
-              message: "¡Por favor ingresa máximo 11 números!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<IdcardOutlined className="site-form-item-icon" />}
-            type="number"
-            value={idNumberPatientState}
-            placeholder="Número de identificación"
-            onChange={(e) => dispatch(setIdNumberLoginPatient(e.target.value))}
-            min={0}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="patient-user-password"
-          label="Contraseña"
-          style={{ marginBottom: 13 }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu contraseña!",
-            },
-            {
-              min: 7,
-              message: "¡La contraseña debe tener mínimo 7 caracteres!",
-            },
-            {
-              max: 14,
-              message: "¡La contraseña debe tener máximo 14 caracteres!",
-            },
-          ]}
-          hasFeedback
-        >
-          <Input.Password
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            value={passwordPatientState}
-            placeholder="Contraseña"
-            onChange={(e) => dispatch(setPasswordLoginPatient(e.target.value))}
-          />
-        </Form.Item>
-
-        <Form.Item style={{ textAlign: "center" }}>
-          <a
-            className="patient-login-form-forgot-user"
-            href=""
-            style={{
-              display: "flow",
-              color: "#960202",
-              textDecorationLine: "underline",
-              fontWeight: 500,
-              marginBottom: 13,
-            }}
+          <Form.Item
+            name="patient-user-password"
+            label="Contraseña"
+            style={{ marginBottom: 13 }}
+            rules={[
+              {
+                required: true,
+                message: "¡Por favor ingresa tu contraseña!",
+              },
+              {
+                min: 7,
+                message: "¡La contraseña debe tener mínimo 7 caracteres!",
+              },
+              {
+                max: 14,
+                message: "¡La contraseña debe tener máximo 14 caracteres!",
+              },
+            ]}
+            hasFeedback
           >
-            Olvide mi contraseña
-          </a>
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              value={passwordPatientState}
+              placeholder="Contraseña"
+              onChange={(e) =>
+                dispatch(setPasswordLoginPatient(e.target.value))
+              }
+            />
+          </Form.Item>
 
-          {isSubmittingPatient && isLoginPatientLoading ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              size="large"
+          <Form.Item style={{ textAlign: "center" }}>
+            <a
+              className="patient-login-form-forgot-user"
+              href=""
               style={{
-                paddingInline: 62,
-                borderRadius: 31,
-                backgroundColor: "#015E90",
-                color: "#f2f2f2",
-                marginBottom: 7,
+                display: "flow",
+                color: "#960202",
+                textDecorationLine: "underline",
+                fontWeight: 500,
+                marginBottom: 13,
               }}
-              htmlType="submit"
-              className="patient-login-form-button"
-              onClick={handleButtonClick}
             >
-              Ingresar
-            </Button>
-          )}
+              Olvide mi contraseña
+            </a>
 
-          <Divider
-            style={{
-              fontSize: 13,
-              fontWeight: "normal",
-              marginBlock: 7,
-              borderWidth: 1.3,
-            }}
-          >
-            ¿No tienes cuenta?
-          </Divider>
+            {isSubmittingPatient && isLoginPatientLoading ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                size="large"
+                style={{
+                  paddingInline: 62,
+                  borderRadius: 31,
+                  backgroundColor: "#015E90",
+                  color: "#f2f2f2",
+                  marginBottom: 7,
+                }}
+                htmlType="submit"
+                className="patient-login-form-button"
+                onClick={handleButtonClick}
+              >
+                Ingresar
+              </Button>
+            )}
 
-          {isSubmittingRegisterPagePatient ? (
-            <CustomSpin />
-          ) : (
-            <Button
+            <Divider
               style={{
-                paddingInline: 22,
-                color: "#015E90",
-                borderColor: "#015E90",
-                fontWeight: "bold",
-                borderRadius: 7,
+                fontSize: 13,
+                fontWeight: "normal",
+                marginBlock: 7,
                 borderWidth: 1.3,
-                marginTop: 7,
-              }}
-              htmlType="button"
-              className="patient-register-button"
-              onClick={async () => {
-                setIsSubmittingRegisterPagePatient(true);
-                await router.push("patient/register", { scroll: true });
-                setIsSubmittingRegisterPagePatient(false);
               }}
             >
-              Activar cuenta
-            </Button>
-          )}
-        </Form.Item>
-        {/* <Form.ErrorList
+              ¿No tienes cuenta?
+            </Divider>
+
+            {isSubmittingRegisterPagePatient ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                style={{
+                  paddingInline: 22,
+                  color: "#015E90",
+                  borderColor: "#015E90",
+                  fontWeight: "bold",
+                  borderRadius: 7,
+                  borderWidth: 1.3,
+                  marginTop: 7,
+                }}
+                htmlType="button"
+                className="patient-register-button"
+                onClick={async () => {
+                  setIsSubmittingRegisterPagePatient(true);
+                  await router.push("/patient/register", {
+                    scroll: true,
+                  });
+
+                  setIsSubmittingRegisterPagePatient(false);
+                }}
+              >
+                Activar cuenta
+              </Button>
+            )}
+          </Form.Item>
+          {/* <Form.ErrorList
           errors={errors?.map((error) => (
             <div
               key={error}
@@ -374,7 +392,8 @@ const PatientUserLoginForm: React.FC = () => {
             </div>
           ))}
         /> */}
-      </Form>
+        </Form>
+      </Col>
     </Card>
   );
 };

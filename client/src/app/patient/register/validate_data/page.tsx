@@ -3,9 +3,9 @@
 import React from "react";
 
 import { Tabs } from "antd";
-import { IoIosBusiness } from "react-icons/io";
+import { RiPassValidLine } from "react-icons/ri";
 
-import RegisterPatientForm from "@/components/register/RegisterPatientForm";
+import ValidatePatientData from "@/components/register/ValidatePatientData";
 
 const ValidateDataPage: React.FC = () => {
   const onChange = (key: string) => {
@@ -14,6 +14,7 @@ const ValidateDataPage: React.FC = () => {
 
   return (
     <div
+      className="validate-data-page"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -21,6 +22,7 @@ const ValidateDataPage: React.FC = () => {
         alignContent: "center",
         alignItems: "center",
         marginBlock: 31,
+        marginInline: 13,
       }}
     >
       <div
@@ -69,8 +71,8 @@ const ValidateDataPage: React.FC = () => {
                 className: "validate-data-card-register",
                 key: "1",
                 label: "Validar Datos Del Paciente",
-                icon: <IoIosBusiness />,
-                children: <RegisterPatientForm />,
+                icon: <RiPassValidLine />,
+                children: <ValidatePatientData />,
               },
             ]}
           />

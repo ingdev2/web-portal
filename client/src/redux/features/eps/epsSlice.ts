@@ -5,6 +5,7 @@ const initialState: User = {
   name: "",
   last_name: "",
   user_gender: 0,
+  user_gender_abbrev: "",
   user_id_type: 0,
   id_type_abbrev: "",
   id_number: 0,
@@ -13,7 +14,7 @@ const initialState: User = {
   email: "",
   cellphone: 0,
   whatsapp: 0,
-  auth_method: 0,
+  authentication_method: 0,
   password: "",
   residence_department: "",
   residence_city: "",
@@ -63,6 +64,9 @@ export const patientSlice = createSlice({
     setCellphoneUserEps: (state, action) => {
       state.cellphone = action.payload;
     },
+    setAuthMethodUserPatient: (state, action) => {
+      state.authentication_method = action.payload;
+    },
     setPasswordUserEps: (state, action) => {
       state.password = action.payload;
     },
@@ -84,6 +88,21 @@ export const patientSlice = createSlice({
     setErrorsUserEps: (state, action) => {
       state.errors = action.payload;
     },
+    setDefaultValuesUserEps: (state) => {
+      state.name = "";
+      state.last_name = "";
+      state.user_gender = 0;
+      state.user_gender_abbrev = "";
+      state.user_id_type = 0;
+      state.id_type_abbrev = "";
+      state.id_number = 0;
+      state.email = "";
+      state.cellphone = 0;
+      state.authentication_method = 0;
+      state.password = "";
+      state.company_area = 0;
+      state.eps_company = 0;
+    },
   },
 });
 
@@ -97,6 +116,7 @@ export const {
   setIdNumberUserEps,
   setEmailUserEps,
   setCellphoneUserEps,
+  setAuthMethodUserPatient,
   setPasswordUserEps,
   setIsActiveUserEps,
   setRoleUserEps,
@@ -104,6 +124,7 @@ export const {
   setEpsCompanyUserEps,
   setMedicalReqUserEps,
   setErrorsUserEps,
+  setDefaultValuesUserEps,
 } = patientSlice.actions;
 
 export default patientSlice.reducer;
