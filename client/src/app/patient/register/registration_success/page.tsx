@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
-import { redirect, useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { Card, Col } from "antd";
@@ -24,11 +24,11 @@ const RegistrationSuccessPage: React.FC = () => {
   const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      redirect("/patient/homepage");
-    }
-    if (!authMethodPatientState && !passwordPatientState) {
-      redirect("/login");
+    if (
+      status === "authenticated" ||
+      (!authMethodPatientState && !passwordPatientState)
+    ) {
+      notFound();
     }
   }, [status, authMethodPatientState, passwordPatientState]);
 

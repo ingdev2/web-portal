@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
+import { notFound } from "next/navigation";
+import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
@@ -28,6 +30,13 @@ const HomePagePatient = () => {
   } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
+    if (
+      status === "authenticated" &&
+      session &&
+      session?.user.role !== UserRolType.PATIENT
+    ) {
+      notFound();
+    }
     if (!idNumberUserPatientState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
@@ -36,7 +45,7 @@ const HomePagePatient = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [status, idNumberUserPatientState]);
+  }, [session, status, idNumberUserPatientState]);
 
   return (
     <div>
@@ -58,11 +67,11 @@ const HomePagePatient = () => {
           </pre>
           <h2>Lista de Familiares del paciente</h2>
 
-          {isRelativesFetching && isRelativesLoading && <CustomSpin />}
-
-          {isRelativesData && isRelativesSuccess && (
+          {isRelativesFetching && isRelativesLoading && !isRelativesData ? (
+            <CustomSpin />
+          ) : (
             <ol>
-              {isRelativesData.map((relative) => (
+              {isRelativesData?.map((relative) => (
                 <li key={relative.id}>
                   {relative.name}
                   {relative.email}

@@ -225,6 +225,8 @@ const PatientModalVerificationCode: React.FC = () => {
           </h5>
 
           <Form
+            id="form-verify-code-modal-patient"
+            name="form-verify-code-modal-patient"
             initialValues={{ remember: false }}
             autoComplete="false"
             onFinish={handleSubmit}
