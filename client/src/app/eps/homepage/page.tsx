@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
+import { notFound } from "next/navigation";
+import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
@@ -18,6 +20,13 @@ const HomePageEps = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    if (
+      status === "authenticated" &&
+      session &&
+      session?.user.role !== UserRolType.EPS
+    ) {
+      notFound();
+    }
     if (!idNumberUserEpsState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
@@ -26,7 +35,7 @@ const HomePageEps = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [status, idNumberUserEpsState]);
+  }, [session, status, idNumberUserEpsState]);
 
   return (
     <div>

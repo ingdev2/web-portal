@@ -3,7 +3,6 @@ import { getSession } from "next-auth/react";
 
 const addTokenToRequest = async (headers: any, { getState }: any) => {
   const session: any = await getSession();
-  console.log(session);
 
   if (session?.user?.access_token) {
     headers.set("Authorization", `Bearer ${session.user.access_token}`);

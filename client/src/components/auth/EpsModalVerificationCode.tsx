@@ -223,6 +223,8 @@ const EpsModalVerificationCode: React.FC = () => {
           </h5>
 
           <Form
+            id="form-verify-code-modal-eps"
+            name="form-verify-code-modal-eps"
             initialValues={{ remember: false }}
             autoComplete="false"
             onFinish={handleSubmit}

@@ -124,7 +124,7 @@ const handler = NextAuth({
       if (token) {
         session.user = token;
       } else {
-        delete session.user;
+        session.user;
       }
 
       return session;

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { redirect, useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import {
@@ -124,11 +124,11 @@ const ValidatePatientData: React.FC = () => {
   });
 
   useEffect(() => {
-    if (status === "authenticated") {
-      redirect("/patient/homepage");
-    }
-    if (!idTypeAbbrevPatientState && !idNumberPatientState) {
-      redirect("/login");
+    if (
+      status === "authenticated" ||
+      (!idTypeAbbrevPatientState && !idNumberPatientState)
+    ) {
+      notFound();
     }
     if (!idTypeAbbrevPatientState && !idNumberPatientState) {
       dispatch(setErrorsUserPatient("¡Datos de paciente no encontrados!"));
