@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
+import { useRoleValidation } from "@/utils/hooks/use_role_validation";
+import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
@@ -11,6 +13,9 @@ import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
+
+  const allowedRoles = [AdminRolType.ADMIN];
+  useRoleValidation(allowedRoles);
 
   const idNumberAdminState = useAppSelector(
     (state) => state.adminLogin.id_number

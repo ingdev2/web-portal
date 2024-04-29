@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
 import { notFound } from "next/navigation";
+import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -13,6 +14,9 @@ import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
+
+  const allowedRoles = [UserRolType.PATIENT];
+  useRoleValidation(allowedRoles);
 
   const idNumberUserPatientState = useAppSelector(
     (state) => state.patientUserLogin.id_number
@@ -30,13 +34,6 @@ const HomePagePatient = () => {
   } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
-    if (
-      status === "authenticated" &&
-      session &&
-      session?.user.role !== UserRolType.PATIENT
-    ) {
-      notFound();
-    }
     if (!idNumberUserPatientState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");

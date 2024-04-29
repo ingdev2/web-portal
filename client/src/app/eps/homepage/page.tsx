@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
-import { notFound } from "next/navigation";
+import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -11,6 +11,9 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 const HomePageEps = () => {
   const { data: session, status } = useSession();
+
+  const allowedRoles = [UserRolType.EPS];
+  useRoleValidation(allowedRoles);
 
   const idNumberUserEpsState = useAppSelector(
     (state) => state.epsUserLogin.id_number
@@ -20,13 +23,6 @@ const HomePageEps = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (
-      status === "authenticated" &&
-      session &&
-      session?.user.role !== UserRolType.EPS
-    ) {
-      notFound();
-    }
     if (!idNumberUserEpsState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
