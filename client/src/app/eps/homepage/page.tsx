@@ -31,7 +31,7 @@ const HomePageEps = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [session, status, idNumberUserEpsState]);
+  }, [status, idNumberUserEpsState]);
 
   return (
     <div>

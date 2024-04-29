@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
-import { notFound } from "next/navigation";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
+import { Card, Col } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
+import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
 
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
@@ -42,7 +43,7 @@ const HomePagePatient = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [session, status, idNumberUserPatientState]);
+  }, [status, idNumberUserPatientState]);
 
   return (
     <div>
@@ -53,30 +54,20 @@ const HomePagePatient = () => {
         />
       )}
 
-      <h1>Página Principal Paciente</h1>
-
       {!idNumberUserPatientState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div>
-          <pre>
-            <code>{JSON.stringify(session, null, 2)}</code>
-          </pre>
-          <h2>Lista de Familiares del paciente</h2>
-
-          {isRelativesFetching && isRelativesLoading && !isRelativesData ? (
-            <CustomSpin />
-          ) : (
-            <ol>
-              {isRelativesData?.map((relative) => (
-                <li key={relative.id}>
-                  {relative.name}
-                  {relative.email}
-                  {relative.cellphone}
-                </li>
-              ))}
-            </ol>
-          )}
+        <div
+          className="homepage-patient-content"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <PatientHomeLayout />
         </div>
       )}
     </div>
