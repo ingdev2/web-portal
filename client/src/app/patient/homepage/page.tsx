@@ -3,16 +3,21 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/redux/hooks";
-import { notFound } from "next/navigation";
+import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
+import { Card, Col } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
+import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
 
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
+
+  const allowedRoles = [UserRolType.PATIENT];
+  useRoleValidation(allowedRoles);
 
   const idNumberUserPatientState = useAppSelector(
     (state) => state.patientUserLogin.id_number
@@ -30,13 +35,6 @@ const HomePagePatient = () => {
   } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
-    if (
-      status === "authenticated" &&
-      session &&
-      session?.user.role !== UserRolType.PATIENT
-    ) {
-      notFound();
-    }
     if (!idNumberUserPatientState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
@@ -45,10 +43,10 @@ const HomePagePatient = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [session, status, idNumberUserPatientState]);
+  }, [status, idNumberUserPatientState]);
 
   return (
-    <div>
+    <>
       {showErrorMessage && (
         <CustomMessage
           typeMessage="error"
@@ -56,33 +54,14 @@ const HomePagePatient = () => {
         />
       )}
 
-      <h1>Página Principal Paciente</h1>
-
       {!idNumberUserPatientState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div>
-          <pre>
-            <code>{JSON.stringify(session, null, 2)}</code>
-          </pre>
-          <h2>Lista de Familiares del paciente</h2>
-
-          {isRelativesFetching && isRelativesLoading && !isRelativesData ? (
-            <CustomSpin />
-          ) : (
-            <ol>
-              {isRelativesData?.map((relative) => (
-                <li key={relative.id}>
-                  {relative.name}
-                  {relative.email}
-                  {relative.cellphone}
-                </li>
-              ))}
-            </ol>
-          )}
+        <div className="homepage-patient-content">
+          <PatientHomeLayout />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -6,7 +6,6 @@ import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
-import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 

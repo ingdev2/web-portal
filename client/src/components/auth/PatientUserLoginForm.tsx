@@ -183,7 +183,6 @@ const PatientUserLoginForm: React.FC = () => {
 
       <Col
         xs={24}
-        md={24}
         lg={24}
         style={{ padding: "0 2px", width: "100vw", maxWidth: 321 }}
       >
@@ -366,6 +365,9 @@ const PatientUserLoginForm: React.FC = () => {
                 className="patient-register-button"
                 onClick={async () => {
                   setIsSubmittingRegisterPagePatient(true);
+
+                  await new Promise((resolve) => setTimeout(resolve, 700));
+
                   await router.push("/patient/register", {
                     scroll: true,
                   });

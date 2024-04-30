@@ -1,5 +1,7 @@
 import NextAuth, { DefaultSession } from "next-auth";
-import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
+import { AdminRolType } from "../../../../api/src/utils/enums/admin_roles.enum";
+import { AllowedRoleType } from "./allowed_role_type";
 
 declare module "next-auth" {
   interface Session {
@@ -9,7 +11,7 @@ declare module "next-auth" {
       access_token_expires_in?: number;
       id_type?: number;
       id_number?: number;
-      role?: UserRolType;
+      role?: AllowedRoleType;
     } & DefaultSession["user"];
   }
 }

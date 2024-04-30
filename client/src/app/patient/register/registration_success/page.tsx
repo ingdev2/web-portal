@@ -113,7 +113,6 @@ const RegistrationSuccessPage: React.FC = () => {
           >
             <Col
               xs={24}
-              md={24}
               lg={24}
               style={{
                 padding: "0 2px",

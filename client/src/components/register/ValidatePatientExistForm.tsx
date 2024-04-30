@@ -66,6 +66,8 @@ const ValidatePatientExistForm: React.FC = () => {
   const [genderPatientLocalState, setGenderPatientLocalState] = useState("");
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
+  const [isSubmittingGoToUserLogin, setIsSubmittingGoToUserLogin] =
+    useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
@@ -258,7 +260,7 @@ const ValidatePatientExistForm: React.FC = () => {
 
             setShowSuccessMessage(true);
 
-            await router.push("register/validate_data", {
+            await router.push("/register/validate_data", {
               scroll: true,
             });
           }
@@ -282,8 +284,15 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = async () => {
+    setIsSubmittingGoToUserLogin(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 700));
+
     await router.push("/login", { scroll: true });
+
     dispatch(setDefaultValuesUserPatient());
+
+    setIsSubmittingGoToUserLogin(true);
   };
 
   const handleButtonClick = () => {
@@ -443,23 +452,27 @@ const ValidatePatientExistForm: React.FC = () => {
               ¿Ya tienes cuenta?
             </Divider>
 
-            <Button
-              style={{
-                paddingInline: 22,
-                color: "#015E90",
-                borderColor: "#015E90",
-                fontWeight: "bold",
-                borderRadius: 7,
-                borderWidth: 1.3,
-                marginTop: 7,
-              }}
-              htmlType="button"
-              className="patient-validate-button"
-              onClick={handleGoToUserLogin}
-              onMouseDown={handleButtonClick}
-            >
-              Ingresar con mi cuenta
-            </Button>
+            {isSubmittingGoToUserLogin ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                style={{
+                  paddingInline: 22,
+                  color: "#015E90",
+                  borderColor: "#015E90",
+                  fontWeight: "bold",
+                  borderRadius: 7,
+                  borderWidth: 1.3,
+                  marginTop: 7,
+                }}
+                htmlType="button"
+                className="patient-validate-button"
+                onClick={handleGoToUserLogin}
+                onMouseDown={handleButtonClick}
+              >
+                Ingresar con mi cuenta
+              </Button>
+            )}
           </Form.Item>
         </Form>
       </Col>
