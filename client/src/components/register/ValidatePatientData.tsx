@@ -322,7 +322,7 @@ const ValidatePatientData: React.FC = () => {
       )}
 
       <Row>
-        <Col xs={24} md={12} lg={12} style={{ padding: "0 7px" }}>
+        <Col xs={24} lg={12} style={{ padding: "0 7px" }}>
           <h2
             className="title-register-patient"
             style={{

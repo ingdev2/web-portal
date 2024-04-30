@@ -46,7 +46,7 @@ const HomePagePatient = () => {
   }, [status, idNumberUserPatientState]);
 
   return (
-    <div>
+    <>
       {showErrorMessage && (
         <CustomMessage
           typeMessage="error"
@@ -57,20 +57,11 @@ const HomePagePatient = () => {
       {!idNumberUserPatientState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div
-          className="homepage-patient-content"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <div className="homepage-patient-content">
           <PatientHomeLayout />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

@@ -76,7 +76,6 @@ const HomePage = () => {
           >
             <Col
               xs={24}
-              md={24}
               lg={24}
               style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
             >
