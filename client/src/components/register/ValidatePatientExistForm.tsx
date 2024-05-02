@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
+import { titleStyleCss } from "@/theme/text_styles";
 import { IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
@@ -236,15 +237,15 @@ const ValidatePatientExistForm: React.FC = () => {
             const patientData = response.data[0].data[0];
 
             const {
-              NOMBRE: name = "NO REGISTRA",
-              TIPO: idType = "NO REGISTRA",
-              ID: idNumber = "NO REGISTRA",
-              SEXO: gender = "NO REGISTRA",
-              FECHA_NACIMIENTO: birthDate = "NO REGISTRA",
-              CORREO: email = "NO REGISTRA",
-              CELULAR: cellPhone = "NO REGISTRA",
-              EMPRESA: affiliationEps = "NO REGISTRA",
-              DIRECCION: residenceAddress = "NO REGISTRA",
+              NOMBRE: name,
+              TIPO: idType,
+              ID: idNumber,
+              SEXO: gender,
+              FECHA_NACIMIENTO: birthDate,
+              CORREO: email,
+              CELULAR: cellPhone,
+              EMPRESA: affiliationEps,
+              DIRECCION: residenceAddress,
             } = patientData;
 
             setIdTypePatientLocalState(idType);
@@ -260,7 +261,7 @@ const ValidatePatientExistForm: React.FC = () => {
 
             setShowSuccessMessage(true);
 
-            await router.push("/register/validate_data", {
+            await router.push("/patient/register/validate_data", {
               scroll: true,
             });
           }
@@ -348,9 +349,7 @@ const ValidatePatientExistForm: React.FC = () => {
           <h2
             className="title-validate-patient"
             style={{
-              fontWeight: "500",
-              lineHeight: 1.3,
-              marginTop: 0,
+              ...titleStyleCss,
               marginBottom: 13,
               textAlign: "center",
             }}

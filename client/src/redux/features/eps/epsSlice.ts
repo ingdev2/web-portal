@@ -89,6 +89,7 @@ export const patientSlice = createSlice({
       state.errors = action.payload;
     },
     setDefaultValuesUserEps: (state) => {
+      state.id = "";
       state.name = "";
       state.last_name = "";
       state.user_gender = 0;
@@ -102,6 +103,7 @@ export const patientSlice = createSlice({
       state.password = "";
       state.company_area = 0;
       state.eps_company = 0;
+      state.errors = [];
     },
   },
 });

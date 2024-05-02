@@ -34,6 +34,11 @@ export class IdTypesController {
     return this.idTypesService.getAllIdTypes();
   }
 
+  @Get('/getIdType/:id')
+  getIdTypeById(@Param('id') id: number) {
+    return this.idTypesService.getIdTypeById(id);
+  }
+
   // PATCH METHODS //
 
   @Auth(AdminRolType.SUPER_ADMIN)

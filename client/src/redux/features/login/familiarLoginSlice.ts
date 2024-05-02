@@ -39,7 +39,7 @@ export const familiarLoginSlice = createSlice({
     setErrorsLoginFamiliar: (state, action) => {
       state.errors = action.payload;
     },
-    resetLoginState: (state) => {
+    resetLoginFamiliarState: (state) => {
       state.id_type = initialState.id_type;
       state.id_number = initialState.id_number;
       state.verification_code = initialState.verification_code;
@@ -57,7 +57,7 @@ export const {
   setRelationWithPatientLoginFamiliar,
   setVerificationCodeLoginFamiliar,
   setErrorsLoginFamiliar,
-  resetLoginState,
+  resetLoginFamiliarState,
 } = familiarLoginSlice.actions;
 
 export default familiarLoginSlice.reducer;

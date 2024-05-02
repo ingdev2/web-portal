@@ -3,6 +3,7 @@
 import React, { ReactNode } from "react";
 
 import { Modal, Button, Space } from "antd";
+import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
 import CustomSpin from "../custom_spin/CustomSpin";
 
@@ -59,9 +60,8 @@ const CustomModalTwoOptions: React.FC<{
             <h2
               className="title-custom-modal"
               style={{
-                fontWeight: "bold",
-                lineHeight: 1.3,
-                marginBlock: 2,
+                ...titleStyleCss,
+                textAlign: "center",
               }}
             >
               {titleCustomModal}
@@ -70,9 +70,7 @@ const CustomModalTwoOptions: React.FC<{
             <h4
               className="subtitle-modal-patient"
               style={{
-                fontWeight: "normal",
-                lineHeight: 1.3,
-                marginBlock: 7,
+                ...subtitleStyleCss,
               }}
             >
               {subtitleCustomModal}

@@ -12,22 +12,22 @@ export const adminLoginSlice = createSlice({
   name: "adminLogin",
   initialState,
   reducers: {
-    setIdTypeOptions: (state, action) => {
+    setIdTypeOptionsLoginAdmin: (state, action) => {
       state.idTypeOptions = action.payload;
     },
-    setIdType: (state, action) => {
+    setIdTypeLoginAdmin: (state, action) => {
       state.id_type = action.payload;
     },
-    setIdNumber: (state, action) => {
+    setIdNumberLoginAdmin: (state, action) => {
       state.id_number = action.payload;
     },
-    setPassword: (state, action) => {
+    setPasswordLoginAdmin: (state, action) => {
       state.password = action.payload;
     },
-    setErrors: (state, action) => {
+    setErrorsLoginAdmin: (state, action) => {
       state.errors = action.payload;
     },
-    resetLoginState: (state) => {
+    resetLoginAdminState: (state) => {
       state.id_type = initialState.id_type;
       state.id_number = initialState.id_number;
       state.password = initialState.password;
@@ -37,12 +37,12 @@ export const adminLoginSlice = createSlice({
 });
 
 export const {
-  setIdTypeOptions,
-  setIdType,
-  setIdNumber,
-  setPassword,
-  setErrors,
-  resetLoginState,
+  setIdTypeOptionsLoginAdmin,
+  setIdTypeLoginAdmin,
+  setIdNumberLoginAdmin,
+  setPasswordLoginAdmin,
+  setErrorsLoginAdmin,
+  resetLoginAdminState,
 } = adminLoginSlice.actions;
 
 export default adminLoginSlice.reducer;

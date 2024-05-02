@@ -9,6 +9,7 @@ import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
+import { titleStyleCss } from "@/theme/text_styles";
 
 import {
   setIdTypeOptionsLoginPatient,
@@ -198,9 +199,7 @@ const PatientUserLoginForm: React.FC = () => {
           <h2
             className="title-login-patient"
             style={{
-              fontWeight: "500",
-              lineHeight: 1.3,
-              marginTop: 0,
+              ...titleStyleCss,
               textAlign: "center",
             }}
           >

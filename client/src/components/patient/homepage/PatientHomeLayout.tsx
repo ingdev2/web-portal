@@ -18,6 +18,7 @@ import {
 } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import PatientHomepageContent from "./homepage_content/PatientHomepageContent";
 
 const PatientHomeLayout: React.FC = () => {
   const { Header, Content, Footer } = Layout;
@@ -38,8 +39,6 @@ const PatientHomeLayout: React.FC = () => {
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
 
   useEffect(() => {
-    console.log(nameUserPatientState);
-
     if (!nameUserPatientState) {
       dispatch(setNameUserPatient(userPatientData?.name));
     }
@@ -97,7 +96,7 @@ const PatientHomeLayout: React.FC = () => {
           display: "flex",
           flexFlow: "column wrap",
           width: "100vw",
-          height: "100vh",
+          minHeight: "100%",
           minWidth: "405px",
           backgroundColor: "transparent",
           zIndex: 1,
@@ -124,12 +123,13 @@ const PatientHomeLayout: React.FC = () => {
           >
             <Col
               xs={8}
+              md={8}
               lg={8}
               style={{
                 display: "flex",
                 flexFlow: "row wrap",
                 justifyContent: "flex-start",
-                alignContent: "center",
+                alignContent: "flex-start",
               }}
             >
               <div
@@ -142,7 +142,8 @@ const PatientHomeLayout: React.FC = () => {
                   width: "80%",
                   height: "80%",
                   backgroundColor: "#f2f2f2",
-                  borderRadius: 7,
+                  borderEndStartRadius: 7,
+                  borderEndEndRadius: 7,
                   overflow: "hidden",
                 }}
               >
@@ -159,6 +160,7 @@ const PatientHomeLayout: React.FC = () => {
             </Col>
             <Col
               xs={16}
+              md={16}
               lg={16}
               style={{
                 display: "flex",
@@ -202,17 +204,19 @@ const PatientHomeLayout: React.FC = () => {
           style={{
             display: "flex",
             flexFlow: "column wrap",
-            // justifyContent: "center",
-            // alignContent: "center",
             alignItems: "center",
             zIndex: 1,
           }}
         >
-          <Row>
-            <Col xs={24} lg={24} style={{ padding: "13px 31px" }}>
-              <div>Contenido Aquí</div>
-            </Col>
-          </Row>
+          <div
+            style={{
+              display: "flex",
+              marginTop: "31px",
+              marginInline: "54px",
+            }}
+          >
+            <PatientHomepageContent />
+          </div>
         </Content>
         <Footer
           style={{

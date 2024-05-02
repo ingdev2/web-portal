@@ -14,4 +14,5 @@ interface Admin {
   createdAt: string;
   updateAt: string;
   deletedAt: string;
+  errors: [];
 }

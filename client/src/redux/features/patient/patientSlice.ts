@@ -100,6 +100,7 @@ export const patientSlice = createSlice({
       state.errors = action.payload;
     },
     setDefaultValuesUserPatient: (state) => {
+      state.id = "";
       state.name = "";
       state.last_name = "";
       state.user_gender = 0;
@@ -115,6 +116,7 @@ export const patientSlice = createSlice({
       state.authentication_method = 0;
       state.password = "";
       state.residence_address = "";
+      state.errors = [];
     },
   },
 });
