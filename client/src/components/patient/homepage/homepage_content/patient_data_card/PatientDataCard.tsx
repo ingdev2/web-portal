@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Card, Col, Row, Space, Divider } from "antd";
+import { Card, Col, Row, Divider } from "antd";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import CustomSpin from "../../../common/custom_spin/CustomSpin";
-import CustomMessage from "../../../common/custom_messages/CustomMessage";
+import CustomSpin from "../../../../common/custom_spin/CustomSpin";
+import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 
 import {
   setIdUserPatient,
@@ -97,7 +97,7 @@ const PatientHomepageContent: React.FC = () => {
       ) : (
         <Card
           style={{
-            maxWidth: "720px",
+            maxWidth: "690px",
             width: "100%",
             height: "max-content",
             display: "flex",
@@ -105,9 +105,9 @@ const PatientHomepageContent: React.FC = () => {
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fcfcfc",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
-            marginBottom: 31,
-            padding: 2,
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+            marginBottom: "31px",
+            padding: "2px",
           }}
         >
           {showErrorMessagePatient && (
@@ -119,105 +119,58 @@ const PatientHomepageContent: React.FC = () => {
             />
           )}
 
-          <Row justify={"space-between"} align={"middle"}>
+          <Row justify={"space-between"} align={"top"}>
             <Col
               xs={24}
-              sm={12}
-              md={12}
-              lg={12}
-              style={{ padding: "2px 22px", textAlign: "start" }}
+              sm={24}
+              md={24}
+              lg={24}
+              style={{ padding: "2px 2px", textAlign: "center" }}
             >
               <h3
-                className="patient-data-card-title"
+                className="patient-welcome-card-title"
                 style={{
                   ...titleStyleCss,
+                  marginBottom: "0px",
                 }}
               >
                 Bienvenido señor(a):
               </h3>
+
               <h3
-                className="subtitle-patient-name"
+                className="patient-name-data"
                 style={{
-                  ...subtitleStyleCss,
                   color: "#3F97AF",
-                  textAlign: "end",
+                  fontSize: 20,
+                  lineHeight: 1.3,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginTop: "0px",
+                  marginBottom: "8px",
                 }}
               >
                 {namePatientState}
               </h3>
-              <Divider style={{ marginBlock: 2, borderWidth: "1.3px" }} />
-              <h3
-                className="id-number-subtitle"
-                style={{
-                  ...titleStyleCss,
-                }}
-              >
-                Número de identificación:
-              </h3>
-              <h3
-                style={{
-                  ...subtitleStyleCss,
-                  color: "#3F97AF",
-                  textAlign: "end",
-                }}
-              >
-                {idNumberPatientState}
-              </h3>
-              <Divider style={{ marginBlock: 2, borderWidth: "1.3px" }} />
-              <h3
-                className="id-number-subtitle"
-                style={{
-                  ...titleStyleCss,
-                }}
-              >
-                EPS de afiliación:
-              </h3>
-              <h3
-                style={{
-                  ...subtitleStyleCss,
-                  color: "#3F97AF",
-                  textAlign: "end",
-                }}
-              >
-                {affiliationEpsPatientState}
-              </h3>
-              <Divider style={{ marginBlock: 2, borderWidth: "1.3px" }} />
             </Col>
+
             <Col
               xs={24}
-              sm={12}
-              md={12}
-              lg={12}
-              style={{ padding: "2px 22px", textAlign: "start" }}
+              sm={10}
+              md={10}
+              lg={10}
+              style={{ padding: "2px 13px", textAlign: "start" }}
             >
               <h3
-                className="patient-data-card-title"
-                style={{
-                  ...titleStyleCss,
-                }}
-              >
-                Bienvenido señor(a):
-              </h3>
-              <h3
-                className="subtitle-patient-name"
-                style={{
-                  ...subtitleStyleCss,
-                  color: "#3F97AF",
-                  textAlign: "end",
-                }}
-              >
-                {namePatientState}
-              </h3>
-              <Divider style={{ marginBlock: 2, borderWidth: "1.3px" }} />
-              <h3
-                className="id-number-subtitle"
+                className="patient-id-type-subtitle"
                 style={{
                   ...titleStyleCss,
                 }}
               >
                 Número de identificación:
               </h3>
+
               <h3
+                className="patient-id-type-data"
                 style={{
                   ...subtitleStyleCss,
                   color: "#3F97AF",
@@ -226,16 +179,20 @@ const PatientHomepageContent: React.FC = () => {
               >
                 {idNumberPatientState}
               </h3>
-              <Divider style={{ marginBlock: 2, borderWidth: "1.3px" }} />
+
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+
               <h3
-                className="id-number-subtitle"
+                className="patient-affiliation-eps-subtitle"
                 style={{
                   ...titleStyleCss,
                 }}
               >
                 EPS de afiliación:
               </h3>
+
               <h3
+                className="patient-affiliation-eps-data"
                 style={{
                   ...subtitleStyleCss,
                   color: "#3F97AF",
@@ -244,7 +201,63 @@ const PatientHomepageContent: React.FC = () => {
               >
                 {affiliationEpsPatientState}
               </h3>
-              <Divider style={{ marginBlock: 2, borderWidth: "1.3px" }} />
+
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+            </Col>
+
+            <Col
+              xs={24}
+              sm={14}
+              md={14}
+              lg={14}
+              style={{
+                padding: "2px 13px",
+                textAlign: "start",
+              }}
+            >
+              <h3
+                className="patient-email-subtitle"
+                style={{
+                  ...titleStyleCss,
+                }}
+              >
+                Correo electrónico:
+              </h3>
+
+              <h3
+                className="patient-email-data"
+                style={{
+                  ...subtitleStyleCss,
+                  color: "#3F97AF",
+                  textAlign: "end",
+                }}
+              >
+                {emailPatientState}
+              </h3>
+
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+
+              <h3
+                className="patient-cellphone-subtitle"
+                style={{
+                  ...titleStyleCss,
+                }}
+              >
+                Número de celular:
+              </h3>
+
+              <h3
+                className="patient-cellphone-data"
+                style={{
+                  ...subtitleStyleCss,
+                  color: "#3F97AF",
+                  textAlign: "end",
+                }}
+              >
+                {cellphonePatientState}
+              </h3>
+
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
             </Col>
           </Row>
         </Card>

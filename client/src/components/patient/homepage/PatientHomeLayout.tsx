@@ -84,10 +84,12 @@ const PatientHomeLayout: React.FC = () => {
           position: "fixed",
           width: "100%",
           height: "100%",
-          backgroundImage: "url('/background/back-healt.jpg')",
+          backgroundImage: "url('/background/back-healt-opacity.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          opacity: 0.2,
+          margin: "0px",
+          padding: "0px",
+          zIndex: -1,
         }}
       />
       <Layout
@@ -95,11 +97,10 @@ const PatientHomeLayout: React.FC = () => {
         style={{
           display: "flex",
           flexFlow: "column wrap",
-          width: "100vw",
+          width: "100%",
           minHeight: "100%",
           minWidth: "405px",
           backgroundColor: "transparent",
-          zIndex: 1,
         }}
       >
         <Header
@@ -110,9 +111,9 @@ const PatientHomeLayout: React.FC = () => {
             flexFlow: "row wrap",
             alignContent: "center",
             backgroundColor: "#015E90",
-            top: 0,
+            top: "0px",
             padding: "0 54px",
-            zIndex: 2,
+            zIndex: 1,
           }}
         >
           <Row
@@ -139,7 +140,7 @@ const PatientHomeLayout: React.FC = () => {
                   flexFlow: "column wrap",
                   justifyContent: "center",
                   alignContent: "center",
-                  width: "80%",
+                  width: "60%",
                   height: "80%",
                   backgroundColor: "#f2f2f2",
                   borderEndStartRadius: 7,
@@ -151,7 +152,7 @@ const PatientHomeLayout: React.FC = () => {
                   src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
                   alt="Logo de Proced"
                   style={{
-                    width: "80%",
+                    maxWidth: "80%",
                     height: "auto",
                     objectFit: "contain",
                   }}
@@ -205,29 +206,21 @@ const PatientHomeLayout: React.FC = () => {
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
-            zIndex: 1,
+            alignContent: "center",
+            // padding: "13px 13px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              marginTop: "31px",
-              marginInline: "54px",
-            }}
-          >
-            <PatientHomepageContent />
-          </div>
+          <PatientHomepageContent />
         </Content>
         <Footer
           style={{
-            height: 13,
+            height: "13px",
             display: "flex",
             flexFlow: "column wrap",
             justifyContent: "center",
             alignContent: "center",
             backgroundColor: "transparent",
-            bottom: 0,
-            zIndex: 1,
+            bottom: "0px",
           }}
         >
           Clínica Bonnadona © {new Date().getFullYear()}

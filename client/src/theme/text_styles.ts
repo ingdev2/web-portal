@@ -5,6 +5,8 @@ export const titleStyleCss: CSSProperties = {
   lineHeight: 1.3,
   marginTop: 0,
   marginBottom: 7,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };
 
 export const subtitleStyleCss: CSSProperties = {
@@ -12,4 +14,6 @@ export const subtitleStyleCss: CSSProperties = {
   lineHeight: 1.3,
   marginTop: 0,
   marginBottom: 7,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };
