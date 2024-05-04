@@ -97,9 +97,8 @@ const PatientHomepageContent: React.FC = () => {
       ) : (
         <Card
           style={{
+            minWidth: "405px",
             maxWidth: "690px",
-            width: "100%",
-            height: "max-content",
             display: "flex",
             flexFlow: "row wrap",
             alignItems: "center",
@@ -107,7 +106,7 @@ const PatientHomepageContent: React.FC = () => {
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
             marginBottom: "31px",
-            padding: "2px",
+            padding: "2px 7px",
           }}
         >
           {showErrorMessagePatient && (

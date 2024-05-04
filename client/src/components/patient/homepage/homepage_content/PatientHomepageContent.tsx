@@ -30,6 +30,7 @@ const PatientHomepageContent: React.FC = () => {
       ) : (
         <>
           <PatientDataCard />
+
           <HomepageOptions />
         </>
       )}
