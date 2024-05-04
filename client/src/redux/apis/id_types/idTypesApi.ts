@@ -16,6 +16,9 @@ export const idTypesApi = createApi({
     getAllIdTypes: builder.query<IdType[], null>({
       query: () => "getAll",
     }),
+    getIdTypeById: builder.query<IdType, number>({
+      query: (id) => `getIdType/${id}`,
+    }),
     updateIdTypeById: builder.mutation<any, { id: number; newName: string }>({
       query: ({ id, newName }) => ({
         url: `update/${id}`,
@@ -30,5 +33,6 @@ export const idTypesApi = createApi({
 export const {
   useCreateIdTypeMutation,
   useGetAllIdTypesQuery,
+  useGetIdTypeByIdQuery,
   useUpdateIdTypeByIdMutation,
 } = idTypesApi;

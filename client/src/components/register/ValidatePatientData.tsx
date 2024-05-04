@@ -18,6 +18,7 @@ import {
   Col,
   Row,
 } from "antd";
+import { titleStyleCss } from "@/theme/text_styles";
 import { LockOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
@@ -53,6 +54,8 @@ const ValidatePatientData: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const NOT_REGISTER: string = "NO REGISTRA";
 
   const namePatientState = useAppSelector((state) => state.patient.name);
   const idTypePatientState = useAppSelector(
@@ -273,7 +276,7 @@ const ValidatePatientData: React.FC = () => {
   return (
     <Card
       style={{
-        maxWidth: 720,
+        maxWidth: "720px",
         width: "100%",
         height: "max-content",
         display: "flex",
@@ -322,13 +325,11 @@ const ValidatePatientData: React.FC = () => {
       )}
 
       <Row>
-        <Col xs={24} lg={12} style={{ padding: "0 7px" }}>
+        <Col xs={24} md={12} lg={12} style={{ padding: "0 7px" }}>
           <h2
             className="title-register-patient"
             style={{
-              fontWeight: "500",
-              lineHeight: 1.3,
-              marginTop: 2,
+              ...titleStyleCss,
               marginBottom: 7,
               textAlign: "center",
             }}
@@ -356,7 +357,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="name-patient-auto-input"
-              value={namePatientState}
+              value={namePatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -367,7 +368,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="id-type-patient-auto-input"
-              value={idTypeAbbrevPatientState}
+              value={idTypeAbbrevPatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -378,7 +379,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-id-number-hosvital"
-              value={idNumberPatientState}
+              value={idNumberPatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -403,7 +404,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-email-hosvital"
-              value={emailPatientState}
+              value={emailPatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -414,7 +415,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-cellphone-hosvital"
-              value={cellphonePatientState}
+              value={cellphonePatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -425,7 +426,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-gender-hosvital"
-              value={genderPatientAbbrevState}
+              value={genderPatientAbbrevState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -436,7 +437,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-birthdate-hosvital"
-              value={birthdatePatientState}
+              value={birthdatePatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -447,7 +448,7 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-affiliationeps-hosvital"
-              value={affiliationEpsPatientState}
+              value={affiliationEpsPatientState || NOT_REGISTER}
               disabled
             />
           </div>
@@ -458,19 +459,17 @@ const ValidatePatientData: React.FC = () => {
             </Typography.Title>
             <Input
               id="patient-residenceaddress-hosvital"
-              value={residenceAddressPatientState}
+              value={residenceAddressPatientState || NOT_REGISTER}
               disabled
             />
           </div>
         </Col>
 
-        <Col xs={24} md={12} style={{ padding: "0 13px" }}>
+        <Col xs={24} md={12} lg={12} style={{ padding: "0 13px" }}>
           <h2
             className="title-register-patient"
             style={{
-              fontWeight: "500",
-              lineHeight: 1.3,
-              marginTop: 2,
+              ...titleStyleCss,
               marginBottom: 22,
               textAlign: "center",
             }}

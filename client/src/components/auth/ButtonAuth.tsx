@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
 
 import { Button } from "antd";
+import { subtitleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
@@ -100,10 +101,7 @@ const ButtonAuth = () => {
         )}
         <h4
           style={{
-            textAlign: "center",
-            fontWeight: "bold",
-            lineHeight: 1.3,
-            marginBlock: 0,
+            ...subtitleStyleCss,
           }}
         >
           Ingresaste con el correo electrónico:

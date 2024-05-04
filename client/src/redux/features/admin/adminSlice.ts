@@ -16,6 +16,7 @@ const initialState: Admin = {
   createdAt: "",
   updateAt: "",
   deletedAt: "",
+  errors: [],
 };
 
 export const adminSlice = createSlice({
@@ -58,6 +59,22 @@ export const adminSlice = createSlice({
     setIsActiveAdmin: (state, action) => {
       state.is_active = action.payload;
     },
+    setErrorsAdmin: (state, action) => {
+      state.errors = action.payload;
+    },
+    setDefaultValuesAdmin: (state) => {
+      state.id = "";
+      state.name = "";
+      state.last_name = "";
+      state.user_gender = 0;
+      state.user_id_type = 0;
+      state.id_number = 0;
+      state.corporate_email = "";
+      state.password = "";
+      state.company_area = 0;
+      state.position_level = 0;
+      state.errors = [];
+    },
   },
 });
 
@@ -74,6 +91,8 @@ export const {
   setPositionLevelAdmin,
   setRoleAdmin,
   setIsActiveAdmin,
+  setErrorsAdmin,
+  setDefaultValuesAdmin,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

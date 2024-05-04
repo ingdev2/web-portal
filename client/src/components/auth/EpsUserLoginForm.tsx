@@ -8,6 +8,7 @@ import { Button, Card, Col, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
+import { titleStyleCss } from "@/theme/text_styles";
 
 import {
   setIdTypeOptionsLoginEps,
@@ -180,9 +181,7 @@ const EpsUserLoginForm: React.FC = () => {
           <h2
             className="title-login-eps"
             style={{
-              fontWeight: "500",
-              lineHeight: 1.3,
-              marginTop: 0,
+              ...titleStyleCss,
               textAlign: "center",
             }}
           >

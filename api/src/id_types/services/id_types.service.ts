@@ -52,6 +52,23 @@ export class IdTypesService {
     }
   }
 
+  async getIdTypeById(id: number) {
+    const idTypeFound = await this.idTypeRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!idTypeFound) {
+      return new HttpException(
+        `El tipo de identificación con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return idTypeFound;
+    }
+  }
+
   // UPDATE FUNTIONS //
 
   async updateIdType(id: number, idType: UpdateIdTypeDto) {

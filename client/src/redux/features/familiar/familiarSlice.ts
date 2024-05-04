@@ -80,6 +80,21 @@ export const familiarSlice = createSlice({
     setErrorsUserFamiliar: (state, action) => {
       state.errors = action.payload;
     },
+    setDefaultValuesUserFamiliar: (state) => {
+      state.id = "";
+      state.name = "";
+      state.last_name = "";
+      state.user_gender = 0;
+      state.user_id_type = 0;
+      state.id_number = 0;
+      state.email = "";
+      state.cellphone = 0;
+      state.whatsapp = 0;
+      state.authentication_method = 0;
+      state.patient_id = "";
+      state.rel_with_patient = 0;
+      state.errors = [];
+    },
   },
 });
 
@@ -101,6 +116,7 @@ export const {
   setCopyFamiliarCitizenshipCard,
   setMedicalReqUserFamiliar,
   setErrorsUserFamiliar,
+  setDefaultValuesUserFamiliar,
 } = familiarSlice.actions;
 
 export default familiarSlice.reducer;

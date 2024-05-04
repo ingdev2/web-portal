@@ -11,6 +11,7 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { FaSignOutAlt } from "react-icons/fa";
 import { PiUserListBold } from "react-icons/pi";
 import { UserOutlined } from "@ant-design/icons";
+import PatientHomepageContent from "./homepage_content/PatientHomepageContent";
 
 import {
   setNameUserPatient,
@@ -38,8 +39,6 @@ const PatientHomeLayout: React.FC = () => {
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
 
   useEffect(() => {
-    console.log(nameUserPatientState);
-
     if (!nameUserPatientState) {
       dispatch(setNameUserPatient(userPatientData?.name));
     }
@@ -75,9 +74,17 @@ const PatientHomeLayout: React.FC = () => {
   };
 
   return (
-    <div
-      className="layout-patient-homepage-content"
-      style={{ height: "100vh", width: "100vw" }}
+    <Layout
+      className="layout-patient-homepage"
+      style={{
+        display: "flex",
+        flexFlow: "column wrap",
+        minWidth: "100vw",
+        minHeight: "100vh",
+        backgroundColor: "transparent",
+        margin: "0px",
+        padding: "0px",
+      }}
     >
       <div
         className="background-homepage-patient"
@@ -85,151 +92,137 @@ const PatientHomeLayout: React.FC = () => {
           position: "fixed",
           width: "100%",
           height: "100%",
-          backgroundImage: "url('/background/back-healt.jpg')",
+          backgroundImage: "url('/background/back-healt-opacity.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          opacity: 0.2,
+          zIndex: -1,
+          margin: "0px",
+          padding: "0px",
         }}
       />
-      <Layout
-        className="layout-patient-homepage"
+      <Header
+        className="header-patient-homepage"
         style={{
+          position: "sticky",
           display: "flex",
-          flexFlow: "column wrap",
-          width: "100vw",
-          height: "100vh",
-          minWidth: "405px",
-          backgroundColor: "transparent",
+          flexFlow: "row wrap",
+          alignContent: "center",
+          backgroundColor: "#015E90",
+          top: "0px",
+          padding: "0 54px",
           zIndex: 1,
         }}
       >
-        <Header
-          className="header-patient-homepage"
+        <Row
           style={{
-            position: "sticky",
-            display: "flex",
-            flexFlow: "row wrap",
-            alignContent: "center",
-            backgroundColor: "#015E90",
-            top: 0,
-            padding: "0 54px",
-            zIndex: 2,
+            width: "100%",
+            height: "100%",
           }}
         >
-          <Row
+          <Col
+            xs={8}
+            md={8}
+            lg={8}
             style={{
-              width: "100%",
-              height: "100%",
+              display: "flex",
+              flexFlow: "row wrap",
+              justifyContent: "flex-start",
+              alignContent: "flex-start",
             }}
           >
-            <Col
-              xs={8}
-              lg={8}
+            <div
+              className="logo-header-patient-homepage"
               style={{
                 display: "flex",
-                flexFlow: "row wrap",
-                justifyContent: "flex-start",
+                flexFlow: "column wrap",
+                justifyContent: "center",
                 alignContent: "center",
+                width: "60%",
+                height: "80%",
+                backgroundColor: "#f2f2f2",
+                borderEndStartRadius: 7,
+                borderEndEndRadius: 7,
+                overflow: "hidden",
               }}
             >
-              <div
-                className="logo-header-patient-homepage"
+              <img
+                src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
+                alt="Logo de Proced"
                 style={{
-                  display: "flex",
-                  flexFlow: "column wrap",
-                  justifyContent: "center",
-                  alignContent: "center",
-                  width: "80%",
-                  height: "80%",
-                  backgroundColor: "#f2f2f2",
-                  borderRadius: 7,
-                  overflow: "hidden",
+                  maxWidth: "80%",
+                  height: "auto",
+                  objectFit: "contain",
                 }}
-              >
-                <img
-                  src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
-                  alt="Logo de Proced"
+              />
+            </div>
+          </Col>
+          <Col
+            xs={16}
+            md={16}
+            lg={16}
+            style={{
+              display: "flex",
+              flexFlow: "row wrap",
+              justifyContent: "flex-end",
+              alignContent: "center",
+            }}
+          >
+            <>
+              {userPatientFetching && userPatientLoading ? (
+                <CustomSpin />
+              ) : (
+                <div
+                  className="avatar-patient-homepage"
                   style={{
-                    width: "80%",
-                    height: "auto",
-                    objectFit: "contain",
+                    display: "flex",
+                    flexFlow: "row wrap",
+                    justifyContent: "flex-end",
+                    alignContent: "center",
                   }}
-                />
-              </div>
-            </Col>
-            <Col
-              xs={16}
-              lg={16}
-              style={{
-                display: "flex",
-                flexFlow: "row wrap",
-                justifyContent: "flex-end",
-                alignContent: "center",
-              }}
-            >
-              <>
-                {userPatientFetching && userPatientLoading ? (
-                  <CustomSpin />
-                ) : (
-                  <div
-                    className="avatar-patient-homepage"
-                    style={{
-                      display: "flex",
-                      flexFlow: "row wrap",
-                      justifyContent: "flex-end",
-                      alignContent: "center",
-                    }}
-                  >
-                    <div>
-                      <CustomDropdown
-                        titleCustomDropdown={getFirstName(nameUserPatientState)}
-                        iconCustomItem1={<PiUserListBold />}
-                        iconCustomItem2={<FaSignOutAlt />}
-                        titleCustomItem1="Actualizar Datos"
-                        titleCustomItem2="Cerrar Sesión"
-                        handleClickCustomItem1={handleClickUpdatePersonalData}
-                        handleClickCustomItem2={handleClickSignOut}
-                        iconCustomDropdown={<UserOutlined />}
-                      />
-                    </div>
+                >
+                  <div>
+                    <CustomDropdown
+                      titleCustomDropdown={getFirstName(nameUserPatientState)}
+                      iconCustomItem1={<PiUserListBold />}
+                      iconCustomItem2={<FaSignOutAlt />}
+                      titleCustomItem1="Actualizar Datos"
+                      titleCustomItem2="Cerrar Sesión"
+                      handleClickCustomItem1={handleClickUpdatePersonalData}
+                      handleClickCustomItem2={handleClickSignOut}
+                      iconCustomDropdown={<UserOutlined />}
+                    />
                   </div>
-                )}
-              </>
-            </Col>
-          </Row>
-        </Header>
-        <Content
-          style={{
-            display: "flex",
-            flexFlow: "column wrap",
-            // justifyContent: "center",
-            // alignContent: "center",
-            alignItems: "center",
-            zIndex: 1,
-          }}
-        >
-          <Row>
-            <Col xs={24} lg={24} style={{ padding: "13px 31px" }}>
-              <div>Contenido Aquí</div>
-            </Col>
-          </Row>
-        </Content>
-        <Footer
-          style={{
-            height: 13,
-            display: "flex",
-            flexFlow: "column wrap",
-            justifyContent: "center",
-            alignContent: "center",
-            backgroundColor: "transparent",
-            bottom: 0,
-            zIndex: 1,
-          }}
-        >
-          Clínica Bonnadona © {new Date().getFullYear()}
-        </Footer>
-      </Layout>
-    </div>
+                </div>
+              )}
+            </>
+          </Col>
+        </Row>
+      </Header>
+      <Content
+        style={{
+          display: "flex",
+          flexFlow: "column wrap",
+          alignItems: "center",
+          padding: "13px 31px",
+        }}
+      >
+        <PatientHomepageContent />
+      </Content>
+      <Footer
+        style={{
+          display: "flex",
+          flexFlow: "column wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "13px",
+          backgroundColor: "transparent",
+          marginTop: "31px",
+          bottom: "0px",
+        }}
+      >
+        Clínica Bonnadona © {new Date().getFullYear()}
+      </Footer>
+    </Layout>
   );
 };
 

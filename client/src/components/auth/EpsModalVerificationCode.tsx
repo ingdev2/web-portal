@@ -11,6 +11,7 @@ import { NumberOutlined } from "@ant-design/icons";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
+import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
 import {
   setIdTypeLoginEps,
@@ -189,9 +190,9 @@ const EpsModalVerificationCode: React.FC = () => {
           <h2
             className="title-modal-eps"
             style={{
-              fontWeight: "bold",
-              lineHeight: 1.3,
+              ...titleStyleCss,
               marginTop: 27,
+              textAlign: "center",
             }}
           >
             Ingresar código de verificación
@@ -200,8 +201,7 @@ const EpsModalVerificationCode: React.FC = () => {
           <h4
             className="subtitle-modal-eps"
             style={{
-              fontWeight: "normal",
-              lineHeight: 1.3,
+              ...subtitleStyleCss,
               marginBlock: 7,
             }}
           >
