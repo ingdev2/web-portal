@@ -100,7 +100,7 @@ const PatientHomepageContent: React.FC = () => {
             minWidth: "405px",
             maxWidth: "690px",
             display: "flex",
-            flexFlow: "row wrap",
+            flexFlow: "column wrap",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fcfcfc",
