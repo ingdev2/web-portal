@@ -100,13 +100,14 @@ const PatientHomepageContent: React.FC = () => {
             minWidth: "405px",
             maxWidth: "690px",
             display: "flex",
+            flexDirection: "column",
             flexFlow: "column wrap",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginBottom: "31px",
-            padding: "2px 7px",
+            marginBlock: "22px",
+            padding: "0px",
           }}
         >
           {showErrorMessagePatient && (

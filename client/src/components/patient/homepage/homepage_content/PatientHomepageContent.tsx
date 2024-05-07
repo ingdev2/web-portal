@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useAppSelector } from "@/redux/hooks";
 
 import CustomSpin from "../../../common/custom_spin/CustomSpin";
@@ -20,8 +20,6 @@ const PatientHomepageContent: React.FC = () => {
     isFetching: userPatientFetching,
     error: userPatientError,
   } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
-
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
   return (
     <>
