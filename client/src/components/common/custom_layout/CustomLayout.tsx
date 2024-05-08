@@ -23,8 +23,10 @@ const CustomLayout: React.FC<{
       style={{
         display: "flex",
         flexFlow: "column wrap",
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        minWidth: "405px",
+        minHeight: "100vh",
+        height: "100%",
         backgroundColor: "transparent",
         margin: "0px",
         padding: "0px",
@@ -49,7 +51,7 @@ const CustomLayout: React.FC<{
         style={{
           position: "sticky",
           display: "flex",
-          flexFlow: "row wrap",
+          flexFlow: "column wrap",
           alignContent: "center",
           backgroundColor: "#015E90",
           top: "0px",
@@ -78,7 +80,6 @@ const CustomLayout: React.FC<{
           alignItems: "center",
           height: "13px",
           backgroundColor: "transparent",
-          marginTop: "13px",
           bottom: "0px",
         }}
       >

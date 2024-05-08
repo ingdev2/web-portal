@@ -18,7 +18,7 @@ const HomepageOptions: React.FC = () => {
       style={{
         width: "100%",
         paddingBlock: "13px",
-        paddingInline: "31px",
+        paddingInline: "22px",
       }}
     >
       <Col
