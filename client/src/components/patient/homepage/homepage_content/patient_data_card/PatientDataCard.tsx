@@ -100,13 +100,12 @@ const PatientHomepageContent: React.FC = () => {
             minWidth: "405px",
             maxWidth: "690px",
             display: "flex",
-            flexDirection: "column",
-            flexFlow: "column wrap",
+            flexFlow: "column nowrap",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginBlock: "22px",
+            marginBlock: "13px",
             padding: "0px",
           }}
         >
@@ -119,7 +118,14 @@ const PatientHomepageContent: React.FC = () => {
             />
           )}
 
-          <Row justify={"space-between"} align={"top"}>
+          <Row
+            justify={"space-between"}
+            align={"top"}
+            style={{
+              width: "100%",
+              height: "auto",
+            }}
+          >
             <Col
               xs={24}
               sm={24}

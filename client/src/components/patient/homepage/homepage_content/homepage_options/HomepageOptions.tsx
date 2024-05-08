@@ -3,8 +3,10 @@
 import React from "react";
 
 import { Col, Row } from "antd";
-import { FcDocument } from "react-icons/fc";
-import { FcViewDetails } from "react-icons/fc";
+import { MdAssignmentAdd } from "react-icons/md";
+import { MdFormatListNumbered } from "react-icons/md";
+import { RxUpdate } from "react-icons/rx";
+import { FaUsers } from "react-icons/fa";
 import CustomOptionButton from "@/components/common/custom_option_card_button/CustomOptionButton";
 
 const HomepageOptions: React.FC = () => {
@@ -12,14 +14,10 @@ const HomepageOptions: React.FC = () => {
     <Row
       justify={"center"}
       align={"top"}
-      gutter={[
-        { xs: 24, sm: 36, md: 48, lg: 48 },
-        { xs: 12, sm: 12, md: 12, lg: 12 },
-      ]}
+      // gutter={[12, 24]}
       style={{
         width: "100%",
         height: "auto",
-        paddingInline: "45px",
       }}
     >
       <Col
@@ -28,7 +26,7 @@ const HomepageOptions: React.FC = () => {
         md={6}
         lg={4}
         style={{
-          padding: "7px 7px",
+          padding: "13px 31px",
           display: "flex",
           flexFlow: "column wrap",
           alignItems: "center",
@@ -36,7 +34,7 @@ const HomepageOptions: React.FC = () => {
         }}
       >
         <CustomOptionButton
-          iconCustomOptionButton={<FcDocument size={"45px"} />}
+          iconCustomOptionButton={<MdAssignmentAdd size={"45px"} />}
           titleCustomOptionButton="Crear solicitud"
           textColorCustomOptionButton="#f2f2f2"
           backgroundColorCustomOptionButton="#015E90"
@@ -53,7 +51,7 @@ const HomepageOptions: React.FC = () => {
         md={6}
         lg={4}
         style={{
-          padding: "7px 7px",
+          padding: "13px 31px",
           display: "flex",
           flexFlow: "column wrap",
           alignItems: "center",
@@ -61,8 +59,8 @@ const HomepageOptions: React.FC = () => {
         }}
       >
         <CustomOptionButton
-          iconCustomOptionButton={<FcViewDetails size={"45px"} />}
-          titleCustomOptionButton="Ver solicitudes"
+          iconCustomOptionButton={<MdFormatListNumbered size={"45px"} />}
+          titleCustomOptionButton="Solicitudes hechas"
           textColorCustomOptionButton="#f2f2f2"
           backgroundColorCustomOptionButton="#015E90"
           borderColorCustomOptionButton="#3F97AF"
@@ -78,7 +76,7 @@ const HomepageOptions: React.FC = () => {
         md={6}
         lg={4}
         style={{
-          padding: "7px 7px",
+          padding: "13px 31px",
           display: "flex",
           flexFlow: "column wrap",
           alignItems: "center",
@@ -86,8 +84,8 @@ const HomepageOptions: React.FC = () => {
         }}
       >
         <CustomOptionButton
-          iconCustomOptionButton={<FcDocument size={"45px"} />}
-          titleCustomOptionButton="Actualización de datos"
+          iconCustomOptionButton={<RxUpdate size={"45px"} />}
+          titleCustomOptionButton="Actualizar datos"
           textColorCustomOptionButton="#f2f2f2"
           backgroundColorCustomOptionButton="#015E90"
           borderColorCustomOptionButton="#3F97AF"
@@ -103,7 +101,7 @@ const HomepageOptions: React.FC = () => {
         md={6}
         lg={4}
         style={{
-          padding: "7px 7px",
+          padding: "13px 31px",
           display: "flex",
           flexFlow: "column wrap",
           alignItems: "center",
@@ -111,8 +109,8 @@ const HomepageOptions: React.FC = () => {
         }}
       >
         <CustomOptionButton
-          iconCustomOptionButton={<FcDocument size={"45px"} />}
-          titleCustomOptionButton="Ver núcleo familiar"
+          iconCustomOptionButton={<FaUsers size={"45px"} />}
+          titleCustomOptionButton="Núcleo familiar"
           textColorCustomOptionButton="#f2f2f2"
           backgroundColorCustomOptionButton="#015E90"
           borderColorCustomOptionButton="#3F97AF"

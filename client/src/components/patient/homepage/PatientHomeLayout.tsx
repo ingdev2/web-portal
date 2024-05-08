@@ -110,6 +110,7 @@ const PatientHomeLayout: React.FC = () => {
           backgroundColor: "#015E90",
           top: "0px",
           padding: "0 54px",
+          margin: "0px",
           zIndex: 1,
         }}
       >
@@ -201,10 +202,9 @@ const PatientHomeLayout: React.FC = () => {
       <Content
         style={{
           display: "flex",
-          flexFlow: "column nowrap",
+          flexFlow: "column wrap",
           alignItems: "center",
-          // padding: "13px 31px",
-          margin: "0px",
+          paddingInline: "13px",
         }}
       >
         <PatientHomepageContent />
