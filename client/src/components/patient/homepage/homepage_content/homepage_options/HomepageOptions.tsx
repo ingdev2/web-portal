@@ -17,7 +17,8 @@ const HomepageOptions: React.FC = () => {
       // gutter={[12, 24]}
       style={{
         width: "100%",
-        height: "auto",
+        paddingBlock: "13px",
+        paddingInline: "31px",
       }}
     >
       <Col

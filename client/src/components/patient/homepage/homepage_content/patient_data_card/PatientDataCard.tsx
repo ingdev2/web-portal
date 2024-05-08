@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Card, Col, Row, Divider } from "antd";
+import { Card, Row, Col, Divider } from "antd";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
@@ -26,7 +26,7 @@ import {
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
 
-const PatientHomepageContent: React.FC = () => {
+const PatientDataCard: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const namePatientState = useAppSelector((state) => state.patient.name);
@@ -97,15 +97,15 @@ const PatientHomepageContent: React.FC = () => {
       ) : (
         <Card
           style={{
-            minWidth: "405px",
-            maxWidth: "690px",
+            minWidth: "min-content",
+            maxWidth: "80%",
             display: "flex",
-            flexFlow: "column nowrap",
+            flexFlow: "column wrap",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#fcfcfc",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginBlock: "13px",
+            backgroundColor: "#f7f7f7",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
+            margin: "0px",
             padding: "0px",
           }}
         >
@@ -118,14 +118,7 @@ const PatientHomepageContent: React.FC = () => {
             />
           )}
 
-          <Row
-            justify={"space-between"}
-            align={"top"}
-            style={{
-              width: "100%",
-              height: "auto",
-            }}
-          >
+          <Row justify={"space-between"} align={"top"}>
             <Col
               xs={24}
               sm={24}
@@ -272,4 +265,4 @@ const PatientHomepageContent: React.FC = () => {
   );
 };
 
-export default PatientHomepageContent;
+export default PatientDataCard;

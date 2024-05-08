@@ -3,11 +3,12 @@
 import React from "react";
 import { useAppSelector } from "@/redux/hooks";
 
+import { Col, Row } from "antd";
 import CustomSpin from "../../../common/custom_spin/CustomSpin";
-
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import PatientDataCard from "./patient_data_card/PatientDataCard";
 import HomepageOptions from "./homepage_options/HomepageOptions";
+
+import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
 const PatientHomepageContent: React.FC = () => {
   const idNumberPatientState = useAppSelector(
