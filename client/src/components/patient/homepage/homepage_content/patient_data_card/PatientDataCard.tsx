@@ -98,7 +98,7 @@ const PatientDataCard: React.FC = () => {
         <Card
           style={{
             minWidth: "405px",
-            maxWidth: "80%",
+            maxWidth: "50%",
             height: "min-content",
             display: "flex",
             flexFlow: "column wrap",
