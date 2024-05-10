@@ -81,7 +81,7 @@ const PatienHeaderLayout: React.FC = () => {
           alignContent: "flex-start",
         }}
       >
-        <div
+        <a
           className="custom-layout-logo-header"
           style={{
             display: "flex",
@@ -95,6 +95,9 @@ const PatienHeaderLayout: React.FC = () => {
             borderEndEndRadius: 7,
             overflow: "hidden",
           }}
+          onClick={() => {
+            router.replace("/patient/homepage", { scroll: true });
+          }}
         >
           <img
             src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
@@ -105,7 +108,7 @@ const PatienHeaderLayout: React.FC = () => {
               objectFit: "contain",
             }}
           />
-        </div>
+        </a>
       </Col>
       <Col
         xs={12}

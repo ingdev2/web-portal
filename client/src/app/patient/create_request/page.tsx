@@ -73,7 +73,7 @@ const CreateRequestPage = () => {
       {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="create-request-patient-content">
+        <div className="create-request-page-patient-content">
           <CreateRequestLayout />
         </div>
       )}

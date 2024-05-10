@@ -2,9 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const loginUsersApi = createApi({
   reducerPath: "loginUsersApi",
+
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
   }),
+
   endpoints: (builder) => ({
     loginPatientUsers: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>(
       {
@@ -15,6 +17,7 @@ export const loginUsersApi = createApi({
         }),
       }
     ),
+
     loginEpsUsers: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>({
       query: (newUserLogin) => ({
         url: "loginEpsUsers",
@@ -22,6 +25,7 @@ export const loginUsersApi = createApi({
         body: newUserLogin,
       }),
     }),
+
     verifyUserCode: builder.mutation<
       Partial<UserLogin>,
       { verification_code: number; id_number: number }
@@ -33,6 +37,7 @@ export const loginUsersApi = createApi({
         params: { id_number },
       }),
     }),
+
     resendUserVerificationCode: builder.mutation<
       Partial<UserLogin>,
       { id_type: number; id_number: number }

@@ -11,6 +11,7 @@ import adminLoginReducer from "./features/login/adminLoginSlice";
 import patientUserLoginReducer from "./features/login/patientUserLoginSlice";
 import epsUserLoginReducer from "./features/login/epsUserLoginSlice";
 import familiarLoginReducer from "./features/login/familiarLoginSlice";
+import medicalReqReducer from "./features/medical_req/medicalReqSlice";
 import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   patientUserLogin: patientUserLoginReducer,
   epsUserLogin: epsUserLoginReducer,
   familiarLogin: familiarLoginReducer,
+  medicalReq: medicalReqReducer,
   admin: adminReducer,
   patient: patientReducer,
   eps: epsReducer,

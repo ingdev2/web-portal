@@ -21,52 +21,61 @@ export const usersApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    transformIdTypeName: builder.mutation<null, { idTypeAbbrev: string }>({
-      query: ({ idTypeAbbrev }) => ({
+    transformIdTypeName: builder.mutation<null, string>({
+      query: (idTypeAbbrev) => ({
         url: `transformIdTypeName`,
         method: "POST",
-        body: { idTypeAbbrev },
+        body: idTypeAbbrev,
       }),
     }),
-    transformIdTypeNumber: builder.mutation<null, { idTypeAbbrev: string }>({
-      query: ({ idTypeAbbrev }) => ({
+
+    transformIdTypeNumber: builder.mutation<null, string>({
+      query: (idTypeAbbrev) => ({
         url: `transformIdTypeNumber`,
         method: "POST",
-        body: { idTypeAbbrev },
+        body: idTypeAbbrev,
       }),
     }),
-    transformGenderName: builder.mutation<null, { genderAbbrev: string }>({
-      query: ({ genderAbbrev }) => ({
+
+    transformGenderName: builder.mutation<null, string>({
+      query: (genderAbbrev) => ({
         url: `transformGenderName`,
         method: "POST",
-        body: { genderAbbrev },
+        body: genderAbbrev,
       }),
     }),
-    transformGenderNumber: builder.mutation<null, { genderAbbrev: string }>({
-      query: ({ genderAbbrev }) => ({
+
+    transformGenderNumber: builder.mutation<null, string>({
+      query: (genderAbbrev) => ({
         url: `transformGenderNumber`,
         method: "POST",
-        body: { genderAbbrev },
+        body: genderAbbrev,
       }),
     }),
+
     getAllUsers: builder.query<User[], null>({
       query: () => "getAllUsers",
     }),
+
     getAllPatients: builder.query<User[], null>({
       query: () => "getAllPatient",
     }),
+
     getAllEps: builder.query<User[], null>({
       query: () => "getAllEps",
     }),
+
     getUserById: builder.query<User, string>({
       query: (id) => `getUser/${id}`,
     }),
+
     getUserByIdNumberPatient: builder.query<User, number>({
       query: (idNumber) => `getPatientUserById/${idNumber}`,
     }),
     getUserByIdNumberEps: builder.query<User, number>({
       query: (idNumber) => `getEpsUserById/${idNumber}`,
     }),
+
     updateUser: builder.mutation<
       any,
       { id: string; updateUser: Partial<User> }
@@ -78,8 +87,9 @@ export const usersApi = createApi({
         body: { updateUser },
       }),
     }),
-    banUser: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
+
+    banUser: builder.mutation<any, string>({
+      query: (id) => ({
         url: `ban/${id}`,
         method: "PATCH",
         params: { id },

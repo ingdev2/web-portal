@@ -24,12 +24,15 @@ export const relativesApi = createApi({
     getAllRelatives: builder.query<Familiar[], null>({
       query: () => "getAllRelatives",
     }),
+
     getFamiliarById: builder.query<Familiar, string>({
       query: (id) => `getFamiliar/${id}`,
     }),
+
     getFamiliarByIdNumber: builder.query<Familiar, number>({
       query: (idNumber) => `getFamiliarById/${idNumber}`,
     }),
+
     updateFamiliar: builder.mutation<
       any,
       { id: string; updateFamiliar: Partial<Familiar> }
@@ -41,8 +44,9 @@ export const relativesApi = createApi({
         body: { updateFamiliar },
       }),
     }),
-    banFamiliar: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
+
+    banFamiliar: builder.mutation<any, string>({
+      query: (id) => ({
         url: `ban/${id}`,
         method: "PATCH",
         params: { id },

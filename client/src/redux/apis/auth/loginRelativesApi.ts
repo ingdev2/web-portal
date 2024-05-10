@@ -2,9 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const loginRelativesApi = createApi({
   reducerPath: "loginRelativesApi",
+
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
   }),
+
   endpoints: (builder) => ({
     loginRelatives: builder.mutation<
       Partial<FamiliarLogin>,
@@ -16,6 +18,7 @@ export const loginRelativesApi = createApi({
         body: newFamiliarLogin,
       }),
     }),
+
     verifyFamiliarCode: builder.mutation<
       Partial<FamiliarLogin>,
       { verification_code: number; id_number: number }
@@ -27,6 +30,7 @@ export const loginRelativesApi = createApi({
         params: { id_number },
       }),
     }),
+
     resendFamiliarVerificationCode: builder.mutation<
       Partial<UserLogin>,
       { id_type: number; id_number: number }

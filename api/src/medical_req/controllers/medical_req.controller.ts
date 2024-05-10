@@ -20,7 +20,7 @@ export class MedicalReqController {
 
   @Auth(UserRolType.PATIENT)
   @Post('/createMedicalReqPatient/:userId')
-  async createMedicalReqPerson(
+  async createMedicalReqPatient(
     @Param('userId') userId: string,
     @Body()
     medicalReqPatient: CreateMedicalReqPatientDto,
