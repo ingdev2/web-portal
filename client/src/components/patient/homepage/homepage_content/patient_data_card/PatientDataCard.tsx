@@ -96,9 +96,10 @@ const PatientDataCard: React.FC = () => {
         <CustomSpin />
       ) : (
         <Card
+          key={"card-patient-data-homepage"}
           style={{
             minWidth: "405px",
-            maxWidth: "50%",
+            maxWidth: "54%",
             height: "min-content",
             display: "flex",
             flexFlow: "column wrap",

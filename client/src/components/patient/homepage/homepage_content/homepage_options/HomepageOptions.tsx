@@ -49,8 +49,10 @@ const HomepageOptions: React.FC = () => {
             iconColorCustomOptionButton="#00B5E8"
             backgroundColorCustomOptionButton="#015E90"
             borderColorCustomOptionButton="#3F97AF"
-            handleClickCustomOptionButton={() => {
-              console.log("CLICK EN CARD");
+            handleClickCustomOptionButton={async () => {
+              await router.push("/patient/create_request", {
+                scroll: true,
+              });
             }}
           />
         </Col>
@@ -195,7 +197,7 @@ const HomepageOptions: React.FC = () => {
           }}
         >
           <a
-            className="url-annarlab-redirect"
+            className="url-halcon-redirect"
             href={process.env.NEXT_PUBLIC_HALCON_PQRS}
             target="_blank"
             style={{

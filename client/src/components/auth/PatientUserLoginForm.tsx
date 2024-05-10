@@ -169,8 +169,8 @@ const PatientUserLoginForm: React.FC = () => {
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: 31,
-        marginInline: 31,
+        marginBottom: "31px",
+        marginInline: "31px",
       }}
     >
       {modalIsOpenPatient && <PatientModalVerificationCode />}
@@ -185,7 +185,7 @@ const PatientUserLoginForm: React.FC = () => {
       <Col
         xs={24}
         lg={24}
-        style={{ padding: "0 2px", width: "100vw", maxWidth: 321 }}
+        style={{ padding: "0 2px", width: "100vw", maxWidth: "321px" }}
       >
         <Form
           id="patient-users-login-form"
