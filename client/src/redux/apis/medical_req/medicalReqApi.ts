@@ -29,7 +29,7 @@ export const medicalReqApi = createApi({
         url: `createMedicalReqPatient/${userId}`,
         method: "POST",
         params: { userId },
-        body: { medicalReqPatient },
+        body: medicalReqPatient,
       }),
     }),
 
@@ -41,7 +41,7 @@ export const medicalReqApi = createApi({
         url: `createMedicalReqEps/${userId}`,
         method: "POST",
         params: { userId },
-        body: { medicalReqEps },
+        body: medicalReqEps,
       }),
     }),
 
@@ -53,7 +53,7 @@ export const medicalReqApi = createApi({
         url: `createMedicalReqFamiliar/${familiarId}`,
         method: "POST",
         params: { familiarId },
-        body: { medicalReqFamiliar },
+        body: medicalReqFamiliar,
       }),
     }),
 
@@ -95,13 +95,45 @@ export const medicalReqApi = createApi({
 
     changeStatusToDelivered: builder.mutation<
       any,
-      { reqId: string; deliveredStatus: Partial<Familiar> }
+      { reqId: string; updateStatus: Partial<MedicalReq> }
     >({
-      query: ({ reqId, deliveredStatus }) => ({
+      query: ({ reqId, updateStatus }) => ({
         url: `deliveredStatus/${reqId}`,
         method: "PATCH",
         params: { reqId },
-        body: { deliveredStatus },
+        body: updateStatus,
+      }),
+    }),
+
+    changeStatusToRejected: builder.mutation<
+      any,
+      { reqId: string; updateStatus: Partial<MedicalReq> }
+    >({
+      query: ({ reqId, updateStatus }) => ({
+        url: `rejectedStatus/${reqId}`,
+        method: "PATCH",
+        params: { reqId },
+        body: updateStatus,
+      }),
+    }),
+
+    forwardToAnotherArea: builder.mutation<
+      any,
+      { reqId: string; updateStatus: Partial<MedicalReq> }
+    >({
+      query: ({ reqId, updateStatus }) => ({
+        url: `rejectedStatus/${reqId}`,
+        method: "PATCH",
+        params: { reqId },
+        body: updateStatus,
+      }),
+    }),
+
+    deletedMedicalReq: builder.mutation<any, string>({
+      query: (reqId) => ({
+        url: `deleted/${reqId}`,
+        method: "PATCH",
+        params: { reqId },
       }),
     }),
   }),
@@ -111,4 +143,17 @@ export const {
   useCreateMedicalReqPatientMutation,
   useCreateMedicalReqEpsMutation,
   useCreateMedicalReqFamiliarMutation,
+  useGetMedicalReqByFilingNumberQuery,
+  useGetAllMedicalReqUsersQuery,
+  useGetAllMedicalReqUsersToLegalAreaQuery,
+  useGetAllMedicalReqPatientQuery,
+  useGetAllMedicalReqFamiliarQuery,
+  useGetAllMedicalReqEpsQuery,
+  useGetMedicalReqPatientByIdQuery,
+  useGetMedicalReqFamiliarByIdQuery,
+  useGetMedicalReqEpsByIdQuery,
+  useChangeStatusToDeliveredMutation,
+  useChangeStatusToRejectedMutation,
+  useForwardToAnotherAreaMutation,
+  useDeletedMedicalReqMutation,
 } = medicalReqApi;

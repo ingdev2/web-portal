@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: MedicalReq = {
   id: "",
   filing_number: "",
-  req_type: 0,
+  requirement_type: 0,
   right_petition: false,
   copy_right_petition: [],
   medicalReqUserType: 0,
@@ -40,6 +40,7 @@ const initialState: MedicalReq = {
   motive_for_rejection: [],
   documents_delivered: [],
   delegate_id: "",
+  typesMedicalReq: [],
   errors: [],
 };
 
@@ -54,7 +55,7 @@ export const medicalReqSlice = createSlice({
       state.filing_number = action.payload;
     },
     setReqTypeMedicalReq: (state, action) => {
-      state.req_type = action.payload;
+      state.requirement_type = action.payload;
     },
     setRightPetitionMedicalReq: (state, action) => {
       state.right_petition = action.payload;
@@ -167,10 +168,13 @@ export const medicalReqSlice = createSlice({
     setErrorsMedicalReq: (state, action) => {
       state.errors = action.payload;
     },
+    setTypesMedicalReq: (state, action) => {
+      state.typesMedicalReq = action.payload;
+    },
     setDefaultValuesMedicalReq: (state) => {
       state.id = "";
       state.filing_number = "";
-      state.req_type = 0;
+      state.requirement_type = 0;
       state.right_petition = false;
       state.copy_right_petition = [];
       state.medicalReqUserType = 0;
@@ -252,6 +256,7 @@ export const {
   setMotiveForRejectionMedicalReq,
   setDocumentsDeliveredMedicalReq,
   setDelegateIdMedicalReq,
+  setTypesMedicalReq,
   setErrorsMedicalReq,
   setDefaultValuesMedicalReq,
 } = medicalReqSlice.actions;

@@ -41,7 +41,7 @@ export const relativesApi = createApi({
         url: `updateFamiliar/${id}`,
         method: "PATCH",
         params: { id },
-        body: { updateFamiliar },
+        body: updateFamiliar,
       }),
     }),
 

@@ -1,7 +1,7 @@
 interface MedicalReq {
   id: string;
   filing_number: string;
-  req_type: number;
+  requirement_type: number;
   right_petition: boolean;
   copy_right_petition: string[];
   medicalReqUserType: number;
@@ -38,5 +38,6 @@ interface MedicalReq {
   motive_for_rejection: number[];
   documents_delivered: string[];
   delegate_id: string;
+  typesMedicalReq: string[];
   errors: [];
 }

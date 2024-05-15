@@ -41,6 +41,7 @@ const PatientUserLoginForm: React.FC = () => {
   const passwordPatientState = useAppSelector(
     (state) => state.patientUserLogin.password
   );
+  const idPatientState = useAppSelector((state) => state.patient.id);
   const affiliationEpsPatientState = useAppSelector(
     (state) => state.patient.affiliation_eps
   );
@@ -86,7 +87,7 @@ const PatientUserLoginForm: React.FC = () => {
       dispatch(setPasswordLoginPatient(""));
       dispatch(setVerificationCodeLoginPatient(""));
     }
-    if (affiliationEpsPatientState) {
+    if (idPatientState || affiliationEpsPatientState) {
       dispatch(setDefaultValuesUserPatient());
     }
     if (

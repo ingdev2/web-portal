@@ -16,7 +16,6 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('requirement-type')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN)
 @Controller('requirement-type')
 export class RequirementTypeController {
   constructor(
@@ -25,6 +24,7 @@ export class RequirementTypeController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
   createRequirementType(
     @Body() createRequirementType: CreateRequirementTypeDto,
@@ -48,6 +48,7 @@ export class RequirementTypeController {
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/update/:id')
   updateRequirementType(
     @Param('id') id: number,

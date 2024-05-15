@@ -33,8 +33,8 @@ export const loginUsersApi = createApi({
       query: ({ verification_code, id_number }) => ({
         url: `verifiedLoginUsers/${id_number}`,
         method: "POST",
-        body: { verification_code },
         params: { id_number },
+        body: verification_code,
       }),
     }),
 

@@ -10,34 +10,40 @@ const addTokenToRequest = async (headers: any, { getState }: any) => {
   return headers;
 };
 
-export const idTypesApi = createApi({
-  reducerPath: "idTypesApi",
+export const typesMedicalReqApi = createApi({
+  reducerPath: "typesMedicalReqApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/id-types`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/requirement-type`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
   }),
 
   endpoints: (builder) => ({
-    createIdType: builder.mutation<IdType, Partial<IdType>>({
-      query: (newIdtype) => ({
+    createMedicalReqType: builder.mutation<
+      MedicalReqType,
+      Partial<MedicalReqType>
+    >({
+      query: (newMedicalReqtype) => ({
         url: `create`,
         method: "POST",
-        body: newIdtype,
+        body: newMedicalReqtype,
       }),
     }),
 
-    getAllIdTypes: builder.query<IdType[], null>({
+    getAllMedicalReqTypes: builder.query<MedicalReqType[], null>({
       query: () => "getAll",
     }),
 
-    getIdTypeById: builder.query<IdType, number>({
-      query: (id) => `getIdType/${id}`,
+    getMedicalReqTypeById: builder.query<MedicalReqType, number>({
+      query: (id) => `getReqType/${id}`,
     }),
 
-    updateIdTypeById: builder.mutation<any, { id: number; newName: string }>({
+    updateMedicalReqTypeById: builder.mutation<
+      any,
+      { id: number; newName: string }
+    >({
       query: ({ id, newName }) => ({
         url: `update/${id}`,
         method: "PATCH",
@@ -49,8 +55,8 @@ export const idTypesApi = createApi({
 });
 
 export const {
-  useCreateIdTypeMutation,
-  useGetAllIdTypesQuery,
-  useGetIdTypeByIdQuery,
-  useUpdateIdTypeByIdMutation,
-} = idTypesApi;
+  useCreateMedicalReqTypeMutation,
+  useGetAllMedicalReqTypesQuery,
+  useGetMedicalReqTypeByIdQuery,
+  useUpdateMedicalReqTypeByIdMutation,
+} = typesMedicalReqApi;

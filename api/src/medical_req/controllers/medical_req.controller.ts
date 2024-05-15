@@ -163,8 +163,8 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/deleted/:id')
-  async deletedMedicalReq(@Param('id') id: string) {
-    return await this.medicalReqService.deletedMedicalReq(id);
+  @Patch('/deleted/:reqId')
+  async deletedMedicalReq(@Param('reqId') reqId: string) {
+    return await this.medicalReqService.deletedMedicalReq(reqId);
   }
 }

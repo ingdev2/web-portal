@@ -1346,13 +1346,7 @@ export class MedicalReqService {
 
     await this.medicalReqRepository.update(reqId, sendToOtherArea);
 
-    const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
-      where: {
-        id: reqId,
-      },
-    });
-
-    return updatedMedicalReqFound;
+    return `El requerimiento médico se traslado al área de: ${companyArea.name}`;
   }
 
   // DELETED-BAN FUNTIONS //
@@ -1377,7 +1371,7 @@ export class MedicalReqService {
 
     return new HttpException(
       `El requerimiento médico con número de radicado: ${medicalReqFound.filing_number} está con estado borrado: ${medicalReqFound.is_deleted}`,
-      HttpStatus.CONFLICT,
+      HttpStatus.OK,
     );
   }
 }

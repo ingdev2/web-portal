@@ -26,8 +26,8 @@ export const loginRelativesApi = createApi({
       query: ({ verification_code, id_number }) => ({
         url: `verifiedLoginRelatives/${id_number}`,
         method: "POST",
-        body: { verification_code },
         params: { id_number },
+        body: verification_code,
       }),
     }),
 

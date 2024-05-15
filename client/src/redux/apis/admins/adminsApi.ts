@@ -37,7 +37,7 @@ export const adminsApi = createApi({
         url: `updateAdmin/${id}`,
         method: "PATCH",
         params: { id },
-        body: { updateAdmin },
+        body: updateAdmin,
       }),
     }),
     banAdmin: builder.mutation<any, { id: string }>({

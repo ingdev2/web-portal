@@ -6,6 +6,7 @@ import { useAppSelector } from "@/redux/hooks";
 import CustomSpin from "../../../common/custom_spin/CustomSpin";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import CreateRequestForm from "./create_request_form/CreateRequestForm";
 
 const CreateRequestContent: React.FC = () => {
   const idNumberPatientState = useAppSelector(
@@ -24,7 +25,7 @@ const CreateRequestContent: React.FC = () => {
       {userPatientLoading && userPatientFetching ? (
         <CustomSpin />
       ) : (
-        <>Contenido de crear solicitud</>
+        <CreateRequestForm />
       )}
     </>
   );
