@@ -239,8 +239,6 @@ const ValidatePatientData: React.FC = () => {
       await router.replace("/login", {
         scroll: false,
       });
-
-      dispatch(setDefaultValuesUserPatient());
     } catch (error) {
       console.error(error);
     } finally {

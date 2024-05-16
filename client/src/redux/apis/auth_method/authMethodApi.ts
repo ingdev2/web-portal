@@ -8,7 +8,7 @@ export const authMethodApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    createAuthMethod: builder.mutation<AuthMethod, AuthMethod>({
+    createAuthMethod: builder.mutation<AuthMethod, Partial<AuthMethod>>({
       query: (newAuthMethod) => ({
         url: `create`,
         method: "POST",

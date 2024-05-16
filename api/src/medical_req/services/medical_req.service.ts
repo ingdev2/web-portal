@@ -587,6 +587,11 @@ export class MedicalReqService {
       aplicantPatientDetails,
     );
 
+    await this.medicalReqRepository.update(
+      createMedicalReq.id,
+      medicalReqPatient,
+    );
+
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
       where: {
         id: createMedicalReq.id,

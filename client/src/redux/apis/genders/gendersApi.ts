@@ -8,7 +8,7 @@ export const gendersApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    createGender: builder.mutation<Gender, Gender>({
+    createGender: builder.mutation<Gender, Partial<Gender>>({
       query: (newGender) => ({
         url: `create`,
         method: "POST",

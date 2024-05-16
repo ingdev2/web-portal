@@ -21,32 +21,32 @@ export const usersApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    transformIdTypeName: builder.mutation<null, { idTypeAbbrev: string }>({
-      query: ({ idTypeAbbrev }) => ({
+    transformIdTypeName: builder.mutation<null, string>({
+      query: (idTypeAbbrev) => ({
         url: `transformIdTypeName`,
         method: "POST",
         body: idTypeAbbrev,
       }),
     }),
 
-    transformIdTypeNumber: builder.mutation<null, { idTypeAbbrev: string }>({
-      query: ({ idTypeAbbrev }) => ({
+    transformIdTypeNumber: builder.mutation<null, string>({
+      query: (idTypeAbbrev) => ({
         url: `transformIdTypeNumber`,
         method: "POST",
         body: idTypeAbbrev,
       }),
     }),
 
-    transformGenderName: builder.mutation<null, { genderAbbrev: string }>({
-      query: ({ genderAbbrev }) => ({
+    transformGenderName: builder.mutation<null, string>({
+      query: (genderAbbrev) => ({
         url: `transformGenderName`,
         method: "POST",
         body: genderAbbrev,
       }),
     }),
 
-    transformGenderNumber: builder.mutation<null, { genderAbbrev: string }>({
-      query: ({ genderAbbrev }) => ({
+    transformGenderNumber: builder.mutation<null, string>({
+      query: (genderAbbrev) => ({
         url: `transformGenderNumber`,
         method: "POST",
         body: genderAbbrev,

@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import EpsModalVerificationCode from "./EpsModalVerificationCode";
 import { Button, Card, Col, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
+import EpsModalVerificationCode from "./EpsModalVerificationCode";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import { titleStyleCss } from "@/theme/text_styles";
@@ -17,6 +17,7 @@ import {
   setPasswordLoginEps,
   setVerificationCodeLoginEps,
   setErrorsLoginEps,
+  resetLoginStateLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
 import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
@@ -37,10 +38,15 @@ const EpsUserLoginForm: React.FC = () => {
   const passwordEpsState = useAppSelector(
     (state) => state.epsUserLogin.password
   );
+  const idEpsState = useAppSelector((state) => state.eps.id);
   const epsCompanyUserEps = useAppSelector((state) => state.eps.eps_company);
   const errorsEpsState = useAppSelector((state) => state.epsUserLogin.errors);
 
   const modalIsOpenEps = useAppSelector((state) => state.modal.epsModalIsOpen);
+
+  const [idTypeEpsLocalState, setIdTypeEpsLocalState] = useState(0);
+  const [idNumberEpsLocalState, setIdNumberEpsLocalState] = useState("");
+  const [passwordEpsLocalState, setPasswordEpsLocalState] = useState("");
 
   const [isSubmittingEps, setIsSubmittingEps] = useState(false);
   const [showErrorMessageEps, setShowErrorMessageEps] = useState(false);
@@ -64,17 +70,14 @@ const EpsUserLoginForm: React.FC = () => {
 
   useEffect(() => {
     if (
-      !isLoginEpsSuccess &&
-      !isSubmittingEps &&
-      !isLoginEpsError &&
-      isLoginEpsData
+      !idTypeEpsLocalState ||
+      !idNumberEpsLocalState ||
+      !passwordEpsLocalState
     ) {
-      dispatch(setIdTypeLoginEps(""));
-      dispatch(setIdNumberLoginEps(""));
-      dispatch(setPasswordLoginEps(""));
-      dispatch(setVerificationCodeLoginEps(""));
+      dispatch(resetLoginStateLoginEps());
     }
-    if (epsCompanyUserEps) {
+    if (idEpsState || epsCompanyUserEps) {
+      dispatch(resetLoginStateLoginEps());
       dispatch(setDefaultValuesUserEps());
     }
     if (!idTypesEpsLoading && !idTypesEpsFetching && idTypesEpsData) {
@@ -93,16 +96,22 @@ const EpsUserLoginForm: React.FC = () => {
     idTypesEpsError,
     isSubmittingEps,
     isLoginEpsError,
+    idEpsState,
+    epsCompanyUserEps,
   ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingEps(true);
 
+      const idNumberEpsLocalStateInt = idNumberEpsLocalState
+        ? parseInt(idNumberEpsLocalState?.toString(), 10)
+        : 0;
+
       const response: any = await loginEpsUsers({
-        id_type: idTypeEpsState,
-        id_number: idNumberEpsState,
-        password: passwordEpsState,
+        id_type: idTypeEpsLocalState,
+        id_number: idNumberEpsLocalStateInt,
+        password: passwordEpsLocalState,
       });
 
       var isLoginUserError = response.error;
@@ -123,6 +132,9 @@ const EpsUserLoginForm: React.FC = () => {
       }
 
       if (isLoginUserSuccess) {
+        dispatch(setIdTypeLoginEps(idTypeEpsLocalState));
+        dispatch(setIdNumberLoginEps(idNumberEpsLocalStateInt));
+        dispatch(setPasswordLoginEps(passwordEpsLocalState));
         dispatch(setErrorsLoginEps([]));
         setShowErrorMessageEps(false);
         dispatch(setEpsModalIsOpen(true));
@@ -204,9 +216,9 @@ const EpsUserLoginForm: React.FC = () => {
               ]}
             >
               <Select
-                value={idTypeEpsState}
+                value={idTypeEpsLocalState}
                 placeholder="Tipo de identificación"
-                onChange={(e) => dispatch(setIdTypeLoginEps(e))}
+                onChange={(e) => setIdTypeEpsLocalState(e)}
               >
                 {idTypeOptionsEps?.map((option: any) => (
                   <Select.Option key={option.id} value={option.id}>
@@ -244,9 +256,9 @@ const EpsUserLoginForm: React.FC = () => {
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               type="number"
-              value={idNumberEpsState}
+              value={idNumberEpsLocalState}
               placeholder="Número de identificación"
-              onChange={(e) => dispatch(setIdNumberLoginEps(e.target.value))}
+              onChange={(e) => setIdNumberEpsLocalState(e.target.value)}
               min={0}
             />
           </Form.Item>
@@ -274,9 +286,9 @@ const EpsUserLoginForm: React.FC = () => {
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              value={passwordEpsState}
+              value={passwordEpsLocalState}
               placeholder="Contraseña"
-              onChange={(e) => dispatch(setPasswordLoginEps(e.target.value))}
+              onChange={(e) => setPasswordEpsLocalState(e.target.value)}
             />
           </Form.Item>
 

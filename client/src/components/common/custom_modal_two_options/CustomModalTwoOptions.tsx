@@ -30,12 +30,15 @@ const CustomModalTwoOptions: React.FC<{
     <div>
       <Modal
         className="custom-modal-two-options"
+        width={371}
+        style={{
+          minWidth: "345px",
+        }}
         open={openCustomModalState}
         onOk={handleConfirmCustomModal}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancelCustomModal}
         destroyOnClose={true}
-        width={371}
         footer={null}
         maskClosable={true}
         centered
