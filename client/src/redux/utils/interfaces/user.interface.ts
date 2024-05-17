@@ -27,6 +27,6 @@ interface User {
   createdAt: string;
   updateAt: string;
   deletedAt: string;
-  medical_req: Array<any>;
+  medical_req: Array<MedicalReq>;
   errors: [];
 }

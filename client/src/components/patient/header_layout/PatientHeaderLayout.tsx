@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,10 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { PiUserListBold } from "react-icons/pi";
 import { UserOutlined } from "@ant-design/icons";
 
-import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
+import {
+  setNameUserPatient,
+  setDefaultValuesUserPatient,
+} from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
@@ -32,6 +35,12 @@ const PatienHeaderLayout: React.FC = () => {
     isFetching: userPatientFetching,
     error: userPatientError,
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
+
+  useEffect(() => {
+    if (!nameUserPatientState) {
+      dispatch(setNameUserPatient(userPatientData?.name));
+    }
+  }, [nameUserPatientState]);
 
   const handleClickUpdatePersonalData = async () => {
     try {

@@ -74,7 +74,7 @@ const PatientDataCard: React.FC = () => {
   } = useGetIdTypeByIdQuery(idTypeNumberPatientState);
 
   useEffect(() => {
-    if (idNumberPatientState) {
+    if (idNumberPatientState && userPatientData) {
       dispatch(setNameUserPatient(userPatientData?.name));
       dispatch(setIdTypeUserPatient(userPatientData?.user_id_type));
       dispatch(setEmailUserPatient(userPatientData?.email));
@@ -88,7 +88,12 @@ const PatientDataCard: React.FC = () => {
     if (idTypeNumberPatientState && idTypeNameUserData) {
       dispatch(setIdTypeAbbrevUserPatient(idTypeNameUserData.name));
     }
-  }, [idNumberPatientState, idTypeNumberPatientState, idTypeNameUserData]);
+  }, [
+    idNumberPatientState,
+    userPatientData,
+    idTypeNumberPatientState,
+    idTypeNameUserData,
+  ]);
 
   return (
     <>

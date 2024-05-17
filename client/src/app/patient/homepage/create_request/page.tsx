@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
+import CreateRequestLayout from "@/components/patient/create_request/CreateRequestLayout";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-const HomePagePatient = () => {
+const CreateRequestPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -64,12 +64,12 @@ const HomePagePatient = () => {
       {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="homepage-patient-content">
-          <PatientHomeLayout />
+        <div className="create-request-page-patient-content">
+          <CreateRequestLayout />
         </div>
       )}
     </>
   );
 };
 
-export default HomePagePatient;
+export default CreateRequestPage;

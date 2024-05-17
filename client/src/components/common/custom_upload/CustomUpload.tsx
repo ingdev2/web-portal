@@ -27,7 +27,7 @@ const props: UploadProps = {
       "0%": "#8C1111",
       "100%": "#137A2B",
     },
-    strokeWidth: 7,
+    size: 7,
     format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
   },
 };

@@ -19,8 +19,8 @@ export const registerUsersApi = createApi({
       }),
     }),
 
-    validatePatientRegister: builder.mutation<[], number>({
-      query: (id_number) => ({
+    validatePatientRegister: builder.mutation<[], { id_number: number }>({
+      query: ({ id_number }) => ({
         url: `validatePatientRegister`,
         method: "POST",
         body: id_number,

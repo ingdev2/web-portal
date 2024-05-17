@@ -64,10 +64,23 @@ export class MedicalReqController {
   async getAllMedReqUsersToLegalArea() {
     return await this.medicalReqService.getAllMedReqUsersToLegalArea();
   }
+
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqUsers')
   async getAllMedicalReqUsers() {
     return await this.medicalReqService.getAllMedicalReqUsers();
+  }
+
+  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Get('/getAllMedicalReqOfAUsers/:userId')
+  async getAllMedicalReqOfAUsers(@Param('userId') userId: string) {
+    return await this.medicalReqService.getAllMedicalReqOfAUsers(userId);
+  }
+
+  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Get('/getAllMedicalReqOfAFamiliar/:userId')
+  async getAllMedicalReqOfAFamiliar(@Param('userId') familiarId: string) {
+    return await this.medicalReqService.getAllMedicalReqOfAFamiliar(familiarId);
   }
 
   @Auth(AdminRolType.ADMIN)

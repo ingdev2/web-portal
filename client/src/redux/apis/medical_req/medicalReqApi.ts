@@ -20,6 +20,10 @@ export const medicalReqApi = createApi({
     },
   }),
 
+  refetchOnMountOrArgChange: 5,
+
+  refetchOnFocus: true,
+
   endpoints: (builder) => ({
     createMedicalReqPatient: builder.mutation<
       Partial<MedicalReq>,
@@ -71,6 +75,14 @@ export const medicalReqApi = createApi({
 
     getAllMedicalReqPatient: builder.query<MedicalReq[], null>({
       query: () => "getAllMedicalReqPatient",
+    }),
+
+    getAllMedicalReqOfAUsers: builder.query<MedicalReq[], string>({
+      query: (userId) => `getAllMedicalReqOfAUsers/${userId}`,
+    }),
+
+    getAllMedicalReqOfAFamiliar: builder.query<MedicalReq[], string>({
+      query: (familiarId) => `getAllMedicalReqOfAFamiliar/${familiarId}`,
     }),
 
     getAllMedicalReqFamiliar: builder.query<MedicalReq[], null>({
@@ -145,6 +157,8 @@ export const {
   useCreateMedicalReqFamiliarMutation,
   useGetMedicalReqByFilingNumberQuery,
   useGetAllMedicalReqUsersQuery,
+  useGetAllMedicalReqOfAUsersQuery,
+  useGetAllMedicalReqOfAFamiliarQuery,
   useGetAllMedicalReqUsersToLegalAreaQuery,
   useGetAllMedicalReqPatientQuery,
   useGetAllMedicalReqFamiliarQuery,

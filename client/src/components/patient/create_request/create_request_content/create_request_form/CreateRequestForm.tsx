@@ -10,6 +10,7 @@ import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
+import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { titleStyleCss } from "@/theme/text_styles";
 import TextArea from "antd/es/input/TextArea";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -24,9 +25,8 @@ import {
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useCreateMedicalReqPatientMutation } from "@/redux/apis/medical_req/medicalReqApi";
-import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
+import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
 const CreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +46,7 @@ const CreateRequestForm: React.FC = () => {
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
   );
-  const medicalReqErrosState = useAppSelector(
+  const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
   );
 
@@ -112,7 +112,16 @@ const CreateRequestForm: React.FC = () => {
       setShowErrorMessageMedicalReq(true);
       dispatch(setTypesMedicalReq(setTypesMedicalReq));
     }
-  }, [reqTypesData, reqTypesLoading, reqTypesFetching, reqTypesError]);
+  }, [
+    reqTypesData,
+    reqTypesLoading,
+    reqTypesFetching,
+    reqTypesError,
+    userPatientData,
+    userPatientLoading,
+    userPatientFetching,
+    idUserPatientState,
+  ]);
 
   const handleCreateRequest = () => {
     try {
@@ -177,7 +186,7 @@ const CreateRequestForm: React.FC = () => {
 
   const handleGoToListOfMedicalReq = async () => {
     try {
-      await router.replace("/patient/homepage", {
+      await router.replace("/patient/homepage/request_list", {
         scroll: false,
       });
     } catch (error) {
@@ -227,7 +236,7 @@ const CreateRequestForm: React.FC = () => {
             }}
             type="link"
             size="large"
-            className="upload-file-button"
+            className="back-to-homepage-button"
             icon={<IoMdArrowRoundBack size={17} />}
             onClick={() => {
               router.push("/patient/homepage", {
@@ -235,7 +244,7 @@ const CreateRequestForm: React.FC = () => {
               });
             }}
           >
-            Regresar
+            Ir a inicio
           </Button>
         </div>
 
@@ -270,7 +279,7 @@ const CreateRequestForm: React.FC = () => {
 
           {modalIsOpenSuccess && (
             <CustomModalNoContent
-              key={"custom-succes-modal-create-medical-req"}
+              key={"custom-success-modal-create-medical-req"}
               openCustomModalState={modalIsOpenSuccess}
               contentCustomModal={
                 <CustomResultOneButton
@@ -290,7 +299,7 @@ const CreateRequestForm: React.FC = () => {
             <CustomMessage
               typeMessage="error"
               message={
-                medicalReqErrosState?.toString() || "¡Error en la petición!"
+                medicalReqErrorsState?.toString() || "¡Error en la petición!"
               }
             />
           )}
@@ -367,11 +376,7 @@ const CreateRequestForm: React.FC = () => {
                   },
                 ]}
               >
-                {reqTypesLoading && reqTypesFetching && !reqTypesData ? (
-                  <CustomSpin />
-                ) : (
-                  <CustomUpload titleCustomUpload="Cargar documento" />
-                )}
+                <CustomUpload titleCustomUpload="Cargar documento" />
               </Form.Item>
 
               <Form.Item

@@ -855,6 +855,74 @@ export class MedicalReqService {
     }
   }
 
+  async getAllMedicalReqOfAUsers(userId: string) {
+    const userFound = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!userFound) {
+      return new HttpException(
+        `El usuario no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const allMedicalReqOfUserFound = await this.medicalReqRepository.find({
+      where: {
+        aplicantId: userId,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    if (allMedicalReqOfUserFound.length === 0) {
+      return new HttpException(
+        `El usuario no tiene requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqOfUserFound;
+    }
+  }
+
+  async getAllMedicalReqOfAFamiliar(familiarId: string) {
+    const familiarFound = await this.familiarRepository.findOne({
+      where: {
+        id: familiarId,
+      },
+    });
+
+    if (!familiarFound) {
+      return new HttpException(
+        `El familiar no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const allMedicalReqOfUserFound = await this.medicalReqRepository.find({
+      where: {
+        aplicantId: familiarId,
+        is_deleted: false,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    if (allMedicalReqOfUserFound.length === 0) {
+      return new HttpException(
+        `El usuario no tiene requerimientos creados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allMedicalReqOfUserFound;
+    }
+  }
+
   async getAllMedReqUsersToLegalArea() {
     const legalArea = await this.companyAreaRepository.findOne({
       where: {

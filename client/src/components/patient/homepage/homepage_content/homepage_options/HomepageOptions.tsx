@@ -50,7 +50,7 @@ const HomepageOptions: React.FC = () => {
             backgroundColorCustomOptionButton="#015E90"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
-              await router.push("/patient/create_request", {
+              await router.push("/patient/homepage/create_request", {
                 scroll: true,
               });
             }}
@@ -72,13 +72,15 @@ const HomepageOptions: React.FC = () => {
         >
           <CustomOptionButton
             iconCustomOptionButton={<MdFormatListNumbered size={"45px"} />}
-            titleCustomOptionButton="Documentos médicos solicitados"
+            titleCustomOptionButton="Ver documentos médicos solicitados"
             textColorCustomOptionButton="#f2f2f2"
             iconColorCustomOptionButton="#00B5E8"
             backgroundColorCustomOptionButton="#015E90"
             borderColorCustomOptionButton="#3F97AF"
-            handleClickCustomOptionButton={() => {
-              console.log("CLICK EN CARD");
+            handleClickCustomOptionButton={async () => {
+              await router.push("/patient/homepage/request_list", {
+                scroll: true,
+              });
             }}
           />
         </Col>

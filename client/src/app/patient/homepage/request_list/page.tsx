@@ -4,18 +4,17 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import CreateRequestLayout from "@/components/patient/create_request/CreateRequestLayout";
+import RequestListLayout from "@/components/patient/request_list/RequestListLayout";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 
-const CreateRequestPage = () => {
+const RequestListPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -38,14 +37,6 @@ const CreateRequestPage = () => {
     isFetching: userPatientFetching,
     error: userPatientError,
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientLoginState);
-
-  const {
-    data: isRelativesData,
-    isLoading: isRelativesLoading,
-    isFetching: isRelativesFetching,
-    isSuccess: isRelativesSuccess,
-    isError: isRelativesError,
-  } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
     if (!idNumberUserPatientLoginState) {
@@ -73,12 +64,12 @@ const CreateRequestPage = () => {
       {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="create-request-page-patient-content">
-          <CreateRequestLayout />
+        <div className="request-list-page-patient-content">
+          <RequestListLayout />
         </div>
       )}
     </>
   );
 };
 
-export default CreateRequestPage;
+export default RequestListPage;
