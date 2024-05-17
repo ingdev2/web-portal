@@ -11,6 +11,7 @@ import adminLoginReducer from "./features/login/adminLoginSlice";
 import patientUserLoginReducer from "./features/login/patientUserLoginSlice";
 import epsUserLoginReducer from "./features/login/epsUserLoginSlice";
 import familiarLoginReducer from "./features/login/familiarLoginSlice";
+import medicalReqReducer from "./features/medical_req/medicalReqSlice";
 import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
@@ -22,6 +23,8 @@ import { registerRelativesApi } from "./apis/register/registerRelativesApi";
 import { loginAdminApi } from "./apis/auth/loginAdminApi";
 import { loginUsersApi } from "./apis/auth/loginUsersApi";
 import { loginRelativesApi } from "./apis/auth/loginRelativesApi";
+import { medicalReqApi } from "./apis/medical_req/medicalReqApi";
+import { typesMedicalReqApi } from "./apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { idTypesApi } from "./apis/id_types/idTypesApi";
 import { gendersApi } from "./apis/genders/gendersApi";
 import { authMethodApi } from "./apis/auth_method/authMethodApi";
@@ -45,6 +48,7 @@ const rootReducer = combineReducers({
   patientUserLogin: patientUserLoginReducer,
   epsUserLogin: epsUserLoginReducer,
   familiarLogin: familiarLoginReducer,
+  medicalReq: medicalReqReducer,
   admin: adminReducer,
   patient: patientReducer,
   eps: epsReducer,
@@ -59,6 +63,8 @@ const rootReducer = combineReducers({
   [loginAdminApi.reducerPath]: loginAdminApi.reducer,
   [loginUsersApi.reducerPath]: loginUsersApi.reducer,
   [loginRelativesApi.reducerPath]: loginRelativesApi.reducer,
+  [medicalReqApi.reducerPath]: medicalReqApi.reducer,
+  [typesMedicalReqApi.reducerPath]: typesMedicalReqApi.reducer,
   [idTypesApi.reducerPath]: idTypesApi.reducer,
   [gendersApi.reducerPath]: gendersApi.reducer,
   [authMethodApi.reducerPath]: authMethodApi.reducer,
@@ -69,7 +75,10 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat([
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    }).concat([
       adminsApi.middleware,
       usersApi.middleware,
       relativesApi.middleware,
@@ -79,6 +88,8 @@ export const store = configureStore({
       loginAdminApi.middleware,
       loginUsersApi.middleware,
       loginRelativesApi.middleware,
+      medicalReqApi.middleware,
+      typesMedicalReqApi.middleware,
       idTypesApi.middleware,
       gendersApi.middleware,
       authMethodApi.middleware,

@@ -32,15 +32,16 @@ const CustomResultOneButton: React.FC<{
         maxWidth: "max-content",
         height: "max-content",
         display: "flex",
-        flexDirection: "column",
+        flexFlow: "column wrap",
         alignItems: "center",
         justifyContent: "center",
         paddingBlock: 13,
         paddingInline: 0,
+        margin: 0,
       }}
       extra={[
         isSubmittingButton ? (
-          <CustomSpin />
+          <CustomSpin key="custom-spin-custom-result-one-button" />
         ) : (
           <Button
             key={"button-custom-result"}

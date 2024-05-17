@@ -2,9 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const registerUsersApi = createApi({
   reducerPath: "registerUsersApi",
+
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
   }),
+
   endpoints: (builder) => ({
     validateThatThePatientExist: builder.mutation<
       [],
@@ -16,25 +18,28 @@ export const registerUsersApi = createApi({
         body: { idType, idNumber },
       }),
     }),
-    validatePatientRegister: builder.mutation<[], { id_number: Number }>({
+
+    validatePatientRegister: builder.mutation<[], { id_number: number }>({
       query: ({ id_number }) => ({
         url: `validatePatientRegister`,
         method: "POST",
-        body: { id_number },
+        body: id_number,
       }),
     }),
+
     createUserPatient: builder.mutation<User, Partial<User>>({
-      query: (newUser) => ({
+      query: (newPatient) => ({
         url: `registerUserPatient`,
         method: "POST",
-        body: newUser,
+        body: newPatient,
       }),
     }),
+
     createUserEps: builder.mutation<User, Partial<User>>({
-      query: (newUser) => ({
+      query: (newEps) => ({
         url: `registerUserEps`,
         method: "POST",
-        body: newUser,
+        body: newEps,
       }),
     }),
   }),

@@ -13,7 +13,6 @@ import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
 
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
@@ -38,14 +37,6 @@ const HomePagePatient = () => {
     isFetching: userPatientFetching,
     error: userPatientError,
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientLoginState);
-
-  const {
-    data: isRelativesData,
-    isLoading: isRelativesLoading,
-    isFetching: isRelativesFetching,
-    isSuccess: isRelativesSuccess,
-    isError: isRelativesError,
-  } = useGetAllRelativesQuery(null);
 
   useEffect(() => {
     if (!idNumberUserPatientLoginState) {

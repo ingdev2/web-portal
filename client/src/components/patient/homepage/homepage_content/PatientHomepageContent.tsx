@@ -1,39 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import { useAppSelector } from "@/redux/hooks";
+import React from "react";
 
-import CustomSpin from "../../../common/custom_spin/CustomSpin";
-
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import PatientDataCard from "./patient_data_card/PatientDataCard";
 import HomepageOptions from "./homepage_options/HomepageOptions";
 
 const PatientHomepageContent: React.FC = () => {
-  const idNumberPatientState = useAppSelector(
-    (state) => state.patient.id_number
-  );
-
-  const {
-    data: userPatientData,
-    isLoading: userPatientLoading,
-    isFetching: userPatientFetching,
-    error: userPatientError,
-  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
-
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
-
   return (
     <>
-      {userPatientLoading && userPatientFetching ? (
-        <CustomSpin />
-      ) : (
-        <>
-          <PatientDataCard />
+      <PatientDataCard />
 
-          <HomepageOptions />
-        </>
-      )}
+      <HomepageOptions />
     </>
   );
 };

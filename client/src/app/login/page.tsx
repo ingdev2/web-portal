@@ -27,10 +27,6 @@ const UsersLoginPage: React.FC = () => {
     }
   }, [status]);
 
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-
   return (
     <div
       style={{
@@ -78,7 +74,6 @@ const UsersLoginPage: React.FC = () => {
         </div>
         <div>
           <Tabs
-            onChange={onChange}
             type="card"
             centered
             style={{

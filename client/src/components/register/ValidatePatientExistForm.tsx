@@ -285,15 +285,17 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   const handleGoToUserLogin = async () => {
-    setIsSubmittingGoToUserLogin(true);
+    try {
+      setIsSubmittingGoToUserLogin(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 700));
+      await router.push("/login", { scroll: true });
 
-    await router.push("/login", { scroll: true });
-
-    dispatch(setDefaultValuesUserPatient());
-
-    setIsSubmittingGoToUserLogin(true);
+      dispatch(setDefaultValuesUserPatient());
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmittingGoToUserLogin(false);
+    }
   };
 
   const handleButtonClick = () => {
@@ -327,7 +329,7 @@ const ValidatePatientExistForm: React.FC = () => {
       {showSuccessMessage && (
         <CustomMessage
           typeMessage="success"
-          message={"¡Paciente encontrado!"}
+          message={"¡Paciente encontrado! Espere..."}
         />
       )}
 

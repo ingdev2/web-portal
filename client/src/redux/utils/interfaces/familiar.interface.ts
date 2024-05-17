@@ -19,6 +19,6 @@ interface Familiar {
   updateAt: string;
   deletedAt: string;
   copy_familiar_citizenship_card: string[];
-  medical_req: Array<any>;
+  medical_req: Array<MedicalReq>;
   errors: [];
 }

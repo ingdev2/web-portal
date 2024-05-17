@@ -25,10 +25,6 @@ const RegisterPatientPage: React.FC = () => {
     }
   }, [status]);
 
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-
   return (
     <div
       className="register-user-page"
@@ -79,7 +75,6 @@ const RegisterPatientPage: React.FC = () => {
 
         <div>
           <Tabs
-            onChange={onChange}
             type="card"
             centered
             tabBarGutter={13}

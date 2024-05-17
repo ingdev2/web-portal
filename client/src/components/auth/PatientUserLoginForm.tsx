@@ -18,6 +18,7 @@ import {
   setPasswordLoginPatient,
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
+  resetLoginStatePatient,
 } from "@/redux/features/login/patientUserLoginSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
@@ -41,6 +42,7 @@ const PatientUserLoginForm: React.FC = () => {
   const passwordPatientState = useAppSelector(
     (state) => state.patientUserLogin.password
   );
+  const idPatientState = useAppSelector((state) => state.patient.id);
   const affiliationEpsPatientState = useAppSelector(
     (state) => state.patient.affiliation_eps
   );
@@ -51,6 +53,12 @@ const PatientUserLoginForm: React.FC = () => {
   const modalIsOpenPatient = useAppSelector(
     (state) => state.modal.patientModalIsOpen
   );
+
+  const [idTypePatientLocalState, setIdTypePatientLocalState] = useState(0);
+  const [idNumberPatientLocalState, setIdNumberPatientLocalState] =
+    useState("");
+  const [passwordPatientLocalState, setPasswordPatientLocalState] =
+    useState("");
 
   const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
     useState(false);
@@ -76,17 +84,14 @@ const PatientUserLoginForm: React.FC = () => {
 
   useEffect(() => {
     if (
-      !isLoginPatientSuccess &&
-      !isSubmittingPatient &&
-      !isLoginPatientError &&
-      isLoginPatientData
+      !idTypePatientLocalState ||
+      !idNumberPatientLocalState ||
+      !passwordPatientLocalState
     ) {
-      dispatch(setIdTypeLoginPatient(""));
-      dispatch(setIdNumberLoginPatient(""));
-      dispatch(setPasswordLoginPatient(""));
-      dispatch(setVerificationCodeLoginPatient(""));
+      dispatch(resetLoginStatePatient());
     }
-    if (affiliationEpsPatientState) {
+    if (idPatientState || affiliationEpsPatientState) {
+      dispatch(resetLoginStatePatient());
       dispatch(setDefaultValuesUserPatient());
     }
     if (
@@ -111,16 +116,22 @@ const PatientUserLoginForm: React.FC = () => {
     idTypesPatientError,
     isSubmittingPatient,
     isLoginPatientError,
+    idPatientState,
+    affiliationEpsPatientState,
   ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
 
+      const idNumberPatientLocalStateInt = idNumberPatientLocalState
+        ? parseInt(idNumberPatientLocalState?.toString(), 10)
+        : 0;
+
       const response: any = await loginPatientUsers({
-        id_type: idTypePatientState,
-        id_number: idNumberPatientState,
-        password: passwordPatientState,
+        id_type: idTypePatientLocalState,
+        id_number: idNumberPatientLocalStateInt,
+        password: passwordPatientLocalState,
       });
 
       var isLoginUserError = response.error;
@@ -141,6 +152,9 @@ const PatientUserLoginForm: React.FC = () => {
       }
 
       if (isLoginUserSuccess) {
+        dispatch(setIdTypeLoginPatient(idTypePatientLocalState));
+        dispatch(setIdNumberLoginPatient(idNumberPatientLocalStateInt));
+        dispatch(setPasswordLoginPatient(passwordPatientLocalState));
         dispatch(setErrorsLoginPatient([]));
         setShowErrorMessagePatient(false);
         dispatch(setPatientModalIsOpen(true));
@@ -169,8 +183,8 @@ const PatientUserLoginForm: React.FC = () => {
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: 31,
-        marginInline: 31,
+        marginBottom: "31px",
+        marginInline: "31px",
       }}
     >
       {modalIsOpenPatient && <PatientModalVerificationCode />}
@@ -185,7 +199,7 @@ const PatientUserLoginForm: React.FC = () => {
       <Col
         xs={24}
         lg={24}
-        style={{ padding: "0 2px", width: "100vw", maxWidth: 321 }}
+        style={{ padding: "0 2px", width: "100vw", maxWidth: "321px" }}
       >
         <Form
           id="patient-users-login-form"
@@ -221,9 +235,9 @@ const PatientUserLoginForm: React.FC = () => {
               ]}
             >
               <Select
-                value={idTypePatientState}
+                value={idTypePatientLocalState}
                 placeholder="Tipo de identificación"
-                onChange={(e) => dispatch(setIdTypeLoginPatient(e))}
+                onChange={(e) => setIdTypePatientLocalState(e)}
               >
                 {idTypeOptionsPatient?.map((option: any) => (
                   <Select.Option key={option.id} value={option.id}>
@@ -261,11 +275,9 @@ const PatientUserLoginForm: React.FC = () => {
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               type="number"
-              value={idNumberPatientState}
+              value={idNumberPatientLocalState}
               placeholder="Número de identificación"
-              onChange={(e) =>
-                dispatch(setIdNumberLoginPatient(e.target.value))
-              }
+              onChange={(e) => setIdNumberPatientLocalState(e.target.value)}
               min={0}
             />
           </Form.Item>
@@ -293,11 +305,9 @@ const PatientUserLoginForm: React.FC = () => {
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              value={passwordPatientState}
+              value={passwordPatientLocalState}
               placeholder="Contraseña"
-              onChange={(e) =>
-                dispatch(setPasswordLoginPatient(e.target.value))
-              }
+              onChange={(e) => setPasswordPatientLocalState(e.target.value)}
             />
           </Form.Item>
 
@@ -363,15 +373,17 @@ const PatientUserLoginForm: React.FC = () => {
                 htmlType="button"
                 className="patient-register-button"
                 onClick={async () => {
-                  setIsSubmittingRegisterPagePatient(true);
+                  try {
+                    setIsSubmittingRegisterPagePatient(true);
 
-                  await new Promise((resolve) => setTimeout(resolve, 700));
-
-                  await router.push("/patient/register", {
-                    scroll: true,
-                  });
-
-                  setIsSubmittingRegisterPagePatient(false);
+                    await router.push("/patient/register", {
+                      scroll: true,
+                    });
+                  } catch (error) {
+                    console.error(error);
+                  } finally {
+                    setIsSubmittingRegisterPagePatient(false);
+                  }
                 }}
               >
                 Activar cuenta

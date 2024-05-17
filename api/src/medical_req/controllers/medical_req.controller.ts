@@ -20,7 +20,7 @@ export class MedicalReqController {
 
   @Auth(UserRolType.PATIENT)
   @Post('/createMedicalReqPatient/:userId')
-  async createMedicalReqPerson(
+  async createMedicalReqPatient(
     @Param('userId') userId: string,
     @Body()
     medicalReqPatient: CreateMedicalReqPatientDto,
@@ -64,10 +64,23 @@ export class MedicalReqController {
   async getAllMedReqUsersToLegalArea() {
     return await this.medicalReqService.getAllMedReqUsersToLegalArea();
   }
+
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqUsers')
   async getAllMedicalReqUsers() {
     return await this.medicalReqService.getAllMedicalReqUsers();
+  }
+
+  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Get('/getAllMedicalReqOfAUsers/:userId')
+  async getAllMedicalReqOfAUsers(@Param('userId') userId: string) {
+    return await this.medicalReqService.getAllMedicalReqOfAUsers(userId);
+  }
+
+  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Get('/getAllMedicalReqOfAFamiliar/:userId')
+  async getAllMedicalReqOfAFamiliar(@Param('userId') familiarId: string) {
+    return await this.medicalReqService.getAllMedicalReqOfAFamiliar(familiarId);
   }
 
   @Auth(AdminRolType.ADMIN)
@@ -163,8 +176,8 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/deleted/:id')
-  async deletedMedicalReq(@Param('id') id: string) {
-    return await this.medicalReqService.deletedMedicalReq(id);
+  @Patch('/deleted/:reqId')
+  async deletedMedicalReq(@Param('reqId') reqId: string) {
+    return await this.medicalReqService.deletedMedicalReq(reqId);
   }
 }
