@@ -9,7 +9,11 @@ import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import PatientRequestCardList from "@/components/patient/request_list/request_list_content/patient_request_card_list/PatientRequestCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
+import CustomTags from "@/components/common/custom_tags/CustomTags";
+import { FaRegEye } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
 
 import {
   setIdUserPatient,
@@ -21,7 +25,6 @@ import {
   useGetAllMedicalReqOfAUsersQuery,
   useGetAllMedicalReqOfAFamiliarQuery,
 } from "@/redux/apis/medical_req/medicalReqApi";
-import CustomEmpty from "@/components/common/custom_empty/CustomEmpty";
 
 const ListOfRequests: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -51,9 +54,7 @@ const ListOfRequests: React.FC = () => {
     isLoading: userMedicalReqLoading,
     isFetching: userMedicalReqFetching,
     error: userMedicalReqError,
-  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState, {
-    refetchOnMountOrArgChange: true,
-  });
+  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState);
 
   useEffect(() => {
     if (
@@ -69,9 +70,6 @@ const ListOfRequests: React.FC = () => {
     userPatientLoading,
     userPatientFetching,
     idUserPatientState,
-    userMedicalReqData,
-    userMedicalReqLoading,
-    userMedicalReqFetching,
   ]);
 
   return (
@@ -86,6 +84,7 @@ const ListOfRequests: React.FC = () => {
           display: "flex",
           flexFlow: "column wrap",
           alignContent: "center",
+          paddingInline: "31px",
         }}
       >
         <div
@@ -94,12 +93,12 @@ const ListOfRequests: React.FC = () => {
             flexFlow: "row wrap",
             justifyContent: "flex-start",
             paddingBlock: "7px",
-            paddingInline: "20px",
+            paddingInline: "7px",
           }}
         >
           <Button
             style={{
-              paddingInline: 17,
+              paddingInline: "7px",
               color: "#015E90",
               fontWeight: "bold",
               display: "flex",
@@ -122,18 +121,16 @@ const ListOfRequests: React.FC = () => {
         </div>
 
         <Card
-          key={"card-create-medical-req-form"}
+          key={"card-list-of-request-content"}
           style={{
-            width: "max-content",
-            height: "max-content",
+            width: "100%",
+            maxWidth: "720px",
             display: "flex",
-            flexDirection: "column",
+            flexFlow: "column wrap",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginBottom: "31px",
-            marginInline: "31px",
           }}
         >
           {showErrorMessageMedicalReq && (
@@ -152,9 +149,6 @@ const ListOfRequests: React.FC = () => {
             lg={24}
             style={{
               padding: "0 2px",
-              width: "100vw",
-              minWidth: "270px",
-              maxWidth: "321px",
             }}
           >
             {!userMedicalReqData &&
@@ -162,16 +156,31 @@ const ListOfRequests: React.FC = () => {
             userMedicalReqFetching ? (
               <CustomSpin />
             ) : Array.isArray(userMedicalReqData) ? (
-              <ul>
-                {userMedicalReqData.map((req) => (
-                  <li key={req.id}>
-                    <p>Filing Number: {req.filing_number}</p>
-                    <p>Aplicant Name: {req.aplicant_name}</p>
-                    <p>User Message: {req.user_message}</p>
-                    <p>Req Type: {req.requirement_type}</p>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <h4
+                  style={{
+                    ...titleStyleCss,
+                    textAlign: "center",
+                    paddingBottom: "7px",
+                  }}
+                >
+                  Total de <b>{userMedicalReqData.length} solicitud(es)</b>
+                </h4>
+
+                <PatientRequestCardList
+                  requestCardListData={userMedicalReqData}
+                  titleCardList="N° Radicado:"
+                  descriptionCardList="Fecha de solicitud:"
+                  iconButtonDetails={<FaRegEye />}
+                  titleButtonDetails="Ver detalles"
+                  backgroundColorButtonDetails="#015E90"
+                  onClickButtonDetails={() => {}}
+                  iconButtonDelete={<MdDeleteOutline />}
+                  titleButtonDelete="Eliminar"
+                  backgroundColorButtonDelete="#8C1111"
+                  onClickButtonDelete={() => {}}
+                />
+              </>
             ) : (
               <CustomEmptyButton
                 titleCustomEmpty="Sin solicitudes"

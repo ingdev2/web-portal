@@ -34,28 +34,30 @@ const props: UploadProps = {
 
 const CustomUpload: React.FC<{ titleCustomUpload: string }> = ({
   titleCustomUpload,
-}) => (
-  <Upload {...props}>
-    <Button
-      style={{
-        paddingInline: 17,
-        color: "#015E90",
-        borderColor: "#015E90",
-        fontWeight: "bold",
-        borderRadius: 7,
-        borderWidth: 1.3,
-        display: "flex",
-        flexFlow: "row wrap",
-        alignContent: "center",
-        alignItems: "center",
-      }}
-      type="default"
-      className="upload-file-button"
-      icon={<FcPlus size={17} />}
-    >
-      {titleCustomUpload}
-    </Button>
-  </Upload>
-);
+}) => {
+  return (
+    <Upload {...props}>
+      <Button
+        style={{
+          paddingInline: 17,
+          color: "#015E90",
+          borderColor: "#015E90",
+          fontWeight: "bold",
+          borderRadius: 7,
+          borderWidth: 1.3,
+          display: "flex",
+          flexFlow: "row wrap",
+          alignContent: "center",
+          alignItems: "center",
+        }}
+        type="default"
+        className="upload-file-button"
+        icon={<FcPlus size={17} />}
+      >
+        {titleCustomUpload}
+      </Button>
+    </Upload>
+  );
+};
 
 export default CustomUpload;

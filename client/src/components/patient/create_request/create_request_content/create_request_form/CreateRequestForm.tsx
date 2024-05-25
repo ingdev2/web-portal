@@ -213,6 +213,7 @@ const CreateRequestForm: React.FC = () => {
           display: "flex",
           flexFlow: "column wrap",
           alignContent: "center",
+          paddingInline: "31px",
         }}
       >
         <div
@@ -221,12 +222,12 @@ const CreateRequestForm: React.FC = () => {
             flexFlow: "row wrap",
             justifyContent: "flex-start",
             paddingBlock: "7px",
-            paddingInline: "20px",
+            paddingInline: "7px",
           }}
         >
           <Button
             style={{
-              paddingInline: 17,
+              paddingInline: "7px",
               color: "#015E90",
               fontWeight: "bold",
               display: "flex",
@@ -251,16 +252,14 @@ const CreateRequestForm: React.FC = () => {
         <Card
           key={"card-create-medical-req-form"}
           style={{
-            width: "max-content",
-            height: "max-content",
+            width: "100%",
+            maxWidth: "450px",
             display: "flex",
-            flexDirection: "column",
+            flexFlow: "column wrap",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginBottom: "31px",
-            marginInline: "31px",
           }}
         >
           {modalIsOpenConfirm && (
@@ -304,126 +303,113 @@ const CreateRequestForm: React.FC = () => {
             />
           )}
 
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-            style={{
-              padding: "0 2px",
-              width: "100vw",
-              minWidth: "270px",
-              maxWidth: "321px",
-            }}
+          <Form
+            id="create-medical-req-form"
+            name="create-medical-req-form"
+            className="create-medical-req-form"
+            onFinish={handleCreateRequest}
+            initialValues={{ remember: false }}
+            autoComplete="false"
+            layout="vertical"
           >
-            <Form
-              id="create-medical-req-form"
-              name="create-medical-req-form"
-              className="create-medical-req-form"
-              onFinish={handleCreateRequest}
-              initialValues={{ remember: false }}
-              autoComplete="false"
-              layout="vertical"
+            <h2
+              className="title-create-medical-req-form"
+              style={{
+                ...titleStyleCss,
+                textAlign: "center",
+                marginBottom: "22px",
+              }}
             >
-              <h2
-                className="title-create-medical-req-form"
-                style={{
-                  ...titleStyleCss,
-                  textAlign: "center",
-                  marginBottom: "22px",
-                }}
-              >
-                Crear nueva solicitud de requerimiento médico
-              </h2>
+              Crear nueva solicitud de requerimiento médico
+            </h2>
 
-              <Form.Item
-                name="medical-req-types"
-                label="Tipo de requerimiento médico"
-                style={{ marginBottom: "13px" }}
-                rules={[
-                  {
-                    required: true,
-                    message:
-                      "¡Por favor selecciona el tipo de requerimiento a solicitar!",
-                  },
-                ]}
-              >
-                {reqTypesLoading && reqTypesFetching && !reqTypesData ? (
-                  <CustomSpin />
-                ) : (
-                  <Select
-                    value={reqTypeState}
-                    placeholder="Tipo de requerimiento"
-                    onChange={handleOnChangeSelect}
-                  >
-                    {typesMedicalReqState?.map((option: any) => (
-                      <Select.Option key={option.id} value={option.id}>
-                        {option.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )}
-              </Form.Item>
+            <Form.Item
+              name="medical-req-types"
+              label="Tipo de requerimiento médico"
+              style={{ marginBottom: "13px" }}
+              rules={[
+                {
+                  required: true,
+                  message:
+                    "¡Por favor selecciona el tipo de requerimiento a solicitar!",
+                },
+              ]}
+            >
+              {reqTypesLoading && reqTypesFetching && !reqTypesData ? (
+                <CustomSpin />
+              ) : (
+                <Select
+                  value={reqTypeState}
+                  placeholder="Tipo de requerimiento"
+                  onChange={handleOnChangeSelect}
+                >
+                  {typesMedicalReqState?.map((option: any) => (
+                    <Select.Option key={option.id} value={option.id}>
+                      {option.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+            </Form.Item>
 
-              <Form.Item
-                name="upload-files-reference-documents"
-                label="Documento(s) de referencia (opcional)"
-                style={{ marginBottom: "13px" }}
-                rules={[
-                  {
-                    required: false,
-                    message: "¡Por favor adjunta mínimo un documento!",
-                  },
-                ]}
-              >
-                <CustomUpload titleCustomUpload="Cargar documento" />
-              </Form.Item>
+            <Form.Item
+              name="upload-files-reference-documents"
+              label="Documento(s) de referencia (opcional)"
+              style={{ marginBottom: "13px" }}
+              rules={[
+                {
+                  required: false,
+                  message: "¡Por favor adjunta mínimo un documento!",
+                },
+              ]}
+            >
+              <CustomUpload titleCustomUpload="Cargar documento" />
+            </Form.Item>
 
-              <Form.Item
-                name="observations"
-                label="Observaciones y/o comentarios"
-                style={{ marginBottom: "31px" }}
-                rules={[
-                  {
-                    required: true,
-                    message:
-                      "¡Por favor ingresa un mensaje de observación a tu solicitud!",
-                  },
-                ]}
-              >
-                <TextArea
-                  autoSize={{ minRows: 2, maxRows: 10 }}
-                  maxLength={301}
-                  value={userMessageMedicalReqState}
-                  placeholder="Comentarios adicionales de la solicitud..."
-                  onChange={(e) =>
-                    dispatch(setUserMessageMedicalReq(e.target.value))
-                  }
-                />
-              </Form.Item>
+            <Form.Item
+              name="observations"
+              label="Observaciones y/o comentarios"
+              style={{ marginBottom: "31px" }}
+              rules={[
+                {
+                  required: true,
+                  message:
+                    "¡Por favor ingresa un mensaje de observación a tu solicitud!",
+                },
+              ]}
+            >
+              <TextArea
+                autoSize={{ minRows: 2, maxRows: 10 }}
+                maxLength={301}
+                value={userMessageMedicalReqState}
+                placeholder="Comentarios adicionales de la solicitud..."
+                onChange={(e) =>
+                  dispatch(setUserMessageMedicalReq(e.target.value))
+                }
+              />
+            </Form.Item>
 
-              <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
-                {isSubmittingConfirmModal && !modalIsOpenConfirm ? (
-                  <CustomSpin />
-                ) : (
-                  <Button
-                    size="large"
-                    style={{
-                      paddingInline: 62,
-                      borderRadius: 31,
-                      backgroundColor: "#015E90",
-                      color: "#f2f2f2",
-                    }}
-                    htmlType="submit"
-                    className="create-medical-req-form-button"
-                    onClick={handleButtonClick}
-                  >
-                    Crear solicitud
-                  </Button>
-                )}
-              </Form.Item>
-            </Form>
-          </Col>
+            <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
+              {isSubmittingConfirmModal && !modalIsOpenConfirm ? (
+                <CustomSpin />
+              ) : (
+                <Button
+                  size="large"
+                  style={{
+                    paddingInline: 62,
+                    borderRadius: 31,
+                    backgroundColor: "#015E90",
+                    color: "#f2f2f2",
+                  }}
+                  htmlType="submit"
+                  className="create-medical-req-form-button"
+                  onClick={handleButtonClick}
+                >
+                  Crear solicitud
+                </Button>
+              )}
+            </Form.Item>
+          </Form>
         </Card>
       </Col>
     </>
