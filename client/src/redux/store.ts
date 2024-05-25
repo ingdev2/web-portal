@@ -25,6 +25,7 @@ import { loginUsersApi } from "./apis/auth/loginUsersApi";
 import { loginRelativesApi } from "./apis/auth/loginRelativesApi";
 import { medicalReqApi } from "./apis/medical_req/medicalReqApi";
 import { typesMedicalReqApi } from "./apis/medical_req/types_medical_req/typesMedicalReqApi";
+import { statusMedicalReqApi } from "./apis/medical_req/status_medical_req/statusMedicalReqApi";
 import { idTypesApi } from "./apis/id_types/idTypesApi";
 import { gendersApi } from "./apis/genders/gendersApi";
 import { authMethodApi } from "./apis/auth_method/authMethodApi";
@@ -65,6 +66,7 @@ const rootReducer = combineReducers({
   [loginRelativesApi.reducerPath]: loginRelativesApi.reducer,
   [medicalReqApi.reducerPath]: medicalReqApi.reducer,
   [typesMedicalReqApi.reducerPath]: typesMedicalReqApi.reducer,
+  [statusMedicalReqApi.reducerPath]: statusMedicalReqApi.reducer,
   [idTypesApi.reducerPath]: idTypesApi.reducer,
   [gendersApi.reducerPath]: gendersApi.reducer,
   [authMethodApi.reducerPath]: authMethodApi.reducer,
@@ -90,6 +92,7 @@ export const store = configureStore({
       loginRelativesApi.middleware,
       medicalReqApi.middleware,
       typesMedicalReqApi.middleware,
+      statusMedicalReqApi.middleware,
       idTypesApi.middleware,
       gendersApi.middleware,
       authMethodApi.middleware,
