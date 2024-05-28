@@ -9,13 +9,14 @@ const HomePage = () => {
     <div
       className="homepage"
       style={{
+        width: "100vw",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
-        marginBlock: 31,
+        paddingBlock: "31px",
       }}
     >
       <div
@@ -35,9 +36,10 @@ const HomePage = () => {
         className="content-homepage"
         style={{
           zIndex: 1,
+          width: "100%",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
           alignContent: "center",
           alignItems: "center",
         }}
@@ -62,29 +64,27 @@ const HomePage = () => {
             className="content-card"
             style={{
               width: "max-content",
-              height: "max-content",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-              marginBottom: 31,
-              marginInline: 31,
-              padding: 2,
+              paddingBottom: "31px",
+              paddingInline: "13px",
             }}
           >
             <Col
               xs={24}
               lg={24}
-              style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
+              style={{ padding: "0px 7px", width: "100vw", maxWidth: "321px" }}
             >
               <div
                 className="proced-logo"
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  marginBlock: 13,
+                  paddingBlock: "13px",
                 }}
               >
                 <img

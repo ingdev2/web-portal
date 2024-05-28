@@ -1340,6 +1340,10 @@ export class MedicalReqService {
       );
     }
 
+    const currentDate = new Date();
+
+    rejectedStatus.answer_date = currentDate;
+
     await this.medicalReqRepository.update(reqId, rejectedStatus);
 
     const updatedMedicalReqFound = await this.medicalReqRepository.findOne({

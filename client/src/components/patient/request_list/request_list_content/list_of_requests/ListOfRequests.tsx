@@ -73,129 +73,112 @@ const ListOfRequests: React.FC = () => {
   ]);
 
   return (
-    <>
-      <Col
-        xs={24}
-        sm={24}
-        md={24}
-        lg={24}
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexFlow: "column wrap",
+        alignContent: "center",
+        paddingInline: "22px",
+      }}
+    >
+      {showErrorMessageMedicalReq && (
+        <CustomMessage
+          typeMessage="error"
+          message={
+            medicalReqErrorsState?.toString() || "¡Error en la petición!"
+          }
+        />
+      )}
+
+      <div
         style={{
-          width: "100%",
           display: "flex",
-          flexFlow: "column wrap",
-          alignContent: "center",
-          paddingInline: "31px",
+          flexFlow: "row wrap",
+          justifyContent: "flex-start",
+          paddingBlock: "7px",
+          paddingInline: "7px",
         }}
       >
-        <div
+        <Button
           style={{
+            paddingInline: "7px",
+            color: "#015E90",
+            fontWeight: "bold",
             display: "flex",
             flexFlow: "row wrap",
-            justifyContent: "flex-start",
-            paddingBlock: "7px",
-            paddingInline: "7px",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+          type="link"
+          size="large"
+          className="back-to-homepage-button"
+          icon={<IoMdArrowRoundBack size={17} />}
+          onClick={() => {
+            router.push("/patient/homepage", {
+              scroll: true,
+            });
           }}
         >
-          <Button
-            style={{
-              paddingInline: "7px",
-              color: "#015E90",
-              fontWeight: "bold",
-              display: "flex",
-              flexFlow: "row wrap",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-            type="link"
-            size="large"
-            className="back-to-homepage-button"
-            icon={<IoMdArrowRoundBack size={17} />}
-            onClick={() => {
-              router.push("/patient/homepage", {
-                scroll: true,
-              });
-            }}
-          >
-            Ir a inicio
-          </Button>
-        </div>
+          Ir a inicio
+        </Button>
+      </div>
 
+      {!userMedicalReqData &&
+      userMedicalReqLoading &&
+      userMedicalReqFetching ? (
+        <CustomSpin />
+      ) : Array.isArray(userMedicalReqData) ? (
         <Card
           key={"card-list-of-request-content"}
           style={{
             width: "100%",
-            maxWidth: "720px",
-            display: "flex",
-            flexFlow: "column wrap",
-            alignItems: "center",
-            justifyContent: "center",
+            maxWidth: "450px",
+            alignContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {showErrorMessageMedicalReq && (
-            <CustomMessage
-              typeMessage="error"
-              message={
-                medicalReqErrorsState?.toString() || "¡Error en la petición!"
-              }
-            />
-          )}
-
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
+          <h4
             style={{
-              padding: "0 2px",
+              ...titleStyleCss,
+              fontSize: "13pt",
+              textAlign: "center",
+              paddingBottom: "7px",
             }}
           >
-            {!userMedicalReqData &&
-            userMedicalReqLoading &&
-            userMedicalReqFetching ? (
-              <CustomSpin />
-            ) : Array.isArray(userMedicalReqData) ? (
-              <>
-                <h4
-                  style={{
-                    ...titleStyleCss,
-                    textAlign: "center",
-                    paddingBottom: "7px",
-                  }}
-                >
-                  Total de <b>{userMedicalReqData.length} solicitud(es)</b>
-                </h4>
+            Total de <b>{userMedicalReqData.length} solicitud(es)</b>
+          </h4>
 
-                <PatientRequestCardList
-                  requestCardListData={userMedicalReqData}
-                  titleCardList="N° Radicado:"
-                  descriptionCardList="Fecha de solicitud:"
-                  iconButtonDetails={<FaRegEye />}
-                  titleButtonDetails="Ver detalles"
-                  backgroundColorButtonDetails="#015E90"
-                  onClickButtonDetails={() => {}}
-                  iconButtonDelete={<MdDeleteOutline />}
-                  titleButtonDelete="Eliminar"
-                  backgroundColorButtonDelete="#8C1111"
-                  onClickButtonDelete={() => {}}
-                />
-              </>
-            ) : (
-              <CustomEmptyButton
-                titleCustomEmpty="Sin solicitudes"
-                buttonCustomEmpty="Crear nueva solicitud"
-                handleClickCustomEmpty={() => {
-                  router.push("/patient/homepage/create_request", {
-                    scroll: true,
-                  });
-                }}
-              />
-            )}
-          </Col>
+          <PatientRequestCardList
+            requestCardListData={userMedicalReqData}
+            titleCardList="N° Radicado:"
+            descriptionCardList1="Tipo de solicitud:"
+            descriptionCardList2="Estado de solicitud:"
+            descriptionCardList3="Fecha de solicitud:"
+            descriptionCardList4="Fecha de respuesta:"
+            iconButtonDetails={<FaRegEye />}
+            titleButtonDetails="Ver detalles"
+            backgroundColorButtonDetails="#015E90"
+            onClickButtonDetails={() => {}}
+            iconButtonDelete={<MdDeleteOutline />}
+            titleButtonDelete="Eliminar"
+            backgroundColorButtonDelete="#8C1111"
+            onClickButtonDelete={() => {}}
+          />
         </Card>
-      </Col>
-    </>
+      ) : (
+        <CustomEmptyButton
+          titleCustomEmpty="Sin solicitudes"
+          buttonCustomEmpty="Crear nueva solicitud"
+          handleClickCustomEmpty={() => {
+            router.push("/patient/homepage/create_request", {
+              scroll: true,
+            });
+          }}
+        />
+      )}
+    </div>
   );
 };
 

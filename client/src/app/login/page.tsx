@@ -35,7 +35,7 @@ const UsersLoginPage: React.FC = () => {
         height: "100vh",
         alignContent: "center",
         alignItems: "center",
-        marginBlock: 31,
+        paddingBlock: "31px",
       }}
     >
       <div
