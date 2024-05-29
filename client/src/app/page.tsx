@@ -9,14 +9,10 @@ const HomePage = () => {
     <div
       className="homepage"
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignContent: "center",
-        alignItems: "center",
-        paddingBlock: "31px",
+        flexFlow: "column wrap",
       }}
     >
       <div
@@ -36,12 +32,11 @@ const HomePage = () => {
         className="content-homepage"
         style={{
           zIndex: 1,
-          width: "100%",
-          height: "100%",
           display: "flex",
-          flexDirection: "column",
+          flexFlow: "column wrap",
           alignContent: "center",
           alignItems: "center",
+          paddingBlock: "31px",
         }}
       >
         <div
@@ -70,7 +65,7 @@ const HomePage = () => {
               justifyContent: "center",
               backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-              paddingBottom: "31px",
+              paddingBottom: "13px",
               paddingInline: "13px",
             }}
           >

@@ -20,7 +20,7 @@ export const medicalReqApi = createApi({
     },
   }),
 
-  refetchOnMountOrArgChange: 5,
+  refetchOnMountOrArgChange: true,
 
   refetchOnFocus: true,
 

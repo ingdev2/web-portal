@@ -4,27 +4,21 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Col } from "antd";
+import { Button, Card } from "antd";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import { IoMdArrowRoundBack } from "react-icons/io";
 import PatientRequestCardList from "@/components/patient/request_list/request_list_content/patient_request_card_list/PatientRequestCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
-import CustomTags from "@/components/common/custom_tags/CustomTags";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { MdPostAdd } from "react-icons/md";
 import { FaRegEye } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 
-import {
-  setIdUserPatient,
-  setMedicalReqUserPatient,
-} from "@/redux/features/patient/patientSlice";
+import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import {
-  useGetAllMedicalReqOfAUsersQuery,
-  useGetAllMedicalReqOfAFamiliarQuery,
-} from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetAllMedicalReqOfAUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
 const ListOfRequests: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +32,6 @@ const ListOfRequests: React.FC = () => {
     (state) => state.medicalReq.errors
   );
 
-  const [modalOpenRequestDetails, setModalOpenRequestDetails] = useState(false);
   const [showErrorMessageMedicalReq, setShowErrorMessageMedicalReq] =
     useState(false);
 
@@ -54,7 +47,10 @@ const ListOfRequests: React.FC = () => {
     isLoading: userMedicalReqLoading,
     isFetching: userMedicalReqFetching,
     error: userMedicalReqError,
-  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState);
+  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState, {
+    pollingInterval: 1000,
+    skipPollingIfUnfocused: true,
+  });
 
   useEffect(() => {
     if (
@@ -95,20 +91,21 @@ const ListOfRequests: React.FC = () => {
         style={{
           display: "flex",
           flexFlow: "row wrap",
-          justifyContent: "flex-start",
+          justifyContent: "space-between",
+          alignItems: "center",
           paddingBlock: "7px",
           paddingInline: "7px",
         }}
       >
         <Button
           style={{
-            paddingInline: "7px",
             color: "#015E90",
             fontWeight: "bold",
             display: "flex",
             flexFlow: "row wrap",
             alignContent: "center",
             alignItems: "center",
+            paddingInline: "7px",
           }}
           type="link"
           size="large"
@@ -122,6 +119,30 @@ const ListOfRequests: React.FC = () => {
         >
           Ir a inicio
         </Button>
+
+        <Button
+          style={{
+            backgroundColor: "#1D8348",
+            color: "#f2f2f2",
+            fontWeight: "bold",
+            display: "flex",
+            flexFlow: "row wrap",
+            alignContent: "center",
+            alignItems: "center",
+            paddingInline: "13px",
+          }}
+          type="primary"
+          size="middle"
+          className="go-to-create-request-page-button"
+          icon={<MdPostAdd size={17} />}
+          onClick={() => {
+            router.push("/patient/homepage/create_request", {
+              scroll: true,
+            });
+          }}
+        >
+          Crear solicitud
+        </Button>
       </div>
 
       {!userMedicalReqData &&
@@ -133,10 +154,11 @@ const ListOfRequests: React.FC = () => {
           key={"card-list-of-request-content"}
           style={{
             width: "100%",
-            maxWidth: "450px",
+            maxWidth: "540px",
             alignContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+            marginTop: "13px",
           }}
         >
           <h4
@@ -160,23 +182,32 @@ const ListOfRequests: React.FC = () => {
             iconButtonDetails={<FaRegEye />}
             titleButtonDetails="Ver detalles"
             backgroundColorButtonDetails="#015E90"
-            onClickButtonDetails={() => {}}
             iconButtonDelete={<MdDeleteOutline />}
             titleButtonDelete="Eliminar"
             backgroundColorButtonDelete="#8C1111"
-            onClickButtonDelete={() => {}}
           />
         </Card>
       ) : (
-        <CustomEmptyButton
-          titleCustomEmpty="Sin solicitudes"
-          buttonCustomEmpty="Crear nueva solicitud"
-          handleClickCustomEmpty={() => {
-            router.push("/patient/homepage/create_request", {
-              scroll: true,
-            });
+        <Card
+          key={"card-list-of-request-content"}
+          style={{
+            width: "100%",
+            maxWidth: "540px",
+            alignContent: "center",
+            backgroundColor: "#fcfcfc",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
           }}
-        />
+        >
+          <CustomEmptyButton
+            titleCustomEmpty="Sin solicitudes"
+            buttonCustomEmpty="Crear nueva solicitud"
+            handleClickCustomEmpty={() => {
+              router.push("/patient/homepage/create_request", {
+                scroll: true,
+              });
+            }}
+          />
+        </Card>
       )}
     </div>
   );

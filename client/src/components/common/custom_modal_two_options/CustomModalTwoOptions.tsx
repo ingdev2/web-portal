@@ -39,8 +39,8 @@ const CustomModalTwoOptions: React.FC<{
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancelCustomModal}
         destroyOnClose={true}
-        footer={null}
         maskClosable={true}
+        footer={null}
         centered
       >
         <div

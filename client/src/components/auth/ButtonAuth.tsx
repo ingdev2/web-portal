@@ -90,7 +90,7 @@ const ButtonAuth = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginInline: 13,
+          marginInline: "13px",
         }}
       >
         {showErrorMessage && (
@@ -175,7 +175,6 @@ const ButtonAuth = () => {
           borderRadius: 31,
           backgroundColor: "#015E90",
           color: "#f2f2f2",
-          marginBottom: 13,
         }}
       >
         Ingresar al portal

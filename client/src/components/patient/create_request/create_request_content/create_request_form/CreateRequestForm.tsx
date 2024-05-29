@@ -264,14 +264,14 @@ const CreateRequestForm: React.FC = () => {
         {modalIsOpenConfirm && (
           <CustomModalTwoOptions
             key={"custom-confirm-modal-create-medical-req"}
-            iconCustomModal={<FcInfo size={77} />}
             openCustomModalState={modalIsOpenConfirm}
+            iconCustomModal={<FcInfo size={77} />}
             titleCustomModal="¿Deseas crear una nueva solicitud?"
             subtitleCustomModal={`Se realizará un nuevo requerimiento de tipo ${reqTypeNameLocalState}, del paciente ${nameUserPatientState}`}
             handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
             handleConfirmCustomModal={handleConfirmDataModal}
-            handleClickCustomModal={handleButtonClick}
             isSubmittingConfirm={isSubmittingNewMedicalReq}
+            handleClickCustomModal={handleButtonClick}
           ></CustomModalTwoOptions>
         )}
 
@@ -279,6 +279,8 @@ const CreateRequestForm: React.FC = () => {
           <CustomModalNoContent
             key={"custom-success-modal-create-medical-req"}
             openCustomModalState={modalIsOpenSuccess}
+            closableCustomModal={false}
+            maskClosableCustomModal={false}
             contentCustomModal={
               <CustomResultOneButton
                 key={"medical-req-created-custom-result"}

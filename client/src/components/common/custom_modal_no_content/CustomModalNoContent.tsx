@@ -6,8 +6,17 @@ import { Modal } from "antd";
 
 const CustomModalNoContent: React.FC<{
   openCustomModalState: boolean;
+  maskClosableCustomModal: boolean;
+  closableCustomModal: boolean;
   contentCustomModal: ReactNode;
-}> = ({ openCustomModalState, contentCustomModal }) => {
+  handleCancelCustomModal?: () => void;
+}> = ({
+  openCustomModalState,
+  maskClosableCustomModal,
+  closableCustomModal,
+  contentCustomModal,
+  handleCancelCustomModal,
+}) => {
   return (
     <div>
       <Modal
@@ -17,10 +26,11 @@ const CustomModalNoContent: React.FC<{
           minWidth: "345px",
         }}
         open={openCustomModalState}
+        onCancel={handleCancelCustomModal}
+        maskClosable={maskClosableCustomModal}
+        closable={closableCustomModal}
         destroyOnClose={true}
         footer={null}
-        maskClosable={false}
-        closable={false}
         centered
       >
         <div
