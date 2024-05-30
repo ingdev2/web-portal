@@ -3,12 +3,20 @@
 import React, { ReactNode, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Avatar, Button, Card, List, Space } from "antd";
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Row,
+  List,
+  Space,
+  Descriptions,
+} from "antd";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
-import { FcInfo } from "react-icons/fc";
-
-import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
+import CustomMessage from "@/components/common/custom_messages/CustomMessage";
+import { FcHighPriority } from "react-icons/fc";
 
 import { setErrorsMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
@@ -16,11 +24,12 @@ import { useDeletedMedicalReqMutation } from "@/redux/apis/medical_req/medicalRe
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
 
-import { typesMap } from "./helpers/types_map";
-import { getTagComponentType } from "./helpers/CustomTagsTypes";
-import { statusMap } from "./helpers/status_map";
-import { getTagComponentStatus } from "./helpers/CustomTagsStatus";
-import CustomMessage from "@/components/common/custom_messages/CustomMessage";
+import { typesMap } from "@/helpers/medical_req_type_map/types_map";
+import { getTagComponentType } from "@/components/common/custom_tags_type/CustomTagsTypes";
+import { statusMap } from "@/helpers/medical_req_status_map/status_map";
+import { getTagComponentStatus } from "@/components/common/custom_tags_status/CustomTagsStatus";
+import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
+import RequestDetailsContent from "./request_details_content/RequestDetailsContent";
 
 const PatientRequestCardList: React.FC<{
   requestCardListData: MedicalReq[];
@@ -55,9 +64,30 @@ const PatientRequestCardList: React.FC<{
     (state) => state.medicalReq.errors
   );
 
+  const [selectedRequestIdLocalState, setSelectedRequestIdLocalState] =
+    useState("");
+  const [
+    selectedRequestFilingNumberLocalState,
+    setSelectedRequestFilingNumberLocalState,
+  ] = useState("");
+  const [selectedRequestTypeLocalState, setSelectedRequestTypeLocalState] =
+    useState<ReactNode>(null);
+  const [selectedRequestStatusLocalState, setSelectedRequestStatusLocalState] =
+    useState<ReactNode>(null);
+  const [
+    selectedRequestResponseDocumentsLocalState,
+    setSelectedRequestResponseDocumentsLocalState,
+  ] = useState<ReactNode>(null);
+  const [
+    selectedRequestUserCommentsLocalState,
+    setSelectedRequestUserCommentsLocalState,
+  ] = useState("");
+  const [
+    selectedRequestResponseCommentsLocalState,
+    setSelectedRequestResponseCommentsLocalState,
+  ] = useState("");
   const [modalOpenRequestDetails, setModalOpenRequestDetails] = useState(false);
   const [modalOpenDeleteRequest, setModalOpenDeleteRequest] = useState(false);
-  const [selectedRequestId, setSelectedRequestId] = useState("");
 
   const [isSubmittingDeletedMedicalReq, setIsSubmittingDeletedMedicalReq] =
     useState(false);
@@ -99,7 +129,9 @@ const PatientRequestCardList: React.FC<{
     try {
       setIsSubmittingDeletedMedicalReq(true);
 
-      const response: any = await deletedMedicalReqPatient(selectedRequestId);
+      const response: any = await deletedMedicalReqPatient(
+        selectedRequestIdLocalState
+      );
 
       var isDeletedMedicalReqError = response.error;
 
@@ -147,7 +179,41 @@ const PatientRequestCardList: React.FC<{
       {modalOpenRequestDetails && (
         <CustomModalNoContent
           openCustomModalState={modalOpenRequestDetails}
-          contentCustomModal={"DETALLES DE SOLICITUD"}
+          contentCustomModal={
+            <RequestDetailsContent
+              titleDescription1={"Detalles de solicitud"}
+              labelFilingNumber={"N° de Radicado:"}
+              selectedRequestFilingNumber={formatFilingNumber(
+                selectedRequestFilingNumberLocalState
+              )}
+              labelRequestType={"Tipo:"}
+              selectedRequestType={selectedRequestTypeLocalState}
+              labelRequestStatus={"Estado:"}
+              selectedRequestStatus={selectedRequestStatusLocalState}
+              labelResponseDocuments={"Documentos de respuesta a solicitud:"}
+              selectedRequestResponseDocuments={
+                selectedRequestResponseDocumentsLocalState ? (
+                  <span
+                    ref={selectedRequestResponseDocumentsLocalState?.toString()}
+                  >
+                    Ver documentos
+                  </span>
+                ) : (
+                  <b style={{ color: "#960202" }}>En proceso de revisión</b>
+                )
+              }
+              labelUserComments={"Comentarios de usuario"}
+              selectedRequestUserComments={
+                selectedRequestUserCommentsLocalState
+              }
+              labelRequestResponse={"Mensaje de respuesta a solicitud"}
+              selectedRequestResponse={
+                selectedRequestResponseCommentsLocalState || (
+                  <b style={{ color: "#960202" }}>En proceso de revisión</b>
+                )
+              }
+            />
+          }
           maskClosableCustomModal={true}
           closableCustomModal={true}
           handleCancelCustomModal={() => {
@@ -159,9 +225,14 @@ const PatientRequestCardList: React.FC<{
       {modalOpenDeleteRequest && (
         <CustomModalTwoOptions
           openCustomModalState={modalOpenDeleteRequest}
-          iconCustomModal={<FcInfo size={77} />}
+          iconCustomModal={<FcHighPriority size={77} />}
           titleCustomModal="¿Deseas eliminar esta solicitud?"
-          subtitleCustomModal="Se va a eliminar el requerimiento con numero de radicado:"
+          subtitleCustomModal={
+            <p>
+              Se va a eliminar el requerimiento con número de radicado: &nbsp;
+              <b>{formatFilingNumber(selectedRequestFilingNumberLocalState)}</b>
+            </p>
+          }
           handleCancelCustomModal={() => {
             setModalOpenDeleteRequest(false);
           }}
@@ -205,7 +276,9 @@ const PatientRequestCardList: React.FC<{
                 }}
                 // avatar={<Avatar src={item.avatar} />}
                 key={item.id}
-                title={`${titleCardList} ${item.filing_number}`}
+                title={`${titleCardList} ${formatFilingNumber(
+                  item.filing_number
+                )}`}
                 description={
                   <Space size={"small"} direction="vertical">
                     <div
@@ -308,6 +381,27 @@ const PatientRequestCardList: React.FC<{
                       color: "#F7F7F7",
                     }}
                     onClick={() => {
+                      setSelectedRequestFilingNumberLocalState(
+                        item.filing_number
+                      );
+                      setSelectedRequestTypeLocalState(
+                        getTagComponentType(typeMapList[item.requirement_type])
+                      );
+                      setSelectedRequestStatusLocalState(
+                        getTagComponentStatus(
+                          statusMapList[item.requirement_status]
+                        )
+                      );
+                      setSelectedRequestResponseDocumentsLocalState(
+                        item.documents_delivered
+                      );
+                      setSelectedRequestUserCommentsLocalState(
+                        item.user_message
+                      );
+                      setSelectedRequestResponseCommentsLocalState(
+                        item.response_comments
+                      );
+
                       setModalOpenRequestDetails(true);
                     }}
                     icon={iconButtonDetails}
@@ -322,7 +416,11 @@ const PatientRequestCardList: React.FC<{
                       color: "#F7F7F7",
                     }}
                     onClick={() => {
-                      setSelectedRequestId(item.id);
+                      setSelectedRequestIdLocalState(item.id);
+                      setSelectedRequestFilingNumberLocalState(
+                        item.filing_number
+                      );
+
                       setModalOpenDeleteRequest(true);
                     }}
                     icon={iconButtonDelete}
@@ -336,8 +434,9 @@ const PatientRequestCardList: React.FC<{
         )}
         // footer={null}
         pagination={{
-          align: "center",
           pageSize: 4,
+          align: "center",
+          position: "both",
         }}
       />
     </>

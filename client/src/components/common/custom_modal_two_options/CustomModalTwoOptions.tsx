@@ -10,7 +10,7 @@ import CustomSpin from "../custom_spin/CustomSpin";
 const CustomModalTwoOptions: React.FC<{
   iconCustomModal: ReactNode;
   titleCustomModal: string;
-  subtitleCustomModal: string;
+  subtitleCustomModal: ReactNode;
   openCustomModalState: boolean;
   handleCancelCustomModal: () => void;
   handleConfirmCustomModal: (e: React.MouseEvent<any>) => Promise<void>;

@@ -48,8 +48,8 @@ const ListOfRequests: React.FC = () => {
     isFetching: userMedicalReqFetching,
     error: userMedicalReqError,
   } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState, {
-    pollingInterval: 1000,
-    skipPollingIfUnfocused: true,
+    // pollingInterval: 7000,
+    // skipPollingIfUnfocused: true,
   });
 
   useEffect(() => {

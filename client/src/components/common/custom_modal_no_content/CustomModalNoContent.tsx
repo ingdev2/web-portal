@@ -21,9 +21,10 @@ const CustomModalNoContent: React.FC<{
     <div>
       <Modal
         className="custom-modal-no-content"
-        width={371}
+        width={"371px"}
         style={{
           minWidth: "345px",
+          paddingBlock: "31px",
         }}
         open={openCustomModalState}
         onCancel={handleCancelCustomModal}
