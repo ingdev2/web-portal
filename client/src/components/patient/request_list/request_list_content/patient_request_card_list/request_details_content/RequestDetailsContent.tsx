@@ -20,6 +20,8 @@ const RequestDetailsContent: React.FC<{
   selectedRequestUserComments: string;
   labelRequestResponse: string;
   selectedRequestResponse: ReactNode;
+  labelReasonsForRejection: string;
+  selectedRequestReasonsForRejection: ReactNode;
 }> = ({
   titleDescription1,
   labelFilingNumber,
@@ -34,14 +36,9 @@ const RequestDetailsContent: React.FC<{
   selectedRequestUserComments,
   labelRequestResponse,
   selectedRequestResponse,
+  labelReasonsForRejection,
+  selectedRequestReasonsForRejection,
 }) => {
-  // const {
-  //   data: userMedicalReqTypeData,
-  //   isLoading: userMedicalReqTypeLoading,
-  //   isFetching: userMedicalReqTypeFetching,
-  //   error: userMedicalReqTypeError,
-  // } = useGetAllMedicalReqTypesQuery(null);
-
   return (
     <Col
       style={{
@@ -65,6 +62,9 @@ const RequestDetailsContent: React.FC<{
         bordered
       >
         <Descriptions.Item
+          contentStyle={{
+            padding: "13px 13px",
+          }}
           label={labelFilingNumber}
           style={{ textAlign: "center" }}
           span={3}
@@ -73,6 +73,9 @@ const RequestDetailsContent: React.FC<{
         </Descriptions.Item>
 
         <Descriptions.Item
+          contentStyle={{
+            padding: "13px 13px",
+          }}
           label={labelRequestType}
           style={{ textAlign: "center" }}
           span={3}
@@ -81,6 +84,9 @@ const RequestDetailsContent: React.FC<{
         </Descriptions.Item>
 
         <Descriptions.Item
+          contentStyle={{
+            padding: "13px 13px",
+          }}
           label={labelRequestStatus}
           style={{ textAlign: "center" }}
           span={3}
@@ -89,6 +95,9 @@ const RequestDetailsContent: React.FC<{
         </Descriptions.Item>
 
         <Descriptions.Item
+          contentStyle={{
+            padding: "13px",
+          }}
           label={labelResponseDocuments}
           style={{ textAlign: "center" }}
           span={3}
@@ -101,7 +110,7 @@ const RequestDetailsContent: React.FC<{
         className="description2-request-details"
         layout="vertical"
         size="middle"
-        style={{ paddingBlock: "13px" }}
+        style={{ paddingBlock: "7px" }}
         labelStyle={{
           ...titleStyleCss,
         }}
@@ -116,6 +125,14 @@ const RequestDetailsContent: React.FC<{
           span={3}
         >
           {selectedRequestResponse}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelReasonsForRejection}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedRequestReasonsForRejection}
         </Descriptions.Item>
 
         <Descriptions.Item

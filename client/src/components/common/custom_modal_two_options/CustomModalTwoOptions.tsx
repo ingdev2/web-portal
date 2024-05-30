@@ -30,9 +30,10 @@ const CustomModalTwoOptions: React.FC<{
     <div>
       <Modal
         className="custom-modal-two-options"
-        width={371}
+        width={"45%"}
         style={{
           minWidth: "345px",
+          paddingBlock: "31px",
         }}
         open={openCustomModalState}
         onOk={handleConfirmCustomModal}

@@ -1293,23 +1293,28 @@ export class MedicalReqService {
       );
     }
 
-    if (!rejectedStatus.motive_for_rejection) {
+    if (
+      !rejectedStatus.motive_for_rejection ||
+      rejectedStatus.motive_for_rejection.length === 0
+    ) {
       throw new HttpException(
         'Debes ingresar mínimo un motivo de rechazo.',
         HttpStatus.NOT_FOUND,
       );
     }
 
-    const motiveOfRejection = await this.reasonsForRejectionRepository.findOne({
+    const motiveOfRejection = await this.reasonsForRejectionRepository.find({
       where: {
         id: In(rejectedStatus.motive_for_rejection),
       },
     });
 
-    if (!motiveOfRejection) {
+    if (
+      motiveOfRejection.length !== rejectedStatus.motive_for_rejection.length
+    ) {
       throw new HttpException(
-        'El motivo de rechazo no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Uno o más motivos de rechazo no son válidos.',
+        HttpStatus.NOT_FOUND,
       );
     }
 

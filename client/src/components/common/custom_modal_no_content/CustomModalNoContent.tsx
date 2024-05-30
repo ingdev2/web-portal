@@ -21,7 +21,7 @@ const CustomModalNoContent: React.FC<{
     <div>
       <Modal
         className="custom-modal-no-content"
-        width={"371px"}
+        width={"72%"}
         style={{
           minWidth: "345px",
           paddingBlock: "31px",

@@ -179,10 +179,10 @@ const ListOfRequests: React.FC = () => {
             descriptionCardList2="Estado de solicitud:"
             descriptionCardList3="Fecha de solicitud:"
             descriptionCardList4="Fecha de respuesta:"
-            iconButtonDetails={<FaRegEye />}
+            iconButtonDetails={<FaRegEye size={17} />}
             titleButtonDetails="Ver detalles"
             backgroundColorButtonDetails="#015E90"
-            iconButtonDelete={<MdDeleteOutline />}
+            iconButtonDelete={<MdDeleteOutline size={17} />}
             titleButtonDelete="Eliminar"
             backgroundColorButtonDelete="#8C1111"
           />

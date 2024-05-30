@@ -16,6 +16,7 @@ import {
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
+import { TbEye } from "react-icons/tb";
 import { FcHighPriority } from "react-icons/fc";
 
 import { setErrorsMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
@@ -23,11 +24,13 @@ import { setErrorsMedicalReq } from "@/redux/features/medical_req/medicalReqSlic
 import { useDeletedMedicalReqMutation } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
+import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
 
 import { typesMap } from "@/helpers/medical_req_type_map/types_map";
 import { getTagComponentType } from "@/components/common/custom_tags_type/CustomTagsTypes";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
 import { getTagComponentStatus } from "@/components/common/custom_tags_status/CustomTagsStatus";
+import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
 import RequestDetailsContent from "./request_details_content/RequestDetailsContent";
 
@@ -79,6 +82,10 @@ const PatientRequestCardList: React.FC<{
     setSelectedRequestResponseDocumentsLocalState,
   ] = useState<ReactNode>(null);
   const [
+    selectedRequestReasonsForRejectionLocalState,
+    setSelectedRequestReasonsForRejectionLocalState,
+  ] = useState<string[]>([]);
+  const [
     selectedRequestUserCommentsLocalState,
     setSelectedRequestUserCommentsLocalState,
   ] = useState("");
@@ -120,8 +127,26 @@ const PatientRequestCardList: React.FC<{
     fixedCacheKey: "deletedMedicalReqPatientData",
   });
 
+  const {
+    data: userMedicalReqReasonsForRejectionData,
+    isLoading: userMedicalReqReasonsForRejectionLoading,
+    isFetching: userMedicalReqReasonsForRejectionFetching,
+    error: userMedicalReqReasonsForRejectionError,
+  } = useGetAllMedicalReqReasonsForRejectionQuery(null);
+
   const typeMapList = typesMap(userMedicalReqTypeData || []);
   const statusMapList = statusMap(userMedicalReqStatusData || []);
+  const updateSelectedRequestReasonsForRejection = (
+    motiveIds: number[] = [],
+    reasonMap: { [key: number]: string }
+  ) => {
+    const rejectionTitles = motiveIds.map((id) => reasonMap[id]);
+    setSelectedRequestReasonsForRejectionLocalState(rejectionTitles);
+  };
+
+  const reasonForRejectionMapList = reasonForRejectionMap(
+    userMedicalReqReasonsForRejectionData || []
+  );
 
   const handleConfirmDataModal = async (
     e: React.FormEvent<HTMLFormElement>
@@ -193,13 +218,39 @@ const PatientRequestCardList: React.FC<{
               labelResponseDocuments={"Documentos de respuesta a solicitud:"}
               selectedRequestResponseDocuments={
                 selectedRequestResponseDocumentsLocalState ? (
-                  <span
-                    ref={selectedRequestResponseDocumentsLocalState?.toString()}
+                  <Button
+                    className="documents-response-link-button"
+                    size="middle"
+                    icon={<TbEye size={17} />}
+                    style={{
+                      display: "flex",
+                      flexFlow: "column wrap",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#015E90",
+                      color: "#F7F7F7",
+                    }}
+                    href={selectedRequestResponseDocumentsLocalState?.toString()}
+                    target="_blank"
                   >
                     Ver documentos
-                  </span>
+                  </Button>
                 ) : (
-                  <b style={{ color: "#960202" }}>En proceso de revisión</b>
+                  <b style={{ color: "#960202" }}>No hay documentos anexados</b>
+                )
+              }
+              labelReasonsForRejection="Motivos de rechazo de solicitud"
+              selectedRequestReasonsForRejection={
+                selectedRequestReasonsForRejectionLocalState.length > 0 ? (
+                  <ul>
+                    {selectedRequestReasonsForRejectionLocalState.map(
+                      (reason, index) => (
+                        <li key={index}>{reason}</li>
+                      )
+                    )}
+                  </ul>
+                ) : (
+                  <b style={{ color: "#960202" }}>No aplica</b>
                 )
               }
               labelUserComments={"Comentarios de usuario"}
@@ -375,8 +426,13 @@ const PatientRequestCardList: React.FC<{
               >
                 <Space size={"middle"}>
                   <Button
+                    className="view-details-medical-req-button"
                     size="middle"
                     style={{
+                      display: "flex",
+                      flexFlow: "column wrap",
+                      alignContent: "center",
+                      justifyContent: "center",
                       backgroundColor: backgroundColorButtonDetails,
                       color: "#F7F7F7",
                     }}
@@ -401,6 +457,10 @@ const PatientRequestCardList: React.FC<{
                       setSelectedRequestResponseCommentsLocalState(
                         item.response_comments
                       );
+                      updateSelectedRequestReasonsForRejection(
+                        item.motive_for_rejection || [],
+                        reasonForRejectionMapList
+                      );
 
                       setModalOpenRequestDetails(true);
                     }}
@@ -410,8 +470,14 @@ const PatientRequestCardList: React.FC<{
                   </Button>
 
                   <Button
+                    className="delete-medical-req-button"
                     size="middle"
                     style={{
+                      width: "100%",
+                      display: "flex",
+                      flexFlow: "column wrap",
+                      alignContent: "center",
+                      justifyContent: "center",
                       backgroundColor: backgroundColorButtonDelete,
                       color: "#F7F7F7",
                     }}
