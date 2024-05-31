@@ -159,7 +159,7 @@ const ListOfRequests: React.FC = () => {
             alignContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginTop: "13px",
+            marginTop: "7px",
           }}
         >
           <h4

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { signIn, signOut, useSession } from "next-auth/react";
 
@@ -41,12 +41,6 @@ const ButtonAuth = () => {
     isFetching: isUserEpsFetching,
     isError: isUserEpsError,
   } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      signOut();
-    }
-  }, [status]);
 
   console.log({ session, status });
 

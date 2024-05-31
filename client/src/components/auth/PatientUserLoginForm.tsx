@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
+import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
 
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
@@ -27,6 +29,7 @@ import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 
 const PatientUserLoginForm: React.FC = () => {
+  const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -98,6 +101,13 @@ const PatientUserLoginForm: React.FC = () => {
       );
       setShowErrorMessagePatient(true);
       dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
+    }
+    if (
+      (status === "authenticated" &&
+        session?.user.role === UserRolType.PATIENT) ||
+      session?.user.role === UserRolType.EPS
+    ) {
+      signOut();
     }
   }, [
     idTypesPatientData,

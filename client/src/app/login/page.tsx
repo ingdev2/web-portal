@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
+import React from "react";
 
 import PatientUserLoginForm from "@/components/auth/PatientUserLoginForm";
 import EpsUserLoginForm from "@/components/auth/EpsUserLoginForm";
@@ -13,20 +10,6 @@ import { FaUser } from "react-icons/fa";
 import { IoIosBusiness } from "react-icons/io";
 
 const UsersLoginPage: React.FC = () => {
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    if (
-      status === "authenticated" &&
-      session?.user.role === UserRolType.PATIENT
-    ) {
-      redirect("/patient/homepage");
-    }
-    if (status === "authenticated" && session?.user.role === UserRolType.EPS) {
-      redirect("/eps/homepage");
-    }
-  }, [status, session]);
-
   return (
     <div
       style={{

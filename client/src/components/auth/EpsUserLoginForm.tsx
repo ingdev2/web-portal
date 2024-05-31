@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
 
 import { Button, Card, Col, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
@@ -26,6 +28,7 @@ import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
 
 const EpsUserLoginForm: React.FC = () => {
+  const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
   const idTypeOptionsEps = useAppSelector(
@@ -78,6 +81,13 @@ const EpsUserLoginForm: React.FC = () => {
       );
       setShowErrorMessageEps(true);
       dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
+    }
+    if (
+      (status === "authenticated" &&
+        session?.user.role === UserRolType.PATIENT) ||
+      session?.user.role === UserRolType.EPS
+    ) {
+      signOut();
     }
   }, [idTypesEpsData, idTypesEpsLoading, idTypesEpsFetching, idTypesEpsError]);
 

@@ -1,11 +1,14 @@
 "use-client";
 
-import React, { ReactNode, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Avatar, Button, Card, List, Space } from "antd";
+import { Avatar, Button, Card, List, Col, Row, Space, SelectProps } from "antd";
+import RequestDetailsContent from "./request_details_content/RequestDetailsContent";
+import CustomSelectTagMultipleOptions from "@/components/common/custom_select_tag_multiple_options/CustomSelectTagMultipleOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { TbEye } from "react-icons/tb";
 import { FcHighPriority } from "react-icons/fc";
@@ -21,9 +24,9 @@ import { typesMap } from "@/helpers/medical_req_type_map/types_map";
 import { getTagComponentType } from "@/components/common/custom_tags_type/CustomTagsTypes";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
 import { getTagComponentStatus } from "@/components/common/custom_tags_status/CustomTagsStatus";
+import { updateSelectedRequestReasonsForRejection } from "@/helpers/medical_req_reason_for_rejection_map/update_selected_reasons_for_rejection";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
-import RequestDetailsContent from "./request_details_content/RequestDetailsContent";
 
 const PatientRequestCardList: React.FC<{
   requestCardListData: MedicalReq[];
@@ -84,6 +87,14 @@ const PatientRequestCardList: React.FC<{
     selectedRequestResponseCommentsLocalState,
     setSelectedRequestResponseCommentsLocalState,
   ] = useState("");
+
+  const [typesOfRequestLocalState, setTypesOfRequestLocalState] = useState<
+    SelectProps["options"]
+  >([]);
+  const [statusOfRequestLocalState, setStatusOfRequestLocalState] = useState<
+    SelectProps["options"]
+  >([]);
+
   const [modalOpenRequestDetails, setModalOpenRequestDetails] = useState(false);
   const [modalOpenDeleteRequest, setModalOpenDeleteRequest] = useState(false);
 
@@ -127,17 +138,65 @@ const PatientRequestCardList: React.FC<{
 
   const typeMapList = typesMap(userMedicalReqTypeData || []);
   const statusMapList = statusMap(userMedicalReqStatusData || []);
-  const updateSelectedRequestReasonsForRejection = (
-    motiveIds: number[] = [],
-    reasonMap: { [key: number]: string }
-  ) => {
-    const rejectionTitles = motiveIds.map((id) => reasonMap[id]);
-    setSelectedRequestReasonsForRejectionLocalState(rejectionTitles);
-  };
 
   const reasonForRejectionMapList = reasonForRejectionMap(
     userMedicalReqReasonsForRejectionData || []
   );
+
+  useEffect(() => {
+    if (
+      userMedicalReqTypeData &&
+      !userMedicalReqTypeLoading &&
+      !userMedicalReqTypeFetching
+    ) {
+      const formattedTypesOfRequest = userMedicalReqTypeData.map(
+        (type: any) => ({
+          value: type.id.toString(),
+          label: type.name,
+        })
+      );
+      setTypesOfRequestLocalState(formattedTypesOfRequest);
+    }
+    if (userMedicalReqTypeError) {
+      dispatch(
+        setErrorsMedicalReq(
+          "¡No se pudo obtener los tipos de requerimientos médicos!"
+        ),
+        setShowErrorMessageMedicalReq(true)
+      );
+    }
+
+    if (
+      userMedicalReqStatusData &&
+      !userMedicalReqStatusLoading &&
+      !userMedicalReqStatusFetching
+    ) {
+      const formattedStatusOfRequest = userMedicalReqStatusData.map(
+        (status: any) => ({
+          value: status.id.toString(),
+          label: status.name,
+        })
+      );
+      setStatusOfRequestLocalState(formattedStatusOfRequest);
+    }
+    if (userMedicalReqStatusError) {
+      dispatch(
+        setErrorsMedicalReq(
+          "¡No se pudo obtener los estados de requerimientos médicos!"
+        ),
+        setShowErrorMessageMedicalReq(true)
+      );
+    }
+  }, [
+    userMedicalReqTypeData,
+    userMedicalReqTypeLoading,
+    userMedicalReqTypeFetching,
+    userMedicalReqTypeError,
+    userMedicalReqStatusData,
+    userMedicalReqStatusLoading,
+    userMedicalReqStatusFetching,
+    userMedicalReqStatusError,
+  ]);
 
   const handleConfirmDataModal = async (
     e: React.FormEvent<HTMLFormElement>
@@ -290,12 +349,46 @@ const PatientRequestCardList: React.FC<{
         />
       )}
 
+      <Col
+        xs={24}
+        sm={24}
+        md={24}
+        lg={24}
+        style={{
+          width: "100%",
+          display: "flex",
+          flexFlow: "row wrap",
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <Col xs={24} sm={12} md={12} lg={12}>
+          {userMedicalReqTypeLoading || userMedicalReqTypeFetching ? (
+            <CustomSpin />
+          ) : (
+            <CustomSelectTagMultipleOptions
+              placeholderCustomSelect="Filtrar por tipo"
+              defaultValueCustomSelect={[]}
+              optionsCustomSelect={typesOfRequestLocalState}
+            />
+          )}
+        </Col>
+
+        <Col xs={24} sm={12} md={12} lg={12}>
+          <CustomSelectTagMultipleOptions
+            placeholderCustomSelect="Filtrar por estado"
+            defaultValueCustomSelect={[]}
+            optionsCustomSelect={statusOfRequestLocalState}
+          />
+        </Col>
+      </Col>
+
       <List
         className="list-of-medical-reqs-cards"
         itemLayout="vertical"
         size="large"
         dataSource={requestCardListData}
-        style={{ margin: "0px", paddingBlock: "0px" }}
+        style={{ margin: "0px", padding: "0px" }}
         renderItem={(item) => (
           <Card
             key={"card-list-of-request"}
@@ -456,7 +549,8 @@ const PatientRequestCardList: React.FC<{
                       );
                       updateSelectedRequestReasonsForRejection(
                         item.motive_for_rejection || [],
-                        reasonForRejectionMapList
+                        reasonForRejectionMapList,
+                        setSelectedRequestReasonsForRejectionLocalState
                       );
 
                       setModalOpenRequestDetails(true);
