@@ -84,17 +84,6 @@ const PatientUserLoginForm: React.FC = () => {
 
   useEffect(() => {
     if (
-      !idTypePatientLocalState ||
-      !idNumberPatientLocalState ||
-      !passwordPatientLocalState
-    ) {
-      dispatch(resetLoginStatePatient());
-    }
-    if (idPatientState || affiliationEpsPatientState) {
-      dispatch(resetLoginStatePatient());
-      dispatch(setDefaultValuesUserPatient());
-    }
-    if (
       !idTypesPatientLoading &&
       !idTypesPatientFetching &&
       idTypesPatientData
@@ -113,16 +102,15 @@ const PatientUserLoginForm: React.FC = () => {
   }, [
     idTypesPatientData,
     idTypesPatientLoading,
+    idTypesPatientFetching,
     idTypesPatientError,
-    isSubmittingPatient,
-    isLoginPatientError,
-    idPatientState,
-    affiliationEpsPatientState,
   ]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
+      dispatch(resetLoginStatePatient());
+      dispatch(setDefaultValuesUserPatient());
 
       const idNumberPatientLocalStateInt = idNumberPatientLocalState
         ? parseInt(idNumberPatientLocalState?.toString(), 10)

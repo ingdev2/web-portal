@@ -25,7 +25,7 @@ const UsersLoginPage: React.FC = () => {
     if (status === "authenticated" && session?.user.role === UserRolType.EPS) {
       redirect("/eps/homepage");
     }
-  }, [status]);
+  }, [status, session]);
 
   return (
     <div

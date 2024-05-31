@@ -3,16 +3,7 @@
 import React, { ReactNode, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Row,
-  List,
-  Space,
-  Descriptions,
-} from "antd";
+import { Avatar, Button, Card, List, Space } from "antd";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
@@ -221,19 +212,25 @@ const PatientRequestCardList: React.FC<{
                   <Button
                     className="documents-response-link-button"
                     size="middle"
-                    icon={<TbEye size={17} />}
                     style={{
-                      display: "flex",
-                      flexFlow: "column wrap",
-                      alignContent: "center",
-                      justifyContent: "center",
                       backgroundColor: "#015E90",
                       color: "#F7F7F7",
                     }}
                     href={selectedRequestResponseDocumentsLocalState?.toString()}
                     target="_blank"
                   >
-                    Ver documentos
+                    <div
+                      style={{
+                        minWidth: "137px",
+                        display: "flex",
+                        flexFlow: "row wrap",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <TbEye size={17} />
+                      &nbsp;Ver documentos
+                    </div>
                   </Button>
                 ) : (
                   <b style={{ color: "#960202" }}>No hay documentos anexados</b>
@@ -473,7 +470,6 @@ const PatientRequestCardList: React.FC<{
                     className="delete-medical-req-button"
                     size="middle"
                     style={{
-                      width: "100%",
                       display: "flex",
                       flexFlow: "column wrap",
                       alignContent: "center",

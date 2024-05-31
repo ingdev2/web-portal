@@ -155,6 +155,7 @@ const ListOfRequests: React.FC = () => {
           style={{
             width: "100%",
             maxWidth: "540px",
+            minWidth: "405px",
             alignContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",

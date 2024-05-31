@@ -41,10 +41,16 @@ const RequestDetailsContent: React.FC<{
 }) => {
   return (
     <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
       style={{
+        width: "100%",
         display: "flex",
         flexFlow: "column wrap",
-        width: "100%",
+        padding: "2px",
+        margin: "0px",
       }}
     >
       <Descriptions
@@ -96,10 +102,13 @@ const RequestDetailsContent: React.FC<{
 
         <Descriptions.Item
           contentStyle={{
-            padding: "13px",
+            padding: "7px",
+            margin: "7px",
           }}
           label={labelResponseDocuments}
-          style={{ textAlign: "center" }}
+          style={{
+            textAlign: "center",
+          }}
           span={3}
         >
           {selectedRequestResponseDocuments}

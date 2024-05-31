@@ -69,17 +69,6 @@ const EpsUserLoginForm: React.FC = () => {
   ] = useLoginEpsUsersMutation({ fixedCacheKey: "loginEpsData" });
 
   useEffect(() => {
-    if (
-      !idTypeEpsLocalState ||
-      !idNumberEpsLocalState ||
-      !passwordEpsLocalState
-    ) {
-      dispatch(resetLoginStateLoginEps());
-    }
-    if (idEpsState || epsCompanyUserEps) {
-      dispatch(resetLoginStateLoginEps());
-      dispatch(setDefaultValuesUserEps());
-    }
     if (!idTypesEpsLoading && !idTypesEpsFetching && idTypesEpsData) {
       dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
@@ -90,19 +79,13 @@ const EpsUserLoginForm: React.FC = () => {
       setShowErrorMessageEps(true);
       dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
-  }, [
-    idTypesEpsData,
-    idTypesEpsLoading,
-    idTypesEpsError,
-    isSubmittingEps,
-    isLoginEpsError,
-    idEpsState,
-    epsCompanyUserEps,
-  ]);
+  }, [idTypesEpsData, idTypesEpsLoading, idTypesEpsFetching, idTypesEpsError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingEps(true);
+      dispatch(resetLoginStateLoginEps());
+      dispatch(setDefaultValuesUserEps());
 
       const idNumberEpsLocalStateInt = idNumberEpsLocalState
         ? parseInt(idNumberEpsLocalState?.toString(), 10)
