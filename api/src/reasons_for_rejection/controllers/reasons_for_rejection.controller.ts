@@ -13,6 +13,7 @@ import { UpdateReasonsForRejectionDto } from '../dto/update-reasons_for_rejectio
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
+import { UserRolType } from 'src/utils/enums/user_roles.enum';
 
 @ApiTags('reasons-for-rejection')
 @ApiBearerAuth()
@@ -36,6 +37,7 @@ export class ReasonsForRejectionController {
 
   // GET METHODS //
 
+  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
   @Get('/getAll')
   getAllReasonsForRejection() {
     return this.reasonsForRejectionService.getAllReasonsForRejection();

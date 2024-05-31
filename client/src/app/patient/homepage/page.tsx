@@ -13,6 +13,7 @@ import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { redirect } from "next/navigation";
 
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
@@ -39,16 +40,18 @@ const HomePagePatient = () => {
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientLoginState);
 
   useEffect(() => {
+    if (!idNumberPatientState) {
+      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
+    }
     if (!idNumberUserPatientLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
-    }
-    if (!idNumberPatientState) {
-      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
+      redirect("/login");
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
+      redirect("/login");
     }
   }, [status, idNumberUserPatientLoginState, idNumberPatientState]);
 

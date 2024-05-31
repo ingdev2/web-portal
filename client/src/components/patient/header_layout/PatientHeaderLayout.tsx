@@ -16,6 +16,7 @@ import {
   setNameUserPatient,
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
+import { resetLoginStatePatient } from "@/redux/features/login/patientUserLoginSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
@@ -53,11 +54,11 @@ const PatienHeaderLayout: React.FC = () => {
     }
   };
 
-  const handleClickSignOut = async () => {
+  const handleClickSignOut = () => {
     try {
+      dispatch(resetLoginStatePatient());
       dispatch(setDefaultValuesUserPatient());
-
-      const response = await signOut();
+      signOut();
     } catch (error) {
       console.error(error);
     } finally {

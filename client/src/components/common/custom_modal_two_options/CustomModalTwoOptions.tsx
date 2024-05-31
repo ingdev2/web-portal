@@ -10,7 +10,7 @@ import CustomSpin from "../custom_spin/CustomSpin";
 const CustomModalTwoOptions: React.FC<{
   iconCustomModal: ReactNode;
   titleCustomModal: string;
-  subtitleCustomModal: string;
+  subtitleCustomModal: ReactNode;
   openCustomModalState: boolean;
   handleCancelCustomModal: () => void;
   handleConfirmCustomModal: (e: React.MouseEvent<any>) => Promise<void>;
@@ -30,17 +30,18 @@ const CustomModalTwoOptions: React.FC<{
     <div>
       <Modal
         className="custom-modal-two-options"
-        width={371}
+        width={"45%"}
         style={{
           minWidth: "345px",
+          paddingBlock: "31px",
         }}
         open={openCustomModalState}
         onOk={handleConfirmCustomModal}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancelCustomModal}
         destroyOnClose={true}
-        footer={null}
         maskClosable={true}
+        footer={null}
         centered
       >
         <div

@@ -175,7 +175,12 @@ export class MedicalReqController {
     );
   }
 
-  @Auth(AdminRolType.ADMIN)
+  @Auth(
+    AdminRolType.ADMIN,
+    UserRolType.PATIENT,
+    UserRolType.EPS,
+    UserRolType.AUTHORIZED_FAMILIAR,
+  )
   @Patch('/deleted/:reqId')
   async deletedMedicalReq(@Param('reqId') reqId: string) {
     return await this.medicalReqService.deletedMedicalReq(reqId);

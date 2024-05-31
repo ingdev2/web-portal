@@ -4,27 +4,21 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Col } from "antd";
+import { Button, Card } from "antd";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import { IoMdArrowRoundBack } from "react-icons/io";
 import PatientRequestCardList from "@/components/patient/request_list/request_list_content/patient_request_card_list/PatientRequestCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
-import CustomTags from "@/components/common/custom_tags/CustomTags";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { MdPostAdd } from "react-icons/md";
 import { FaRegEye } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 
-import {
-  setIdUserPatient,
-  setMedicalReqUserPatient,
-} from "@/redux/features/patient/patientSlice";
+import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import {
-  useGetAllMedicalReqOfAUsersQuery,
-  useGetAllMedicalReqOfAFamiliarQuery,
-} from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetAllMedicalReqOfAUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
 const ListOfRequests: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +32,6 @@ const ListOfRequests: React.FC = () => {
     (state) => state.medicalReq.errors
   );
 
-  const [modalOpenRequestDetails, setModalOpenRequestDetails] = useState(false);
   const [showErrorMessageMedicalReq, setShowErrorMessageMedicalReq] =
     useState(false);
 
@@ -54,7 +47,10 @@ const ListOfRequests: React.FC = () => {
     isLoading: userMedicalReqLoading,
     isFetching: userMedicalReqFetching,
     error: userMedicalReqError,
-  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState);
+  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState, {
+    // pollingInterval: 7000,
+    // skipPollingIfUnfocused: true,
+  });
 
   useEffect(() => {
     if (
@@ -73,129 +69,148 @@ const ListOfRequests: React.FC = () => {
   ]);
 
   return (
-    <>
-      <Col
-        xs={24}
-        sm={24}
-        md={24}
-        lg={24}
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexFlow: "column wrap",
+        alignContent: "center",
+        paddingInline: "22px",
+      }}
+    >
+      {showErrorMessageMedicalReq && (
+        <CustomMessage
+          typeMessage="error"
+          message={
+            medicalReqErrorsState?.toString() || "¡Error en la petición!"
+          }
+        />
+      )}
+
+      <div
         style={{
-          width: "100%",
           display: "flex",
-          flexFlow: "column wrap",
-          alignContent: "center",
-          paddingInline: "31px",
+          flexFlow: "row wrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingBlock: "7px",
+          paddingInline: "7px",
         }}
       >
-        <div
+        <Button
           style={{
+            color: "#015E90",
+            fontWeight: "bold",
             display: "flex",
             flexFlow: "row wrap",
-            justifyContent: "flex-start",
-            paddingBlock: "7px",
+            alignContent: "center",
+            alignItems: "center",
             paddingInline: "7px",
           }}
+          type="link"
+          size="large"
+          className="back-to-homepage-button"
+          icon={<IoMdArrowRoundBack size={17} />}
+          onClick={() => {
+            router.push("/patient/homepage", {
+              scroll: true,
+            });
+          }}
         >
-          <Button
-            style={{
-              paddingInline: "7px",
-              color: "#015E90",
-              fontWeight: "bold",
-              display: "flex",
-              flexFlow: "row wrap",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-            type="link"
-            size="large"
-            className="back-to-homepage-button"
-            icon={<IoMdArrowRoundBack size={17} />}
-            onClick={() => {
-              router.push("/patient/homepage", {
-                scroll: true,
-              });
-            }}
-          >
-            Ir a inicio
-          </Button>
-        </div>
+          Ir a inicio
+        </Button>
 
+        <Button
+          style={{
+            backgroundColor: "#1D8348",
+            color: "#f2f2f2",
+            fontWeight: "bold",
+            display: "flex",
+            flexFlow: "row wrap",
+            alignContent: "center",
+            alignItems: "center",
+            paddingInline: "13px",
+          }}
+          type="primary"
+          size="middle"
+          className="go-to-create-request-page-button"
+          icon={<MdPostAdd size={17} />}
+          onClick={() => {
+            router.push("/patient/homepage/create_request", {
+              scroll: true,
+            });
+          }}
+        >
+          Crear solicitud
+        </Button>
+      </div>
+
+      {!userMedicalReqData &&
+      userMedicalReqLoading &&
+      userMedicalReqFetching ? (
+        <CustomSpin />
+      ) : Array.isArray(userMedicalReqData) ? (
         <Card
           key={"card-list-of-request-content"}
           style={{
             width: "100%",
-            maxWidth: "720px",
-            display: "flex",
-            flexFlow: "column wrap",
-            alignItems: "center",
-            justifyContent: "center",
+            maxWidth: "540px",
+            minWidth: "405px",
+            alignContent: "center",
+            backgroundColor: "#fcfcfc",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+            marginTop: "7px",
+          }}
+        >
+          <h4
+            style={{
+              ...titleStyleCss,
+              fontSize: "13pt",
+              textAlign: "center",
+              paddingBottom: "7px",
+            }}
+          >
+            Total de <b>{userMedicalReqData.length} solicitud(es)</b>
+          </h4>
+
+          <PatientRequestCardList
+            requestCardListData={userMedicalReqData}
+            titleCardList="N° Radicado:"
+            descriptionCardList1="Tipo de solicitud:"
+            descriptionCardList2="Estado de solicitud:"
+            descriptionCardList3="Fecha de solicitud:"
+            descriptionCardList4="Fecha de respuesta:"
+            iconButtonDetails={<FaRegEye size={17} />}
+            titleButtonDetails="Ver detalles"
+            backgroundColorButtonDetails="#015E90"
+            iconButtonDelete={<MdDeleteOutline size={17} />}
+            titleButtonDelete="Eliminar"
+            backgroundColorButtonDelete="#8C1111"
+          />
+        </Card>
+      ) : (
+        <Card
+          key={"card-list-of-request-content"}
+          style={{
+            width: "100%",
+            maxWidth: "540px",
+            alignContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {showErrorMessageMedicalReq && (
-            <CustomMessage
-              typeMessage="error"
-              message={
-                medicalReqErrorsState?.toString() || "¡Error en la petición!"
-              }
-            />
-          )}
-
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-            style={{
-              padding: "0 2px",
+          <CustomEmptyButton
+            titleCustomEmpty="Sin solicitudes"
+            buttonCustomEmpty="Crear nueva solicitud"
+            handleClickCustomEmpty={() => {
+              router.push("/patient/homepage/create_request", {
+                scroll: true,
+              });
             }}
-          >
-            {!userMedicalReqData &&
-            userMedicalReqLoading &&
-            userMedicalReqFetching ? (
-              <CustomSpin />
-            ) : Array.isArray(userMedicalReqData) ? (
-              <>
-                <h4
-                  style={{
-                    ...titleStyleCss,
-                    textAlign: "center",
-                    paddingBottom: "7px",
-                  }}
-                >
-                  Total de <b>{userMedicalReqData.length} solicitud(es)</b>
-                </h4>
-
-                <PatientRequestCardList
-                  requestCardListData={userMedicalReqData}
-                  titleCardList="N° Radicado:"
-                  descriptionCardList="Fecha de solicitud:"
-                  iconButtonDetails={<FaRegEye />}
-                  titleButtonDetails="Ver detalles"
-                  backgroundColorButtonDetails="#015E90"
-                  onClickButtonDetails={() => {}}
-                  iconButtonDelete={<MdDeleteOutline />}
-                  titleButtonDelete="Eliminar"
-                  backgroundColorButtonDelete="#8C1111"
-                  onClickButtonDelete={() => {}}
-                />
-              </>
-            ) : (
-              <CustomEmptyButton
-                titleCustomEmpty="Sin solicitudes"
-                buttonCustomEmpty="Crear nueva solicitud"
-                handleClickCustomEmpty={() => {
-                  router.push("/patient/homepage/create_request", {
-                    scroll: true,
-                  });
-                }}
-              />
-            )}
-          </Col>
+          />
         </Card>
-      </Col>
-    </>
+      )}
+    </div>
   );
 };
 

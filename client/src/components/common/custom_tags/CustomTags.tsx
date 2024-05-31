@@ -9,7 +9,11 @@ const CustomTags: React.FC<{ tag: CustomTag }> = ({ tag }) => {
     <Tag
       key={tag.label}
       color={tag.color}
-      style={{ color: tag.textColor, margin: "0px", paddingInline: "13px" }}
+      style={{
+        color: tag.textColor,
+        margin: "0px",
+        paddingInline: "13px",
+      }}
     >
       {tag.label}
     </Tag>

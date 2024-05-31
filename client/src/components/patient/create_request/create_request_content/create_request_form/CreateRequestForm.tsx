@@ -202,217 +202,217 @@ const CreateRequestForm: React.FC = () => {
   };
 
   return (
-    <>
-      <Col
-        xs={24}
-        sm={24}
-        md={24}
-        lg={24}
+    <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
+      style={{
+        width: "100%",
+        display: "flex",
+        flexFlow: "column wrap",
+        alignContent: "center",
+        paddingInline: "31px",
+      }}
+    >
+      <div
         style={{
-          width: "100%",
           display: "flex",
-          flexFlow: "column wrap",
-          alignContent: "center",
-          paddingInline: "31px",
+          flexFlow: "row wrap",
+          justifyContent: "flex-start",
+          paddingBlock: "7px",
+          paddingInline: "7px",
         }}
       >
-        <div
+        <Button
           style={{
+            paddingInline: "7px",
+            color: "#015E90",
+            fontWeight: "bold",
             display: "flex",
             flexFlow: "row wrap",
-            justifyContent: "flex-start",
-            paddingBlock: "7px",
-            paddingInline: "7px",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+          type="link"
+          size="large"
+          className="back-to-homepage-button"
+          icon={<IoMdArrowRoundBack size={17} />}
+          onClick={() => {
+            router.push("/patient/homepage", {
+              scroll: true,
+            });
           }}
         >
-          <Button
+          Ir a inicio
+        </Button>
+      </div>
+
+      <Card
+        key={"card-create-medical-req-form"}
+        style={{
+          width: "100%",
+          maxWidth: "450px",
+          display: "flex",
+          flexFlow: "column wrap",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fcfcfc",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        {modalIsOpenConfirm && (
+          <CustomModalTwoOptions
+            key={"custom-confirm-modal-create-medical-req"}
+            openCustomModalState={modalIsOpenConfirm}
+            iconCustomModal={<FcInfo size={77} />}
+            titleCustomModal="¿Deseas crear una nueva solicitud?"
+            subtitleCustomModal={`Se realizará un nuevo requerimiento de tipo ${reqTypeNameLocalState}, del paciente ${nameUserPatientState}`}
+            handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
+            handleConfirmCustomModal={handleConfirmDataModal}
+            isSubmittingConfirm={isSubmittingNewMedicalReq}
+            handleClickCustomModal={handleButtonClick}
+          ></CustomModalTwoOptions>
+        )}
+
+        {modalIsOpenSuccess && (
+          <CustomModalNoContent
+            key={"custom-success-modal-create-medical-req"}
+            openCustomModalState={modalIsOpenSuccess}
+            closableCustomModal={false}
+            maskClosableCustomModal={false}
+            contentCustomModal={
+              <CustomResultOneButton
+                key={"medical-req-created-custom-result"}
+                statusTypeResult={"success"}
+                titleCustomResult="¡Solicitud Creada Correctamente!"
+                subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
+                handleClickCustomResult={handleGoToListOfMedicalReq}
+                isSubmittingButton={isSubmittingGoToListOfMedicalReq}
+                textButtonCustomResult="Ver mis solicitudes hechas"
+              />
+            }
+          ></CustomModalNoContent>
+        )}
+
+        {showErrorMessageMedicalReq && (
+          <CustomMessage
+            typeMessage="error"
+            message={
+              medicalReqErrorsState?.toString() || "¡Error en la petición!"
+            }
+          />
+        )}
+
+        <Form
+          id="create-medical-req-form"
+          name="create-medical-req-form"
+          className="create-medical-req-form"
+          onFinish={handleCreateRequest}
+          initialValues={{ remember: false }}
+          autoComplete="false"
+          layout="vertical"
+        >
+          <h2
+            className="title-create-medical-req-form"
             style={{
-              paddingInline: "7px",
-              color: "#015E90",
-              fontWeight: "bold",
-              display: "flex",
-              flexFlow: "row wrap",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-            type="link"
-            size="large"
-            className="back-to-homepage-button"
-            icon={<IoMdArrowRoundBack size={17} />}
-            onClick={() => {
-              router.push("/patient/homepage", {
-                scroll: true,
-              });
+              ...titleStyleCss,
+              textAlign: "center",
+              marginBottom: "22px",
             }}
           >
-            Ir a inicio
-          </Button>
-        </div>
+            Crear nueva solicitud de requerimiento médico
+          </h2>
 
-        <Card
-          key={"card-create-medical-req-form"}
-          style={{
-            width: "100%",
-            maxWidth: "450px",
-            display: "flex",
-            flexFlow: "column wrap",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#fcfcfc",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          {modalIsOpenConfirm && (
-            <CustomModalTwoOptions
-              key={"custom-confirm-modal-create-medical-req"}
-              iconCustomModal={<FcInfo size={77} />}
-              openCustomModalState={modalIsOpenConfirm}
-              titleCustomModal="¿Deseas crear una nueva solicitud?"
-              subtitleCustomModal={`Se realizará un nuevo requerimiento de tipo ${reqTypeNameLocalState}, del paciente ${nameUserPatientState}`}
-              handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
-              handleConfirmCustomModal={handleConfirmDataModal}
-              handleClickCustomModal={handleButtonClick}
-              isSubmittingConfirm={isSubmittingNewMedicalReq}
-            ></CustomModalTwoOptions>
-          )}
+          <Form.Item
+            name="medical-req-types"
+            label="Tipo de requerimiento médico"
+            style={{ marginBottom: "13px" }}
+            rules={[
+              {
+                required: true,
+                message:
+                  "¡Por favor selecciona el tipo de requerimiento a solicitar!",
+              },
+            ]}
+          >
+            {reqTypesLoading && reqTypesFetching && !reqTypesData ? (
+              <CustomSpin />
+            ) : (
+              <Select
+                value={reqTypeState}
+                placeholder="Tipo de requerimiento"
+                onChange={handleOnChangeSelect}
+              >
+                {typesMedicalReqState?.map((option: any) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
 
-          {modalIsOpenSuccess && (
-            <CustomModalNoContent
-              key={"custom-success-modal-create-medical-req"}
-              openCustomModalState={modalIsOpenSuccess}
-              contentCustomModal={
-                <CustomResultOneButton
-                  key={"medical-req-created-custom-result"}
-                  statusTypeResult={"success"}
-                  titleCustomResult="¡Solicitud Creada Correctamente!"
-                  subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                  handleClickCustomResult={handleGoToListOfMedicalReq}
-                  isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                  textButtonCustomResult="Ver mis solicitudes hechas"
-                />
-              }
-            ></CustomModalNoContent>
-          )}
+          <Form.Item
+            name="upload-files-reference-documents"
+            label="Documento(s) de referencia (opcional)"
+            style={{ marginBottom: "13px" }}
+            rules={[
+              {
+                required: false,
+                message: "¡Por favor adjunta mínimo un documento!",
+              },
+            ]}
+          >
+            <CustomUpload titleCustomUpload="Cargar documento" />
+          </Form.Item>
 
-          {showErrorMessageMedicalReq && (
-            <CustomMessage
-              typeMessage="error"
-              message={
-                medicalReqErrorsState?.toString() || "¡Error en la petición!"
+          <Form.Item
+            name="observations"
+            label="Observaciones y/o comentarios"
+            style={{ marginBottom: "31px" }}
+            rules={[
+              {
+                required: true,
+                message:
+                  "¡Por favor ingresa un mensaje de observación a tu solicitud!",
+              },
+            ]}
+          >
+            <TextArea
+              autoSize={{ minRows: 2, maxRows: 10 }}
+              maxLength={301}
+              value={userMessageMedicalReqState}
+              placeholder="Comentarios adicionales de la solicitud..."
+              onChange={(e) =>
+                dispatch(setUserMessageMedicalReq(e.target.value))
               }
             />
-          )}
+          </Form.Item>
 
-          <Form
-            id="create-medical-req-form"
-            name="create-medical-req-form"
-            className="create-medical-req-form"
-            onFinish={handleCreateRequest}
-            initialValues={{ remember: false }}
-            autoComplete="false"
-            layout="vertical"
-          >
-            <h2
-              className="title-create-medical-req-form"
-              style={{
-                ...titleStyleCss,
-                textAlign: "center",
-                marginBottom: "22px",
-              }}
-            >
-              Crear nueva solicitud de requerimiento médico
-            </h2>
-
-            <Form.Item
-              name="medical-req-types"
-              label="Tipo de requerimiento médico"
-              style={{ marginBottom: "13px" }}
-              rules={[
-                {
-                  required: true,
-                  message:
-                    "¡Por favor selecciona el tipo de requerimiento a solicitar!",
-                },
-              ]}
-            >
-              {reqTypesLoading && reqTypesFetching && !reqTypesData ? (
-                <CustomSpin />
-              ) : (
-                <Select
-                  value={reqTypeState}
-                  placeholder="Tipo de requerimiento"
-                  onChange={handleOnChangeSelect}
-                >
-                  {typesMedicalReqState?.map((option: any) => (
-                    <Select.Option key={option.id} value={option.id}>
-                      {option.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </Form.Item>
-
-            <Form.Item
-              name="upload-files-reference-documents"
-              label="Documento(s) de referencia (opcional)"
-              style={{ marginBottom: "13px" }}
-              rules={[
-                {
-                  required: false,
-                  message: "¡Por favor adjunta mínimo un documento!",
-                },
-              ]}
-            >
-              <CustomUpload titleCustomUpload="Cargar documento" />
-            </Form.Item>
-
-            <Form.Item
-              name="observations"
-              label="Observaciones y/o comentarios"
-              style={{ marginBottom: "31px" }}
-              rules={[
-                {
-                  required: true,
-                  message:
-                    "¡Por favor ingresa un mensaje de observación a tu solicitud!",
-                },
-              ]}
-            >
-              <TextArea
-                autoSize={{ minRows: 2, maxRows: 10 }}
-                maxLength={301}
-                value={userMessageMedicalReqState}
-                placeholder="Comentarios adicionales de la solicitud..."
-                onChange={(e) =>
-                  dispatch(setUserMessageMedicalReq(e.target.value))
-                }
-              />
-            </Form.Item>
-
-            <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
-              {isSubmittingConfirmModal && !modalIsOpenConfirm ? (
-                <CustomSpin />
-              ) : (
-                <Button
-                  size="large"
-                  style={{
-                    paddingInline: 62,
-                    borderRadius: 31,
-                    backgroundColor: "#015E90",
-                    color: "#f2f2f2",
-                  }}
-                  htmlType="submit"
-                  className="create-medical-req-form-button"
-                  onClick={handleButtonClick}
-                >
-                  Crear solicitud
-                </Button>
-              )}
-            </Form.Item>
-          </Form>
-        </Card>
-      </Col>
-    </>
+          <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
+            {isSubmittingConfirmModal && !modalIsOpenConfirm ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                size="large"
+                style={{
+                  paddingInline: 62,
+                  borderRadius: 31,
+                  backgroundColor: "#015E90",
+                  color: "#f2f2f2",
+                }}
+                htmlType="submit"
+                className="create-medical-req-form-button"
+                onClick={handleButtonClick}
+              >
+                Crear solicitud
+              </Button>
+            )}
+          </Form.Item>
+        </Form>
+      </Card>
+    </Col>
   );
 };
 

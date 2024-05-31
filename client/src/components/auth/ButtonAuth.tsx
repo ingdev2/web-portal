@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
+import { useState } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 import { Button } from "antd";
 import { subtitleStyleCss } from "@/theme/text_styles";
@@ -13,12 +13,9 @@ import {
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
 } from "@/redux/apis/users/usersApi";
-import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
-import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
 
 const ButtonAuth = () => {
-  const { data: session, status }: any = useSession();
-  const dispatch = useAppDispatch();
+  const { data: session, status } = useSession();
 
   const idNumberPatientState = useAppSelector(
     (state) => state.patientUserLogin.id_number
@@ -27,11 +24,6 @@ const ButtonAuth = () => {
   const idNumberEpsState = useAppSelector(
     (state) => state.epsUserLogin.id_number
   );
-
-  const affiliationEpsPatientState = useAppSelector(
-    (state) => state.patient.affiliation_eps
-  );
-  const epsCompanyUserEps = useAppSelector((state) => state.eps.eps_company);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -50,32 +42,6 @@ const ButtonAuth = () => {
     isError: isUserEpsError,
   } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
-  useEffect(() => {
-    if (isUserPatientData && idNumberPatientState) {
-      if (isUserPatientError) {
-        setShowErrorMessage(true);
-        setErrorMessage("¡Usuario no encontrado!");
-      }
-    }
-    if (isUserEpsData && idNumberEpsState) {
-      if (isUserEpsError) {
-        setShowErrorMessage(true);
-        setErrorMessage("¡Usuario no encontrado!");
-      }
-    }
-    if (affiliationEpsPatientState || epsCompanyUserEps) {
-      dispatch(setDefaultValuesUserPatient());
-      dispatch(setDefaultValuesUserEps());
-    }
-  }, [
-    isUserPatientData,
-    isUserPatientError,
-    idNumberPatientState,
-    isUserEpsData,
-    isUserEpsError,
-    idNumberEpsState,
-  ]);
-
   console.log({ session, status });
 
   if (status === "loading") {
@@ -90,7 +56,7 @@ const ButtonAuth = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginInline: 13,
+          marginInline: "13px",
         }}
       >
         {showErrorMessage && (
@@ -175,7 +141,6 @@ const ButtonAuth = () => {
           borderRadius: 31,
           backgroundColor: "#015E90",
           color: "#f2f2f2",
-          marginBottom: 13,
         }}
       >
         Ingresar al portal
