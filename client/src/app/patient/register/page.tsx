@@ -34,7 +34,6 @@ const RegisterPatientPage: React.FC = () => {
         height: "100vh",
         alignContent: "center",
         alignItems: "center",
-        marginBlock: 31,
       }}
     >
       <div
@@ -63,7 +62,7 @@ const RegisterPatientPage: React.FC = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 13,
+            paddingBlock: "22px",
           }}
         >
           <img

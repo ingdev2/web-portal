@@ -368,14 +368,14 @@ const CreateRequestForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            name="observations"
-            label="Observaciones y/o comentarios"
+            name="especifications"
+            label="Observaciones y/o detalles"
             style={{ marginBottom: "31px" }}
             rules={[
               {
                 required: true,
                 message:
-                  "¡Por favor ingresa un mensaje de observación a tu solicitud!",
+                  "¡Por favor, especifique detalles a tener en cuenta de su solicitud!",
               },
             ]}
           >
@@ -383,7 +383,7 @@ const CreateRequestForm: React.FC = () => {
               autoSize={{ minRows: 2, maxRows: 10 }}
               maxLength={301}
               value={userMessageMedicalReqState}
-              placeholder="Comentarios adicionales de la solicitud..."
+              placeholder="Especifique detalles a tener en cuenta de su solicitud. Ej. Fecha aprox. de procedimiento"
               onChange={(e) =>
                 dispatch(setUserMessageMedicalReq(e.target.value))
               }

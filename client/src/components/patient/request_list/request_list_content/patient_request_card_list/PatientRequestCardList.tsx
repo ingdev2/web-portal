@@ -295,7 +295,7 @@ const PatientRequestCardList: React.FC<{
                   <b style={{ color: "#960202" }}>No hay documentos anexados</b>
                 )
               }
-              labelReasonsForRejection="Motivos de rechazo de solicitud"
+              labelReasonsForRejection="Motivos de rechazo a solicitud"
               selectedRequestReasonsForRejection={
                 selectedRequestReasonsForRejectionLocalState.length > 0 ? (
                   <ul>
@@ -309,7 +309,7 @@ const PatientRequestCardList: React.FC<{
                   <b style={{ color: "#960202" }}>No aplica</b>
                 )
               }
-              labelUserComments={"Comentarios de usuario"}
+              labelUserComments={"Detalles del usuario para solicitud"}
               selectedRequestUserComments={
                 selectedRequestUserCommentsLocalState
               }

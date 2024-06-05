@@ -25,7 +25,7 @@ export const usersApi = createApi({
       query: ({ idTypeAbbrev }) => ({
         url: `transformIdTypeName`,
         method: "POST",
-        body: idTypeAbbrev,
+        body: { idTypeAbbrev },
       }),
     }),
 
@@ -33,7 +33,7 @@ export const usersApi = createApi({
       query: ({ idTypeAbbrev }) => ({
         url: `transformIdTypeNumber`,
         method: "POST",
-        body: idTypeAbbrev,
+        body: { idTypeAbbrev },
       }),
     }),
 
@@ -41,7 +41,7 @@ export const usersApi = createApi({
       query: ({ genderAbbrev }) => ({
         url: `transformGenderName`,
         method: "POST",
-        body: genderAbbrev,
+        body: { genderAbbrev },
       }),
     }),
 
@@ -49,7 +49,7 @@ export const usersApi = createApi({
       query: ({ genderAbbrev }) => ({
         url: `transformGenderNumber`,
         method: "POST",
-        body: genderAbbrev,
+        body: { genderAbbrev },
       }),
     }),
 

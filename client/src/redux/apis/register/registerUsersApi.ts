@@ -23,7 +23,7 @@ export const registerUsersApi = createApi({
       query: ({ id_number }) => ({
         url: `validatePatientRegister`,
         method: "POST",
-        body: id_number,
+        body: { id_number },
       }),
     }),
 
