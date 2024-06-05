@@ -18,7 +18,7 @@ const UsersLoginPage: React.FC = () => {
         height: "100vh",
         alignContent: "center",
         alignItems: "center",
-        paddingBlock: "31px",
+        // paddingBlock: "31px",
       }}
     >
       <div
@@ -46,7 +46,7 @@ const UsersLoginPage: React.FC = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 13,
+            paddingBlock: "22px",
           }}
         >
           <img

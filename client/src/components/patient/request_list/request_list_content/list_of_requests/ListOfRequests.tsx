@@ -71,7 +71,7 @@ const ListOfRequests: React.FC = () => {
   return (
     <div
       style={{
-        width: "100%",
+        width: "98vw",
         display: "flex",
         flexFlow: "column wrap",
         alignContent: "center",

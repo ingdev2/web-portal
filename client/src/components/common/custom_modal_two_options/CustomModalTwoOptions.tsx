@@ -27,13 +27,14 @@ const CustomModalTwoOptions: React.FC<{
   isSubmittingConfirm,
 }) => {
   return (
-    <div>
+    <>
       <Modal
         className="custom-modal-two-options"
         width={"45%"}
         style={{
           minWidth: "345px",
           paddingBlock: "31px",
+          margin: "0px",
         }}
         open={openCustomModalState}
         onOk={handleConfirmCustomModal}
@@ -45,13 +46,16 @@ const CustomModalTwoOptions: React.FC<{
         centered
       >
         <div
-          className="content-custom-modal"
+          className="content-custom-modal-two-options"
           style={{
+            display: "flex",
+            flexFlow: "column wrap",
             textAlign: "center",
-            flexDirection: "column",
             alignItems: "center",
-            marginBlock: 13,
-            marginInline: 7,
+            alignContent: "center",
+            justifyContent: "center",
+            marginBlock: "13px",
+            marginInline: "7px",
           }}
         >
           <Space
@@ -137,7 +141,7 @@ const CustomModalTwoOptions: React.FC<{
           </Space>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 

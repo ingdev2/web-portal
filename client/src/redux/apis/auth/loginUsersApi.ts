@@ -34,7 +34,7 @@ export const loginUsersApi = createApi({
         url: `verifiedLoginUsers/${id_number}`,
         method: "POST",
         params: { id_number },
-        body: verification_code,
+        body: { verification_code },
       }),
     }),
 

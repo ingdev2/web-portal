@@ -48,7 +48,7 @@ export const statusMedicalReqApi = createApi({
         url: `update/${id}`,
         method: "PATCH",
         params: { id },
-        body: newName,
+        body: { newName },
       }),
     }),
   }),
