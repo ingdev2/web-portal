@@ -19,10 +19,10 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
+import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
-import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const PatientModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -101,20 +101,20 @@ const PatientModalVerificationCode: React.FC = () => {
         dispatch(setErrorsLoginPatient(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
+
       if (responseNextAuth?.status === 200) {
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
         dispatch(setIdTypeLoginPatient(""));
         dispatch(setPasswordLoginPatient(""));
         dispatch(setVerificationCodeLoginPatient(""));
-        await router.replace("/patient/homepage", { scroll: false });
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        dispatch(setPatientModalIsOpen(false));
+        await router.replace("/patient/homepage", { scroll: false });
       }
     } catch (error) {
       console.error(error);
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsSubmittingConfirm(false);
     }
   };

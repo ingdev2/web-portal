@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
@@ -11,9 +12,9 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
+import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { redirect } from "next/navigation";
 
 const HomePagePatient = () => {
   const { data: session, status } = useSession();
@@ -21,6 +22,10 @@ const HomePagePatient = () => {
 
   const allowedRoles = [UserRolType.PATIENT];
   useRoleValidation(allowedRoles);
+
+  const patientModalState = useAppSelector(
+    (state) => state.modal.patientModalIsOpen
+  );
 
   const idNumberUserPatientLoginState = useAppSelector(
     (state) => state.patientUserLogin.id_number
@@ -53,7 +58,15 @@ const HomePagePatient = () => {
       setErrorMessage("¡No autenticado!");
       redirect("/login");
     }
-  }, [status, idNumberUserPatientLoginState, idNumberPatientState]);
+    if (patientModalState) {
+      dispatch(setPatientModalIsOpen(false));
+    }
+  }, [
+    status,
+    idNumberUserPatientLoginState,
+    idNumberPatientState,
+    patientModalState,
+  ]);
 
   return (
     <>

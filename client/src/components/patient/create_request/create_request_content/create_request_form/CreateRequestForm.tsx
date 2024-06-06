@@ -278,6 +278,7 @@ const CreateRequestForm: React.FC = () => {
         {modalIsOpenSuccess && (
           <CustomModalNoContent
             key={"custom-success-modal-create-medical-req"}
+            widthCustomModalNoContent={"54%"}
             openCustomModalState={modalIsOpenSuccess}
             closableCustomModal={false}
             maskClosableCustomModal={false}

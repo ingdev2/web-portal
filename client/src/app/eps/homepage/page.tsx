@@ -10,6 +10,7 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import { setIdNumberUserEps } from "@/redux/features/eps/epsSlice";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 
@@ -19,6 +20,8 @@ const HomePageEps = () => {
 
   const allowedRoles = [UserRolType.EPS];
   useRoleValidation(allowedRoles);
+
+  const epsModalState = useAppSelector((state) => state.modal.epsModalIsOpen);
 
   const idNumberUserEpsLoginState = useAppSelector(
     (state) => state.epsUserLogin.id_number
@@ -47,7 +50,10 @@ const HomePageEps = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
-  }, [status, idNumberUserEpsLoginState, idNumberEpsState]);
+    if (epsModalState) {
+      dispatch(setEpsModalIsOpen(false));
+    }
+  }, [status, idNumberUserEpsLoginState, idNumberEpsState, epsModalState]);
 
   return (
     <div>

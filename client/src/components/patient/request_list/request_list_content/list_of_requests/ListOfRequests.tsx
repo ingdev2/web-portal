@@ -154,7 +154,7 @@ const ListOfRequests: React.FC = () => {
           key={"card-list-of-request-content"}
           style={{
             width: "100%",
-            maxWidth: "540px",
+            maxWidth: "609px",
             minWidth: "405px",
             alignContent: "center",
             backgroundColor: "#fcfcfc",
@@ -173,20 +173,7 @@ const ListOfRequests: React.FC = () => {
             Total de <b>{userMedicalReqData.length} solicitud(es)</b>
           </h4>
 
-          <PatientRequestCardList
-            requestCardListData={userMedicalReqData}
-            titleCardList="N° Radicado:"
-            descriptionCardList1="Tipo de solicitud:"
-            descriptionCardList2="Estado de solicitud:"
-            descriptionCardList3="Fecha de solicitud:"
-            descriptionCardList4="Fecha de respuesta:"
-            iconButtonDetails={<FaRegEye size={17} />}
-            titleButtonDetails="Ver detalles"
-            backgroundColorButtonDetails="#015E90"
-            iconButtonDelete={<MdDeleteOutline size={17} />}
-            titleButtonDelete="Eliminar"
-            backgroundColorButtonDelete="#8C1111"
-          />
+          <PatientRequestCardList requestCardListData={userMedicalReqData} />
         </Card>
       ) : (
         <Card

@@ -6,8 +6,8 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const RequestDetailsContent: React.FC<{
-  titleDescription1: string;
+const RequestDetailsModalContent: React.FC<{
+  titleDescription: string;
   labelFilingNumber: string;
   selectedRequestFilingNumber: string;
   labelRequestType: string;
@@ -23,7 +23,7 @@ const RequestDetailsContent: React.FC<{
   labelReasonsForRejection: string;
   selectedRequestReasonsForRejection: ReactNode;
 }> = ({
-  titleDescription1,
+  titleDescription,
   labelFilingNumber,
   selectedRequestFilingNumber,
   labelRequestType,
@@ -55,8 +55,8 @@ const RequestDetailsContent: React.FC<{
     >
       <Descriptions
         className="description1-request-details"
-        title={titleDescription1}
-        layout="horizontal"
+        title={titleDescription}
+        layout="vertical"
         size="middle"
         style={{ paddingBlock: "7px" }}
         labelStyle={{
@@ -66,6 +66,7 @@ const RequestDetailsContent: React.FC<{
           ...subtitleStyleCss,
         }}
         bordered
+        column={3}
       >
         <Descriptions.Item
           contentStyle={{
@@ -127,6 +128,7 @@ const RequestDetailsContent: React.FC<{
           ...subtitleStyleCss,
         }}
         bordered
+        column={3}
       >
         <Descriptions.Item
           label={labelRequestResponse}
@@ -156,4 +158,4 @@ const RequestDetailsContent: React.FC<{
   );
 };
 
-export default RequestDetailsContent;
+export default RequestDetailsModalContent;

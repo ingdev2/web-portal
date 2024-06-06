@@ -13,15 +13,17 @@ const CustomSelectTagMultipleOptions: React.FC<{
   placeholderCustomSelect,
   optionsCustomSelect,
   defaultValueCustomSelect,
-}) => (
-  <Select
-    mode="multiple"
-    placeholder={placeholderCustomSelect}
-    options={optionsCustomSelect}
-    defaultValue={defaultValueCustomSelect}
-    style={{ width: "100%", paddingInline: "7px", paddingBlock: "7px" }}
-    allowClear
-  />
-);
+}) => {
+  return (
+    <Select
+      mode="multiple"
+      placeholder={placeholderCustomSelect}
+      options={optionsCustomSelect}
+      defaultValue={defaultValueCustomSelect}
+      style={{ width: "100%", paddingInline: "7px", paddingBlock: "7px" }}
+      allowClear
+    />
+  );
+};
 
 export default CustomSelectTagMultipleOptions;

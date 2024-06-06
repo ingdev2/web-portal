@@ -5,12 +5,14 @@ import React, { ReactNode } from "react";
 import { Modal } from "antd";
 
 const CustomModalNoContent: React.FC<{
+  widthCustomModalNoContent: string;
   openCustomModalState: boolean;
   maskClosableCustomModal: boolean;
   closableCustomModal: boolean;
   contentCustomModal: ReactNode;
   handleCancelCustomModal?: () => void;
 }> = ({
+  widthCustomModalNoContent,
   openCustomModalState,
   maskClosableCustomModal,
   closableCustomModal,
@@ -20,7 +22,7 @@ const CustomModalNoContent: React.FC<{
   return (
     <Modal
       className="custom-modal-no-content"
-      width={"72%"}
+      width={widthCustomModalNoContent}
       style={{
         minWidth: "345px",
         alignItems: "center",

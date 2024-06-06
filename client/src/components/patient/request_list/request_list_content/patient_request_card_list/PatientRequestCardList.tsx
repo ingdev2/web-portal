@@ -3,19 +3,24 @@
 import React, { useEffect, useState, ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Avatar, Button, Card, List, Col, Row, Space, SelectProps } from "antd";
-import RequestDetailsContent from "./request_details_content/RequestDetailsContent";
+import { Avatar, Card, List, Col, SelectProps } from "antd";
 import CustomSelectTagMultipleOptions from "@/components/common/custom_select_tag_multiple_options/CustomSelectTagMultipleOptions";
-import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
+import RequestDetailsModal from "./request_details_content/RequestDetailsModal";
+import RequestCardDescription from "./request_card/RequestCardDescription";
+import RequestCardOptionsButtons from "./request_card/RequestCardOptionsButtons";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import { TbEye } from "react-icons/tb";
 import { FcHighPriority } from "react-icons/fc";
+import { FaRegEye } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
 
 import { setErrorsMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
-import { useDeletedMedicalReqMutation } from "@/redux/apis/medical_req/medicalReqApi";
+import {
+  useDeletedMedicalReqMutation,
+  useLazyGetAllMedicalReqOfAUsersQuery,
+} from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
 import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
@@ -30,33 +35,10 @@ import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing
 
 const PatientRequestCardList: React.FC<{
   requestCardListData: MedicalReq[];
-  titleCardList: string;
-  descriptionCardList1: string;
-  descriptionCardList2: string;
-  descriptionCardList3?: string;
-  descriptionCardList4?: string;
-  iconButtonDetails?: ReactNode;
-  titleButtonDetails?: string;
-  backgroundColorButtonDetails?: string;
-  iconButtonDelete?: ReactNode;
-  titleButtonDelete?: string;
-  backgroundColorButtonDelete?: string;
-}> = ({
-  requestCardListData,
-  titleCardList,
-  descriptionCardList1,
-  descriptionCardList2,
-  descriptionCardList3,
-  descriptionCardList4,
-  iconButtonDetails,
-  titleButtonDetails,
-  backgroundColorButtonDetails,
-  iconButtonDelete,
-  titleButtonDelete,
-  backgroundColorButtonDelete,
-}) => {
+}> = ({ requestCardListData }) => {
   const dispatch = useAppDispatch();
 
+  const idUserPatientState = useAppSelector((state) => state.patient.id);
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
   );
@@ -100,8 +82,20 @@ const PatientRequestCardList: React.FC<{
 
   const [isSubmittingDeletedMedicalReq, setIsSubmittingDeletedMedicalReq] =
     useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [showErrorMessageMedicalReq, setShowErrorMessageMedicalReq] =
     useState(false);
+
+  const [
+    trigger,
+    {
+      data: userMedicalLazyReqData,
+      isLoading: userMedicalLazyReqLoading,
+      isFetching: userMedicalLazyReqFetching,
+      error: userMedicalLazyReqError,
+    },
+  ] = useLazyGetAllMedicalReqOfAUsersQuery({});
 
   const {
     data: userMedicalReqTypeData,
@@ -157,6 +151,7 @@ const PatientRequestCardList: React.FC<{
       );
       setTypesOfRequestLocalState(formattedTypesOfRequest);
     }
+
     if (userMedicalReqTypeError) {
       dispatch(
         setErrorsMedicalReq(
@@ -179,6 +174,7 @@ const PatientRequestCardList: React.FC<{
       );
       setStatusOfRequestLocalState(formattedStatusOfRequest);
     }
+
     if (userMedicalReqStatusError) {
       dispatch(
         setErrorsMedicalReq(
@@ -226,6 +222,13 @@ const PatientRequestCardList: React.FC<{
       }
 
       if (isDeletedMedicalReqSuccess) {
+        trigger(idUserPatientState);
+        setSuccessMessage(
+          `Solicitud con N° Radicado ${formatFilingNumber(
+            selectedRequestFilingNumberLocalState
+          )} eliminada correctamente`
+        );
+        setShowSuccessMessage(true);
         setModalOpenDeleteRequest(false);
       }
     } catch (error) {
@@ -251,79 +254,34 @@ const PatientRequestCardList: React.FC<{
         />
       )}
 
+      {showSuccessMessage && (
+        <CustomMessage
+          typeMessage="success"
+          message={successMessage || "¡Proceso finalizado con éxito!"}
+        />
+      )}
+
       {modalOpenRequestDetails && (
-        <CustomModalNoContent
-          openCustomModalState={modalOpenRequestDetails}
-          contentCustomModal={
-            <RequestDetailsContent
-              titleDescription1={"Detalles de solicitud"}
-              labelFilingNumber={"N° de Radicado:"}
-              selectedRequestFilingNumber={formatFilingNumber(
-                selectedRequestFilingNumberLocalState
-              )}
-              labelRequestType={"Tipo:"}
-              selectedRequestType={selectedRequestTypeLocalState}
-              labelRequestStatus={"Estado:"}
-              selectedRequestStatus={selectedRequestStatusLocalState}
-              labelResponseDocuments={"Documentos de respuesta a solicitud:"}
-              selectedRequestResponseDocuments={
-                selectedRequestResponseDocumentsLocalState ? (
-                  <Button
-                    className="documents-response-link-button"
-                    size="middle"
-                    style={{
-                      backgroundColor: "#015E90",
-                      color: "#F7F7F7",
-                    }}
-                    href={selectedRequestResponseDocumentsLocalState?.toString()}
-                    target="_blank"
-                  >
-                    <div
-                      style={{
-                        minWidth: "137px",
-                        display: "flex",
-                        flexFlow: "row wrap",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <TbEye size={17} />
-                      &nbsp;Ver documentos
-                    </div>
-                  </Button>
-                ) : (
-                  <b style={{ color: "#960202" }}>No hay documentos anexados</b>
-                )
-              }
-              labelReasonsForRejection="Motivos de rechazo a solicitud"
-              selectedRequestReasonsForRejection={
-                selectedRequestReasonsForRejectionLocalState.length > 0 ? (
-                  <ul>
-                    {selectedRequestReasonsForRejectionLocalState.map(
-                      (reason, index) => (
-                        <li key={index}>{reason}</li>
-                      )
-                    )}
-                  </ul>
-                ) : (
-                  <b style={{ color: "#960202" }}>No aplica</b>
-                )
-              }
-              labelUserComments={"Detalles del usuario para solicitud"}
-              selectedRequestUserComments={
-                selectedRequestUserCommentsLocalState
-              }
-              labelRequestResponse={"Mensaje de respuesta a solicitud"}
-              selectedRequestResponse={
-                selectedRequestResponseCommentsLocalState || (
-                  <b style={{ color: "#960202" }}>En proceso de revisión</b>
-                )
-              }
-            />
+        <RequestDetailsModal
+          modalOpenRequestDetailsModal={modalOpenRequestDetails}
+          selectedRequestFilingNumberModal={formatFilingNumber(
+            selectedRequestFilingNumberLocalState
+          )}
+          selectedRequestTypeModal={selectedRequestTypeLocalState}
+          selectedRequestStatusModal={selectedRequestStatusLocalState}
+          selectedRequestResponseDocumentsModal={
+            selectedRequestResponseDocumentsLocalState
           }
-          maskClosableCustomModal={true}
-          closableCustomModal={true}
-          handleCancelCustomModal={() => {
+          selectedRequestReasonsForRejectionModal={
+            selectedRequestReasonsForRejectionLocalState
+          }
+          selectedRequestUserCommentsModal={
+            selectedRequestUserCommentsLocalState
+          }
+          selectedRequestResponseCommentsModal={
+            selectedRequestResponseCommentsLocalState
+          }
+          handleCancelRequestDetailsModal={() => {
             setModalOpenRequestDetails(false);
           }}
         />
@@ -367,7 +325,7 @@ const PatientRequestCardList: React.FC<{
             <CustomSpin />
           ) : (
             <CustomSelectTagMultipleOptions
-              placeholderCustomSelect="Filtrar por tipo"
+              placeholderCustomSelect="Filtrar por tipo de solicitud"
               defaultValueCustomSelect={[]}
               optionsCustomSelect={typesOfRequestLocalState}
             />
@@ -376,7 +334,7 @@ const PatientRequestCardList: React.FC<{
 
         <Col xs={24} sm={12} md={12} lg={12}>
           <CustomSelectTagMultipleOptions
-            placeholderCustomSelect="Filtrar por estado"
+            placeholderCustomSelect="Filtrar por estado de solicitud"
             defaultValueCustomSelect={[]}
             optionsCustomSelect={statusOfRequestLocalState}
           />
@@ -417,174 +375,73 @@ const PatientRequestCardList: React.FC<{
                 }}
                 // avatar={<Avatar src={item.avatar} />}
                 key={item.id}
-                title={`${titleCardList} ${formatFilingNumber(
+                title={`"N° Radicado:" ${formatFilingNumber(
                   item.filing_number
                 )}`}
                 description={
-                  <Space size={"small"} direction="vertical">
-                    <div
-                      style={{
-                        display: "flex",
-                        flexFlow: "row wrap",
-                        margin: 0,
-                        padding: 0,
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "31px",
-                          display: "flex",
-                          flexFlow: "row wrap",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          paddingBlock: "2px",
-                        }}
-                      >
-                        {descriptionCardList1}
-
-                        {getTagComponentType(
-                          typeMapList[item.requirement_type]
+                  <RequestCardDescription
+                    descriptionCard1={"Tipo de solicitud:"}
+                    tagComponentType={getTagComponentType(
+                      typeMapList[item.requirement_type]
+                    )}
+                    descriptionCard2={"Estado de solicitud:"}
+                    tagComponentStatus={getTagComponentStatus(
+                      statusMapList[item.requirement_status]
+                    )}
+                    descriptionCard3={"Fecha de solicitud:"}
+                    itemDateOfAdmission={<b>{item.date_of_admission}</b>}
+                    descriptionCard4={"Fecha de respuesta:"}
+                    itemAnswerDate={
+                      <b>
+                        {item.answer_date || (
+                          <b style={{ color: "#960202" }}>
+                            En proceso de revisión
+                          </b>
                         )}
-                      </div>
-
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "31px",
-                          display: "flex",
-                          flexFlow: "row wrap",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          paddingBlock: "2px",
-                        }}
-                      >
-                        {descriptionCardList2}
-
-                        {getTagComponentStatus(
-                          statusMapList[item.requirement_status]
-                        )}
-                      </div>
-
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "31px",
-                          display: "flex",
-                          flexFlow: "row wrap",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          paddingBlock: "2px",
-                        }}
-                      >
-                        {descriptionCardList3} <b>{item.date_of_admission}</b>
-                      </div>
-
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "31px",
-                          display: "flex",
-                          flexFlow: "row wrap",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          paddingBlock: "2px",
-                        }}
-                      >
-                        {descriptionCardList4}
-                        <b>
-                          {item.answer_date || (
-                            <b style={{ color: "#960202" }}>
-                              En proceso de revisión
-                            </b>
-                          )}
-                        </b>
-                      </div>
-                    </div>
-                  </Space>
+                      </b>
+                    }
+                  />
                 }
               />
+              <RequestCardOptionsButtons
+                backgroundColorButtonOptionDelete={"#8C1111"}
+                onClickButtonOptionDelete={() => {
+                  setSelectedRequestIdLocalState(item.id);
+                  setSelectedRequestFilingNumberLocalState(item.filing_number);
 
-              <div
-                style={{
-                  display: "flex",
-                  flexFlow: "row wrap",
-                  justifyContent: "flex-end",
-                  padding: 0,
-                  margin: 0,
+                  setModalOpenDeleteRequest(true);
                 }}
-              >
-                <Space size={"middle"}>
-                  <Button
-                    className="view-details-medical-req-button"
-                    size="middle"
-                    style={{
-                      display: "flex",
-                      flexFlow: "column wrap",
-                      alignContent: "center",
-                      justifyContent: "center",
-                      backgroundColor: backgroundColorButtonDetails,
-                      color: "#F7F7F7",
-                    }}
-                    onClick={() => {
-                      setSelectedRequestFilingNumberLocalState(
-                        item.filing_number
-                      );
-                      setSelectedRequestTypeLocalState(
-                        getTagComponentType(typeMapList[item.requirement_type])
-                      );
-                      setSelectedRequestStatusLocalState(
-                        getTagComponentStatus(
-                          statusMapList[item.requirement_status]
-                        )
-                      );
-                      setSelectedRequestResponseDocumentsLocalState(
-                        item.documents_delivered
-                      );
-                      setSelectedRequestUserCommentsLocalState(
-                        item.user_message
-                      );
-                      setSelectedRequestResponseCommentsLocalState(
-                        item.response_comments
-                      );
-                      updateSelectedRequestReasonsForRejection(
-                        item.motive_for_rejection || [],
-                        reasonForRejectionMapList,
-                        setSelectedRequestReasonsForRejectionLocalState
-                      );
+                iconButtonOptionDelete={<MdDeleteOutline size={17} />}
+                titleButtonOptionDelete={"Eliminar"}
+                backgroundColorButtonOptionDetails={"#015E90"}
+                onClickButtonOptionDetails={() => {
+                  setSelectedRequestFilingNumberLocalState(item.filing_number);
+                  setSelectedRequestTypeLocalState(
+                    getTagComponentType(typeMapList[item.requirement_type])
+                  );
+                  setSelectedRequestStatusLocalState(
+                    getTagComponentStatus(
+                      statusMapList[item.requirement_status]
+                    )
+                  );
+                  setSelectedRequestResponseDocumentsLocalState(
+                    item.documents_delivered
+                  );
+                  setSelectedRequestUserCommentsLocalState(item.user_message);
+                  setSelectedRequestResponseCommentsLocalState(
+                    item.response_comments
+                  );
+                  updateSelectedRequestReasonsForRejection(
+                    item.motive_for_rejection || [],
+                    reasonForRejectionMapList,
+                    setSelectedRequestReasonsForRejectionLocalState
+                  );
 
-                      setModalOpenRequestDetails(true);
-                    }}
-                    icon={iconButtonDetails}
-                  >
-                    {titleButtonDetails}
-                  </Button>
-
-                  <Button
-                    className="delete-medical-req-button"
-                    size="middle"
-                    style={{
-                      display: "flex",
-                      flexFlow: "column wrap",
-                      alignContent: "center",
-                      justifyContent: "center",
-                      backgroundColor: backgroundColorButtonDelete,
-                      color: "#F7F7F7",
-                    }}
-                    onClick={() => {
-                      setSelectedRequestIdLocalState(item.id);
-                      setSelectedRequestFilingNumberLocalState(
-                        item.filing_number
-                      );
-
-                      setModalOpenDeleteRequest(true);
-                    }}
-                    icon={iconButtonDelete}
-                  >
-                    {titleButtonDelete}
-                  </Button>
-                </Space>
-              </div>
+                  setModalOpenRequestDetails(true);
+                }}
+                iconButtonOptionDetails={<FaRegEye size={17} />}
+                titleButtonOptionDetails={"Ver detalles"}
+              />
             </List.Item>
           </Card>
         )}

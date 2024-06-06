@@ -19,10 +19,10 @@ import {
   setVerificationCodeLoginEps,
   setErrorsLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
-import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const EpsModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -97,22 +97,22 @@ const EpsModalVerificationCode: React.FC = () => {
         dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
+
       if (responseNextAuth?.status === 200) {
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
         dispatch(setIdTypeLoginEps(""));
         dispatch(setPasswordLoginEps(""));
         dispatch(setVerificationCodeLoginEps(""));
+
         await router.replace("/eps/homepage", {
           scroll: false,
         });
-
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        dispatch(setEpsModalIsOpen(false));
       }
     } catch (error) {
       console.error(error);
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsSubmittingConfirm(false);
     }
   };
