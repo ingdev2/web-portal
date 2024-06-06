@@ -145,7 +145,7 @@ const PatientRequestCardList: React.FC<{
     ) {
       const formattedTypesOfRequest = userMedicalReqTypeData.map(
         (type: any) => ({
-          value: type.id.toString(),
+          value: type.id,
           label: type.name,
         })
       );
@@ -168,7 +168,7 @@ const PatientRequestCardList: React.FC<{
     ) {
       const formattedStatusOfRequest = userMedicalReqStatusData.map(
         (status: any) => ({
-          value: status.id.toString(),
+          value: status.id,
           label: status.name,
         })
       );

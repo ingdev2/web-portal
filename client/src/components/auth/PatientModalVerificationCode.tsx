@@ -7,7 +7,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 import { Button, Divider, Form, Input, Modal } from "antd";
-import { NumberOutlined } from "@ant-design/icons";
+import { MdPassword } from "react-icons/md";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
@@ -19,7 +19,6 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
-import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
@@ -262,7 +261,12 @@ const PatientModalVerificationCode: React.FC = () => {
               <Input
                 id="input-code-patient"
                 className="input-code-patient"
-                prefix={<NumberOutlined className="input-code-item-icon" />}
+                prefix={
+                  <MdPassword
+                    className="input-code-item-icon"
+                    style={{ paddingInline: "2px", color: "#1D8348" }}
+                  />
+                }
                 style={{
                   width: 183,
                   fontSize: 27,
