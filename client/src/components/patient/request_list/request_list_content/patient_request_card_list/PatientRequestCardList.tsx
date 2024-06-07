@@ -70,6 +70,11 @@ const PatientRequestCardList: React.FC<{
     setSelectedRequestResponseCommentsLocalState,
   ] = useState("");
 
+  const [filterRequestTypesLocalState, setFilterRequestTypesLocalState] =
+    useState<number[]>([]);
+  const [filterRequestStatusLocalState, setFilterRequestStatusLocalState] =
+    useState<number[]>([]);
+
   const [typesOfRequestLocalState, setTypesOfRequestLocalState] = useState<
     SelectProps["options"]
   >([]);
@@ -192,6 +197,7 @@ const PatientRequestCardList: React.FC<{
     userMedicalReqStatusLoading,
     userMedicalReqStatusFetching,
     userMedicalReqStatusError,
+    filterRequestTypesLocalState,
   ]);
 
   const handleConfirmDataModal = async (
@@ -241,6 +247,28 @@ const PatientRequestCardList: React.FC<{
   const handleButtonClick = () => {
     dispatch(setErrorsMedicalReq([]));
     setShowErrorMessageMedicalReq(false);
+  };
+
+  const filteredRequests = requestCardListData.filter((request) => {
+    const typeMatches =
+      filterRequestTypesLocalState.length > 0
+        ? filterRequestTypesLocalState.includes(request.requirement_type)
+        : true;
+
+    const statusMatches =
+      filterRequestStatusLocalState.length > 0
+        ? filterRequestStatusLocalState.includes(request.requirement_status)
+        : true;
+
+    return typeMatches && statusMatches;
+  });
+
+  const handleTypeSelectionChange = (selectedTypes: number[]) => {
+    setFilterRequestTypesLocalState(selectedTypes);
+  };
+
+  const handleStatusSelectionChange = (selectedStatus: number[]) => {
+    setFilterRequestStatusLocalState(selectedStatus);
   };
 
   return (
@@ -328,6 +356,7 @@ const PatientRequestCardList: React.FC<{
               placeholderCustomSelect="Filtrar por tipo de solicitud"
               defaultValueCustomSelect={[]}
               optionsCustomSelect={typesOfRequestLocalState}
+              onChangeCustomSelect={handleTypeSelectionChange}
             />
           )}
         </Col>
@@ -337,6 +366,7 @@ const PatientRequestCardList: React.FC<{
             placeholderCustomSelect="Filtrar por estado de solicitud"
             defaultValueCustomSelect={[]}
             optionsCustomSelect={statusOfRequestLocalState}
+            onChangeCustomSelect={handleStatusSelectionChange}
           />
         </Col>
       </Col>
@@ -345,7 +375,7 @@ const PatientRequestCardList: React.FC<{
         className="list-of-medical-reqs-cards"
         itemLayout="vertical"
         size="large"
-        dataSource={requestCardListData}
+        dataSource={filteredRequests || requestCardListData}
         style={{ margin: "0px", padding: "0px" }}
         renderItem={(item) => (
           <Card
