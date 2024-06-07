@@ -3,13 +3,12 @@
 import React, { useEffect, useState, ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Avatar, Card, List, Col, SelectProps } from "antd";
-import CustomSelectTagMultipleOptions from "@/components/common/custom_select_tag_multiple_options/CustomSelectTagMultipleOptions";
+import { Avatar, Col, SelectProps } from "antd";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import RequestDetailsModal from "./request_details_content/RequestDetailsModal";
-import RequestCardDescription from "./request_card/RequestCardDescription";
 import RequestCardOptionsButtons from "./request_card/RequestCardOptionsButtons";
-import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import FilterByType from "./filters_request_card_list/FilterByRequestType";
+import FilterByStatus from "./filters_request_card_list/FilterByRequestStatus";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { FcHighPriority } from "react-icons/fc";
 import { FaRegEye } from "react-icons/fa";
@@ -32,6 +31,8 @@ import { getTagComponentStatus } from "@/components/common/custom_tags_status/Cu
 import { updateSelectedRequestReasonsForRejection } from "@/helpers/medical_req_reason_for_rejection_map/update_selected_reasons_for_rejection";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
+import { filterRequests } from "./filters_request_card_list/filtered_request";
+import ListOfRequestsCard from "./list_of_requests/ListOfRequests";
 
 const PatientRequestCardList: React.FC<{
   requestCardListData: MedicalReq[];
@@ -116,15 +117,7 @@ const PatientRequestCardList: React.FC<{
     error: userMedicalReqStatusError,
   } = useGetAllMedicalReqStatusQuery(null);
 
-  const [
-    deletedMedicalReqPatient,
-    {
-      data: deletedMedicalReqData,
-      isLoading: deletedMedicalReqLoading,
-      isSuccess: deletedMedicalReqSuccess,
-      isError: deletedMedicalReqError,
-    },
-  ] = useDeletedMedicalReqMutation({
+  const [deletedMedicalReqPatient] = useDeletedMedicalReqMutation({
     fixedCacheKey: "deletedMedicalReqPatientData",
   });
 
@@ -197,7 +190,6 @@ const PatientRequestCardList: React.FC<{
     userMedicalReqStatusLoading,
     userMedicalReqStatusFetching,
     userMedicalReqStatusError,
-    filterRequestTypesLocalState,
   ]);
 
   const handleConfirmDataModal = async (
@@ -249,19 +241,45 @@ const PatientRequestCardList: React.FC<{
     setShowErrorMessageMedicalReq(false);
   };
 
-  const filteredRequests = requestCardListData.filter((request) => {
-    const typeMatches =
-      filterRequestTypesLocalState.length > 0
-        ? filterRequestTypesLocalState.includes(request.requirement_type)
-        : true;
+  const renderOptionsButtons = (item: MedicalReq) => (
+    <RequestCardOptionsButtons
+      backgroundColorButtonOptionDelete={"#8C1111"}
+      onClickButtonOptionDelete={() => {
+        setSelectedRequestIdLocalState(item.id);
+        setSelectedRequestFilingNumberLocalState(item.filing_number);
+        setModalOpenDeleteRequest(true);
+      }}
+      iconButtonOptionDelete={<MdDeleteOutline size={17} />}
+      titleButtonOptionDelete={"Eliminar"}
+      backgroundColorButtonOptionDetails={"#015E90"}
+      onClickButtonOptionDetails={() => {
+        setSelectedRequestFilingNumberLocalState(item.filing_number);
+        setSelectedRequestTypeLocalState(
+          getTagComponentType(typeMapList[item.requirement_type])
+        );
+        setSelectedRequestStatusLocalState(
+          getTagComponentStatus(statusMapList[item.requirement_status])
+        );
+        setSelectedRequestResponseDocumentsLocalState(item.documents_delivered);
+        setSelectedRequestUserCommentsLocalState(item.user_message);
+        setSelectedRequestResponseCommentsLocalState(item.response_comments);
+        updateSelectedRequestReasonsForRejection(
+          item.motive_for_rejection || [],
+          reasonForRejectionMapList,
+          setSelectedRequestReasonsForRejectionLocalState
+        );
+        setModalOpenRequestDetails(true);
+      }}
+      iconButtonOptionDetails={<FaRegEye size={17} />}
+      titleButtonOptionDetails={"Ver detalles"}
+    />
+  );
 
-    const statusMatches =
-      filterRequestStatusLocalState.length > 0
-        ? filterRequestStatusLocalState.includes(request.requirement_status)
-        : true;
-
-    return typeMatches && statusMatches;
-  });
+  const filteredRequests = filterRequests(
+    requestCardListData,
+    filterRequestTypesLocalState,
+    filterRequestStatusLocalState
+  );
 
   const handleTypeSelectionChange = (selectedTypes: number[]) => {
     setFilterRequestTypesLocalState(selectedTypes);
@@ -349,138 +367,27 @@ const PatientRequestCardList: React.FC<{
         }}
       >
         <Col xs={24} sm={12} md={12} lg={12}>
-          {userMedicalReqTypeLoading || userMedicalReqTypeFetching ? (
-            <CustomSpin />
-          ) : (
-            <CustomSelectTagMultipleOptions
-              placeholderCustomSelect="Filtrar por tipo de solicitud"
-              defaultValueCustomSelect={[]}
-              optionsCustomSelect={typesOfRequestLocalState}
-              onChangeCustomSelect={handleTypeSelectionChange}
-            />
-          )}
+          <FilterByType
+            typesOfRequestLocalState={typesOfRequestLocalState}
+            onChange={handleTypeSelectionChange}
+            isLoading={userMedicalReqTypeLoading || userMedicalReqTypeFetching}
+          />
         </Col>
 
         <Col xs={24} sm={12} md={12} lg={12}>
-          <CustomSelectTagMultipleOptions
-            placeholderCustomSelect="Filtrar por estado de solicitud"
-            defaultValueCustomSelect={[]}
-            optionsCustomSelect={statusOfRequestLocalState}
-            onChangeCustomSelect={handleStatusSelectionChange}
+          <FilterByStatus
+            statusOfRequestLocalState={statusOfRequestLocalState}
+            onChange={handleStatusSelectionChange}
+            isLoading={
+              userMedicalReqStatusLoading || userMedicalReqStatusFetching
+            }
           />
         </Col>
       </Col>
 
-      <List
-        className="list-of-medical-reqs-cards"
-        itemLayout="vertical"
-        size="large"
-        dataSource={filteredRequests || requestCardListData}
-        style={{ margin: "0px", padding: "0px" }}
-        renderItem={(item) => (
-          <Card
-            key={"card-list-of-request"}
-            style={{
-              display: "flex",
-              flexFlow: "column wrap",
-              backgroundColor: "#fcfcfc",
-              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-              padding: "0px 0px",
-              margin: "13px 0px",
-            }}
-          >
-            <List.Item
-              key={item.id}
-              style={{
-                padding: "0px 0px",
-                margin: "0px 0px",
-              }}
-              // actions={[null]}
-              // extra={null}
-            >
-              <List.Item.Meta
-                style={{
-                  padding: "7px 0px",
-                  margin: "0px 0px",
-                }}
-                // avatar={<Avatar src={item.avatar} />}
-                key={item.id}
-                title={`"N° Radicado:" ${formatFilingNumber(
-                  item.filing_number
-                )}`}
-                description={
-                  <RequestCardDescription
-                    descriptionCard1={"Tipo de solicitud:"}
-                    tagComponentType={getTagComponentType(
-                      typeMapList[item.requirement_type]
-                    )}
-                    descriptionCard2={"Estado de solicitud:"}
-                    tagComponentStatus={getTagComponentStatus(
-                      statusMapList[item.requirement_status]
-                    )}
-                    descriptionCard3={"Fecha de solicitud:"}
-                    itemDateOfAdmission={<b>{item.date_of_admission}</b>}
-                    descriptionCard4={"Fecha de respuesta:"}
-                    itemAnswerDate={
-                      <b>
-                        {item.answer_date || (
-                          <b style={{ color: "#960202" }}>
-                            En proceso de revisión
-                          </b>
-                        )}
-                      </b>
-                    }
-                  />
-                }
-              />
-              <RequestCardOptionsButtons
-                backgroundColorButtonOptionDelete={"#8C1111"}
-                onClickButtonOptionDelete={() => {
-                  setSelectedRequestIdLocalState(item.id);
-                  setSelectedRequestFilingNumberLocalState(item.filing_number);
-
-                  setModalOpenDeleteRequest(true);
-                }}
-                iconButtonOptionDelete={<MdDeleteOutline size={17} />}
-                titleButtonOptionDelete={"Eliminar"}
-                backgroundColorButtonOptionDetails={"#015E90"}
-                onClickButtonOptionDetails={() => {
-                  setSelectedRequestFilingNumberLocalState(item.filing_number);
-                  setSelectedRequestTypeLocalState(
-                    getTagComponentType(typeMapList[item.requirement_type])
-                  );
-                  setSelectedRequestStatusLocalState(
-                    getTagComponentStatus(
-                      statusMapList[item.requirement_status]
-                    )
-                  );
-                  setSelectedRequestResponseDocumentsLocalState(
-                    item.documents_delivered
-                  );
-                  setSelectedRequestUserCommentsLocalState(item.user_message);
-                  setSelectedRequestResponseCommentsLocalState(
-                    item.response_comments
-                  );
-                  updateSelectedRequestReasonsForRejection(
-                    item.motive_for_rejection || [],
-                    reasonForRejectionMapList,
-                    setSelectedRequestReasonsForRejectionLocalState
-                  );
-
-                  setModalOpenRequestDetails(true);
-                }}
-                iconButtonOptionDetails={<FaRegEye size={17} />}
-                titleButtonOptionDetails={"Ver detalles"}
-              />
-            </List.Item>
-          </Card>
-        )}
-        // footer={null}
-        pagination={{
-          pageSize: 4,
-          align: "center",
-          position: "both",
-        }}
+      <ListOfRequestsCard
+        dataSourceList={filteredRequests}
+        optionsButtonSectionListOfRequest={renderOptionsButtons}
       />
     </>
   );
