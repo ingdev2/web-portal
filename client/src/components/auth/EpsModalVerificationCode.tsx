@@ -7,7 +7,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 import { Button, Divider, Form, Input, Modal } from "antd";
-import { NumberOutlined } from "@ant-design/icons";
+import { MdPassword } from "react-icons/md";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
@@ -22,7 +22,6 @@ import {
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
-import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const EpsModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -97,22 +96,22 @@ const EpsModalVerificationCode: React.FC = () => {
         dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
+
       if (responseNextAuth?.status === 200) {
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
         dispatch(setIdTypeLoginEps(""));
         dispatch(setPasswordLoginEps(""));
         dispatch(setVerificationCodeLoginEps(""));
+
         await router.replace("/eps/homepage", {
           scroll: false,
         });
-
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        dispatch(setEpsModalIsOpen(false));
       }
     } catch (error) {
       console.error(error);
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsSubmittingConfirm(false);
     }
   };
@@ -260,7 +259,12 @@ const EpsModalVerificationCode: React.FC = () => {
               <Input
                 id="input-code-eps"
                 className="input-code-eps"
-                prefix={<NumberOutlined className="input-code-item-icon" />}
+                prefix={
+                  <MdPassword
+                    className="input-code-item-icon"
+                    style={{ paddingInline: "2px", color: "#1D8348" }}
+                  />
+                }
                 style={{
                   width: 183,
                   fontSize: 27,

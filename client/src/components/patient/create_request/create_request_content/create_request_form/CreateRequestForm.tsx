@@ -147,12 +147,12 @@ const CreateRequestForm: React.FC = () => {
         },
       });
 
-      var isLoginUserError = response.error;
+      var createMedicalReqError = response.error;
 
-      var isLoginUserSuccess = response.data;
+      var createMedicalReqSuccess = response.data;
 
-      if (isLoginUserError) {
-        const errorMessage = isLoginUserError?.data.message;
+      if (createMedicalReqError) {
+        const errorMessage = createMedicalReqError?.data.message;
 
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsMedicalReq(errorMessage[0]));
@@ -164,7 +164,7 @@ const CreateRequestForm: React.FC = () => {
         }
       }
 
-      if (isLoginUserSuccess) {
+      if (createMedicalReqSuccess) {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
       }
@@ -278,6 +278,7 @@ const CreateRequestForm: React.FC = () => {
         {modalIsOpenSuccess && (
           <CustomModalNoContent
             key={"custom-success-modal-create-medical-req"}
+            widthCustomModalNoContent={"54%"}
             openCustomModalState={modalIsOpenSuccess}
             closableCustomModal={false}
             maskClosableCustomModal={false}

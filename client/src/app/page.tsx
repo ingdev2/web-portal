@@ -36,7 +36,6 @@ const HomePage = () => {
           flexFlow: "column wrap",
           alignContent: "center",
           alignItems: "center",
-          paddingBlock: "31px",
         }}
       >
         <div
@@ -44,13 +43,13 @@ const HomePage = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 20,
+            paddingTop: "22px",
           }}
         >
           <img
             src="/logos/LOGO-BONNADONA.png"
             alt="Logo de Bonnadona"
-            style={{ height: 88 }}
+            style={{ height: 96 }}
           />
         </div>
 
@@ -65,7 +64,8 @@ const HomePage = () => {
               justifyContent: "center",
               backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-              paddingBottom: "13px",
+              paddingBlock: "13px",
+              marginBlock: "31px",
               paddingInline: "13px",
             }}
           >

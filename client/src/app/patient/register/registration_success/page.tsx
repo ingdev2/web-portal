@@ -85,13 +85,13 @@ const RegistrationSuccessPage: React.FC = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 22,
+            marginBottom: "22px",
           }}
         >
           <img
             src="/logos/LOGO-BONNADONA.png"
             alt="Logo de Bonnadona"
-            style={{ height: 77 }}
+            style={{ height: 88 }}
           />
         </div>
         <div>

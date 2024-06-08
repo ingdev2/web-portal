@@ -21,8 +21,7 @@ const ValidateDataPage: React.FC = () => {
         height: "100vh",
         alignContent: "center",
         alignItems: "center",
-        marginBlock: 31,
-        marginInline: 13,
+        marginInline: "13px",
       }}
     >
       <div
@@ -50,13 +49,13 @@ const ValidateDataPage: React.FC = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 13,
+            paddingBlock: "13px",
           }}
         >
           <img
             src="/logos/LOGO-BONNADONA.png"
             alt="Logo de Bonnadona"
-            style={{ height: 77 }}
+            style={{ height: 88 }}
           />
         </div>
         <div>

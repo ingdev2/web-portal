@@ -2,30 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
+import FamilyNucleusLayout from "@/components/patient/family_nucleus/FamilyNucleusLayout";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
-import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-const HomePagePatient = () => {
+const FamilyNucleusPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
   const allowedRoles = [UserRolType.PATIENT];
   useRoleValidation(allowedRoles);
-
-  const patientModalState = useAppSelector(
-    (state) => state.modal.patientModalIsOpen
-  );
 
   const idNumberUserPatientLoginState = useAppSelector(
     (state) => state.patientUserLogin.id_number
@@ -45,28 +39,18 @@ const HomePagePatient = () => {
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientLoginState);
 
   useEffect(() => {
-    if (!idNumberPatientState) {
-      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
-    }
     if (!idNumberUserPatientLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
-      redirect("/login");
+    }
+    if (!idNumberPatientState) {
+      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
-      redirect("/login");
     }
-    if (patientModalState) {
-      dispatch(setPatientModalIsOpen(false));
-    }
-  }, [
-    status,
-    idNumberUserPatientLoginState,
-    idNumberPatientState,
-    patientModalState,
-  ]);
+  }, [status, idNumberUserPatientLoginState, idNumberPatientState]);
 
   return (
     <>
@@ -80,12 +64,12 @@ const HomePagePatient = () => {
       {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="homepage-patient-content">
-          <PatientHomeLayout />
+        <div className="request-list-page-patient-content">
+          <FamilyNucleusLayout />
         </div>
       )}
     </>
   );
 };
 
-export default HomePagePatient;
+export default FamilyNucleusPage;

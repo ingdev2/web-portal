@@ -24,6 +24,8 @@ export const medicalReqApi = createApi({
 
   refetchOnFocus: true,
 
+  refetchOnReconnect: true,
+
   endpoints: (builder) => ({
     createMedicalReqPatient: builder.mutation<
       Partial<MedicalReq>,
@@ -158,6 +160,7 @@ export const {
   useGetMedicalReqByFilingNumberQuery,
   useGetAllMedicalReqUsersQuery,
   useGetAllMedicalReqOfAUsersQuery,
+  useLazyGetAllMedicalReqOfAUsersQuery,
   useGetAllMedicalReqOfAFamiliarQuery,
   useGetAllMedicalReqUsersToLegalAreaQuery,
   useGetAllMedicalReqPatientQuery,

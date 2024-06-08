@@ -129,7 +129,8 @@ const PatientDataCard: React.FC = () => {
             key={"card-patient-data-homepage"}
             style={{
               width: "100%",
-              maxWidth: "720px",
+              maxWidth: "702px",
+              minWidth: "405px",
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "#f7f7f7",
