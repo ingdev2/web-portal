@@ -41,6 +41,9 @@ const initialState: MedicalReq = {
   documents_delivered: [],
   delegate_id: "",
   typesMedicalReq: [],
+  createdAt: "",
+  updateAt: "",
+  deletedAt: "",
   errors: [],
 };
 
@@ -171,6 +174,15 @@ export const medicalReqSlice = createSlice({
     setTypesMedicalReq: (state, action) => {
       state.typesMedicalReq = action.payload;
     },
+    setCreatedAtMedicalReq: (state, action) => {
+      state.createdAt = action.payload;
+    },
+    setUpdatedAtMedicalReq: (state, action) => {
+      state.updateAt = action.payload;
+    },
+    setDeletedAtMedicalReq: (state, action) => {
+      state.deletedAt = action.payload;
+    },
     setDefaultValuesMedicalReq: (state) => {
       state.id = "";
       state.filing_number = "";
@@ -257,6 +269,9 @@ export const {
   setDocumentsDeliveredMedicalReq,
   setDelegateIdMedicalReq,
   setTypesMedicalReq,
+  setCreatedAtMedicalReq,
+  setUpdatedAtMedicalReq,
+  setDeletedAtMedicalReq,
   setErrorsMedicalReq,
   setDefaultValuesMedicalReq,
 } = medicalReqSlice.actions;

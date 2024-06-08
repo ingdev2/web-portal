@@ -68,7 +68,7 @@ const RegisterPatientPage: React.FC = () => {
           <img
             src="/logos/LOGO-BONNADONA.png"
             alt="Logo de Bonnadona"
-            style={{ height: 77 }}
+            style={{ height: 88 }}
           />
         </div>
 

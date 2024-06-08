@@ -12,8 +12,6 @@ import PatientRequestCardList from "@/components/patient/request_list/request_li
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdPostAdd } from "react-icons/md";
-import { FaRegEye } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
 
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 
@@ -162,16 +160,14 @@ const ListOfRequests: React.FC = () => {
             marginTop: "7px",
           }}
         >
-          <h4
+          <h2
             style={{
               ...titleStyleCss,
-              fontSize: "13pt",
               textAlign: "center",
-              paddingBottom: "7px",
             }}
           >
             Total de <b>{userMedicalReqData.length} solicitud(es)</b>
-          </h4>
+          </h2>
 
           <PatientRequestCardList requestCardListData={userMedicalReqData} />
         </Card>

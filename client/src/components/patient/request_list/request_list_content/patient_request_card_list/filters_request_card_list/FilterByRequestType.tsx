@@ -15,7 +15,7 @@ const FilterByType: React.FC<{
     <CustomSpin />
   ) : (
     <CustomSelectTagMultipleOptions
-      placeholderCustomSelect="Filtrar por tipo de solicitud"
+      placeholderCustomSelect="Filtrar por tipo"
       defaultValueCustomSelect={[]}
       optionsCustomSelect={typesOfRequestLocalState}
       onChangeCustomSelect={onChange}

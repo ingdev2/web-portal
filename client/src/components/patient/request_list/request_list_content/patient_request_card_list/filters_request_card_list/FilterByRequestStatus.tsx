@@ -15,7 +15,7 @@ const FilterByStatus: React.FC<{
     <CustomSpin />
   ) : (
     <CustomSelectTagMultipleOptions
-      placeholderCustomSelect="Filtrar por estado de solicitud"
+      placeholderCustomSelect="Filtrar por estado"
       defaultValueCustomSelect={[]}
       optionsCustomSelect={statusOfRequestLocalState}
       onChangeCustomSelect={onChange}

@@ -39,5 +39,8 @@ interface MedicalReq {
   documents_delivered: string[];
   delegate_id: string;
   typesMedicalReq: string[];
+  createdAt: string;
+  updateAt: string;
+  deletedAt: string;
   errors: [];
 }

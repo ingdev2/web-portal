@@ -3,16 +3,18 @@
 import React, { useEffect, useState, ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Avatar, Col, SelectProps } from "antd";
+import { Avatar, Col, Row, Select, SelectProps } from "antd";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import RequestDetailsModal from "./request_details_content/RequestDetailsModal";
 import RequestCardOptionsButtons from "./request_card/RequestCardOptionsButtons";
 import FilterByType from "./filters_request_card_list/FilterByRequestType";
 import FilterByStatus from "./filters_request_card_list/FilterByRequestStatus";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
+import ListOfRequestsCard from "./list_of_requests/ListOfRequests";
 import { FcHighPriority } from "react-icons/fc";
 import { FaRegEye } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import { subtitleStyleCss } from "@/theme/text_styles";
 
 import { setErrorsMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
@@ -32,7 +34,9 @@ import { updateSelectedRequestReasonsForRejection } from "@/helpers/medical_req_
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
 import { filterRequests } from "./filters_request_card_list/filtered_request";
-import ListOfRequestsCard from "./list_of_requests/ListOfRequests";
+import { SortRequestsBy } from "./request_details_content/enums/select_sortby.enums";
+import SortByRequest from "./sortby_request_card_list/SortByRequest";
+import { sortRequests } from "./sortby_request_card_list/sort_request_by_options";
 
 const PatientRequestCardList: React.FC<{
   requestCardListData: MedicalReq[];
@@ -71,6 +75,8 @@ const PatientRequestCardList: React.FC<{
     setSelectedRequestResponseCommentsLocalState,
   ] = useState("");
 
+  const [sortRequestsByOptionsLocalState, setSortRequestsByOptionsLocalState] =
+    useState<SortRequestsBy>(SortRequestsBy.MOST_RECENT);
   const [filterRequestTypesLocalState, setFilterRequestTypesLocalState] =
     useState<number[]>([]);
   const [filterRequestStatusLocalState, setFilterRequestStatusLocalState] =
@@ -275,11 +281,17 @@ const PatientRequestCardList: React.FC<{
     />
   );
 
-  const filteredRequests = filterRequests(
+  var filteredRequests = filterRequests(
     requestCardListData,
     filterRequestTypesLocalState,
     filterRequestStatusLocalState
   );
+
+  sortRequests(filteredRequests, sortRequestsByOptionsLocalState);
+
+  const handleOnChangeSelectSortBy = (value: SortRequestsBy) => {
+    setSortRequestsByOptionsLocalState(value);
+  };
 
   const handleTypeSelectionChange = (selectedTypes: number[]) => {
     setFilterRequestTypesLocalState(selectedTypes);
@@ -353,37 +365,70 @@ const PatientRequestCardList: React.FC<{
         />
       )}
 
-      <Col
-        xs={24}
-        sm={24}
-        md={24}
-        lg={24}
-        style={{
-          width: "100%",
-          display: "flex",
-          flexFlow: "row wrap",
-          justifyContent: "center",
-          alignContent: "center",
-        }}
-      >
-        <Col xs={24} sm={12} md={12} lg={12}>
-          <FilterByType
-            typesOfRequestLocalState={typesOfRequestLocalState}
-            onChange={handleTypeSelectionChange}
-            isLoading={userMedicalReqTypeLoading || userMedicalReqTypeFetching}
-          />
-        </Col>
+      <SortByRequest
+        selectValueToSort={sortRequestsByOptionsLocalState}
+        handleSelectSortBy={handleOnChangeSelectSortBy}
+      />
 
-        <Col xs={24} sm={12} md={12} lg={12}>
-          <FilterByStatus
-            statusOfRequestLocalState={statusOfRequestLocalState}
-            onChange={handleStatusSelectionChange}
-            isLoading={
-              userMedicalReqStatusLoading || userMedicalReqStatusFetching
-            }
-          />
+      <Row justify={"center"} align={"middle"}>
+        <Col
+          xs={24}
+          sm={24}
+          md={24}
+          lg={24}
+          style={{
+            width: "100%",
+            display: "flex",
+            flexFlow: "row wrap",
+            justifyContent: "center",
+            alignContent: "center",
+          }}
+        >
+          <Col
+            xs={6}
+            sm={4}
+            md={4}
+            lg={4}
+            style={{
+              display: "flex",
+              flexFlow: "column wrap",
+              alignContent: "flex-end",
+              justifyContent: "center",
+            }}
+          >
+            <h3
+              className="title-filter-req"
+              style={{
+                ...subtitleStyleCss,
+                color: "#0707077F",
+                paddingInline: "7px",
+              }}
+            >
+              Filtrar por:
+            </h3>
+          </Col>
+
+          <Col xs={9} sm={10} md={10} lg={10}>
+            <FilterByType
+              typesOfRequestLocalState={typesOfRequestLocalState}
+              onChange={handleTypeSelectionChange}
+              isLoading={
+                userMedicalReqTypeLoading || userMedicalReqTypeFetching
+              }
+            />
+          </Col>
+
+          <Col xs={9} sm={10} md={10} lg={10}>
+            <FilterByStatus
+              statusOfRequestLocalState={statusOfRequestLocalState}
+              onChange={handleStatusSelectionChange}
+              isLoading={
+                userMedicalReqStatusLoading || userMedicalReqStatusFetching
+              }
+            />
+          </Col>
         </Col>
-      </Col>
+      </Row>
 
       <ListOfRequestsCard
         dataSourceList={filteredRequests}
