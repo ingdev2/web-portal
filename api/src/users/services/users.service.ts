@@ -662,6 +662,40 @@ export class UsersService {
     }
   }
 
+  async getAllAuthorizedPatientRelatives(patientId: string) {
+    const patientFound = await this.userRepository.findOne({
+      where: {
+        id: patientId,
+      },
+    });
+
+    if (!patientFound) {
+      return new HttpException(
+        `El usuario no está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const allRelativesOfPatientFound = await this.familiarRepository.find({
+      where: {
+        patient_id: patientId,
+        is_active: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    if (allRelativesOfPatientFound.length === 0) {
+      return new HttpException(
+        `El usuario no tiene familiares agregados actualmente.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allRelativesOfPatientFound;
+    }
+  }
+
   async getUserFoundByIdNumber(idNumber: number) {
     return await this.userRepository.findOneBy({
       id_number: idNumber,
