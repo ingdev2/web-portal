@@ -226,6 +226,11 @@ const EpsUserLoginForm: React.FC = () => {
             name="eps-user-id-number"
             label="Número de identificación"
             style={{ marginBottom: 7 }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.replace(/[^0-9]/g, "");
+            }}
             rules={[
               {
                 required: true,
@@ -234,7 +239,7 @@ const EpsUserLoginForm: React.FC = () => {
               {
                 pattern: /^[0-9]+$/,
                 message:
-                  "¡Por favor ingresa número de identificación sin puntos!",
+                  "¡Por favor ingresa número de identificación sin puntos, ni comas!",
               },
               {
                 min: 7,
@@ -248,10 +253,11 @@ const EpsUserLoginForm: React.FC = () => {
           >
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
-              type="number"
+              type="tel"
               value={idNumberEpsLocalState}
               placeholder="Número de identificación"
               onChange={(e) => setIdNumberEpsLocalState(e.target.value)}
+              autoComplete="off"
               min={0}
             />
           </Form.Item>

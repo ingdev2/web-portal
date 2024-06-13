@@ -111,7 +111,6 @@ const EpsModalVerificationCode: React.FC = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsSubmittingConfirm(false);
     }
   };
@@ -237,6 +236,11 @@ const EpsModalVerificationCode: React.FC = () => {
               className="user-code-eps"
               name={"user-code-eps"}
               style={{ textAlign: "center" }}
+              normalize={(value) => {
+                if (!value) return "";
+
+                return value.replace(/[^0-9]/g, "");
+              }}
               rules={[
                 {
                   required: true,
@@ -272,12 +276,13 @@ const EpsModalVerificationCode: React.FC = () => {
                   borderWidth: 2,
                   marginBottom: 4,
                 }}
-                type="number"
+                type="tel"
                 placeholder="Código"
                 value={verificationCodeEpsState}
                 onChange={(e) =>
                   dispatch(setVerificationCodeLoginEps(e.target.value))
                 }
+                autoComplete="off"
                 min={0}
               />
             </Form.Item>

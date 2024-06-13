@@ -113,7 +113,6 @@ const PatientModalVerificationCode: React.FC = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsSubmittingConfirm(false);
     }
   };
@@ -239,6 +238,11 @@ const PatientModalVerificationCode: React.FC = () => {
               className="user-code-patient"
               name={"user-code-patient"}
               style={{ textAlign: "center" }}
+              normalize={(value) => {
+                if (!value) return "";
+
+                return value.replace(/[^0-9]/g, "");
+              }}
               rules={[
                 {
                   required: true,
@@ -274,12 +278,13 @@ const PatientModalVerificationCode: React.FC = () => {
                   borderWidth: 2,
                   marginBottom: 4,
                 }}
-                type="number"
+                type="tel"
                 placeholder="Código"
                 value={verificationCodePatientState}
                 onChange={(e) =>
                   dispatch(setVerificationCodeLoginPatient(e.target.value))
                 }
+                autoComplete="off"
                 min={0}
               />
             </Form.Item>

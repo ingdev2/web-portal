@@ -490,6 +490,11 @@ const ValidatePatientData: React.FC = () => {
               name="patient-user-whatsapp-register"
               label="WhatsApp (opcional)"
               style={{ marginBottom: 13 }}
+              normalize={(value) => {
+                if (!value) return "";
+
+                return value.replace(/[^0-9]/g, "");
+              }}
               rules={[
                 {
                   required: false,
@@ -511,12 +516,13 @@ const ValidatePatientData: React.FC = () => {
             >
               <Input
                 prefix={<WhatsAppOutlined className="site-form-item-icon" />}
-                type="number"
+                type="tel"
                 value={whatsappPatientState}
                 placeholder="Número de WhatsApp"
                 onChange={(e) =>
                   dispatch(setWhatsappUserPatient(e.target.value))
                 }
+                autoComplete="off"
                 min={0}
               />
             </Form.Item>

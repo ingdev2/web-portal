@@ -210,26 +210,18 @@ const AddRelativeForm: React.FC = () => {
       setShowErrorMessageUserFamiliar(true);
       setFamiliarAuthMethodsListLocalState(authMethodData);
     }
+    if (familiarNameLocalState || familiarLastNameLocalState) {
+    }
   }, [
     idUserPatientState,
     userPatientData,
-    userPatientLoading,
-    userPatientFetching,
     idTypesData,
-    idTypesLoading,
-    idTypesFetching,
     idTypesError,
     gendersData,
-    gendersLoading,
-    gendersFetching,
-    gendersLoading,
+    gendersError,
     authMethodData,
-    authMethodLoading,
-    authMethodFetching,
     authMethodError,
     relationshipTypesData,
-    relationshipTypesLoading,
-    relationshipTypesFetching,
     relationshipTypesError,
   ]);
 
@@ -248,16 +240,6 @@ const AddRelativeForm: React.FC = () => {
   ) => {
     try {
       setIsSubmittingNewFamiliar(true);
-
-      console.log("nombre", familiarNameLocalState);
-      console.log("apellido", familiarLastNameLocalState);
-      console.log("tipo de id", familiarIdTypeLocalState);
-      console.log("numero de id", familiarIdNumberLocalState);
-      console.log("sexo", familiarGenderLocalState);
-      console.log("email", familiarEmailLocalState);
-      console.log("celular", familiarCellphoneLocalState);
-      console.log("metodo", familiarAuthMethodLocalState);
-      console.log("parentesco", familiarRelationshipLocalState);
 
       const response: any = await addAuthFamiliarToPatient({
         patientId: idUserPatientState,
@@ -279,12 +261,6 @@ const AddRelativeForm: React.FC = () => {
       var addAuthFamiliarValidationData = response.data?.message;
 
       var addAuthFamiliarSuccess = response.data;
-
-      console.log("RESPONSE", response);
-
-      console.log("ERROR", addAuthFamiliarError);
-      console.log("SUCCESS", addAuthFamiliarSuccess);
-      console.log("VALIDATION", addAuthFamiliarValidationData);
 
       if (addAuthFamiliarError || addAuthFamiliarValidationData) {
         const errorMessage = addAuthFamiliarError?.data.message;
@@ -359,18 +335,6 @@ const AddRelativeForm: React.FC = () => {
   const handleButtonClick = () => {
     dispatch(setErrorsUserFamiliar([]));
     setShowErrorMessageUserFamiliar(false);
-  };
-
-  const handleInputInsertNameChange = (e: any) => {
-    const uppercasedValue = e.target.value.toUpperCase();
-
-    setFamiliarNameLocalState(uppercasedValue);
-  };
-
-  const handleInputInsertLastNameChange = (e: any) => {
-    const uppercasedValue = e.target.value.toUpperCase();
-
-    setFamiliarLastNameLocalState(uppercasedValue);
   };
 
   return (
@@ -539,6 +503,14 @@ const AddRelativeForm: React.FC = () => {
             name="new-familiar-name"
             label="Nombre(s) del familiar"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              const filteredValue = value
+                .toUpperCase()
+                .replace(/[^A-Z\s]/g, "");
+              return filteredValue;
+            }}
             rules={[
               {
                 required: true,
@@ -563,10 +535,12 @@ const AddRelativeForm: React.FC = () => {
               prefix={
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
-              type="string"
+              type="text"
               value={familiarNameLocalState}
               placeholder="Nombre(s) completos"
-              onChange={handleInputInsertNameChange}
+              onChange={(e) => {
+                setFamiliarNameLocalState(e.target.value.toUpperCase());
+              }}
               autoComplete="off"
             />
           </Form.Item>
@@ -575,6 +549,14 @@ const AddRelativeForm: React.FC = () => {
             name="new-familiar-lastname"
             label="Apellido(s) del familiar"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              const filteredValue = value
+                .toUpperCase()
+                .replace(/[^A-Z\s]/g, "");
+              return filteredValue;
+            }}
             rules={[
               {
                 required: true,
@@ -599,10 +581,12 @@ const AddRelativeForm: React.FC = () => {
               prefix={
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
-              type="string"
+              type="text"
               value={familiarLastNameLocalState}
               placeholder="Apellido(s) completos"
-              onChange={handleInputInsertLastNameChange}
+              onChange={(e) => {
+                setFamiliarLastNameLocalState(e.target.value.toUpperCase());
+              }}
               autoComplete="off"
             />
           </Form.Item>
@@ -640,6 +624,11 @@ const AddRelativeForm: React.FC = () => {
             name="new-familiar-id-number"
             label="Número de identificación del familiar"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.replace(/[^0-9]/g, "");
+            }}
             rules={[
               {
                 required: true,
@@ -663,12 +652,13 @@ const AddRelativeForm: React.FC = () => {
           >
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
-              type="number"
+              type="tel"
               value={familiarIdNumberLocalState}
               placeholder="Número de identificación"
               onChange={(e) => {
                 setFamiliarIdNumberLocalState(parseInt(e.target.value, 10));
               }}
+              autoComplete="off"
               min={0}
             />
           </Form.Item>
@@ -707,6 +697,11 @@ const AddRelativeForm: React.FC = () => {
             name="new-familiar-cellphone"
             label="Celular del familiar"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.replace(/[^0-9]/g, "");
+            }}
             rules={[
               {
                 required: true,
@@ -730,12 +725,13 @@ const AddRelativeForm: React.FC = () => {
           >
             <Input
               prefix={<FiPhone className="site-form-item-icon" />}
-              type="number"
+              type="tel"
               value={familiarCellphoneLocalState}
               placeholder="Número de celular"
               onChange={(e) =>
                 setFamiliarCellphoneLocalState(parseInt(e.target.value, 10))
               }
+              autoComplete="off"
               min={0}
             />
           </Form.Item>
@@ -744,6 +740,11 @@ const AddRelativeForm: React.FC = () => {
             name="new-familiar-email"
             label="Correo electrónico del familiar"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.toLowerCase().replace(/[^a-z0-9@._-]/g, "");
+            }}
             rules={[
               {
                 required: true,
@@ -766,11 +767,11 @@ const AddRelativeForm: React.FC = () => {
           >
             <Input
               prefix={<MdOutlineEmail className="site-form-item-icon" />}
-              type="string"
+              type="email"
               value={familiarEmailLocalState}
               placeholder="Correo electrónico"
               onChange={(e) => {
-                setFamiliarEmailLocalState(e.target.value);
+                setFamiliarEmailLocalState(e.target.value.toLowerCase());
               }}
               autoComplete="off"
             />
@@ -806,6 +807,11 @@ const AddRelativeForm: React.FC = () => {
             name="familiar-whatsapp-register"
             label="WhatsApp del familiar (opcional)"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.replace(/[^0-9]/g, "");
+            }}
             rules={[
               {
                 required: false,
@@ -827,10 +833,11 @@ const AddRelativeForm: React.FC = () => {
           >
             <Input
               prefix={<WhatsAppOutlined className="site-form-item-icon" />}
-              type="number"
+              type="tel"
               value={familiarWhatsappLocalState}
               placeholder="Número de WhatsApp"
               onChange={(e) => setFamiliarWhatsappLocalState(e.target.value)}
+              autoComplete="off"
               min={0}
             />
           </Form.Item>
