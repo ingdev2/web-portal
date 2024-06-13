@@ -3,7 +3,7 @@
 import React from "react";
 
 import { Select, Col } from "antd";
-import { SortRequestsBy } from "../request_details_content/enums/select_sortby.enums";
+import { SortRequestsBy } from "./enums/select_sortby.enums";
 import { subtitleStyleCss } from "@/theme/text_styles";
 
 const SortByRequest: React.FC<{

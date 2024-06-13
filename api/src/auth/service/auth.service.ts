@@ -573,19 +573,19 @@ export class AuthService {
   }
 
   async loginRelatives({
-    id_type,
-    id_number,
-    email,
+    id_type_familiar,
+    id_number_familiar,
+    email_familiar,
     patient_id_number,
     rel_with_patient,
   }: FamiliarLoginDto) {
-    const familiarFound = await this.familiarService.getFamiliarWithPatient(
-      id_type,
-      id_number,
-      email,
+    const familiarFound = await this.familiarService.getFamiliarWithPatient({
+      id_type_familiar,
+      id_number_familiar,
+      email_familiar,
       patient_id_number,
       rel_with_patient,
-    );
+    });
 
     if (!familiarFound) {
       throw new UnauthorizedException(`¡Datos de ingreso incorrectos!`);
@@ -607,9 +607,9 @@ export class AuthService {
 
     const familiarVerified = await this.familiarRepository.findOne({
       where: {
-        user_id_type: id_type,
-        id_number: id_number,
-        email: email,
+        user_id_type: id_type_familiar,
+        id_number: id_number_familiar,
+        email: email_familiar,
         patient_id: patientOfFamiliar.id,
         user_role: familiarUserRoleFound.id,
       },
@@ -692,7 +692,12 @@ export class AuthService {
       // TODO: IMPLEMENTAR ENVIO DE CÓDIGO POR MENSAJE DE TEXTO
     }
 
-    return { id_type, id_number, email, patient_id_number };
+    return {
+      id_type_familiar,
+      id_number_familiar,
+      email_familiar,
+      patient_id_number,
+    };
   }
 
   async resendVerificationUserCode({ id_type, id_number }: LoginDto) {
@@ -733,9 +738,9 @@ export class AuthService {
   }
 
   async resendVerificationFamiliarCode({
-    id_type,
-    id_number,
-    email,
+    id_type_familiar: id_type,
+    id_number_familiar: id_number,
+    email_familiar: email,
   }: FamiliarLoginDto) {
     const familiarFound =
       await this.familiarService.getFamiliarFoundByIdNumber(id_number);

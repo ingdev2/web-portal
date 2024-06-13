@@ -20,6 +20,12 @@ export const relativesApi = createApi({
     },
   }),
 
+  refetchOnMountOrArgChange: true,
+
+  refetchOnFocus: true,
+
+  refetchOnReconnect: true,
+
   endpoints: (builder) => ({
     getAllRelatives: builder.query<Familiar[], null>({
       query: () => "getAllRelatives",

@@ -13,6 +13,7 @@ const CustomOptionButton: React.FC<{
   backgroundColorCustomOptionButton: string;
   borderColorCustomOptionButton: string;
   handleClickCustomOptionButton: () => void;
+  iconPopoverCustomOptionButton?: ReactNode;
 }> = ({
   titleCustomOptionButton,
   iconCustomOptionButton,
@@ -21,6 +22,7 @@ const CustomOptionButton: React.FC<{
   backgroundColorCustomOptionButton,
   borderColorCustomOptionButton,
   handleClickCustomOptionButton,
+  iconPopoverCustomOptionButton,
 }) => {
   return (
     <Button
@@ -46,7 +48,7 @@ const CustomOptionButton: React.FC<{
         style={{
           ...subtitleStyleCss,
           display: "flex",
-          flexFlow: "column wrap",
+          flexFlow: "column nowrap",
           width: "100%",
           height: "100%",
           alignItems: "center",
@@ -57,6 +59,15 @@ const CustomOptionButton: React.FC<{
           textOverflow: "ellipsis",
         }}
       >
+        <div
+          style={{
+            display: "contents",
+            margin: "0px",
+            padding: "0px",
+          }}
+        >
+          {iconPopoverCustomOptionButton}
+        </div>
         <div
           style={{
             display: "flex",

@@ -1,47 +1,61 @@
+"use client";
+
 import React from "react";
 
 import CustomTags from "../custom_tags/CustomTags";
-import { RequirementTypeEnum } from "../../../../../api/src/medical_req/enums/requirement_type.enum";
+import { RelationshipWithPatient } from "../../../../../api/src/medical_req/enums/relationship_with_patient.enum";
 
-export const getTagComponentType = (typeName: string | undefined) => {
+export const getTagComponentRelationshipType = (
+  typeName: string | undefined
+) => {
   switch (typeName) {
-    case RequirementTypeEnum.CLINIC_HISTORY:
+    case RelationshipWithPatient.PARENT:
       return (
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "HISTORIA CLÍNICA",
+            label: "PADRE/MADRE",
           }}
         />
       );
-    case RequirementTypeEnum.MEDICAL_RESULTS:
+    case RelationshipWithPatient.BROTHER:
       return (
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "RESULTADOS MÉDICOS",
+            label: "HERMANO(A)",
           }}
         />
       );
-    case RequirementTypeEnum.MEDICAL_ORDER:
+    case RelationshipWithPatient.SON:
       return (
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "ORDEN MÉDICA",
+            label: "HIJO(A)",
           }}
         />
       );
-    case RequirementTypeEnum.MEDICAL_DISABILITY:
+    case RelationshipWithPatient.FAMILIAR:
       return (
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "INCAPACIDAD MÉDICA",
+            label: "FAMILIAR",
+          }}
+        />
+      );
+    case RelationshipWithPatient.SPOUSE:
+      return (
+        <CustomTags
+          tag={{
+            textColor: "#F7F7F7",
+            color: "#017DC0B2",
+            label: "ESPOSO(A)",
           }}
         />
       );

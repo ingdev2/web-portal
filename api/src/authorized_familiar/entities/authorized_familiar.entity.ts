@@ -101,6 +101,9 @@ export class AuthorizedFamiliar {
   @Column({ type: 'uuid' })
   patient_id: string;
 
+  @Column({ type: 'bigint' })
+  patient_id_number: number;
+
   @ManyToOne(
     () => AuthenticationMethod,
     (familiar_authentication_method) => familiar_authentication_method.familiar,

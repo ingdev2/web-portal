@@ -1,4 +1,4 @@
-import { SortRequestsBy } from "../request_details_content/enums/select_sortby.enums";
+import { SortRequestsBy } from "./enums/select_sortby.enums";
 
 export const sortRequests = (
   filteredRequests: MedicalReq[],

@@ -8,7 +8,7 @@ import { Button, Card } from "antd";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import PatientRequestCardList from "@/components/patient/request_list/request_list_content/patient_request_card_list/PatientRequestCardList";
+import PatientRelativesCardList from "../patient_relatives_card_list/PatientRelativesCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdPostAdd } from "react-icons/md";
@@ -16,9 +16,9 @@ import { MdPostAdd } from "react-icons/md";
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { useGetAllMedicalReqOfAUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetAllAuthorizedPatientRelativesQuery } from "@/redux/apis/users/usersApi";
 
-const AuthorizedFamilyList: React.FC = () => {
+const ListOfRelatives: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -26,9 +26,7 @@ const AuthorizedFamilyList: React.FC = () => {
     (state) => state.patientUserLogin.id_number
   );
   const idUserPatientState = useAppSelector((state) => state.patient.id);
-  const medicalReqErrorsState = useAppSelector(
-    (state) => state.medicalReq.errors
-  );
+  const relativesErrorsState = useAppSelector((state) => state.familiar.errors);
 
   const [showErrorMessageMedicalReq, setShowErrorMessageMedicalReq] =
     useState(false);
@@ -41,11 +39,11 @@ const AuthorizedFamilyList: React.FC = () => {
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
 
   const {
-    data: userMedicalReqData,
-    isLoading: userMedicalReqLoading,
-    isFetching: userMedicalReqFetching,
-    error: userMedicalReqError,
-  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState, {
+    data: userRelativesData,
+    isLoading: userRelativesLoading,
+    isFetching: userRelativesFetching,
+    error: userRelativesError,
+  } = useGetAllAuthorizedPatientRelativesQuery(idUserPatientState, {
     // pollingInterval: 7000,
     // skipPollingIfUnfocused: true,
   });
@@ -79,9 +77,7 @@ const AuthorizedFamilyList: React.FC = () => {
       {showErrorMessageMedicalReq && (
         <CustomMessage
           typeMessage="error"
-          message={
-            medicalReqErrorsState?.toString() || "¡Error en la petición!"
-          }
+          message={relativesErrorsState?.toString() || "¡Error en la petición!"}
         />
       )}
 
@@ -134,22 +130,20 @@ const AuthorizedFamilyList: React.FC = () => {
           className="go-to-create-request-page-button"
           icon={<MdPostAdd size={17} />}
           onClick={() => {
-            router.push("/patient/homepage/create_request", {
+            router.push("/patient/homepage/add_relative", {
               scroll: true,
             });
           }}
         >
-          Crear solicitud
+          Agregar familiar
         </Button>
       </div>
 
-      {!userMedicalReqData &&
-      userMedicalReqLoading &&
-      userMedicalReqFetching ? (
+      {!userRelativesData && userRelativesLoading && userRelativesFetching ? (
         <CustomSpin />
-      ) : Array.isArray(userMedicalReqData) ? (
+      ) : Array.isArray(userRelativesData) ? (
         <Card
-          key={"card-list-of-request-content"}
+          key={"card-list-of-relatives-content"}
           style={{
             width: "100%",
             maxWidth: "609px",
@@ -166,14 +160,14 @@ const AuthorizedFamilyList: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Total de <b>{userMedicalReqData.length} solicitud(es)</b>
+            Total de <b>{userRelativesData.length} familiar(es)</b>
           </h2>
 
-          <PatientRequestCardList requestCardListData={userMedicalReqData} />
+          <PatientRelativesCardList relativesCardListData={userRelativesData} />
         </Card>
       ) : (
         <Card
-          key={"card-list-of-request-content"}
+          key={"card-list-of-relatives-content"}
           style={{
             width: "100%",
             maxWidth: "540px",
@@ -183,10 +177,10 @@ const AuthorizedFamilyList: React.FC = () => {
           }}
         >
           <CustomEmptyButton
-            titleCustomEmpty="Sin solicitudes"
-            buttonCustomEmpty="Crear nueva solicitud"
+            titleCustomEmpty="Sin familiares"
+            buttonCustomEmpty="Agregar nuevo familiar"
             handleClickCustomEmpty={() => {
-              router.push("/patient/homepage/create_request", {
+              router.push("/patient/homepage/add_relative", {
                 scroll: true,
               });
             }}
@@ -197,4 +191,4 @@ const AuthorizedFamilyList: React.FC = () => {
   );
 };
 
-export default AuthorizedFamilyList;
+export default ListOfRelatives;

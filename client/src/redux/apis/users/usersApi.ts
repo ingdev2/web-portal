@@ -20,6 +20,12 @@ export const usersApi = createApi({
     },
   }),
 
+  refetchOnMountOrArgChange: true,
+
+  refetchOnFocus: true,
+
+  refetchOnReconnect: true,
+
   endpoints: (builder) => ({
     transformIdTypeName: builder.mutation<null, { idTypeAbbrev: string }>({
       query: ({ idTypeAbbrev }) => ({
@@ -55,6 +61,10 @@ export const usersApi = createApi({
 
     getAllUsers: builder.query<User[], null>({
       query: () => "getAllUsers",
+    }),
+
+    getAllAuthorizedPatientRelatives: builder.query<Familiar, string>({
+      query: (patientId) => `getAllRelatives/${patientId}`,
     }),
 
     getAllPatients: builder.query<User[], null>({
@@ -104,6 +114,8 @@ export const {
   useTransformGenderNameMutation,
   useTransformGenderNumberMutation,
   useGetAllUsersQuery,
+  useGetAllAuthorizedPatientRelativesQuery,
+  useLazyGetAllAuthorizedPatientRelativesQuery,
   useGetAllPatientsQuery,
   useGetAllEpsQuery,
   useGetUserByIdQuery,

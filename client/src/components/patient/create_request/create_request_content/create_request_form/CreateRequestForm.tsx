@@ -110,7 +110,7 @@ const CreateRequestForm: React.FC = () => {
         )
       );
       setShowErrorMessageMedicalReq(true);
-      dispatch(setTypesMedicalReq(setTypesMedicalReq));
+      dispatch(setTypesMedicalReq(reqTypesData));
     }
   }, [
     reqTypesData,
@@ -175,7 +175,7 @@ const CreateRequestForm: React.FC = () => {
     }
   };
 
-  const handleOnChangeSelect = (value: number) => {
+  const handleOnChangeSelectIdType = (value: number) => {
     dispatch(setReqTypeMedicalReq(value));
 
     const selectedType: any = typesMedicalReqState?.find(
@@ -343,7 +343,7 @@ const CreateRequestForm: React.FC = () => {
               <Select
                 value={reqTypeState}
                 placeholder="Tipo de requerimiento"
-                onChange={handleOnChangeSelect}
+                onChange={handleOnChangeSelectIdType}
               >
                 {typesMedicalReqState?.map((option: any) => (
                   <Select.Option key={option.id} value={option.id}>

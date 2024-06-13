@@ -4,24 +4,24 @@ import React, { ReactNode } from "react";
 
 import { Space } from "antd";
 
-const RequestCardDescription: React.FC<{
+const CustomCardDescription: React.FC<{
   descriptionCard1: string;
-  tagComponentType: ReactNode;
-  descriptionCard2: string;
-  tagComponentStatus: ReactNode;
+  tagComponentCard1: ReactNode;
+  descriptionCard2?: string;
+  tagComponentCard2?: ReactNode;
   descriptionCard3?: string;
-  itemDateOfAdmission: ReactNode;
+  itemCard1?: ReactNode;
   descriptionCard4?: string;
-  itemAnswerDate: ReactNode;
+  itemCard2?: ReactNode;
 }> = ({
   descriptionCard1,
-  tagComponentType,
+  tagComponentCard1,
   descriptionCard2,
-  tagComponentStatus,
+  tagComponentCard2,
   descriptionCard3,
-  itemDateOfAdmission,
+  itemCard1,
   descriptionCard4,
-  itemAnswerDate,
+  itemCard2,
 }) => {
   return (
     <Space size={"small"} direction="vertical">
@@ -46,7 +46,7 @@ const RequestCardDescription: React.FC<{
         >
           {descriptionCard1}
 
-          {tagComponentType}
+          {tagComponentCard1}
         </div>
 
         <div
@@ -62,7 +62,7 @@ const RequestCardDescription: React.FC<{
         >
           {descriptionCard2}
 
-          {tagComponentStatus}
+          {tagComponentCard2}
         </div>
 
         <div
@@ -76,7 +76,7 @@ const RequestCardDescription: React.FC<{
             paddingBlock: "2px",
           }}
         >
-          {descriptionCard3} <b>{itemDateOfAdmission}</b>
+          {descriptionCard3} <b>{itemCard1}</b>
         </div>
 
         <div
@@ -91,11 +91,11 @@ const RequestCardDescription: React.FC<{
           }}
         >
           {descriptionCard4}
-          <b>{itemAnswerDate}</b>
+          <b>{itemCard2}</b>
         </div>
       </div>
     </Space>
   );
 };
 
-export default RequestCardDescription;
+export default CustomCardDescription;

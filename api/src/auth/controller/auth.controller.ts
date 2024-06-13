@@ -54,12 +54,12 @@ export class AuthController {
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
-  @Post(':userId/registerFamiliar')
+  @Post(':patientId/registerFamiliar')
   async registerFamiliar(
-    @Param('userId') userId: string,
+    @Param('patientId') patientId: string,
     @Body() registerFamiliar: CreateAuthorizedFamiliarDto,
   ) {
-    return await this.authService.registerFamiliar(userId, registerFamiliar);
+    return await this.authService.registerFamiliar(patientId, registerFamiliar);
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
