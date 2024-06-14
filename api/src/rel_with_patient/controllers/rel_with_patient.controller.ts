@@ -11,6 +11,7 @@ import { RelWithPatientService } from '../services/rel_with_patient.service';
 import { CreateRelWithPatientDto } from '../dto/create-rel_with_patient.dto';
 import { UpdateRelWithPatientDto } from '../dto/update-rel_with_patient.dto';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { UserRolType } from 'src/utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 
@@ -32,12 +33,13 @@ export class RelWithPatientController {
 
   // GET METHODS //
 
+  @Auth(UserRolType.PATIENT, UserRolType.AUTHORIZED_FAMILIAR)
   @Get('/getAll')
   getAllRelWithPatient() {
     return this.relWithPatientService.getAllRelWithPatient();
   }
 
-  @Get('/getReqType/:id')
+  @Get('/getRelationshipType/:id')
   getRelWithPatientById(id: number) {
     return this.relWithPatientService.getRelWithPatientById(id);
   }

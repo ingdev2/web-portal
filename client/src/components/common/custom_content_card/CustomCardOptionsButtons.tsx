@@ -4,14 +4,14 @@ import React, { ReactNode } from "react";
 
 import { Button, Space } from "antd";
 
-const RequestCardOptionsButtons: React.FC<{
+const CustomCardOptionsButtons: React.FC<{
   backgroundColorButtonOptionDelete?: string;
-  onClickButtonOptionDelete: () => void;
-  iconButtonOptionDelete: ReactNode;
+  onClickButtonOptionDelete?: () => void;
+  iconButtonOptionDelete?: ReactNode;
   titleButtonOptionDelete?: string;
   backgroundColorButtonOptionDetails?: string;
-  onClickButtonOptionDetails: () => void;
-  iconButtonOptionDetails: ReactNode;
+  onClickButtonOptionDetails?: () => void;
+  iconButtonOptionDetails?: ReactNode;
   titleButtonOptionDetails?: string;
 }> = ({
   backgroundColorButtonOptionDelete,
@@ -35,7 +35,7 @@ const RequestCardOptionsButtons: React.FC<{
     >
       <Space size={"middle"}>
         <Button
-          className="delete-medical-req-button"
+          className="delete-custom-list-card-button"
           size="middle"
           style={{
             display: "flex",
@@ -52,7 +52,7 @@ const RequestCardOptionsButtons: React.FC<{
         </Button>
 
         <Button
-          className="view-details-medical-req-button"
+          className="view-details-custom-list-card-button"
           size="middle"
           style={{
             display: "flex",
@@ -72,4 +72,4 @@ const RequestCardOptionsButtons: React.FC<{
   );
 };
 
-export default RequestCardOptionsButtons;
+export default CustomCardOptionsButtons;

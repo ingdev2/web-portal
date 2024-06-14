@@ -15,6 +15,7 @@ interface Familiar {
   rel_with_patient: number;
   patient_id: string;
   verification_code: number;
+  idTypesFamiliar: string[];
   createdAt: string;
   updateAt: string;
   deletedAt: string;

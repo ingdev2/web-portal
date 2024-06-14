@@ -26,21 +26,10 @@ import { FcHighPriority } from "react-icons/fc";
 import { FcInfo } from "react-icons/fc";
 
 import {
-  setNameUserPatient,
-  setIdTypeUserPatient,
-  setIdTypeAbbrevUserPatient,
-  setIdNumberUserPatient,
-  setGenderUserPatient,
-  setBirthdateUserPatient,
-  setEmailUserPatient,
-  setCellphoneUserPatient,
   setPasswordUserPatient,
   setAuthMethodUserPatient,
-  setResidenceAddressUserPatient,
-  setAffiliationEpsUserPatient,
   setErrorsUserPatient,
   setWhatsappUserPatient,
-  setDefaultValuesUserPatient,
   setIdUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
@@ -48,6 +37,7 @@ import { useCreateUserPatientMutation } from "@/redux/apis/register/registerUser
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import CustomModalTwoOptions from "../common/custom_modal_two_options/CustomModalTwoOptions";
+import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
 
 const ValidatePatientData: React.FC = () => {
   const { data: session, status } = useSession();
@@ -101,7 +91,7 @@ const ValidatePatientData: React.FC = () => {
   const [showCustomCancelModal, setShowCustomCancelModal] = useState(false);
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
-  const [allAuthMethodsData, setAllAuthMethodsData]: any = useState([]);
+  const [allAuthMethodsData, setAllAuthMethodsData]: any[] = useState([]);
 
   const [passwordUserPatientLocalState, setPasswordUserPatientLocalState] =
     useState("");
@@ -253,22 +243,6 @@ const ValidatePatientData: React.FC = () => {
 
   const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
     setIsCheckboxChecked(e.target.checked);
-  };
-
-  const customCheckboxValidator = (_: any, value: boolean) => {
-    return new Promise((resolve, reject) => {
-      if (!value) {
-        reject(
-          new Error(
-            "¡Para continuar debes aceptar las políticas de tratamientos de datos!"
-          )
-        );
-      } else {
-        resolve(
-          "¡El usuario aceptó términos y condiciones de tratamiento de datos!"
-        );
-      }
-    });
   };
 
   return (
@@ -516,6 +490,11 @@ const ValidatePatientData: React.FC = () => {
               name="patient-user-whatsapp-register"
               label="WhatsApp (opcional)"
               style={{ marginBottom: 13 }}
+              normalize={(value) => {
+                if (!value) return "";
+
+                return value.replace(/[^0-9]/g, "");
+              }}
               rules={[
                 {
                   required: false,
@@ -537,12 +516,13 @@ const ValidatePatientData: React.FC = () => {
             >
               <Input
                 prefix={<WhatsAppOutlined className="site-form-item-icon" />}
-                type="number"
+                type="tel"
                 value={whatsappPatientState}
                 placeholder="Número de WhatsApp"
                 onChange={(e) =>
                   dispatch(setWhatsappUserPatient(e.target.value))
                 }
+                autoComplete="off"
                 min={0}
               />
             </Form.Item>
@@ -619,7 +599,7 @@ const ValidatePatientData: React.FC = () => {
               style={{ textAlign: "center", marginBottom: 13 }}
               rules={[
                 {
-                  validator: customCheckboxValidator,
+                  validator: checkboxValidator,
                 },
               ]}
             >

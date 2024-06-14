@@ -2,12 +2,12 @@
 
 import React from "react";
 
-import AuthorizedFamilyList from "./authorized_family_list/AuthorizedFamilyList";
+import ListOfRelatives from "./list_of_relatives/ListOfRelatives";
 
 const FamilyNucleusContent: React.FC = () => {
   return (
     <>
-      <AuthorizedFamilyList />
+      <ListOfRelatives />
     </>
   );
 };

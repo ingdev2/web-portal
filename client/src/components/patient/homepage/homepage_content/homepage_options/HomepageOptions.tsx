@@ -11,6 +11,7 @@ import { FaUsers } from "react-icons/fa";
 import { RxUpdate } from "react-icons/rx";
 import { FaRegCommentDots } from "react-icons/fa";
 import CustomOptionButton from "@/components/common/custom_option_card_button/CustomOptionButton";
+import CustomPopover from "@/components/common/custom_popover/CustomPopover";
 
 const HomepageOptions: React.FC = () => {
   const router = useRouter();
@@ -146,6 +147,14 @@ const HomepageOptions: React.FC = () => {
                 scroll: true,
               });
             }}
+            iconPopoverCustomOptionButton={
+              <CustomPopover
+                titleCustomPopover={"¿Qué es el núcleo familiar autorizado?"}
+                contentCustomPopover={
+                  "Aquí puedes agregar familiares cercanos para que puedan acceder a tus documentos médicos desde el portal web, solo los que estén en la lista estarán autorizados de acceder a tu información médica."
+                }
+              />
+            }
           />
         </Col>
       </Row>
@@ -219,6 +228,14 @@ const HomepageOptions: React.FC = () => {
               backgroundColorCustomOptionButton="#015E90"
               borderColorCustomOptionButton="#3F97AF"
               handleClickCustomOptionButton={() => {}}
+              iconPopoverCustomOptionButton={
+                <CustomPopover
+                  titleCustomPopover={"¿Qué es PQRS?"}
+                  contentCustomPopover={
+                    "Aquí en esta sección podrás interponer una petición, queja, reclamo, sugerencia o felicitación a cualquiera de nuestros servicios."
+                  }
+                />
+              }
             />
           </a>
         </Col>

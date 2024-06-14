@@ -17,6 +17,7 @@ const initialState: Familiar = {
   verification_code: 0,
   is_active: true,
   accept_terms: false,
+  idTypesFamiliar: [],
   createdAt: "",
   updateAt: "",
   deletedAt: "",
@@ -40,6 +41,9 @@ export const familiarSlice = createSlice({
     },
     setGenderUserFamiliar: (state, action) => {
       state.user_gender = action.payload;
+    },
+    setIdTypesUserFamiliar: (state, action) => {
+      state.idTypesFamiliar = action.payload;
     },
     setIdTypeUserFamiliar: (state, action) => {
       state.user_id_type = action.payload;
@@ -104,6 +108,7 @@ export const {
   setLastNameUserFamiliar,
   setGenderUserFamiliar,
   setIdTypeUserFamiliar,
+  setIdTypesUserFamiliar,
   setIdNumberUserFamiliar,
   setEmailUserFamiliar,
   setCellphoneUserFamiliar,

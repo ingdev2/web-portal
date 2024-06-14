@@ -1,21 +1,21 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class FamiliarLoginDto {
-  @IsNotEmpty()
-  id_type: number;
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
+  id_type_familiar: number;
 
-  @IsNotEmpty()
-  id_number: number;
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
+  id_number_familiar: number;
 
-  @IsOptional()
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
   @IsEmail()
-  email: string;
+  email_familiar: string;
 
-  @IsOptional()
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
   @IsNumber()
   patient_id_number: number;
 
-  @IsOptional()
+  @IsNotEmpty({ message: '¡Datos ingresados incorrectos!' })
   @IsNumber()
   rel_with_patient: number;
 }

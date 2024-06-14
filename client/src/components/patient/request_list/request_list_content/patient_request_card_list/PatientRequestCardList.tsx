@@ -6,11 +6,10 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Avatar, Col, Row, Select, SelectProps } from "antd";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import RequestDetailsModal from "./request_details_content/RequestDetailsModal";
-import RequestCardOptionsButtons from "./request_card/RequestCardOptionsButtons";
-import FilterByType from "./filters_request_card_list/FilterByRequestType";
-import FilterByStatus from "./filters_request_card_list/FilterByRequestStatus";
+import CustomCardOptionsButtons from "../../../../common/custom_content_card/CustomCardOptionsButtons";
+import CustomFilterBy from "../../../../common/custom_filter_by/CustomFilterBy";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import ListOfRequestsCard from "./list_of_requests/ListOfRequests";
+import ListOfRequestsCards from "./list_of_requests_cards/ListOfRequestsCards";
 import { FcHighPriority } from "react-icons/fc";
 import { FaRegEye } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
@@ -27,14 +26,14 @@ import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_
 import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
 
 import { typesMap } from "@/helpers/medical_req_type_map/types_map";
-import { getTagComponentType } from "@/components/common/custom_tags_type/CustomTagsTypes";
+import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
-import { getTagComponentStatus } from "@/components/common/custom_tags_status/CustomTagsStatus";
+import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
 import { updateSelectedRequestReasonsForRejection } from "@/helpers/medical_req_reason_for_rejection_map/update_selected_reasons_for_rejection";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
 import { filterRequests } from "./filters_request_card_list/filtered_request";
-import { SortRequestsBy } from "./request_details_content/enums/select_sortby.enums";
+import { SortRequestsBy } from "./sortby_request_card_list/enums/select_sortby.enums";
 import SortByRequest from "./sortby_request_card_list/SortByRequest";
 import { sortRequests } from "./sortby_request_card_list/sort_request_by_options";
 
@@ -248,7 +247,7 @@ const PatientRequestCardList: React.FC<{
   };
 
   const renderOptionsButtons = (item: MedicalReq) => (
-    <RequestCardOptionsButtons
+    <CustomCardOptionsButtons
       backgroundColorButtonOptionDelete={"#8C1111"}
       onClickButtonOptionDelete={() => {
         setSelectedRequestIdLocalState(item.id);
@@ -409,8 +408,9 @@ const PatientRequestCardList: React.FC<{
           </Col>
 
           <Col xs={9} sm={10} md={10} lg={10}>
-            <FilterByType
-              typesOfRequestLocalState={typesOfRequestLocalState}
+            <CustomFilterBy
+              optionsToFilterLocalState={typesOfRequestLocalState}
+              labelOptionToFilterLocalState={"Filtrar por tipo:"}
               onChange={handleTypeSelectionChange}
               isLoading={
                 userMedicalReqTypeLoading || userMedicalReqTypeFetching
@@ -419,8 +419,9 @@ const PatientRequestCardList: React.FC<{
           </Col>
 
           <Col xs={9} sm={10} md={10} lg={10}>
-            <FilterByStatus
-              statusOfRequestLocalState={statusOfRequestLocalState}
+            <CustomFilterBy
+              optionsToFilterLocalState={statusOfRequestLocalState}
+              labelOptionToFilterLocalState={"Filtrar por estado:"}
               onChange={handleStatusSelectionChange}
               isLoading={
                 userMedicalReqStatusLoading || userMedicalReqStatusFetching
@@ -430,7 +431,7 @@ const PatientRequestCardList: React.FC<{
         </Col>
       </Row>
 
-      <ListOfRequestsCard
+      <ListOfRequestsCards
         dataSourceList={filteredRequests}
         optionsButtonSectionListOfRequest={renderOptionsButtons}
       />

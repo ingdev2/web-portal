@@ -64,7 +64,7 @@ const FamilyNucleusPage = () => {
       {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="request-list-page-patient-content">
+        <div className="relatives-list-page-patient-content">
           <FamilyNucleusLayout />
         </div>
       )}

@@ -3,9 +3,9 @@
 import React, { ReactNode } from "react";
 
 import { Card, List } from "antd";
-import RequestCardDescription from "../request_card/RequestCardDescription";
-import { getTagComponentType } from "@/components/common/custom_tags_type/CustomTagsTypes";
-import { getTagComponentStatus } from "@/components/common/custom_tags_status/CustomTagsStatus";
+import CustomCardDescription from "@/components/common/custom_content_card/CustomCardDescription";
+import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
+import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
 
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
@@ -14,7 +14,7 @@ import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing
 import { typesMap } from "@/helpers/medical_req_type_map/types_map";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
 
-const ListOfRequestsCard: React.FC<{
+const ListOfRequestsCards: React.FC<{
   dataSourceList: MedicalReq[];
   optionsButtonSectionListOfRequest: (item: MedicalReq) => ReactNode;
 }> = ({ dataSourceList, optionsButtonSectionListOfRequest }) => {
@@ -70,21 +70,21 @@ const ListOfRequestsCard: React.FC<{
               }}
               // avatar={<Avatar src={item.avatar} />}
               key={item.id}
-              title={`"N° Radicado:" ${formatFilingNumber(item.filing_number)}`}
+              title={`N° Radicado: ${formatFilingNumber(item.filing_number)}`}
               description={
-                <RequestCardDescription
+                <CustomCardDescription
                   descriptionCard1={"Tipo de solicitud:"}
-                  tagComponentType={getTagComponentType(
+                  tagComponentCard1={getTagComponentType(
                     typeMapList[item.requirement_type]
                   )}
                   descriptionCard2={"Estado de solicitud:"}
-                  tagComponentStatus={getTagComponentStatus(
+                  tagComponentCard2={getTagComponentStatus(
                     statusMapList[item.requirement_status]
                   )}
                   descriptionCard3={"Fecha de solicitud:"}
-                  itemDateOfAdmission={<b>{item.date_of_admission}</b>}
+                  itemCard1={<b>{item.date_of_admission}</b>}
                   descriptionCard4={"Fecha de respuesta:"}
-                  itemAnswerDate={
+                  itemCard2={
                     <b>
                       {item.answer_date || (
                         <b style={{ color: "#960202" }}>
@@ -110,4 +110,4 @@ const ListOfRequestsCard: React.FC<{
   );
 };
 
-export default ListOfRequestsCard;
+export default ListOfRequestsCards;

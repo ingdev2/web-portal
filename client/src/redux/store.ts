@@ -17,6 +17,7 @@ import modalReducer from "./features/common/modal/modalSlice";
 import { adminsApi } from "./apis/admins/adminsApi";
 import { usersApi } from "./apis/users/usersApi";
 import { relativesApi } from "./apis/relatives/relativesApi";
+import { relationshipTypesApi } from "./apis/relatives/relationship_types/relationshipTypesApi";
 import { registerAdminApi } from "./apis/register/registerAdminApi";
 import { registerUsersApi } from "./apis/register/registerUsersApi";
 import { registerRelativesApi } from "./apis/register/registerRelativesApi";
@@ -59,6 +60,7 @@ const rootReducer = combineReducers({
   [adminsApi.reducerPath]: adminsApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [relativesApi.reducerPath]: relativesApi.reducer,
+  [relationshipTypesApi.reducerPath]: relationshipTypesApi.reducer,
   [registerAdminApi.reducerPath]: registerAdminApi.reducer,
   [registerUsersApi.reducerPath]: registerUsersApi.reducer,
   [registerRelativesApi.reducerPath]: registerRelativesApi.reducer,
@@ -87,6 +89,7 @@ export const store = configureStore({
       adminsApi.middleware,
       usersApi.middleware,
       relativesApi.middleware,
+      relationshipTypesApi.middleware,
       registerAdminApi.middleware,
       registerUsersApi.middleware,
       registerRelativesApi.middleware,

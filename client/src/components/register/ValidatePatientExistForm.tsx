@@ -387,6 +387,11 @@ const ValidatePatientExistForm: React.FC = () => {
             name="patient-user-id-number-validate"
             label="Número de identificación"
             style={{ marginBottom: 7 }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.replace(/[^0-9]/g, "");
+            }}
             rules={[
               {
                 required: true,
@@ -409,10 +414,11 @@ const ValidatePatientExistForm: React.FC = () => {
           >
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
-              type="number"
+              type="tel"
               value={idNumberLocalState}
               placeholder="Número de identificación"
               onChange={(e) => setIdNumberLocalState(e.target.valueAsNumber)}
+              autoComplete="off"
               min={0}
             />
           </Form.Item>

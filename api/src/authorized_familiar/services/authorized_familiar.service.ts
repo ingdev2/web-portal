@@ -9,6 +9,7 @@ import { CreateAuthorizedFamiliarDto } from '../dto/create-authorized_familiar.d
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 import { AuthenticationMethodEnum } from '../../utils/enums/authentication_method.enum';
+import { FamiliarLoginDto } from 'src/auth/dto/familiar_login.dto';
 
 @Injectable()
 export class AuthorizedFamiliarService {
@@ -90,23 +91,25 @@ export class AuthorizedFamiliarService {
       );
     }
 
-    const userFamiliarCellphoneFound = await this.familiarRepository.findOne({
-      where: {
-        cellphone: familiar.cellphone,
-      },
-    });
+    if (familiar.cellphone) {
+      const userFamiliarCellphoneFound = await this.familiarRepository.findOne({
+        where: {
+          cellphone: familiar.cellphone,
+        },
+      });
 
-    const userPatientCellphoneFound = await this.userRepository.findOne({
-      where: {
-        cellphone: familiar.cellphone,
-      },
-    });
+      const userPatientCellphoneFound = await this.userRepository.findOne({
+        where: {
+          cellphone: familiar.cellphone,
+        },
+      });
 
-    if (userFamiliarCellphoneFound || userPatientCellphoneFound) {
-      return new HttpException(
-        `El número de celular ${familiar.cellphone} ya está registrado.`,
-        HttpStatus.CONFLICT,
-      );
+      if (userFamiliarCellphoneFound || userPatientCellphoneFound) {
+        return new HttpException(
+          `El número de celular ${familiar.cellphone} ya está registrado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
     }
 
     const authenticationMethodFound =
@@ -150,7 +153,7 @@ export class AuthorizedFamiliarService {
 
     if (
       familiar.authentication_method === authenticationMethodEmailFound.id &&
-      familiar.email
+      !familiar.email
     ) {
       return new HttpException(
         `Debe ingresar un correo electrónico para activar el método de autenticación seleccionado`,
@@ -169,6 +172,7 @@ export class AuthorizedFamiliarService {
         ...familiar,
         user_role: familiarWithAnotherPatient.user_role,
         patient_id: patientFound.id,
+        patient_id_number: patientFound.id_number,
         authentication_method: authenticationMethodFound.id,
         accept_terms: true,
       });
@@ -207,6 +211,7 @@ export class AuthorizedFamiliarService {
       ...familiar,
       user_role: roleFamiliarFound.id,
       patient_id: patientFound.id,
+      patient_id_number: patientFound.id_number,
       accept_terms: true,
     });
 
@@ -332,16 +337,16 @@ export class AuthorizedFamiliarService {
     }
   }
 
-  async getFamiliarWithPatient(
-    familiarIdType: number,
-    idNumber: number,
-    familiarEmail: string,
-    patientIdNumber: number,
-    relWithPatient: number,
-  ) {
+  async getFamiliarWithPatient({
+    id_type_familiar,
+    id_number_familiar,
+    email_familiar,
+    patient_id_number,
+    rel_with_patient,
+  }: FamiliarLoginDto) {
     const patientData = await this.userRepository.findOne({
       where: {
-        id_number: patientIdNumber,
+        id_number: patient_id_number,
       },
     });
 
@@ -351,11 +356,11 @@ export class AuthorizedFamiliarService {
 
     const familiarPatient = await this.familiarRepository.findOne({
       where: {
-        user_id_type: familiarIdType,
-        id_number: idNumber,
-        email: familiarEmail,
+        user_id_type: id_type_familiar,
+        id_number: id_number_familiar,
+        email: email_familiar,
         patient_id: patientData.id,
-        rel_with_patient: relWithPatient,
+        rel_with_patient: rel_with_patient,
       },
       select: [
         'id',
