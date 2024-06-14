@@ -12,8 +12,9 @@ const FamiliarDetailsModal: React.FC<{
   selectedFamiliarIdTypeModal: ReactNode;
   selectedFamiliarIdNumberModal: number;
   selectedFamiliarRelationshipWithPatientModal: ReactNode;
-  selectedFamiliarCellphoneModal: number;
   selectedFamiliarEmailModal: string;
+  selectedFamiliarCellphoneModal: number;
+  selectedFamiliarWhatsappModal: number;
   handleCancelFamiliarDetailsModal: () => void;
 }> = ({
   modalOpenRequestDetailsModal,
@@ -22,8 +23,9 @@ const FamiliarDetailsModal: React.FC<{
   selectedFamiliarIdTypeModal,
   selectedFamiliarIdNumberModal,
   selectedFamiliarRelationshipWithPatientModal,
-  selectedFamiliarCellphoneModal,
   selectedFamiliarEmailModal,
+  selectedFamiliarCellphoneModal,
+  selectedFamiliarWhatsappModal,
   handleCancelFamiliarDetailsModal,
 }) => {
   return (
@@ -46,10 +48,12 @@ const FamiliarDetailsModal: React.FC<{
           selectedFamiliarRelationshipWithPatient={
             selectedFamiliarRelationshipWithPatientModal
           }
-          labelFamiliarCellphone={"Celular:"}
-          selectedFamiliarCellphone={selectedFamiliarCellphoneModal}
           labelFamiliarEmail={"Email:"}
           selectedFamiliarEmail={selectedFamiliarEmailModal}
+          labelFamiliarCellphone={"Celular:"}
+          selectedFamiliarCellphone={selectedFamiliarCellphoneModal}
+          labelFamiliarWhatsapp={"Whatsapp"}
+          selectedFamiliarWhatsapp={selectedFamiliarWhatsappModal}
         />
       }
       maskClosableCustomModal={true}

@@ -65,6 +65,10 @@ const PatientRelativesCardList: React.FC<{
     selectedFamiliarCellphoneLocalState,
     setSelectedFamiliarCellphoneLocalState,
   ] = useState(0);
+  const [
+    selectedFamiliarWhatsappLocalState,
+    setSelectedFamiliarWhatsappLocalState,
+  ] = useState(0);
 
   const [
     sortRelativesByOptionsLocalState,
@@ -223,6 +227,7 @@ const PatientRelativesCardList: React.FC<{
         setSelectedFamiliarIdNumberLocalState(item.id_number);
         setSelectedFamiliarCellphoneLocalState(item.cellphone);
         setSelectedFamiliarEmailLocalState(item.email);
+        setSelectedFamiliarWhatsappLocalState(item.whatsapp);
         setModalOpenFamiliarDetails(true);
       }}
       iconButtonOptionDetails={<FaRegEye size={17} />}
@@ -273,8 +278,9 @@ const PatientRelativesCardList: React.FC<{
           selectedFamiliarRelationshipWithPatientModal={
             selectedFamiliarRelationshipWithPatientLocalState
           }
-          selectedFamiliarCellphoneModal={selectedFamiliarCellphoneLocalState}
           selectedFamiliarEmailModal={selectedFamiliarEmailLocalState}
+          selectedFamiliarCellphoneModal={selectedFamiliarCellphoneLocalState}
+          selectedFamiliarWhatsappModal={selectedFamiliarWhatsappLocalState}
           handleCancelFamiliarDetailsModal={() => {
             setModalOpenFamiliarDetails(false);
           }}

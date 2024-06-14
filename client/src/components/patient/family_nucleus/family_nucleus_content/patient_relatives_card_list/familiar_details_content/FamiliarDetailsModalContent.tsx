@@ -22,6 +22,8 @@ const FamiliarDetailsModalContent: React.FC<{
   selectedFamiliarCellphone: number;
   labelFamiliarEmail: string;
   selectedFamiliarEmail: string;
+  labelFamiliarWhatsapp: string;
+  selectedFamiliarWhatsapp: number;
 }> = ({
   titleDescription,
   labelFamiliarName,
@@ -38,6 +40,8 @@ const FamiliarDetailsModalContent: React.FC<{
   selectedFamiliarCellphone,
   labelFamiliarEmail,
   selectedFamiliarEmail,
+  labelFamiliarWhatsapp,
+  selectedFamiliarWhatsapp,
 }) => {
   return (
     <Col
@@ -142,19 +146,31 @@ const FamiliarDetailsModalContent: React.FC<{
         column={3}
       >
         <Descriptions.Item
-          label={labelFamiliarCellphone}
-          style={{ textAlign: "center" }}
-          span={3}
-        >
-          {selectedFamiliarCellphone}
-        </Descriptions.Item>
-
-        <Descriptions.Item
           label={labelFamiliarEmail}
           style={{ textAlign: "center" }}
           span={3}
         >
           {selectedFamiliarEmail}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelFamiliarCellphone}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedFamiliarCellphone || (
+            <b style={{ color: "#960202" }}>No aplica</b>
+          )}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelFamiliarWhatsapp}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedFamiliarWhatsapp || (
+            <b style={{ color: "#960202" }}>No aplica</b>
+          )}
         </Descriptions.Item>
       </Descriptions>
     </Col>

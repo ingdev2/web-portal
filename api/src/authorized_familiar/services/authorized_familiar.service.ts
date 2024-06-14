@@ -91,23 +91,25 @@ export class AuthorizedFamiliarService {
       );
     }
 
-    const userFamiliarCellphoneFound = await this.familiarRepository.findOne({
-      where: {
-        cellphone: familiar.cellphone,
-      },
-    });
+    if (familiar.cellphone) {
+      const userFamiliarCellphoneFound = await this.familiarRepository.findOne({
+        where: {
+          cellphone: familiar.cellphone,
+        },
+      });
 
-    const userPatientCellphoneFound = await this.userRepository.findOne({
-      where: {
-        cellphone: familiar.cellphone,
-      },
-    });
+      const userPatientCellphoneFound = await this.userRepository.findOne({
+        where: {
+          cellphone: familiar.cellphone,
+        },
+      });
 
-    if (userFamiliarCellphoneFound || userPatientCellphoneFound) {
-      return new HttpException(
-        `El número de celular ${familiar.cellphone} ya está registrado.`,
-        HttpStatus.CONFLICT,
-      );
+      if (userFamiliarCellphoneFound || userPatientCellphoneFound) {
+        return new HttpException(
+          `El número de celular ${familiar.cellphone} ya está registrado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
     }
 
     const authenticationMethodFound =

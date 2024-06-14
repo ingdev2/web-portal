@@ -4,29 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import {
-  Button,
-  Card,
-  Checkbox,
-  CheckboxProps,
-  Col,
-  Form,
-  Input,
-  Radio,
-  Select,
-  Space,
-} from "antd";
-import CustomSpin from "../../../../common/custom_spin/CustomSpin";
+import { Button, Card, CheckboxProps, Col } from "antd";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
-import { titleStyleCss } from "@/theme/text_styles";
-import { IdcardOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
-import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
-import { FiPhone } from "react-icons/fi";
 
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import {
@@ -42,6 +26,7 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import AddRelativeDataForm from "./AddRelativeDataForm";
 
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -76,7 +61,7 @@ const AddRelativeForm: React.FC = () => {
   const [familiarCellphoneLocalState, setFamiliarCellphoneLocalState] =
     useState(0);
   const [familiarWhatsappLocalState, setFamiliarWhatsappLocalState] =
-    useState("");
+    useState(0);
   const [
     familiarRelationshipListLocalState,
     setFamiliarRelationshipListLocalState,
@@ -250,9 +235,10 @@ const AddRelativeForm: React.FC = () => {
           id_number: familiarIdNumberLocalState,
           user_gender: familiarGenderLocalState,
           email: familiarEmailLocalState,
-          cellphone: familiarCellphoneLocalState,
+          cellphone: familiarCellphoneLocalState || undefined,
           authentication_method: familiarAuthMethodLocalState,
           rel_with_patient: familiarRelationshipLocalState,
+          whatsapp: familiarWhatsappLocalState || undefined,
         },
       });
 
@@ -284,7 +270,11 @@ const AddRelativeForm: React.FC = () => {
         }
       }
 
-      if (addAuthFamiliarSuccess) {
+      if (
+        addAuthFamiliarSuccess &&
+        !addAuthFamiliarError &&
+        !addAuthFamiliarValidationData
+      ) {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
       }
@@ -450,451 +440,67 @@ const AddRelativeForm: React.FC = () => {
           />
         )}
 
-        <Form
-          id="add-relative-form"
-          name="add-relative-form"
-          className="add-relative-form"
-          onFinish={handleAddAuthFamiliar}
-          initialValues={{ remember: false }}
-          autoComplete="false"
-          layout="vertical"
-        >
-          <h2
-            className="title-add-relative-form"
-            style={{
-              ...titleStyleCss,
-              textAlign: "center",
-              marginBottom: "22px",
-            }}
-          >
-            Agregar familiar autorizado
-          </h2>
-
-          <Form.Item
-            name="new-familiar-relationship-with-patient"
-            label="Tipo de parentesco"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor selecciona el tipo de parentesco con el familiar!",
-              },
-            ]}
-          >
-            {idTypesLoading && idTypesFetching && !idTypesData ? (
-              <CustomSpin />
-            ) : (
-              <Select
-                value={familiarRelationshipLocalState}
-                placeholder="Parentesco con familiar"
-                onChange={handleOnChangeSelectRelationship}
-              >
-                {familiarRelationshipListLocalState?.map((option: any) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-name"
-            label="Nombre(s) del familiar"
-            style={{ marginBottom: "13px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              const filteredValue = value
-                .toUpperCase()
-                .replace(/[^A-Z\s]/g, "");
-              return filteredValue;
-            }}
-            rules={[
-              {
-                required: true,
-                message: "¡Por favor ingrese el nombre del familiar!",
-              },
-              {
-                min: 3,
-                message: "El nombre debe tener al menos 3 caracteres",
-              },
-              {
-                max: 31,
-                message: "El nombre no puede tener más de 31 caracteres",
-              },
-              {
-                pattern: /^[A-Z\s]*$/,
-                message:
-                  "El nombre solo puede contener letras mayúsculas y espacios",
-              },
-            ]}
-          >
-            <Input
-              prefix={
-                <MdDriveFileRenameOutline className="site-form-item-icon" />
-              }
-              type="text"
-              value={familiarNameLocalState}
-              placeholder="Nombre(s) completos"
-              onChange={(e) => {
-                setFamiliarNameLocalState(e.target.value.toUpperCase());
-              }}
-              autoComplete="off"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-lastname"
-            label="Apellido(s) del familiar"
-            style={{ marginBottom: "13px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              const filteredValue = value
-                .toUpperCase()
-                .replace(/[^A-Z\s]/g, "");
-              return filteredValue;
-            }}
-            rules={[
-              {
-                required: true,
-                message: "¡Por favor ingrese el apellido del familiar!",
-              },
-              {
-                min: 4,
-                message: "El apellido debe tener al menos 4 caracteres",
-              },
-              {
-                max: 31,
-                message: "El apellido no puede tener más de 31 caracteres",
-              },
-              {
-                pattern: /^[A-Z\s]*$/,
-                message:
-                  "El apellido solo puede contener letras mayúsculas y espacios",
-              },
-            ]}
-          >
-            <Input
-              prefix={
-                <MdDriveFileRenameOutline className="site-form-item-icon" />
-              }
-              type="text"
-              value={familiarLastNameLocalState}
-              placeholder="Apellido(s) completos"
-              onChange={(e) => {
-                setFamiliarLastNameLocalState(e.target.value.toUpperCase());
-              }}
-              autoComplete="off"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-id-types"
-            label="Tipo de identificación del familiar"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor selecciona el tipo de identificación del familiar!",
-              },
-            ]}
-          >
-            {idTypesLoading && idTypesFetching && !idTypesData ? (
-              <CustomSpin />
-            ) : (
-              <Select
-                value={familiarIdTypeLocalState}
-                placeholder="Tipo de identificación"
-                onChange={handleOnChangeSelectIdType}
-              >
-                {idTypesListFamiliarState?.map((option: any) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-id-number"
-            label="Número de identificación del familiar"
-            style={{ marginBottom: "13px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              return value.replace(/[^0-9]/g, "");
-            }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor ingresa el número de identificación del familiar!",
-              },
-              {
-                pattern: /^[0-9]+$/,
-                message:
-                  "¡Por favor ingresa número de identificación sin puntos!",
-              },
-              {
-                min: 7,
-                message: "¡Por favor ingresa mínimo 7 números!",
-              },
-              {
-                max: 11,
-                message: "¡Por favor ingresa máximo 11 números!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<IdcardOutlined className="site-form-item-icon" />}
-              type="tel"
-              value={familiarIdNumberLocalState}
-              placeholder="Número de identificación"
-              onChange={(e) => {
-                setFamiliarIdNumberLocalState(parseInt(e.target.value, 10));
-              }}
-              autoComplete="off"
-              min={0}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-gender"
-            label="Sexo del familiar"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: true,
-                message: "¡Por favor selecciona el tipo de sexo del familiar!",
-              },
-            ]}
-          >
-            {gendersLoading && gendersFetching && !gendersData ? (
-              <CustomSpin />
-            ) : (
-              <Select
-                value={familiarGenderLocalState}
-                placeholder="Selecciona sexo"
-                onChange={(e) => {
-                  setFamiliarGenderLocalState(e);
-                }}
-              >
-                {familiarGenderListLocalState?.map((option: any) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-cellphone"
-            label="Celular del familiar"
-            style={{ marginBottom: "13px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              return value.replace(/[^0-9]/g, "");
-            }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor ingresa el número de celular del familiar!",
-              },
-              {
-                pattern: /^[0-9]+$/,
-                message:
-                  "¡Por favor ingresa número de celular sin puntos ni comas!",
-              },
-              {
-                min: 7,
-                message: "¡Por favor ingresa mínimo 7 números!",
-              },
-              {
-                max: 11,
-                message: "¡Por favor ingresa máximo 11 números!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<FiPhone className="site-form-item-icon" />}
-              type="tel"
-              value={familiarCellphoneLocalState}
-              placeholder="Número de celular"
-              onChange={(e) =>
-                setFamiliarCellphoneLocalState(parseInt(e.target.value, 10))
-              }
-              autoComplete="off"
-              min={0}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="new-familiar-email"
-            label="Correo electrónico del familiar"
-            style={{ marginBottom: "13px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              return value.toLowerCase().replace(/[^a-z0-9@._-]/g, "");
-            }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor ingresa el correo electrónico del familiar!",
-              },
-              {
-                type: "email",
-                message: "¡Por favor ingresa un correo electrónico valido!",
-              },
-              {
-                min: 10,
-                message: "¡Por favor ingresa mínimo 10 caracteres!",
-              },
-              {
-                max: 45,
-                message: "¡Por favor ingresa máximo 45 caracteres!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<MdOutlineEmail className="site-form-item-icon" />}
-              type="email"
-              value={familiarEmailLocalState}
-              placeholder="Correo electrónico"
-              onChange={(e) => {
-                setFamiliarEmailLocalState(e.target.value.toLowerCase());
-              }}
-              autoComplete="off"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="radio-select-auth-method"
-            label="Método de autenticación del familiar"
-            style={{ marginBottom: 22 }}
-            rules={[
-              {
-                required: true,
-                message: "¡Por favor selecciona un método de autenticación!",
-              },
-            ]}
-          >
-            <Radio.Group
-              value={familiarAuthMethodLocalState}
-              onChange={(e) => setFamiliarAuthMethodLocalState(e.target.value)}
-              style={{ textAlign: "start" }}
-            >
-              <Space size={"small"} direction="horizontal">
-                {familiarAuthMethodsListLocalState?.map((option: any) => (
-                  <Radio key={option.id} value={option.id}>
-                    {option.name}
-                  </Radio>
-                ))}
-              </Space>
-            </Radio.Group>
-          </Form.Item>
-
-          <Form.Item
-            name="familiar-whatsapp-register"
-            label="WhatsApp del familiar (opcional)"
-            style={{ marginBottom: "13px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              return value.replace(/[^0-9]/g, "");
-            }}
-            rules={[
-              {
-                required: false,
-              },
-              {
-                pattern: /^[0-9]+$/,
-                message:
-                  "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
-              },
-              {
-                min: 7,
-                message: "¡Por favor ingresa mínimo 7 números!",
-              },
-              {
-                max: 11,
-                message: "¡Por favor ingresa máximo 11 números!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<WhatsAppOutlined className="site-form-item-icon" />}
-              type="tel"
-              value={familiarWhatsappLocalState}
-              placeholder="Número de WhatsApp"
-              onChange={(e) => setFamiliarWhatsappLocalState(e.target.value)}
-              autoComplete="off"
-              min={0}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="checkbox-data-autorization"
-            valuePropName="checked"
-            style={{ textAlign: "center", marginBottom: 13 }}
-            rules={[
-              {
-                validator: checkboxValidator,
-              },
-            ]}
-          >
-            <div style={{ marginBlock: 7 }}>
-              <div style={{ marginBottom: "13px" }}>
-                <a
-                  className="data-processing-autorization-link"
-                  href={
-                    process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK
-                  }
-                  target="_blank"
-                  style={{ textDecoration: "underline" }}
-                >
-                  Leer Política de Tratamiento de Datos
-                </a>
-              </div>
-              <Checkbox
-                checked={isCheckboxChecked}
-                onChange={handleCheckboxChange}
-              >
-                Acepto las políticas de tratamiento de datos personales
-              </Checkbox>
-            </div>
-          </Form.Item>
-
-          <Form.Item style={{ textAlign: "center", marginBottom: "13px" }}>
-            {isSubmittingConfirmModal && !modalIsOpenConfirm ? (
-              <CustomSpin />
-            ) : (
-              <Button
-                size="large"
-                style={{
-                  paddingInline: 62,
-                  borderRadius: 31,
-                  backgroundColor: "#015E90",
-                  color: "#f2f2f2",
-                }}
-                htmlType="submit"
-                className="create-medical-req-form-button"
-                onClick={handleButtonClick}
-              >
-                Agregar familiar
-              </Button>
-            )}
-          </Form.Item>
-        </Form>
+        <AddRelativeDataForm
+          handleAddAuthFamiliarDataForm={handleAddAuthFamiliar}
+          relationshipSelectorLoadingDataForm={
+            idTypesLoading && idTypesFetching && !idTypesData
+          }
+          familiarRelationshipValueDataForm={familiarRelationshipLocalState}
+          handleOnChangeSelectRelationshipDataForm={
+            handleOnChangeSelectRelationship
+          }
+          familiarRelationshipListDataForm={familiarRelationshipListLocalState}
+          familiarNameDataForm={familiarNameLocalState}
+          handleOnChangeFamiliarNameDataForm={(e) => {
+            setFamiliarNameLocalState(e.target.value.toUpperCase());
+          }}
+          familiarLastNameDataForm={familiarLastNameLocalState}
+          handleOnChangeFamiliarLastNameDataForm={(e) => {
+            setFamiliarLastNameLocalState(e.target.value.toUpperCase());
+          }}
+          idTypeSelectorLoadingDataForm={
+            idTypesLoading && idTypesFetching && !idTypesData
+          }
+          familiarIdTypeValueDataForm={familiarIdTypeLocalState}
+          handleOnChangeSelectIdTypeDataForm={handleOnChangeSelectIdType}
+          familiarIdTypeListDataForm={idTypesListFamiliarState}
+          familiarIdNumberDataForm={familiarIdNumberLocalState}
+          handleOnChangeFamiliarIdNumberDataForm={(e) => {
+            setFamiliarIdNumberLocalState(parseInt(e.target.value, 10));
+          }}
+          genderSelectorLoadingDataForm={
+            gendersLoading && gendersFetching && !gendersData
+          }
+          familiarGenderValueDataForm={familiarGenderLocalState}
+          handleOnChangeSelectGenderDataForm={(e) => {
+            setFamiliarGenderLocalState(e);
+          }}
+          familiarGenderListDataForm={familiarGenderListLocalState}
+          familiarEmailDataForm={familiarEmailLocalState}
+          handleOnChangeFamiliarEmailDataForm={(e) => {
+            setFamiliarEmailLocalState(e.target.value.toLowerCase());
+          }}
+          familiarCellphoneDataForm={familiarCellphoneLocalState}
+          handleOnChangeFamiliarCellphoneDataForm={(e) =>
+            setFamiliarCellphoneLocalState(parseInt(e.target.value, 10))
+          }
+          familiarAuthMethodValueDataForm={familiarAuthMethodLocalState}
+          handleOnChangeSelectAuthMethodDataForm={(e) =>
+            setFamiliarAuthMethodLocalState(e.target.value)
+          }
+          familiarAuthMethodListDataForm={familiarAuthMethodsListLocalState}
+          familiarWhatsappDataForm={familiarWhatsappLocalState}
+          handleOnChangeFamiliarWhatsappDataForm={(e) =>
+            setFamiliarWhatsappLocalState(parseInt(e.target.value, 10))
+          }
+          checkboxValidatorDataForm={checkboxValidator}
+          isCheckboxCheckedDataForm={isCheckboxChecked}
+          handleCheckboxChangeDataForm={handleCheckboxChange}
+          buttonSubmitFormLoadingDataForm={
+            isSubmittingConfirmModal && !modalIsOpenConfirm
+          }
+          handleButtonSubmitFormDataForm={handleButtonClick}
+        />
       </Card>
     </Col>
   );
