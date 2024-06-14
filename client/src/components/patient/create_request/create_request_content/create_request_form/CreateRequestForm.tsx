@@ -4,15 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Col, Form, Select } from "antd";
-import CustomSpin from "../../../../common/custom_spin/CustomSpin";
+import { Button, Card, Col } from "antd";
+import CreateRequestDataForm from "./CreateRequestDataForm";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
-import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
-import { titleStyleCss } from "@/theme/text_styles";
-import TextArea from "antd/es/input/TextArea";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
 
@@ -267,7 +264,13 @@ const CreateRequestForm: React.FC = () => {
             openCustomModalState={modalIsOpenConfirm}
             iconCustomModal={<FcInfo size={77} />}
             titleCustomModal="¿Deseas crear una nueva solicitud?"
-            subtitleCustomModal={`Se realizará un nuevo requerimiento de tipo ${reqTypeNameLocalState}, del paciente ${nameUserPatientState}`}
+            subtitleCustomModal={
+              <p>
+                Se realizará un nuevo requerimiento de tipo&nbsp;
+                <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
+                <b>{nameUserPatientState}</b>
+              </p>
+            }
             handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
             handleConfirmCustomModal={handleConfirmDataModal}
             isSubmittingConfirm={isSubmittingNewMedicalReq}
@@ -305,113 +308,23 @@ const CreateRequestForm: React.FC = () => {
           />
         )}
 
-        <Form
-          id="create-medical-req-form"
-          name="create-medical-req-form"
-          className="create-medical-req-form"
-          onFinish={handleCreateRequest}
-          initialValues={{ remember: false }}
-          autoComplete="false"
-          layout="vertical"
-        >
-          <h2
-            className="title-create-medical-req-form"
-            style={{
-              ...titleStyleCss,
-              textAlign: "center",
-              marginBottom: "22px",
-            }}
-          >
-            Crear nueva solicitud de requerimiento médico
-          </h2>
-
-          <Form.Item
-            name="medical-req-types"
-            label="Tipo de requerimiento médico"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor selecciona el tipo de requerimiento a solicitar!",
-              },
-            ]}
-          >
-            {reqTypesLoading && reqTypesFetching && !reqTypesData ? (
-              <CustomSpin />
-            ) : (
-              <Select
-                value={reqTypeState}
-                placeholder="Tipo de requerimiento"
-                onChange={handleOnChangeSelectIdType}
-              >
-                {typesMedicalReqState?.map((option: any) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </Form.Item>
-
-          <Form.Item
-            name="upload-files-reference-documents"
-            label="Documento(s) de referencia (opcional)"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: false,
-                message: "¡Por favor adjunta mínimo un documento!",
-              },
-            ]}
-          >
-            <CustomUpload titleCustomUpload="Cargar documento" />
-          </Form.Item>
-
-          <Form.Item
-            name="especifications"
-            label="Observaciones y/o detalles"
-            style={{ marginBottom: "31px" }}
-            rules={[
-              {
-                required: true,
-                message:
-                  "¡Por favor, especifique detalles a tener en cuenta de su solicitud!",
-              },
-            ]}
-          >
-            <TextArea
-              autoSize={{ minRows: 2, maxRows: 10 }}
-              maxLength={301}
-              value={userMessageMedicalReqState}
-              placeholder="Especifique detalles a tener en cuenta de su solicitud. Ej. Fecha aprox. de procedimiento"
-              onChange={(e) =>
-                dispatch(setUserMessageMedicalReq(e.target.value))
-              }
-            />
-          </Form.Item>
-
-          <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
-            {isSubmittingConfirmModal && !modalIsOpenConfirm ? (
-              <CustomSpin />
-            ) : (
-              <Button
-                size="large"
-                style={{
-                  paddingInline: 62,
-                  borderRadius: 31,
-                  backgroundColor: "#015E90",
-                  color: "#f2f2f2",
-                }}
-                htmlType="submit"
-                className="create-medical-req-form-button"
-                onClick={handleButtonClick}
-              >
-                Crear solicitud
-              </Button>
-            )}
-          </Form.Item>
-        </Form>
+        <CreateRequestDataForm
+          handleCreateRequestDataForm={handleCreateRequest}
+          reqTypeSelectorLoadingDataForm={
+            reqTypesLoading && reqTypesFetching && !reqTypesData
+          }
+          familiarReqTypeValueDataForm={reqTypeState}
+          handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
+          familiarReqTypeListDataForm={typesMedicalReqState}
+          userMessageMedicalReqDataForm={userMessageMedicalReqState}
+          handleOnChangeUserMessageMedicalReqDataForm={(e) =>
+            dispatch(setUserMessageMedicalReq(e.target.value))
+          }
+          buttonSubmitFormLoadingDataForm={
+            isSubmittingConfirmModal && !modalIsOpenConfirm
+          }
+          handleButtonSubmitFormDataForm={handleButtonClick}
+        />
       </Card>
     </Col>
   );

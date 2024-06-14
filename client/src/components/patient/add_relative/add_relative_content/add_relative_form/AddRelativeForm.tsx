@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, CheckboxProps, Col } from "antd";
+import AddRelativeDataForm from "./AddRelativeDataForm";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
@@ -26,7 +27,6 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
-import AddRelativeDataForm from "./AddRelativeDataForm";
 
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();
