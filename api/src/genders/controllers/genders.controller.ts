@@ -34,6 +34,11 @@ export class GenderTypeController {
     return this.genderTypeService.getAllGenderTypes();
   }
 
+  @Get('/getGender/:id')
+  getGenderById(@Param('id') id: number) {
+    return this.genderTypeService.getGenderById(id);
+  }
+
   // PATCH METHODS //
 
   @Auth(AdminRolType.SUPER_ADMIN)

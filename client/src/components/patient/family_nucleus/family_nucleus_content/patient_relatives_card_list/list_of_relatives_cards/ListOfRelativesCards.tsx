@@ -84,8 +84,8 @@ const ListOfRelativesCards: React.FC<{
                   )}
                   descriptionCard3={"Número de identificación:"}
                   itemCard1={item.id_number}
-                  descriptionCard4={"Número de celular:"}
-                  itemCard2={item.cellphone}
+                  descriptionCard4={"Email:"}
+                  itemCard2={item.email}
                 />
               }
             />

@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import { Button, Divider, Form, Input, Modal } from "antd";
 import { MdPassword } from "react-icons/md";
 import CustomMessage from "../common/custom_messages/CustomMessage";
+import CustomLoadingOverlay from "../common/custom_loading_overlay/CustomLoadingOverlay";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
@@ -41,6 +42,7 @@ const PatientModalVerificationCode: React.FC = () => {
     (state) => state.patientUserLogin.verification_code
   );
 
+  const [isHomepageLoading, setIsHomepageLoading] = useState(false);
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
   const [isSubmittingResendCode, setIsSubmittingResendCode] = useState(false);
 
@@ -102,6 +104,8 @@ const PatientModalVerificationCode: React.FC = () => {
       }
 
       if (responseNextAuth?.status === 200) {
+        setIsHomepageLoading(true);
+
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
         dispatch(setIdTypeLoginPatient(""));
@@ -109,6 +113,10 @@ const PatientModalVerificationCode: React.FC = () => {
         dispatch(setVerificationCodeLoginPatient(""));
 
         await router.replace("/patient/homepage", { scroll: false });
+
+        await new Promise((resolve) => setTimeout(resolve, 4000));
+
+        setIsHomepageLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -225,6 +233,8 @@ const PatientModalVerificationCode: React.FC = () => {
           >
             {isUserPatientData?.email}
           </h5>
+
+          <CustomLoadingOverlay isLoading={isHomepageLoading} />
 
           <Form
             id="form-verify-code-modal-patient"

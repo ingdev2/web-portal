@@ -20,6 +20,10 @@ export const gendersApi = createApi({
       query: () => "getAll",
     }),
 
+    getGenderById: builder.query<Gender, number>({
+      query: (id) => `getGender/${id}`,
+    }),
+
     updateGenderById: builder.mutation<any, { id: number; newName: string }>({
       query: ({ id, newName }) => ({
         url: `update/${id}`,
@@ -34,5 +38,6 @@ export const gendersApi = createApi({
 export const {
   useCreateGenderMutation,
   useGetAllGendersQuery,
+  useGetGenderByIdQuery,
   useUpdateGenderByIdMutation,
 } = gendersApi;

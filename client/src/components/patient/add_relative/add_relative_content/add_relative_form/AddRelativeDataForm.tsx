@@ -135,7 +135,7 @@ const AddRelativeDataForm: React.FC<{
         normalize={(value) => {
           if (!value) return "";
 
-          const filteredValue = value.toUpperCase().replace(/[^A-Z\s]/g, "");
+          const filteredValue = value.toUpperCase().replace(/[^A-ZÑ\s]/g, "");
           return filteredValue;
         }}
         rules={[
@@ -152,7 +152,7 @@ const AddRelativeDataForm: React.FC<{
             message: "El nombre no puede tener más de 31 caracteres",
           },
           {
-            pattern: /^[A-Z\s]*$/,
+            pattern: /^[A-ZÑ\s]*$/,
             message:
               "El nombre solo puede contener letras mayúsculas y espacios",
           },
@@ -175,7 +175,7 @@ const AddRelativeDataForm: React.FC<{
         normalize={(value) => {
           if (!value) return "";
 
-          const filteredValue = value.toUpperCase().replace(/[^A-Z\s]/g, "");
+          const filteredValue = value.toUpperCase().replace(/[^A-ZÑ\s]/g, "");
           return filteredValue;
         }}
         rules={[
@@ -192,7 +192,7 @@ const AddRelativeDataForm: React.FC<{
             message: "El apellido no puede tener más de 31 caracteres",
           },
           {
-            pattern: /^[A-Z\s]*$/,
+            pattern: /^[A-ZÑ\s]*$/,
             message:
               "El apellido solo puede contener letras mayúsculas y espacios",
           },
@@ -386,7 +386,7 @@ const AddRelativeDataForm: React.FC<{
       <Form.Item
         name="radio-select-auth-method"
         label="Método de autenticación del familiar"
-        style={{ marginBottom: 22 }}
+        style={{ marginBottom: "22px" }}
         rules={[
           {
             required: true,

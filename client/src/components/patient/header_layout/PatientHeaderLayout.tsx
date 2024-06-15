@@ -45,7 +45,7 @@ const PatienHeaderLayout: React.FC = () => {
 
   const handleClickUpdatePersonalData = async () => {
     try {
-      await router.push("/patient/update_personal_data", {
+      await router.push("/patient/homepage/update_personal_data", {
         scroll: true,
       });
     } catch (error) {
