@@ -64,7 +64,7 @@ export const patientSlice = createSlice({
     setCellphoneUserEps: (state, action) => {
       state.cellphone = action.payload;
     },
-    setAuthMethodUserPatient: (state, action) => {
+    setAuthMethodUserEps: (state, action) => {
       state.authentication_method = action.payload;
     },
     setPasswordUserEps: (state, action) => {
@@ -118,7 +118,7 @@ export const {
   setIdNumberUserEps,
   setEmailUserEps,
   setCellphoneUserEps,
-  setAuthMethodUserPatient,
+  setAuthMethodUserEps,
   setPasswordUserEps,
   setIsActiveUserEps,
   setRoleUserEps,

@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import { Button, Divider, Form, Input, Modal } from "antd";
 import { MdPassword } from "react-icons/md";
 import CustomMessage from "../common/custom_messages/CustomMessage";
+import CustomLoadingOverlay from "../common/custom_loading_overlay/CustomLoadingOverlay";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CountdownTimer from "../common/countdown_timer/CountdownTimer";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
@@ -37,6 +38,7 @@ const EpsModalVerificationCode: React.FC = () => {
     (state) => state.epsUserLogin.verification_code
   );
 
+  const [isHomepageLoading, setIsHomepageLoading] = useState(false);
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
   const [isSubmittingResendCode, setIsSubmittingResendCode] = useState(false);
 
@@ -107,6 +109,10 @@ const EpsModalVerificationCode: React.FC = () => {
         await router.replace("/eps/homepage", {
           scroll: false,
         });
+
+        await new Promise((resolve) => setTimeout(resolve, 4000));
+
+        setIsHomepageLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -223,6 +229,8 @@ const EpsModalVerificationCode: React.FC = () => {
           >
             {isUserEpsData?.email}
           </h5>
+
+          <CustomLoadingOverlay isLoading={isHomepageLoading} />
 
           <Form
             id="form-verify-code-modal-eps"

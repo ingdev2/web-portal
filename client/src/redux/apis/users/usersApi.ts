@@ -86,12 +86,24 @@ export const usersApi = createApi({
       query: (idNumber) => `getEpsUserById/${idNumber}`,
     }),
 
-    updateUser: builder.mutation<
+    updateUserPatient: builder.mutation<
       any,
       { id: string; updateUser: Partial<User> }
     >({
       query: ({ id, updateUser }) => ({
-        url: `update/${id}`,
+        url: `updatePatient/${id}`,
+        method: "PATCH",
+        params: { id },
+        body: updateUser,
+      }),
+    }),
+
+    updateUserEps: builder.mutation<
+      any,
+      { id: string; updateUser: Partial<User> }
+    >({
+      query: ({ id, updateUser }) => ({
+        url: `updateEps/${id}`,
         method: "PATCH",
         params: { id },
         body: updateUser,
@@ -121,6 +133,7 @@ export const {
   useGetUserByIdQuery,
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
-  useUpdateUserMutation,
+  useUpdateUserPatientMutation,
+  useUpdateUserEpsMutation,
   useBanUserMutation,
 } = usersApi;

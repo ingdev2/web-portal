@@ -21,10 +21,15 @@ import {
   setErrorsUserPatient,
   setDefaultValuesUserPatient,
   setIdTypeAbbrevUserPatient,
+  setGenderUserPatient,
+  setGenderAbbrevUserPatient,
+  setAuthMethodUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
+import { useGetGenderByIdQuery } from "@/redux/apis/genders/gendersApi";
+import { setAuthMethodUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
 const PatientDataCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,8 +44,11 @@ const PatientDataCard: React.FC = () => {
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
   );
-  const genderPatientState = useAppSelector(
+  const genderNumberPatientState = useAppSelector(
     (state) => state.patient.user_gender
+  );
+  const genderNamePatientState = useAppSelector(
+    (state) => state.patient.user_gender_abbrev
   );
   const emailPatientState = useAppSelector((state) => state.patient.email);
   const cellphonePatientState = useAppSelector(
@@ -73,10 +81,18 @@ const PatientDataCard: React.FC = () => {
     error: idTypeNameUserError,
   } = useGetIdTypeByIdQuery(idTypeNumberPatientState);
 
+  const {
+    data: genderNameUserData,
+    isLoading: genderNameUserLoading,
+    isFetching: genderNameUserFetching,
+    error: genderNameUserError,
+  } = useGetGenderByIdQuery(genderNumberPatientState);
+
   useEffect(() => {
     if (idNumberPatientState && userPatientData) {
       dispatch(setNameUserPatient(userPatientData?.name));
       dispatch(setIdTypeUserPatient(userPatientData?.user_id_type));
+      dispatch(setGenderUserPatient(userPatientData?.user_gender));
       dispatch(setEmailUserPatient(userPatientData?.email));
       dispatch(setCellphoneUserPatient(userPatientData?.cellphone));
       dispatch(setWhatsappUserPatient(userPatientData?.whatsapp));
@@ -84,9 +100,15 @@ const PatientDataCard: React.FC = () => {
         setResidenceAddressUserPatient(userPatientData?.residence_address)
       );
       dispatch(setAffiliationEpsUserPatient(userPatientData?.affiliation_eps));
+      dispatch(
+        setAuthMethodUserPatient(userPatientData?.authentication_method)
+      );
     }
     if (idTypeNumberPatientState && idTypeNameUserData) {
       dispatch(setIdTypeAbbrevUserPatient(idTypeNameUserData.name));
+    }
+    if (genderNumberPatientState && genderNameUserData) {
+      dispatch(setGenderAbbrevUserPatient(genderNameUserData.name));
     }
   }, [
     idNumberPatientState,

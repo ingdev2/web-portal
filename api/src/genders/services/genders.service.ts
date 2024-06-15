@@ -52,6 +52,23 @@ export class GenderTypeService {
     }
   }
 
+  async getGenderById(id: number) {
+    const genderFound = await this.genderTypeRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!genderFound) {
+      return new HttpException(
+        `El tipo de sexo con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return genderFound;
+    }
+  }
+
   // UPDATE FUNTIONS //
 
   async updateGenderType(id: number, genderType: UpdateGenderTypeDto) {
