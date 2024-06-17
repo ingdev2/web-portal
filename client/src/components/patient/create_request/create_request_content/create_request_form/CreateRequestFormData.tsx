@@ -8,7 +8,7 @@ import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
-const CreateRequestDataForm: React.FC<{
+const CreateRequestFormData: React.FC<{
   handleCreateRequestDataForm: () => void;
   reqTypeSelectorLoadingDataForm: boolean;
   familiarReqTypeValueDataForm: number;
@@ -138,4 +138,4 @@ const CreateRequestDataForm: React.FC<{
   );
 };
 
-export default CreateRequestDataForm;
+export default CreateRequestFormData;

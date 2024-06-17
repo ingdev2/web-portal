@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
-import CreateRequestDataForm from "./CreateRequestDataForm";
+import CreateRequestFormData from "./CreateRequestFormData";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
@@ -161,7 +161,7 @@ const CreateRequestForm: React.FC = () => {
         }
       }
 
-      if (createMedicalReqSuccess) {
+      if (createMedicalReqSuccess && !createMedicalReqError) {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
       }
@@ -308,7 +308,7 @@ const CreateRequestForm: React.FC = () => {
           />
         )}
 
-        <CreateRequestDataForm
+        <CreateRequestFormData
           handleCreateRequestDataForm={handleCreateRequest}
           reqTypeSelectorLoadingDataForm={
             reqTypesLoading && reqTypesFetching && !reqTypesData

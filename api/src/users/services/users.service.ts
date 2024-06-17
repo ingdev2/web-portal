@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
@@ -753,6 +753,34 @@ export class UsersService {
       );
     }
 
+    const emailUserPatientValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        email: userPatient.email,
+      },
+    });
+
+    if (emailUserPatientValidate) {
+      return new HttpException(
+        `El correo electrónico ${userPatient.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const cellphoneUserPatientValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        cellphone: userPatient.cellphone,
+      },
+    });
+
+    if (cellphoneUserPatientValidate) {
+      return new HttpException(
+        `El número de celular ${userPatient.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const authenticationMethodEmailFound =
       await this.authenticationMethodRepository.findOne({
         where: {
@@ -834,6 +862,34 @@ export class UsersService {
       return new HttpException(
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const emailUserEpsValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        email: userEps.email,
+      },
+    });
+
+    if (emailUserEpsValidate) {
+      return new HttpException(
+        `El correo electrónico ${userEps.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const cellphoneUserEpsValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        cellphone: userEps.cellphone,
+      },
+    });
+
+    if (cellphoneUserEpsValidate) {
+      return new HttpException(
+        `El número de celular ${userEps.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
       );
     }
 

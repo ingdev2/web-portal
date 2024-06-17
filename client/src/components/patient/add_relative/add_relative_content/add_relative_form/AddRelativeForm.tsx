@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, CheckboxProps, Col } from "antd";
-import AddRelativeDataForm from "./AddRelativeDataForm";
+import AddRelativeFormData from "./AddRelativeFormData";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
@@ -440,7 +440,7 @@ const AddRelativeForm: React.FC = () => {
           />
         )}
 
-        <AddRelativeDataForm
+        <AddRelativeFormData
           handleAddAuthFamiliarDataForm={handleAddAuthFamiliar}
           relationshipSelectorLoadingDataForm={
             idTypesLoading && idTypesFetching && !idTypesData
