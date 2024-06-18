@@ -3,6 +3,7 @@ import { GenderType } from '../../genders/entities/gender.entity';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { CompanyArea } from '../../company_area/entities/company_area.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
+import { AuthenticationMethod } from 'src/authentication_method/entities/authentication_method.entity';
 import {
   Column,
   CreateDateColumn,
@@ -89,4 +90,20 @@ export class Admin {
 
   @Column({ nullable: true })
   position_level: number;
+
+  @ManyToOne(
+    () => AuthenticationMethod,
+    (admin_authentication_method) => admin_authentication_method.admin,
+  )
+  @JoinColumn({ name: 'authentication_method', referencedColumnName: 'id' })
+  admin_authentication_method: AuthenticationMethod;
+
+  @Column({ nullable: true })
+  authentication_method: number;
+
+  @Column({ nullable: true })
+  verification_code: number;
+
+  @Column({ nullable: true })
+  reset_password_token: string;
 }

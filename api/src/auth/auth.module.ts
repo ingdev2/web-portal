@@ -11,6 +11,7 @@ import { Admin } from '../admins/entities/admin.entity';
 import { User } from '../users/entities/user.entity';
 import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_familiar.entity';
 import { AuthenticationMethod } from '../authentication_method/entities/authentication_method.entity';
+import { AdminRole } from 'src/admin_roles/entities/admin_role.entity';
 import { UserRole } from '../user_roles/entities/user_role.entity';
 import { AdminRolesModule } from '../admin_roles/admin_roles.module';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
@@ -24,6 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       AuthorizedFamiliar,
       IdTypeEntity,
       UserRole,
+      AdminRole,
       AuthenticationMethod,
     ]),
     AdminsModule,

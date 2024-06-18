@@ -15,14 +15,16 @@ export class NodemailerService {
       from,
       recipients,
       subject,
-      userName,
-      pacientName,
-      pacientIdNumber,
+      userNameToEmail: userName,
+      patientNameToEmail: pacientName,
+      patientIdNumberToEmail: pacientIdNumber,
       medicalReqFilingNumber,
       requirementType,
       emailTemplate,
       requestStatusReq,
+      portalWebUrl,
       verificationCode,
+      resetPasswordUrl,
     } = email;
 
     const emailSent = await this.mailerService.sendMail({
@@ -40,7 +42,9 @@ export class NodemailerService {
         medicalReqFilingNumber,
         requirementType,
         requestStatusReq,
+        portalWebUrl,
         verificationCode,
+        resetPasswordUrl,
       },
     });
 

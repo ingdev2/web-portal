@@ -423,9 +423,9 @@ export class MedicalReqService {
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
-    emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
-    emailDetailsToSend.pacientName = userPatientFound.name;
-    emailDetailsToSend.pacientIdNumber = userPatientFound.id_number;
+    emailDetailsToSend.userNameToEmail = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.patientNameToEmail = userPatientFound.name;
+    emailDetailsToSend.patientIdNumberToEmail = userPatientFound.id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -617,9 +617,9 @@ export class MedicalReqService {
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
-    emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
-    emailDetailsToSend.pacientName = userPatientFound.name;
-    emailDetailsToSend.pacientIdNumber = userPatientFound.id_number;
+    emailDetailsToSend.userNameToEmail = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.patientNameToEmail = userPatientFound.name;
+    emailDetailsToSend.patientIdNumberToEmail = userPatientFound.id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -819,9 +819,9 @@ export class MedicalReqService {
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
-    emailDetailsToSend.userName = medicalReqCompleted.aplicant_name;
-    emailDetailsToSend.pacientName = patientData[0]?.NOMBRE;
-    emailDetailsToSend.pacientIdNumber = medicalReqEps.patient_id_number;
+    emailDetailsToSend.userNameToEmail = medicalReqCompleted.aplicant_name;
+    emailDetailsToSend.patientNameToEmail = patientData[0]?.NOMBRE;
+    emailDetailsToSend.patientIdNumberToEmail = medicalReqEps.patient_id_number;
     emailDetailsToSend.medicalReqFilingNumber =
       medicalReqCompleted.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
@@ -1265,13 +1265,14 @@ export class MedicalReqService {
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [updatedMedicalReqFound.aplicant_email];
-    emailDetailsToSend.userName = updatedMedicalReqFound.aplicant_name;
+    emailDetailsToSend.userNameToEmail = updatedMedicalReqFound.aplicant_name;
     emailDetailsToSend.medicalReqFilingNumber =
       updatedMedicalReqFound.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.requestStatusReq = requirementStatusDelivered.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -1366,13 +1367,14 @@ export class MedicalReqService {
     const emailDetailsToSend = new SendEmailDto();
 
     emailDetailsToSend.recipients = [updatedMedicalReqFound.aplicant_email];
-    emailDetailsToSend.userName = updatedMedicalReqFound.aplicant_name;
+    emailDetailsToSend.userNameToEmail = updatedMedicalReqFound.aplicant_name;
     emailDetailsToSend.medicalReqFilingNumber =
       updatedMedicalReqFound.filing_number;
     emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.requestStatusReq = requirementStatus.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 

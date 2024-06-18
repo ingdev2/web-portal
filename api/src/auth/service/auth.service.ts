@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AdminsService } from '../../admins/services/admins.service';
 import { UsersService } from '../../users/services/users.service';
 import { AuthorizedFamiliarService } from '../../authorized_familiar/services/authorized_familiar.service';
@@ -16,7 +16,9 @@ import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
+import { Admin } from '../../admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
+import { AdminRole } from 'src/admin_roles/entities/admin_role.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { LoginDto } from '../dto/login.dto';
@@ -39,12 +41,16 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../constants/jwt.constants';
 import { Tokens } from '../interfaces/tokens.interface';
 import * as bcryptjs from 'bcryptjs';
+import { AdminRolType } from 'src/utils/enums/admin_roles.enum';
 
 const schedule = require('node-schedule');
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(Admin)
+    private adminRepository: Repository<Admin>,
+
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
@@ -53,6 +59,9 @@ export class AuthService {
 
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
+
+    @InjectRepository(AdminRole)
+    private adminRoleRepository: Repository<AdminRole>,
 
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
@@ -315,6 +324,14 @@ export class AuthService {
   // LOGIN FUNTIONS //
 
   async loginAdmins({ id_type, id_number, password }: LoginDto) {
+    const adminRoleFound = await this.adminRoleRepository.findOne({
+      where: { name: In([AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN]) },
+    });
+
+    if (!adminRoleFound) {
+      throw new UnauthorizedException(`¡Role de admin no encontrado!`);
+    }
+
     const adminFound =
       await this.adminsService.getAdminFoundByIdNumberWithPassword(
         id_type,
@@ -322,9 +339,18 @@ export class AuthService {
       );
 
     if (!adminFound) {
-      throw new UnauthorizedException(
-        `¡El número de identificación es incorrecto!`,
-      );
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
+    const verifiedAdminRole = await this.adminRepository.findOne({
+      where: {
+        id_number: id_number,
+        admin_role: adminRoleFound.id,
+      },
+    });
+
+    if (!verifiedAdminRole) {
+      throw new UnauthorizedException(`¡Usuario no autorizado!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(
@@ -333,23 +359,113 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      throw new UnauthorizedException(`¡Contraseña incorrecta!`);
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.adminRepository.update(
+      {
+        id: adminFound.id,
+      },
+      { verification_code: verificationCode },
+    );
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Email" no existe.`,
+      );
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Célular" no existe.`,
+      );
+    }
+
+    if (
+      adminFound.authentication_method === authenticationMethodEmailFound.id
+    ) {
+      const adminWithCode = await this.adminRepository.findOne({
+        where: {
+          id: adminFound.id,
+        },
+      });
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [adminFound.corporate_email];
+      emailDetailsToSend.userNameToEmail = adminFound.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.verificationCode = adminWithCode.verification_code;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.adminRepository.update(
+          { id: adminFound.id },
+          { verification_code: null },
+        );
+      });
+    }
+
+    if (
+      adminFound.authentication_method === authenticationMethodCellphoneFound.id
+    ) {
+      // TODO: IMPLEMENTAR ENVIO DE CÓDIGO POR MENSAJE DE TEXTO
+    }
+
+    return { id_type, id_number };
+  }
+
+  async verifyCodeAndLoginAdmins(idNumber: number, verification_code: number) {
+    const adminFound = await this.adminsService.getAdminFoundByIdAndCode(
+      idNumber,
+      verification_code,
+    );
+
+    if (!adminFound) {
+      throw new UnauthorizedException(`¡Código de verificación incorrecto!`);
+    }
+
+    await this.adminRepository.update(
+      {
+        id: adminFound.id,
+      },
+      { verification_code: null },
+    );
 
     const payload = {
       sub: adminFound.id,
       name: adminFound.name,
       email: adminFound.corporate_email,
-      id_type: adminFound.id_type,
+      id_type: adminFound.admin_id_type,
       id_number: adminFound.id_number,
       role: adminFound.role,
     };
 
-    const { access_token, refresh_token } = await this.generateTokens(payload);
+    const { access_token, refresh_token, access_token_expires_in } =
+      await this.generateTokens(payload);
 
     return {
       access_token,
       refresh_token,
+      access_token_expires_in,
       id_type: adminFound.admin_id_type,
       id_number: adminFound.id_number,
       role: adminFound.role.name,
@@ -440,7 +556,7 @@ export class AuthService {
       const emailDetailsToSend = new SendEmailDto();
 
       emailDetailsToSend.recipients = [userFound.email];
-      emailDetailsToSend.userName = userFound.name;
+      emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.verificationCode = userWithCode.verification_code;
@@ -548,7 +664,7 @@ export class AuthService {
       const emailDetailsToSend = new SendEmailDto();
 
       emailDetailsToSend.recipients = [userFound.email];
-      emailDetailsToSend.userName = userFound.name;
+      emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.verificationCode = userWithCode.verification_code;
@@ -668,7 +784,7 @@ export class AuthService {
       const emailDetailsToSend = new SendEmailDto();
 
       emailDetailsToSend.recipients = [familiarVerified.email];
-      emailDetailsToSend.userName = familiarVerified.name;
+      emailDetailsToSend.userNameToEmail = familiarVerified.name;
       emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
@@ -720,7 +836,7 @@ export class AuthService {
 
     const emailDetailsToSend = new SendEmailDto();
     emailDetailsToSend.recipients = [userFound.email];
-    emailDetailsToSend.userName = userFound.name;
+    emailDetailsToSend.userNameToEmail = userFound.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.verificationCode = userWithCode.verification_code;
@@ -775,7 +891,7 @@ export class AuthService {
 
     const emailDetailsToSend = new SendEmailDto();
     emailDetailsToSend.recipients = [familiarFound.email];
-    emailDetailsToSend.userName = familiarFound.name;
+    emailDetailsToSend.userNameToEmail = familiarFound.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.verificationCode = familiarWithCode.verification_code;

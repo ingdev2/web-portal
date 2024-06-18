@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -18,10 +23,22 @@ import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
+import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patient.dto';
+import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
+import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
+import { nanoid } from 'nanoid';
+import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+import {
+  PASSWORD_RESET,
+  RESET_PASSWORD_TEMPLATE,
+} from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
+
+const schedule = require('node-schedule');
 
 @Injectable()
 export class UsersService {
@@ -43,7 +60,7 @@ export class UsersService {
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
-    private locationService: DeptsAndCitiesService,
+    private readonly nodemailerService: NodemailerService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -971,6 +988,7 @@ export class UsersService {
       passwords.oldPassword,
       userFound.password,
     );
+
     if (!isPasswordValid) {
       throw new HttpException(
         `Contraseña antigua incorrecta.`,
@@ -982,6 +1000,7 @@ export class UsersService {
       passwords.newPassword,
       userFound.password,
     );
+
     if (isNewPasswordSameAsOld) {
       throw new HttpException(
         `La nueva contraseña no puede ser igual a la antigua.`,
@@ -994,7 +1013,142 @@ export class UsersService {
     await this.userRepository.update(id, { password: hashedNewPassword });
 
     return new HttpException(
-      `Contraseña actualizada correctamente.`,
+      `¡Contraseña actualizada correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  async forgotUserPatientPassword({
+    id_type,
+    id_number,
+    birthdate,
+  }: ForgotPasswordUserPatientDto) {
+    const userFound = await this.userRepository.findOne({
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+        birthdate: birthdate,
+        is_active: true,
+      },
+    });
+
+    if (userFound) {
+      const resetPasswordToken = nanoid(64);
+
+      await this.userRepository.update(
+        {
+          id: userFound.id,
+        },
+        { reset_password_token: resetPasswordToken },
+      );
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [userFound.email];
+      emailDetailsToSend.userNameToEmail = userFound.name;
+      emailDetailsToSend.subject = PASSWORD_RESET;
+      emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.userRepository.update(
+          { id: userFound.id },
+          { reset_password_token: null },
+        );
+      });
+
+      return new HttpException(
+        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        HttpStatus.ACCEPTED,
+      );
+    } else {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+  }
+
+  async forgotUserEpsPassword({
+    id_type,
+    id_number,
+    eps_company,
+  }: ForgotPasswordUserEpsDto) {
+    const userFound = await this.userRepository.findOne({
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+        eps_company: eps_company,
+        is_active: true,
+      },
+    });
+
+    if (userFound) {
+      const resetPasswordToken = nanoid(64);
+
+      await this.userRepository.update(
+        {
+          id: userFound.id,
+        },
+        { reset_password_token: resetPasswordToken },
+      );
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [userFound.email];
+      emailDetailsToSend.userNameToEmail = userFound.name;
+      emailDetailsToSend.subject = PASSWORD_RESET;
+      emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.userRepository.update(
+          { id: userFound.id },
+          { reset_password_token: null },
+        );
+      });
+
+      return new HttpException(
+        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        HttpStatus.ACCEPTED,
+      );
+    } else {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+  }
+
+  async resetUserPassword(
+    token: string,
+    { new_password }: ResetPasswordUserDto,
+  ) {
+    const tokenFound = await this.userRepository.findOne({
+      where: {
+        reset_password_token: token,
+      },
+    });
+
+    if (!tokenFound) {
+      throw new UnauthorizedException('¡Link invalido o caducado!');
+    }
+
+    const userFound = await this.userRepository.findOneBy({
+      id: tokenFound.id,
+    });
+
+    if (!userFound) {
+      throw new UnauthorizedException('¡Usuario no encontrado!');
+    }
+
+    const hashedNewPassword = await bcryptjs.hash(new_password, 10);
+
+    await this.userRepository.update(userFound.id, {
+      password: hashedNewPassword,
+      reset_password_token: null,
+    });
+
+    return new HttpException(
+      `¡Contraseña restablecida correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }
