@@ -23,8 +23,10 @@ export class NodemailerService {
       emailTemplate,
       requestStatusReq,
       portalWebUrl,
+      personalDataProcessingPolicy,
       verificationCode,
       resetPasswordUrl,
+      contactPbx,
     } = email;
 
     const emailSent = await this.mailerService.sendMail({
@@ -43,8 +45,10 @@ export class NodemailerService {
         requirementType,
         requestStatusReq,
         portalWebUrl,
+        personalDataProcessingPolicy,
         verificationCode,
         resetPasswordUrl,
+        contactPbx,
       },
     });
 

@@ -169,7 +169,7 @@ export class MedicalReqController {
     @Param('reqId') reqId: string,
     @Body() sendToLegalArea: UpdateStatusMedicalReqDto,
   ) {
-    return await this.medicalReqService.forwardToAnotherArea(
+    return await this.medicalReqService.sendToAnotherArea(
       reqId,
       sendToLegalArea,
     );

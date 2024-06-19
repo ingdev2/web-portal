@@ -51,10 +51,18 @@ export class SendEmailDto {
   portalWebUrl: string;
 
   @IsOptional()
+  @IsString()
+  personalDataProcessingPolicy: string;
+
+  @IsOptional()
   @IsNumber()
   verificationCode: number;
 
   @IsOptional()
   @IsString()
   resetPasswordUrl: string;
+
+  @IsOptional()
+  @IsString()
+  contactPbx: string;
 }

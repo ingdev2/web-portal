@@ -5,8 +5,7 @@ import { AdminsModule } from '../admins/admins.module';
 import { UsersModule } from '../users/users.module';
 import { AuthorizedFamiliarModule } from '../authorized_familiar/authorized_familiar.module';
 import { IdTypeEntity } from '../id_types/entities/id_type.entity';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './constants/jwt.constants';
+import { JwtModule } from '@nestjs/jwt';
 import { Admin } from '../admins/entities/admin.entity';
 import { User } from '../users/entities/user.entity';
 import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_familiar.entity';
@@ -35,7 +34,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     NodemailerModule,
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
+      secret: process.env.JWT_CONSTANTS_SECRET,
       signOptions: { expiresIn: process.env.EXPIRES_IN },
     }),
   ],

@@ -31,12 +31,15 @@ import { nanoid } from 'nanoid';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import {
+  ACCOUNT_CREATED,
   PASSWORD_RESET,
   RESET_PASSWORD_TEMPLATE,
+  SUBJECT_ACCOUNT_CREATED,
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
+import { CONTACT_PBX } from 'src/utils/constants/constants';
 
 const schedule = require('node-schedule');
 
@@ -148,7 +151,7 @@ export class UsersService {
       default:
         throw new HttpException(
           `Tipo de identificación ingresado no válido.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
     }
   }
@@ -185,7 +188,7 @@ export class UsersService {
       default:
         throw new HttpException(
           `Tipo de sexo ingresado no válido.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
     }
   }
@@ -333,7 +336,7 @@ export class UsersService {
     if (!rolePatientFound) {
       throw new HttpException(
         'El rol "Paciente" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -407,7 +410,7 @@ export class UsersService {
     if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -416,6 +419,17 @@ export class UsersService {
     const newUserPatient = await this.userRepository.findOne({
       where: { id: userPatientWithRole.id },
     });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [newUserPatient.email];
+    emailDetailsToSend.userNameToEmail = newUserPatient.name;
+    emailDetailsToSend.subject = SUBJECT_ACCOUNT_CREATED;
+    emailDetailsToSend.emailTemplate = ACCOUNT_CREATED;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return newUserPatient;
   }
@@ -457,7 +471,7 @@ export class UsersService {
     if (!authenticationMethodFound) {
       return new HttpException(
         `El método de autenticación "Email" no existe.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -468,10 +482,7 @@ export class UsersService {
     });
 
     if (!roleEpsFound) {
-      throw new HttpException(
-        'El rol "Eps" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('El rol "Eps" no existe.', HttpStatus.NOT_FOUND);
     }
 
     const insertRoleUserEps = await this.userRepository.create({
@@ -493,7 +504,7 @@ export class UsersService {
     if (!userRoleEps) {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -502,6 +513,17 @@ export class UsersService {
     const newUserEps = await this.userRepository.findOne({
       where: { id: userEpsWithRole.id },
     });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [newUserEps.email];
+    emailDetailsToSend.userNameToEmail = newUserEps.name;
+    emailDetailsToSend.subject = SUBJECT_ACCOUNT_CREATED;
+    emailDetailsToSend.emailTemplate = ACCOUNT_CREATED;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return newUserEps;
   }
@@ -549,7 +571,7 @@ export class UsersService {
       if (!allUsersPerson.length) {
         return new HttpException(
           `No hay usuarios registrados en la base de datos`,
-          HttpStatus.CONFLICT,
+          HttpStatus.NOT_FOUND,
         );
       } else {
         return allUsersPerson;
@@ -557,7 +579,7 @@ export class UsersService {
     } else {
       throw new HttpException(
         'No hay role creado de "Paciente".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }
@@ -583,7 +605,7 @@ export class UsersService {
       if (!allUsersEps.length) {
         return new HttpException(
           `No hay usuarios registrados en la base de datos`,
-          HttpStatus.CONFLICT,
+          HttpStatus.NOT_FOUND,
         );
       } else {
         return allUsersEps;
@@ -591,7 +613,7 @@ export class UsersService {
     } else {
       throw new HttpException(
         'No hay role creado de "Eps".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }
@@ -625,7 +647,7 @@ export class UsersService {
     if (!userRolePatient) {
       throw new HttpException(
         'El rol "Paciente" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -655,10 +677,7 @@ export class UsersService {
     });
 
     if (!userRoleEps) {
-      throw new HttpException(
-        'El rol "Eps" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('El rol "Eps" no existe.', HttpStatus.NOT_FOUND);
     }
 
     const epsUserFound = await this.userRepository.findOne({
@@ -733,6 +752,7 @@ export class UsersService {
         'id_number',
         'password',
         'email',
+        'authentication_method',
         'role',
       ],
     });
@@ -1005,7 +1025,7 @@ export class UsersService {
     if (isNewPasswordSameAsOld) {
       throw new HttpException(
         `La nueva contraseña no puede ser igual a la antigua.`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.CONFLICT,
       );
     }
 

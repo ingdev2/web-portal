@@ -110,7 +110,7 @@ export class MedicalReqService {
     if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -125,7 +125,7 @@ export class MedicalReqService {
     if (!verifiedFamiliar) {
       throw new HttpException(
         'El familiar no tiene parentesco con el paciente.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -139,7 +139,7 @@ export class MedicalReqService {
     if (!userRoleFamiliar) {
       throw new HttpException(
         'El usuario debe tener el rol "Familiar Autorizado".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -152,7 +152,7 @@ export class MedicalReqService {
     if (!fileArea) {
       throw new HttpException(
         'El área de "Departamento de Archivos" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -163,7 +163,7 @@ export class MedicalReqService {
     if (!reqStatusPending) {
       throw new HttpException(
         'El estado "En Revisión" de requerimiento no existe',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -242,7 +242,7 @@ export class MedicalReqService {
     if (!patientClassStatus) {
       throw new HttpException(
         'La clasificación de paciente no es valida',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -282,7 +282,7 @@ export class MedicalReqService {
     if (!relWithPatient || !verifiedRelationshipWithPatient) {
       throw new HttpException(
         'El parentesco con el paciente no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -349,7 +349,7 @@ export class MedicalReqService {
     if (!userIdType) {
       throw new HttpException(
         'El tipo de documento de identidad del paciente no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -360,7 +360,7 @@ export class MedicalReqService {
     if (!medicalReqType) {
       throw new HttpException(
         'El tipo de requerimiento médico no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -431,6 +431,8 @@ export class MedicalReqService {
     emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
+    emailDetailsToSend.personalDataProcessingPolicy =
+      process.env.PERSONAL_DATA_PROCESSING_POLICY;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -464,7 +466,7 @@ export class MedicalReqService {
     if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -517,7 +519,7 @@ export class MedicalReqService {
     if (!fileArea) {
       throw new HttpException(
         'El área de "DEPARTAMENTO JURÍDICO" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -528,7 +530,7 @@ export class MedicalReqService {
     if (!reqStatusPending) {
       throw new HttpException(
         'El estado "En Revisión" de requerimiento no existe',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -568,7 +570,7 @@ export class MedicalReqService {
     if (!userIdType) {
       throw new HttpException(
         'El tipo de documento de identidad del paciente no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -579,7 +581,7 @@ export class MedicalReqService {
     if (!medicalReqType) {
       throw new HttpException(
         'El tipo de requerimiento médico no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -605,7 +607,7 @@ export class MedicalReqService {
     ) {
       throw new HttpException(
         'El tipo y número de documento de identidad del paciente es requerido',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -625,6 +627,8 @@ export class MedicalReqService {
     emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
+    emailDetailsToSend.personalDataProcessingPolicy =
+      process.env.PERSONAL_DATA_PROCESSING_POLICY;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -658,7 +662,7 @@ export class MedicalReqService {
     if (!userRoleEps) {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -724,7 +728,7 @@ export class MedicalReqService {
     if (!fileArea) {
       throw new HttpException(
         'El área de "DEPARTAMENTO JURÍDICO" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -735,7 +739,7 @@ export class MedicalReqService {
     if (!reqStatusPending) {
       throw new HttpException(
         'El estado "En Revisión" de requerimiento no existe',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -776,7 +780,7 @@ export class MedicalReqService {
     if (!userIdType) {
       throw new HttpException(
         'El tipo de documento de identidad del paciente no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -787,7 +791,7 @@ export class MedicalReqService {
     if (!medicalReqType) {
       throw new HttpException(
         'El tipo de requerimiento médico no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -827,6 +831,8 @@ export class MedicalReqService {
     emailDetailsToSend.requirementType = sendReqTypeName.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_CONFIRM_CREATION;
     emailDetailsToSend.emailTemplate = MEDICAL_REQ_CREATED;
+    emailDetailsToSend.personalDataProcessingPolicy =
+      process.env.PERSONAL_DATA_PROCESSING_POLICY;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -933,7 +939,7 @@ export class MedicalReqService {
     if (!legalArea) {
       throw new HttpException(
         'El área de "DEPARTAMENTO JURÍDICO" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -1153,7 +1159,7 @@ export class MedicalReqService {
     if (!requirementFound) {
       throw new HttpException(
         'Requerimiento médico no encontrado',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1168,7 +1174,7 @@ export class MedicalReqService {
     if (!statusDeliveredFound) {
       throw new HttpException(
         'El estado "Entregado" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -1183,14 +1189,14 @@ export class MedicalReqService {
     if (!requirementStatusDelivered) {
       throw new HttpException(
         'El estado de requerimiento no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
     if (!deliveredStatus.documents_delivered) {
       throw new HttpException(
         'Debes anexar mínimo un archivo para enviar solicitud.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1224,7 +1230,7 @@ export class MedicalReqService {
     if (!statusExpiredFound) {
       throw new HttpException(
         'El estado "Expirado" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1238,7 +1244,7 @@ export class MedicalReqService {
     if (!requirementStatusExpired) {
       throw new HttpException(
         'El estado de requerimiento no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1290,7 +1296,7 @@ export class MedicalReqService {
     if (!requirementFound) {
       throw new HttpException(
         'Requerimiento médico no encontrado',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -1300,7 +1306,7 @@ export class MedicalReqService {
     ) {
       throw new HttpException(
         'Debes ingresar mínimo un motivo de rechazo.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1315,7 +1321,7 @@ export class MedicalReqService {
     ) {
       throw new HttpException(
         'Uno o más motivos de rechazo no son válidos.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1328,7 +1334,7 @@ export class MedicalReqService {
     if (!statusRejectedFound) {
       throw new HttpException(
         'El estado "Rechazado" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -1342,7 +1348,7 @@ export class MedicalReqService {
     if (!requirementStatus) {
       throw new HttpException(
         'El estado de requerimiento no es valido',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1393,7 +1399,7 @@ export class MedicalReqService {
     return updatedMedicalReqFound;
   }
 
-  async forwardToAnotherArea(
+  async sendToAnotherArea(
     reqId: string,
     sendToOtherArea: UpdateStatusMedicalReqDto,
   ) {
@@ -1404,14 +1410,14 @@ export class MedicalReqService {
     if (!requirementFound) {
       throw new HttpException(
         'Requerimiento médico no encontrado',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
     if (!sendToOtherArea.currently_in_area) {
       throw new HttpException(
         'Debes ingresar una área para reenviar solicitud.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -1424,7 +1430,7 @@ export class MedicalReqService {
     if (!companyArea) {
       throw new HttpException(
         'El área seleccionada no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 

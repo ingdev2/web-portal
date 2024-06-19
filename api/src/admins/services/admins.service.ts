@@ -10,14 +10,17 @@ import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { AuthenticationMethod } from 'src/authentication_method/entities/authentication_method.entity';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { CreateAdminDto } from '../dto/create_admin.dto';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
 import { UpdatePasswordAdminDto } from '../dto/update_password_admin.dto';
 import { ForgotPasswordAdminDto } from '../dto/forgot_password_admin.dto';
+import { ResetPasswordAdminDto } from '../dto/reset_password_admin.dto';
 
 import { nanoid } from 'nanoid';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { AuthenticationMethodEnum } from 'src/utils/enums/authentication_method.enum';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import {
   PASSWORD_RESET,
@@ -25,7 +28,6 @@ import {
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
-import { ResetPasswordAdminDto } from '../dto/reset_password_admin.dto';
 
 const schedule = require('node-schedule');
 
@@ -39,6 +41,9 @@ export class AdminsService {
 
     @InjectRepository(PositionLevel)
     private positionLevelRepository: Repository<PositionLevel>,
+
+    @InjectRepository(AuthenticationMethod)
+    private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
     private readonly nodemailerService: NodemailerService,
   ) {}
@@ -72,6 +77,20 @@ export class AdminsService {
       );
     }
 
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new HttpException(
+        `El método de autenticación con Email no existe`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const roleSuperAdminFound = await this.adminRoleRepository.findOne({
       where: {
         name: AdminRolType.SUPER_ADMIN,
@@ -81,7 +100,7 @@ export class AdminsService {
     if (!roleSuperAdminFound) {
       throw new HttpException(
         'El rol "Super Admin" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -104,7 +123,7 @@ export class AdminsService {
     if (!adminRoleSuperAdmin) {
       throw new HttpException(
         'El usuario debe tener el rol "Super Admin".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -153,7 +172,7 @@ export class AdminsService {
     if (!roleAdminFound) {
       throw new HttpException(
         'El rol "Admin" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -166,13 +185,28 @@ export class AdminsService {
     if (!adminPositionLevel) {
       throw new HttpException(
         'El nivel de cargo ingresado no es valido.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new HttpException(
+        `El método de autenticación con Email no existe`,
+        HttpStatus.CONFLICT,
       );
     }
 
     const insertRoleAdminInAdmin = await this.adminRepository.create({
       ...admin,
       admin_role: roleAdminFound.id,
+      authentication_method: authenticationMethodEmailFound.id,
     });
 
     const adminInAdminWithRole = await this.adminRepository.save(
@@ -189,7 +223,7 @@ export class AdminsService {
     if (!adminRoleAdmin) {
       throw new HttpException(
         'El usuario debe tener el rol "Admin".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -225,7 +259,7 @@ export class AdminsService {
       if (!allAdmins.length) {
         return new HttpException(
           `No hay administradores registrados en la base de datos`,
-          HttpStatus.CONFLICT,
+          HttpStatus.NOT_FOUND,
         );
       } else {
         return allAdmins;
@@ -233,7 +267,7 @@ export class AdminsService {
     } else {
       throw new HttpException(
         'No hay role creado de "Admin".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }
@@ -333,6 +367,7 @@ export class AdminsService {
         'id_number',
         'password',
         'corporate_email',
+        'authentication_method',
         'role',
       ],
     });
@@ -432,7 +467,7 @@ export class AdminsService {
     if (isNewPasswordSameAsOld) {
       throw new HttpException(
         `La nueva contraseña no puede ser igual a la antigua.`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.CONFLICT,
       );
     }
 

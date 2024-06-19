@@ -3,6 +3,7 @@
 import React from "react";
 
 import { Button, Col, Form, Input, Radio, Row, Space, Typography } from "antd";
+import { Store } from "antd/es/form/interface";
 import { titleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import {
@@ -14,7 +15,8 @@ import { IdcardOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import { TbGenderBigender } from "react-icons/tb";
 import { IoHomeOutline } from "react-icons/io5";
 import { FiPhone } from "react-icons/fi";
-import { Store } from "antd/es/form/interface";
+
+import { CONTACT_PBX } from "@/utils/constants/constants";
 
 const UpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;
@@ -86,8 +88,8 @@ const UpdatePersonalDataFormData: React.FC<{
         }}
       >
         Por favor, verifique si todos sus datos están correctos, de lo contrario
-        debe comunicarse a nuestra línea PBX: (601)3770055 para realizar la
-        actualización de sus datos personales que no se puedan actualizar por
+        debe comunicarse a nuestra línea PBX: <b>{CONTACT_PBX}</b> para realizar
+        la actualización de sus datos personales que no se puedan actualizar por
         este medio.
       </p>
 

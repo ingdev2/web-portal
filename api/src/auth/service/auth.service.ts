@@ -38,7 +38,6 @@ import {
 } from '../../nodemailer/constants/email_config.constant';
 
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from '../constants/jwt.constants';
 import { Tokens } from '../interfaces/tokens.interface';
 import * as bcryptjs from 'bcryptjs';
 import { AdminRolType } from 'src/utils/enums/admin_roles.enum';
@@ -173,6 +172,7 @@ export class AuthService {
     company_area,
     position_level,
     admin_role,
+    authentication_method,
   }: CreateAdminDto) {
     await this.adminsService.getAdminByIdNumber(id_number);
 
@@ -187,6 +187,7 @@ export class AuthService {
       company_area,
       position_level,
       admin_role,
+      authentication_method,
     });
   }
 
@@ -378,22 +379,9 @@ export class AuthService {
         },
       });
 
-    const authenticationMethodCellphoneFound =
-      await this.authenticationMethodRepository.findOne({
-        where: {
-          name: AuthenticationMethodEnum.CELLPHONE,
-        },
-      });
-
     if (!authenticationMethodEmailFound) {
       return new UnauthorizedException(
         `El método de autenticación "Email" no existe.`,
-      );
-    }
-
-    if (!authenticationMethodCellphoneFound) {
-      return new UnauthorizedException(
-        `El método de autenticación "Célular" no existe.`,
       );
     }
 
@@ -422,12 +410,10 @@ export class AuthService {
           { verification_code: null },
         );
       });
-    }
-
-    if (
-      adminFound.authentication_method === authenticationMethodCellphoneFound.id
-    ) {
-      // TODO: IMPLEMENTAR ENVIO DE CÓDIGO POR MENSAJE DE TEXTO
+    } else {
+      throw new UnauthorizedException(
+        `El administrador no tiene método de autenticación asignado.`,
+      );
     }
 
     return { id_type, id_number };
@@ -769,7 +755,15 @@ export class AuthService {
         patient_id: patientOfFamiliar.id,
         user_role: familiarUserRoleFound.id,
       },
-      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
+      select: [
+        'id',
+        'name',
+        'user_id_type',
+        'id_number',
+        'email',
+        'authentication_method',
+        'role',
+      ],
     });
 
     if (!familiarVerified) {
@@ -972,11 +966,11 @@ export class AuthService {
     const [accessToken, refreshToken, accessTokenExpiresIn] = await Promise.all(
       [
         await this.jwtService.signAsync(jwtUserPayload, {
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_CONSTANTS_SECRET,
           expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
         }),
         await this.jwtService.signAsync(jwtUserPayload, {
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_CONSTANTS_SECRET,
           expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
         }),
         await this.getExpirationInSeconds(process.env.ACCESS_TOKEN_EXPIRES_IN),
@@ -993,7 +987,7 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<any> {
     try {
       const user = this.jwtService.verify(refreshToken, {
-        secret: jwtConstants.secret,
+        secret: process.env.JWT_CONSTANTS_SECRET,
       });
 
       const payload = {

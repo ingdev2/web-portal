@@ -7,6 +7,26 @@ import { RequirementStatusEnum } from "../../../../../api/src/medical_req/enums/
 
 export const getTagComponentStatus = (statusName: string | undefined) => {
   switch (statusName) {
+    case RequirementStatusEnum.ESTABLISHED:
+      return (
+        <CustomTags
+          tag={{
+            textColor: "#070707",
+            color: "#DDDDDDB2",
+            label: "INSTAURADA",
+          }}
+        />
+      );
+    case RequirementStatusEnum.VISUALIZED:
+      return (
+        <CustomTags
+          tag={{
+            textColor: "#070707",
+            color: "#9960B0B2",
+            label: "VISUALIZADA",
+          }}
+        />
+      );
     case RequirementStatusEnum.UNDER_REVIEW:
       return (
         <CustomTags
@@ -23,7 +43,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#137A2BB2",
-            label: "ENTREGADA",
+            label: "DOCS. ENTREGADOS",
           }}
         />
       );
@@ -43,7 +63,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#BA3400B2",
-            label: "EXPIRADA",
+            label: "DOCS. EXPIRADOS",
           }}
         />
       );

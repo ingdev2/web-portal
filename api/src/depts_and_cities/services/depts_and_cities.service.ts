@@ -13,7 +13,7 @@ export class DeptsAndCitiesService {
     } catch (error) {
       throw new HttpException(
         'No se pudo obtener la información de ubicación de Colombia',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }

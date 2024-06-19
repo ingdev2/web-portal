@@ -23,8 +23,10 @@ export class NodemailerController {
       requestStatusReq,
       emailTemplate,
       portalWebUrl,
+      personalDataProcessingPolicy,
       verificationCode,
       resetPasswordUrl,
+      contactPbx,
     }: SendEmailDto,
   ) {
     return await this.nodemailerService.sendEmail({
@@ -39,8 +41,10 @@ export class NodemailerController {
       requestStatusReq,
       emailTemplate,
       portalWebUrl,
+      personalDataProcessingPolicy,
       verificationCode,
       resetPasswordUrl,
+      contactPbx,
     });
   }
 }
