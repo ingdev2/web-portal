@@ -313,9 +313,15 @@ export class AuthorizedFamiliarService {
     }
   }
 
-  async getFamiliarFoundByIdNumber(idNumber: number) {
+  async getFamiliarFoundByIdNumber(
+    idType: number,
+    idNumber: number,
+    familiarEmail: string,
+  ) {
     return await this.familiarRepository.findOneBy({
+      user_id_type: idType,
       id_number: idNumber,
+      email: familiarEmail,
     });
   }
 

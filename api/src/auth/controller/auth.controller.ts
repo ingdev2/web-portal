@@ -93,6 +93,11 @@ export class AuthController {
     );
   }
 
+  @Post('resendVerificationAdminCode')
+  async resendVerificationAdminCode(@Body() loginDto: LoginDto) {
+    return await this.authService.resendVerificationAdminCode(loginDto);
+  }
+
   @Post('loginPatientUsers')
   async loginPatientUsers(@Body() loginPatient: LoginDto) {
     return await this.authService.loginPatientUsers(loginPatient);

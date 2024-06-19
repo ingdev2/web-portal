@@ -324,11 +324,11 @@ export class AuthService {
   // LOGIN FUNTIONS //
 
   async loginAdmins({ id_type, id_number, password }: LoginDto) {
-    const adminRoleFound = await this.adminRoleRepository.findOne({
+    const adminRoleFound = await this.adminRoleRepository.find({
       where: { name: In([AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN]) },
     });
 
-    if (!adminRoleFound) {
+    if (!adminRoleFound.length) {
       throw new UnauthorizedException(`¡Role de admin no encontrado!`);
     }
 
@@ -345,7 +345,7 @@ export class AuthService {
     const verifiedAdminRole = await this.adminRepository.findOne({
       where: {
         id_number: id_number,
-        admin_role: adminRoleFound.id,
+        admin_role: In(adminRoleFound.map((role) => role.id)),
       },
     });
 
@@ -470,6 +470,46 @@ export class AuthService {
       id_number: adminFound.id_number,
       role: adminFound.role.name,
     };
+  }
+
+  async resendVerificationAdminCode({ id_type, id_number }: LoginDto) {
+    const adminFound = await this.adminsService.getAdminFoundByIdNumber(
+      id_type,
+      id_number,
+    );
+
+    if (!adminFound) {
+      throw new UnauthorizedException(`Usuario no encontrado`);
+    }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.adminRepository.update(
+      { id: adminFound.id },
+      { verification_code: verificationCode },
+    );
+
+    const adminWithCode = await this.adminRepository.findOne({
+      where: { id: adminFound.id },
+    });
+
+    const emailDetailsToSend = new SendEmailDto();
+    emailDetailsToSend.recipients = [adminFound.corporate_email];
+    emailDetailsToSend.userNameToEmail = adminFound.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.verificationCode = adminWithCode.verification_code;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+      await this.adminRepository.update(
+        { id: adminFound.id },
+        { verification_code: null },
+      );
+    });
+
+    return { id_type, id_number };
   }
 
   async loginPatientUsers({ id_type, id_number, password }: LoginDto) {
@@ -817,7 +857,10 @@ export class AuthService {
   }
 
   async resendVerificationUserCode({ id_type, id_number }: LoginDto) {
-    const userFound = await this.usersService.getUserFoundByIdNumber(id_number);
+    const userFound = await this.usersService.getUserFoundByIdNumber(
+      id_type,
+      id_number,
+    );
 
     if (!userFound) {
       throw new UnauthorizedException(`Usuario no encontrado`);
@@ -854,12 +897,15 @@ export class AuthService {
   }
 
   async resendVerificationFamiliarCode({
-    id_type_familiar: id_type,
-    id_number_familiar: id_number,
-    email_familiar: email,
+    id_type_familiar,
+    id_number_familiar,
+    email_familiar,
   }: FamiliarLoginDto) {
-    const familiarFound =
-      await this.familiarService.getFamiliarFoundByIdNumber(id_number);
+    const familiarFound = await this.familiarService.getFamiliarFoundByIdNumber(
+      id_type_familiar,
+      id_number_familiar,
+      email_familiar,
+    );
 
     if (!familiarFound) {
       throw new UnauthorizedException(`Familiar no encontrado`);
@@ -867,9 +913,9 @@ export class AuthService {
 
     const familiarVerifiedFound = await this.familiarRepository.findOne({
       where: {
-        user_id_type: id_type,
-        id_number: id_number,
-        email: email,
+        user_id_type: id_type_familiar,
+        id_number: id_number_familiar,
+        email: email_familiar,
         rel_with_patient: familiarFound.rel_with_patient,
       },
     });
@@ -905,7 +951,7 @@ export class AuthService {
       );
     });
 
-    return { id_type, id_number };
+    return { id_type_familiar, id_number_familiar };
   }
 
   private getExpirationInSeconds(expiresIn: string): number {
@@ -1057,22 +1103,32 @@ export class AuthService {
   }
 
   async profileAdmin({
+    admin_id_type,
     id_number,
     role,
   }: {
+    admin_id_type: number;
     id_number: number;
     role: Enumerator;
   }) {
-    return await this.adminsService.getAdminFoundByIdNumber(id_number);
+    return await this.adminsService.getAdminFoundByIdNumber(
+      admin_id_type,
+      id_number,
+    );
   }
 
   async profileUser({
+    user_id_type,
     id_number,
     role,
   }: {
+    user_id_type: number;
     id_number: number;
     role: Enumerator;
   }) {
-    return await this.usersService.getUserFoundByIdNumber(id_number);
+    return await this.usersService.getUserFoundByIdNumber(
+      user_id_type,
+      id_number,
+    );
   }
 }

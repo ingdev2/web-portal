@@ -313,8 +313,11 @@ export class AdminsService {
     }
   }
 
-  async getAdminFoundByIdNumber(idNumber: number) {
-    return await this.adminRepository.findOneBy({ id_number: idNumber });
+  async getAdminFoundByIdNumber(idType: number, idNumber: number) {
+    return await this.adminRepository.findOneBy({
+      admin_id_type: idType,
+      id_number: idNumber,
+    });
   }
 
   async getAdminFoundByIdNumberWithPassword(

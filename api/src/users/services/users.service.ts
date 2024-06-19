@@ -713,8 +713,9 @@ export class UsersService {
     }
   }
 
-  async getUserFoundByIdNumber(idNumber: number) {
+  async getUserFoundByIdNumber(idType: number, idNumber: number) {
     return await this.userRepository.findOneBy({
+      user_id_type: idType,
       id_number: idNumber,
     });
   }
