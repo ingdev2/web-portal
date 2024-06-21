@@ -45,6 +45,10 @@ export class CreateMedicalReqFamiliarDto {
 
   @IsOptional()
   @IsArray()
+  user_message_documents: string[];
+
+  @IsOptional()
+  @IsArray()
   copy_right_petition: string[];
 
   @IsOptional()

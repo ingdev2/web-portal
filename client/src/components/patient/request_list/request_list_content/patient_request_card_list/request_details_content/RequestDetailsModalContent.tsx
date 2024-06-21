@@ -16,6 +16,8 @@ const RequestDetailsModalContent: React.FC<{
   selectedRequestStatus: ReactNode;
   labelResponseDocuments: string;
   selectedRequestResponseDocuments: ReactNode;
+  labelDocumentExpirationDate: string;
+  selectedRequestDocumentExpirationDate: ReactNode;
   labelUserComments: string;
   selectedRequestUserComments: string;
   labelRequestResponse: string;
@@ -32,6 +34,8 @@ const RequestDetailsModalContent: React.FC<{
   selectedRequestStatus,
   labelResponseDocuments,
   selectedRequestResponseDocuments,
+  labelDocumentExpirationDate,
+  selectedRequestDocumentExpirationDate,
   labelUserComments,
   selectedRequestUserComments,
   labelRequestResponse,
@@ -113,6 +117,20 @@ const RequestDetailsModalContent: React.FC<{
           span={3}
         >
           {selectedRequestResponseDocuments}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          contentStyle={{
+            padding: "7px",
+            margin: "7px",
+          }}
+          label={labelDocumentExpirationDate}
+          style={{
+            textAlign: "center",
+          }}
+          span={3}
+        >
+          {selectedRequestDocumentExpirationDate}
         </Descriptions.Item>
       </Descriptions>
 

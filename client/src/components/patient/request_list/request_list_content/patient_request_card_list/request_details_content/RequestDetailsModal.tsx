@@ -14,6 +14,7 @@ const RequestDetailsModal: React.FC<{
   selectedRequestTypeModal: ReactNode;
   selectedRequestStatusModal: ReactNode;
   selectedRequestResponseDocumentsModal: ReactNode;
+  selectedRequestDocumentExpirationDateModal: ReactNode;
   selectedRequestReasonsForRejectionModal: string[];
   selectedRequestUserCommentsModal: string;
   selectedRequestResponseCommentsModal: string;
@@ -24,6 +25,7 @@ const RequestDetailsModal: React.FC<{
   selectedRequestTypeModal,
   selectedRequestStatusModal,
   selectedRequestResponseDocumentsModal,
+  selectedRequestDocumentExpirationDateModal,
   selectedRequestReasonsForRejectionModal,
   selectedRequestUserCommentsModal,
   selectedRequestResponseCommentsModal,
@@ -73,6 +75,12 @@ const RequestDetailsModal: React.FC<{
               <b style={{ color: "#960202" }}>No hay documentos anexados</b>
             )
           }
+          labelDocumentExpirationDate="Fecha de expiración de documentos"
+          selectedRequestDocumentExpirationDate={
+            selectedRequestDocumentExpirationDateModal || (
+              <b style={{ color: "#960202" }}>No aplica</b>
+            )
+          }
           labelReasonsForRejection="Motivos de rechazo a solicitud"
           selectedRequestReasonsForRejection={
             selectedRequestReasonsForRejectionModal.length > 0 ? (
@@ -92,7 +100,7 @@ const RequestDetailsModal: React.FC<{
           labelRequestResponse={"Mensaje de respuesta a solicitud"}
           selectedRequestResponse={
             selectedRequestResponseCommentsModal || (
-              <b style={{ color: "#960202" }}>En proceso de revisión</b>
+              <b style={{ color: "#960202" }}>En espera de respuesta</b>
             )
           }
         />

@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { DataSource, In, Repository, EntityManager } from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
@@ -34,7 +34,7 @@ import {
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
-import { EntityManager } from 'typeorm';
+import { randomUUID } from 'crypto';
 
 const schedule = require('node-schedule');
 
@@ -71,13 +71,12 @@ export class MedicalReqService {
     @InjectRepository(RelWithPatient)
     private relWithPatientRepository: Repository<RelWithPatient>,
 
-    @InjectRepository(ReasonsForRejection)
-    private reasonsForRejectionRepository: Repository<ReasonsForRejection>,
-
     private usersService: UsersService,
     private nodemailerService: NodemailerService,
     private requirementTypeService: RequirementTypeService,
+
     private entityManager: EntityManager,
+    private dataSource: DataSource,
   ) {}
 
   // CREATE FUNTIONS //
@@ -156,13 +155,15 @@ export class MedicalReqService {
       );
     }
 
-    const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.UNDER_REVIEW },
-    });
+    const reqStatusEstablished = await this.requerimentStatusRepository.findOne(
+      {
+        where: { name: RequirementStatusEnum.ESTABLISHED },
+      },
+    );
 
-    if (!reqStatusPending) {
+    if (!reqStatusEstablished) {
       throw new HttpException(
-        'El estado "En Revisión" de requerimiento no existe',
+        'El estado "Instaurada" de requerimiento no existe',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -186,7 +187,7 @@ export class MedicalReqService {
     aplicantFamiliarDetails.right_petition = medicalReqFamiliar.right_petition;
     aplicantFamiliarDetails.accept_terms = true;
     aplicantFamiliarDetails.currently_in_area = fileArea.id;
-    aplicantFamiliarDetails.requirement_status = reqStatusPending.id;
+    aplicantFamiliarDetails.requirement_status = reqStatusEstablished.id;
     aplicantFamiliarDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantFamiliarDetails.patient_id_number = userPatientFound.id_number;
     aplicantFamiliarDetails.requirement_type =
@@ -387,6 +388,8 @@ export class MedicalReqService {
     documentsFamiliarDetails.copy_marriage_certificate =
       medicalReqFamiliar?.copy_marriage_certificate;
     documentsFamiliarDetails.user_message = medicalReqFamiliar?.user_message;
+    documentsFamiliarDetails.user_message_documents =
+      medicalReqFamiliar?.user_message_documents;
 
     await this.medicalReqRepository.update(
       createMedicalReqFamiliar.id,
@@ -523,13 +526,13 @@ export class MedicalReqService {
       );
     }
 
-    const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.UNDER_REVIEW },
+    const reqStatusStablished = await this.requerimentStatusRepository.findOne({
+      where: { name: RequirementStatusEnum.ESTABLISHED },
     });
 
-    if (!reqStatusPending) {
+    if (!reqStatusStablished) {
       throw new HttpException(
-        'El estado "En Revisión" de requerimiento no existe',
+        'El estado "Instaurada" de requerimiento no existe',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -552,7 +555,7 @@ export class MedicalReqService {
     aplicantPatientDetails.aplicant_cellphone = userPatientFound.cellphone;
     aplicantPatientDetails.accept_terms = true;
     aplicantPatientDetails.currently_in_area = fileArea.id;
-    aplicantPatientDetails.requirement_status = reqStatusPending.id;
+    aplicantPatientDetails.requirement_status = reqStatusStablished.id;
     aplicantPatientDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantPatientDetails.patient_id_number = userPatientFound.id_number;
     aplicantPatientDetails.requirement_type =
@@ -732,13 +735,15 @@ export class MedicalReqService {
       );
     }
 
-    const reqStatusPending = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.UNDER_REVIEW },
-    });
+    const reqStatusEstablished = await this.requerimentStatusRepository.findOne(
+      {
+        where: { name: RequirementStatusEnum.ESTABLISHED },
+      },
+    );
 
-    if (!reqStatusPending) {
+    if (!reqStatusEstablished) {
       throw new HttpException(
-        'El estado "En Revisión" de requerimiento no existe',
+        'El estado "Instaurada" de requerimiento no existe',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -763,7 +768,7 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicant_company_area = userEpsFound.company_area;
     aplicantEpsDetails.accept_terms = true;
     aplicantEpsDetails.currently_in_area = fileArea.id;
-    aplicantEpsDetails.requirement_status = reqStatusPending.id;
+    aplicantEpsDetails.requirement_status = reqStatusEstablished.id;
     aplicantEpsDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantEpsDetails.patient_id_number = userPatientFound.id_number;
     aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
@@ -797,6 +802,8 @@ export class MedicalReqService {
 
     const createMedicalReq =
       await this.medicalReqRepository.save(aplicantEpsDetails);
+
+    await this.medicalReqRepository.update(createMedicalReq.id, medicalReqEps);
 
     const medicalReqCompleted = await this.medicalReqRepository.findOne({
       where: {
@@ -845,6 +852,7 @@ export class MedicalReqService {
     const allMedicalReqUsers = await this.medicalReqRepository.find({
       where: {
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -879,6 +887,7 @@ export class MedicalReqService {
       where: {
         aplicantId: userId,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'DESC',
@@ -913,6 +922,7 @@ export class MedicalReqService {
       where: {
         aplicantId: familiarId,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'DESC',
@@ -947,6 +957,7 @@ export class MedicalReqService {
       where: {
         currently_in_area: legalArea.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1148,295 +1159,714 @@ export class MedicalReqService {
 
   // UPDATE FUNTIONS //
 
+  async changeStatusToVisualized(reqId: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const statusFoundEstablished = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.ESTABLISHED,
+          },
+        },
+      );
+
+      if (!statusFoundEstablished) {
+        throw new HttpException(
+          'El estado "Instaurada" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: reqId,
+          is_it_reviewed: false,
+          requirement_status: statusFoundEstablished.id,
+        },
+      });
+
+      if (!requirementFound) {
+        throw new HttpException(
+          'Requerimiento médico no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const statusVisualizedFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.VISUALIZED,
+          },
+        },
+      );
+
+      if (!statusVisualizedFound) {
+        throw new HttpException(
+          'El estado "Visualizada" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const createNewRecord = await queryRunner.manager.insert(MedicalReq, {
+        ...requirementFound,
+        id: randomUUID(),
+        requirement_status: statusVisualizedFound.id,
+      });
+
+      if (!createNewRecord) {
+        throw new HttpException(
+          '¡No se ha podido crear un nuevo registro en base de datos!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: requirementFound.id,
+          requirement_status: statusFoundEstablished.id,
+          answer_date: null,
+          download_expiration_date: null,
+          response_comments: null,
+          is_it_reviewed: false,
+        },
+      });
+
+      if (!lastMedicalReq) {
+        throw new HttpException(
+          'El último requerimiento médico no se ha podido encontrar.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await queryRunner.manager.update(
+        MedicalReq,
+        { id: lastMedicalReq.id },
+        { is_it_reviewed: true },
+      );
+
+      await queryRunner.commitTransaction();
+
+      return new HttpException(
+        `El requerimiento cambio a estado: ${statusVisualizedFound.name}`,
+        HttpStatus.ACCEPTED,
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async changeStatusToUnderReview(reqId: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const statusVisualizedFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.VISUALIZED,
+          },
+        },
+      );
+
+      if (!statusVisualizedFound) {
+        throw new HttpException(
+          'El estado "Visualizada" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: reqId,
+          is_it_reviewed: false,
+          requirement_status: statusVisualizedFound.id,
+        },
+      });
+
+      if (!requirementFound) {
+        throw new HttpException(
+          'Requerimiento médico no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const statusUnderReviewFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.UNDER_REVIEW,
+          },
+        },
+      );
+
+      if (!statusUnderReviewFound) {
+        throw new HttpException(
+          'El estado "En revisión" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const createNewRecord = await queryRunner.manager.insert(MedicalReq, {
+        ...requirementFound,
+        id: randomUUID(),
+        requirement_status: statusUnderReviewFound.id,
+      });
+
+      if (!createNewRecord) {
+        throw new HttpException(
+          '¡No se ha podido crear un nuevo registro en base de datos!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: requirementFound.id,
+          requirement_status: statusVisualizedFound.id,
+          answer_date: null,
+          download_expiration_date: null,
+          response_comments: null,
+          is_it_reviewed: false,
+        },
+      });
+
+      if (!lastMedicalReq) {
+        throw new HttpException(
+          'El último requerimiento médico no se ha podido encontrar.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await queryRunner.manager.update(
+        MedicalReq,
+        { id: lastMedicalReq.id },
+        { is_it_reviewed: true },
+      );
+
+      await queryRunner.commitTransaction();
+
+      return new HttpException(
+        `El requerimiento cambio a estado: ${statusUnderReviewFound.name}`,
+        HttpStatus.ACCEPTED,
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   async changeStatusToDelivered(
     reqId: string,
     deliveredStatus: UpdateStatusMedicalReqDto,
   ) {
-    const requirementFound = await this.medicalReqRepository.findOne({
-      where: { id: reqId },
-    });
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!requirementFound) {
-      throw new HttpException(
-        'Requerimiento médico no encontrado',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const statusDeliveredFound = await this.requerimentStatusRepository.findOne(
-      {
-        where: {
-          name: RequirementStatusEnum.DELIVERED,
-        },
-      },
-    );
-
-    if (!statusDeliveredFound) {
-      throw new HttpException(
-        'El estado "Entregado" no existe.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const statusDeliveredId = (deliveredStatus.requirement_status =
-      statusDeliveredFound.id);
-
-    const requirementStatusDelivered =
-      await this.requerimentStatusRepository.findOne({
-        where: { id: statusDeliveredId },
+    try {
+      const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
+        where: { id: reqId, is_it_reviewed: false },
       });
 
-    if (!requirementStatusDelivered) {
-      throw new HttpException(
-        'El estado de requerimiento no es valido',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    if (!deliveredStatus.documents_delivered) {
-      throw new HttpException(
-        'Debes anexar mínimo un archivo para enviar solicitud.',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const currentDate = new Date();
-
-    const sevenDaysLater = new Date();
-    sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-
-    deliveredStatus.answer_date = currentDate;
-    deliveredStatus.download_expiration_date = sevenDaysLater;
-
-    if (
-      deliveredStatus.answer_date &&
-      deliveredStatus.download_expiration_date
-    ) {
-      await this.medicalReqRepository.update(reqId, deliveredStatus);
-    }
-
-    const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
-      where: {
-        id: reqId,
-      },
-    });
-
-    const statusExpiredFound = await this.requerimentStatusRepository.findOne({
-      where: {
-        name: RequirementStatusEnum.EXPIRED,
-      },
-    });
-
-    if (!statusExpiredFound) {
-      throw new HttpException(
-        'El estado "Expirado" no existe.',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const statusExpiredId = statusExpiredFound.id;
-
-    const requirementStatusExpired =
-      await this.requerimentStatusRepository.findOne({
-        where: { id: statusExpiredId },
-      });
-
-    if (!requirementStatusExpired) {
-      throw new HttpException(
-        'El estado de requerimiento no es valido',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    schedule.scheduleJob(
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      async () => {
-        await this.medicalReqRepository.update(
-          {
-            id: updatedMedicalReqFound.id,
-          },
-          {
-            documents_delivered: null,
-            requirement_status: requirementStatusExpired.id,
-          },
+      if (!requirementFound) {
+        throw new HttpException(
+          'Requerimiento médico no encontrado',
+          HttpStatus.NOT_FOUND,
         );
-      },
-    );
+      }
 
-    const sendReqTypeName =
-      await this.requirementTypeService.getRequirementTypeById(
-        updatedMedicalReqFound.requirement_type,
+      const statusDeliveredFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.DELIVERED,
+          },
+        },
       );
 
-    const emailDetailsToSend = new SendEmailDto();
+      if (!statusDeliveredFound) {
+        throw new HttpException(
+          'El estado "Docs. entregados" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
 
-    emailDetailsToSend.recipients = [updatedMedicalReqFound.aplicant_email];
-    emailDetailsToSend.userNameToEmail = updatedMedicalReqFound.aplicant_name;
-    emailDetailsToSend.medicalReqFilingNumber =
-      updatedMedicalReqFound.filing_number;
-    emailDetailsToSend.requirementType = sendReqTypeName.name;
-    emailDetailsToSend.requestStatusReq = requirementStatusDelivered.name;
-    emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
-    emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
-    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+      if (!deliveredStatus.response_comments) {
+        throw new HttpException(
+          'Debes anexar un mensaje o comentario de respuesta para enviar solicitud.',
+          HttpStatus.CONFLICT,
+        );
+      }
 
-    await this.nodemailerService.sendEmail(emailDetailsToSend);
+      if (!deliveredStatus.documents_delivered) {
+        throw new HttpException(
+          'Debes anexar mínimo un archivo para enviar solicitud.',
+          HttpStatus.CONFLICT,
+        );
+      }
 
-    return updatedMedicalReqFound;
+      const currentDate = new Date();
+
+      const sevenDaysLater = new Date();
+      sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+
+      deliveredStatus.answer_date = currentDate;
+      deliveredStatus.download_expiration_date = sevenDaysLater;
+
+      if (
+        deliveredStatus.answer_date &&
+        deliveredStatus.download_expiration_date
+      ) {
+        const createNewRecord = await queryRunner.manager.insert(MedicalReq, {
+          ...requirementFound,
+          id: randomUUID(),
+          requirement_status: statusDeliveredFound.id,
+          answer_date: deliveredStatus.answer_date,
+          download_expiration_date: deliveredStatus.download_expiration_date,
+          response_comments: deliveredStatus.response_comments,
+          documents_delivered: deliveredStatus.documents_delivered,
+        });
+
+        if (!createNewRecord) {
+          throw new HttpException(
+            '¡No se ha podido crear un nuevo registro en base de datos!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+
+      const statusUnderReviewFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.UNDER_REVIEW,
+          },
+        },
+      );
+
+      if (!statusUnderReviewFound) {
+        throw new HttpException(
+          'El estado "En revisión" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: requirementFound.id,
+          requirement_status: statusUnderReviewFound.id,
+          answer_date: null,
+          download_expiration_date: null,
+          response_comments: null,
+          documents_delivered: null,
+          is_it_reviewed: false,
+        },
+      });
+
+      if (!lastMedicalReq) {
+        throw new HttpException(
+          'El último requerimiento médico no se ha podido encontrar.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await queryRunner.manager.update(
+        MedicalReq,
+        { id: lastMedicalReq.id },
+        { is_it_reviewed: true },
+      );
+
+      const updatedMedicalReqDelivered = await queryRunner.manager.findOne(
+        MedicalReq,
+        {
+          where: {
+            filing_number: requirementFound.filing_number,
+            is_it_reviewed: false,
+            requirement_status: statusDeliveredFound.id,
+          },
+        },
+      );
+
+      const statusExpiredFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.EXPIRED,
+          },
+        },
+      );
+
+      if (!statusExpiredFound) {
+        throw new HttpException(
+          'El estado "Expirado" no existe.',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      schedule.scheduleJob(
+        new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        async () => {
+          await this.medicalReqRepository.update(
+            {
+              id: updatedMedicalReqDelivered.id,
+            },
+            {
+              documents_delivered: null,
+              requirement_status: statusExpiredFound.id,
+            },
+          );
+        },
+      );
+
+      const sendReqTypeName =
+        await this.requirementTypeService.getRequirementTypeById(
+          updatedMedicalReqDelivered.requirement_type,
+        );
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [
+        updatedMedicalReqDelivered.aplicant_email,
+      ];
+      emailDetailsToSend.userNameToEmail =
+        updatedMedicalReqDelivered.aplicant_name;
+      emailDetailsToSend.medicalReqFilingNumber =
+        updatedMedicalReqDelivered.filing_number;
+      emailDetailsToSend.requirementType = sendReqTypeName.name;
+      emailDetailsToSend.requestStatusReq = statusDeliveredFound.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
+      emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
+      emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      await queryRunner.commitTransaction();
+
+      return updatedMedicalReqDelivered;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async changeStatusToRejected(
     reqId: string,
     rejectedStatus: UpdateStatusMedicalReqDto,
   ) {
-    const requirementFound = await this.medicalReqRepository.findOne({
-      where: { id: reqId },
-    });
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!requirementFound) {
-      throw new HttpException(
-        'Requerimiento médico no encontrado',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    if (
-      !rejectedStatus.motive_for_rejection ||
-      rejectedStatus.motive_for_rejection.length === 0
-    ) {
-      throw new HttpException(
-        'Debes ingresar mínimo un motivo de rechazo.',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const motiveOfRejection = await this.reasonsForRejectionRepository.find({
-      where: {
-        id: In(rejectedStatus.motive_for_rejection),
-      },
-    });
-
-    if (
-      motiveOfRejection.length !== rejectedStatus.motive_for_rejection.length
-    ) {
-      throw new HttpException(
-        'Uno o más motivos de rechazo no son válidos.',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const statusRejectedFound = await this.requerimentStatusRepository.findOne({
-      where: {
-        name: RequirementStatusEnum.REJECTED,
-      },
-    });
-
-    if (!statusRejectedFound) {
-      throw new HttpException(
-        'El estado "Rechazado" no existe.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const statusRejectedId = (rejectedStatus.requirement_status =
-      statusRejectedFound.id);
-
-    const requirementStatus = await this.requerimentStatusRepository.findOne({
-      where: { id: statusRejectedId },
-    });
-
-    if (!requirementStatus) {
-      throw new HttpException(
-        'El estado de requerimiento no es valido',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const currentDate = new Date();
-
-    rejectedStatus.answer_date = currentDate;
-
-    await this.medicalReqRepository.update(reqId, rejectedStatus);
-
-    const updatedMedicalReqFound = await this.medicalReqRepository.findOne({
-      where: {
-        id: reqId,
-      },
-      relations: ['reasons_for_rejection'],
-    });
-
-    const sendReqTypeName =
-      await this.requirementTypeService.getRequirementTypeById(
-        updatedMedicalReqFound.requirement_type,
-      );
-
-    const emailDetailsToSend = new SendEmailDto();
-
-    emailDetailsToSend.recipients = [updatedMedicalReqFound.aplicant_email];
-    emailDetailsToSend.userNameToEmail = updatedMedicalReqFound.aplicant_name;
-    emailDetailsToSend.medicalReqFilingNumber =
-      updatedMedicalReqFound.filing_number;
-    emailDetailsToSend.requirementType = sendReqTypeName.name;
-    emailDetailsToSend.requestStatusReq = requirementStatus.name;
-    emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
-    emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
-    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
-
-    await this.nodemailerService.sendEmail(emailDetailsToSend);
-
-    const selectedReasonsForRejection =
-      await this.reasonsForRejectionRepository.find({
-        where: { id: In(rejectedStatus.motive_for_rejection) },
+    try {
+      const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
+        where: { id: reqId, is_it_reviewed: false },
       });
 
-    updatedMedicalReqFound.reasons_for_rejection = [
-      ...updatedMedicalReqFound.reasons_for_rejection,
-      ...selectedReasonsForRejection,
-    ];
+      if (!requirementFound) {
+        throw new HttpException(
+          'Requerimiento médico no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
 
-    await this.medicalReqRepository.save(updatedMedicalReqFound);
+      const statusRejectedFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.REJECTED,
+          },
+        },
+      );
 
-    return updatedMedicalReqFound;
+      if (!statusRejectedFound) {
+        throw new HttpException(
+          'El estado "Rechazada" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      if (!rejectedStatus.response_comments) {
+        throw new HttpException(
+          'Debes anexar un mensaje o comentario de respuesta para enviar solicitud.',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      if (
+        !rejectedStatus.motive_for_rejection ||
+        rejectedStatus.motive_for_rejection.length === 0
+      ) {
+        throw new HttpException(
+          'Debes ingresar mínimo un motivo de rechazo.',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      const motiveOfRejection = await queryRunner.manager.find(
+        ReasonsForRejection,
+        {
+          where: {
+            id: In(rejectedStatus.motive_for_rejection),
+          },
+        },
+      );
+
+      if (
+        motiveOfRejection.length !== rejectedStatus.motive_for_rejection.length
+      ) {
+        throw new HttpException(
+          'Uno o más motivos de rechazo no son válidos.',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      const currentDate = new Date();
+
+      rejectedStatus.answer_date = currentDate;
+
+      if (rejectedStatus.answer_date && rejectedStatus.motive_for_rejection) {
+        const createNewRecord = await queryRunner.manager.insert(MedicalReq, {
+          ...requirementFound,
+          id: randomUUID(),
+          requirement_status: statusRejectedFound.id,
+          answer_date: rejectedStatus.answer_date,
+          response_comments: rejectedStatus.response_comments,
+          motive_for_rejection: rejectedStatus.motive_for_rejection,
+        });
+
+        if (!createNewRecord) {
+          throw new HttpException(
+            '¡No se ha podido crear un nuevo registro en base de datos!',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+
+      const statusUnderReviewFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.UNDER_REVIEW,
+          },
+        },
+      );
+
+      if (!statusUnderReviewFound) {
+        throw new HttpException(
+          'El estado "En revisión" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: requirementFound.id,
+          requirement_status: statusUnderReviewFound.id,
+          answer_date: null,
+          response_comments: null,
+          motive_for_rejection: null,
+          is_it_reviewed: false,
+        },
+      });
+
+      if (!lastMedicalReq) {
+        throw new HttpException(
+          'El último requerimiento médico no se ha podido encontrar.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await queryRunner.manager.update(
+        MedicalReq,
+        { id: lastMedicalReq.id },
+        { is_it_reviewed: true },
+      );
+
+      const updatedMedicalReqRejected = await queryRunner.manager.findOne(
+        MedicalReq,
+        {
+          where: {
+            filing_number: requirementFound.filing_number,
+            is_it_reviewed: false,
+            requirement_status: statusRejectedFound.id,
+          },
+          relations: ['reasons_for_rejection'],
+        },
+      );
+
+      const sendReqTypeName =
+        await this.requirementTypeService.getRequirementTypeById(
+          updatedMedicalReqRejected.requirement_type,
+        );
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [
+        updatedMedicalReqRejected.aplicant_email,
+      ];
+      emailDetailsToSend.userNameToEmail =
+        updatedMedicalReqRejected.aplicant_name;
+      emailDetailsToSend.medicalReqFilingNumber =
+        updatedMedicalReqRejected.filing_number;
+      emailDetailsToSend.requirementType = sendReqTypeName.name;
+      emailDetailsToSend.requestStatusReq = statusRejectedFound.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_STATUS_CHANGE;
+      emailDetailsToSend.emailTemplate = MEDICAL_REQ_UPDATE;
+      emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      const selectedReasonsForRejection = await queryRunner.manager.find(
+        ReasonsForRejection,
+        {
+          where: { id: In(rejectedStatus.motive_for_rejection) },
+        },
+      );
+
+      updatedMedicalReqRejected.reasons_for_rejection = [
+        ...updatedMedicalReqRejected.reasons_for_rejection,
+        ...selectedReasonsForRejection,
+      ];
+
+      await queryRunner.manager.save(MedicalReq, updatedMedicalReqRejected);
+
+      await queryRunner.commitTransaction();
+
+      return updatedMedicalReqRejected;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async sendToAnotherArea(
     reqId: string,
     sendToOtherArea: UpdateStatusMedicalReqDto,
   ) {
-    const requirementFound = await this.medicalReqRepository.findOne({
-      where: { id: reqId },
-    });
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!requirementFound) {
-      throw new HttpException(
-        'Requerimiento médico no encontrado',
-        HttpStatus.NOT_FOUND,
+    try {
+      const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
+        where: { id: reqId, is_it_reviewed: false },
+      });
+
+      if (!requirementFound) {
+        throw new HttpException(
+          'Requerimiento médico no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      if (!sendToOtherArea.currently_in_area) {
+        throw new HttpException(
+          'Debes ingresar una área para reenviar solicitud.',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      if (!sendToOtherArea.area_redirection_message) {
+        throw new HttpException(
+          'Debes ingresar un mensaje para reenviar solicitud.',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      const companyArea = await queryRunner.manager.findOne(CompanyArea, {
+        where: {
+          id: sendToOtherArea.currently_in_area,
+        },
+      });
+
+      if (!companyArea) {
+        throw new HttpException(
+          'El área seleccionada no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const createNewRecord = await queryRunner.manager.insert(MedicalReq, {
+        ...requirementFound,
+        id: randomUUID(),
+        currently_in_area: companyArea.id,
+        area_redirection_message: sendToOtherArea.area_redirection_message,
+      });
+
+      if (!createNewRecord) {
+        throw new HttpException(
+          '¡No se ha podido crear un nuevo registro en base de datos!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const statusUnderReviewFound = await queryRunner.manager.findOne(
+        RequirementStatus,
+        {
+          where: {
+            name: RequirementStatusEnum.UNDER_REVIEW,
+          },
+        },
       );
-    }
 
-    if (!sendToOtherArea.currently_in_area) {
-      throw new HttpException(
-        'Debes ingresar una área para reenviar solicitud.',
-        HttpStatus.CONFLICT,
+      if (!statusUnderReviewFound) {
+        throw new HttpException(
+          'El estado "En revisión" no existe.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
+        where: {
+          id: requirementFound.id,
+          requirement_status: statusUnderReviewFound.id,
+          currently_in_area: requirementFound.currently_in_area,
+          area_redirection_message: null,
+          is_it_reviewed: false,
+        },
+      });
+
+      if (!lastMedicalReq) {
+        throw new HttpException(
+          'El último requerimiento médico no se ha podido encontrar.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await queryRunner.manager.update(
+        MedicalReq,
+        { id: lastMedicalReq.id },
+        { is_it_reviewed: true },
       );
-    }
 
-    const companyArea = await this.companyAreaRepository.findOne({
-      where: {
-        id: sendToOtherArea.currently_in_area,
-      },
-    });
+      await queryRunner.commitTransaction();
 
-    if (!companyArea) {
-      throw new HttpException(
-        'El área seleccionada no existe.',
-        HttpStatus.NOT_FOUND,
+      return new HttpException(
+        `El requerimiento médico se traslado al área de: ${companyArea.name}`,
+        HttpStatus.ACCEPTED,
       );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    await this.medicalReqRepository.update(reqId, sendToOtherArea);
-
-    return `El requerimiento médico se traslado al área de: ${companyArea.name}`;
   }
 
   // DELETED-BAN FUNTIONS //

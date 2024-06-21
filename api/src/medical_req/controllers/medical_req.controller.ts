@@ -71,13 +71,13 @@ export class MedicalReqController {
     return await this.medicalReqService.getAllMedicalReqUsers();
   }
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Auth(UserRolType.PATIENT, UserRolType.EPS)
   @Get('/getAllMedicalReqOfAUsers/:userId')
   async getAllMedicalReqOfAUsers(@Param('userId') userId: string) {
     return await this.medicalReqService.getAllMedicalReqOfAUsers(userId);
   }
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Auth(UserRolType.AUTHORIZED_FAMILIAR)
   @Get('/getAllMedicalReqOfAFamiliar/:userId')
   async getAllMedicalReqOfAFamiliar(@Param('userId') familiarId: string) {
     return await this.medicalReqService.getAllMedicalReqOfAFamiliar(familiarId);
@@ -101,27 +101,19 @@ export class MedicalReqController {
     return await this.medicalReqService.getAllMedicalReqEps();
   }
 
-  @Auth(
-    AdminRolType.ADMIN,
-    UserRolType.PATIENT,
-    UserRolType.AUTHORIZED_FAMILIAR,
-  )
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReqPatient/:id')
   async getMedicalReqPatientById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPatientById(id);
   }
 
-  @Auth(
-    AdminRolType.ADMIN,
-    UserRolType.PATIENT,
-    UserRolType.AUTHORIZED_FAMILIAR,
-  )
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReqFamiliar/:id')
   async getMedicalReqFamiliarById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqFamiliarById(id);
   }
 
-  @Auth(AdminRolType.ADMIN, UserRolType.EPS)
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReqEps/:id')
   async getMedicalReqEpsById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqEpsById(id);
@@ -138,6 +130,18 @@ export class MedicalReqController {
   }
 
   // PATCH METHODS //
+
+  @Auth(AdminRolType.ADMIN)
+  @Patch('/visualizedStatus/:reqId')
+  async changeStatusToVisualized(@Param('reqId') reqId: string) {
+    return await this.medicalReqService.changeStatusToVisualized(reqId);
+  }
+
+  @Auth(AdminRolType.ADMIN)
+  @Patch('/underReviewStatus/:reqId')
+  async changeStatusToUnderReview(@Param('reqId') reqId: string) {
+    return await this.medicalReqService.changeStatusToUnderReview(reqId);
+  }
 
   @Auth(AdminRolType.ADMIN)
   @Patch('/deliveredStatus/:reqId')
