@@ -9,7 +9,7 @@
     "target": "esnext",
     "module": "commonjs",
     "jsx": "preserve",
-    "types": ["react", "next", "antd"],
+    "types": ["react", "next", "antd", "express", "multer"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

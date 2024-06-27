@@ -34,6 +34,8 @@ interface MedicalReq {
   currently_in_area: number;
   requirement_status: number;
   user_message: string;
+  user_message_documents: string[];
+  files_user_message_documents: Array<Express.Multer.File>;
   response_comments: string;
   motive_for_rejection: number[];
   documents_delivered: string[];

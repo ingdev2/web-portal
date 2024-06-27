@@ -20,6 +20,7 @@ import {
   setVerificationCodeLoginEps,
   setErrorsLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
@@ -29,6 +30,7 @@ const EpsModalVerificationCode: React.FC = () => {
   const router = useRouter();
 
   const epsModalIsOpen = useAppSelector((state) => state.modal.epsModalIsOpen);
+  const isPageLoading = useAppSelector((state) => state.modal.isPageLoading);
 
   const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
   const idNumberEpsState = useAppSelector(
@@ -38,7 +40,6 @@ const EpsModalVerificationCode: React.FC = () => {
     (state) => state.epsUserLogin.verification_code
   );
 
-  const [isHomepageLoading, setIsHomepageLoading] = useState(false);
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
   const [isSubmittingResendCode, setIsSubmittingResendCode] = useState(false);
 
@@ -100,6 +101,8 @@ const EpsModalVerificationCode: React.FC = () => {
       }
 
       if (responseNextAuth?.status === 200) {
+        dispatch(setIsPageLoading(true));
+
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
         dispatch(setIdTypeLoginEps(""));
@@ -111,8 +114,6 @@ const EpsModalVerificationCode: React.FC = () => {
         });
 
         await new Promise((resolve) => setTimeout(resolve, 4000));
-
-        setIsHomepageLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -230,7 +231,7 @@ const EpsModalVerificationCode: React.FC = () => {
             {isUserEpsData?.email}
           </h5>
 
-          <CustomLoadingOverlay isLoading={isHomepageLoading} />
+          <CustomLoadingOverlay isLoading={isPageLoading} />
 
           <Form
             id="form-verify-code-modal-eps"
@@ -302,11 +303,12 @@ const EpsModalVerificationCode: React.FC = () => {
                 key="confirm-code-button-eps"
                 className="confirm-code-button-eps"
                 size="large"
+                disabled={isPageLoading}
                 style={{
+                  backgroundColor: isPageLoading ? "#D8D8D8" : "#015E90",
+                  color: isPageLoading ? "#A0A0A0" : "#f2f2f2",
                   paddingInline: 31,
                   borderRadius: 31,
-                  backgroundColor: "#015E90",
-                  color: "#f2f2f2",
                   marginTop: 5,
                   marginBottom: 13,
                 }}

@@ -20,6 +20,7 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
@@ -31,6 +32,7 @@ const PatientModalVerificationCode: React.FC = () => {
   const patientModalIsOpen = useAppSelector(
     (state) => state.modal.patientModalIsOpen
   );
+  const isPageLoading = useAppSelector((state) => state.modal.isPageLoading);
 
   const idTypePatientState = useAppSelector(
     (state) => state.patientUserLogin.id_type
@@ -42,7 +44,6 @@ const PatientModalVerificationCode: React.FC = () => {
     (state) => state.patientUserLogin.verification_code
   );
 
-  const [isHomepageLoading, setIsHomepageLoading] = useState(false);
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
   const [isSubmittingResendCode, setIsSubmittingResendCode] = useState(false);
 
@@ -104,7 +105,7 @@ const PatientModalVerificationCode: React.FC = () => {
       }
 
       if (responseNextAuth?.status === 200) {
-        setIsHomepageLoading(true);
+        dispatch(setIsPageLoading(true));
 
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
@@ -115,8 +116,6 @@ const PatientModalVerificationCode: React.FC = () => {
         await router.replace("/patient/homepage", { scroll: false });
 
         await new Promise((resolve) => setTimeout(resolve, 4000));
-
-        setIsHomepageLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -234,7 +233,7 @@ const PatientModalVerificationCode: React.FC = () => {
             {isUserPatientData?.email}
           </h5>
 
-          <CustomLoadingOverlay isLoading={isHomepageLoading} />
+          <CustomLoadingOverlay isLoading={isPageLoading} />
 
           <Form
             id="form-verify-code-modal-patient"
@@ -306,11 +305,12 @@ const PatientModalVerificationCode: React.FC = () => {
                 key={"confirm-code-button-patient"}
                 className="confirm-code-button-patient"
                 size="large"
+                disabled={isPageLoading}
                 style={{
+                  backgroundColor: isPageLoading ? "#D8D8D8" : "#015E90",
+                  color: isPageLoading ? "#A0A0A0" : "#f2f2f2",
                   paddingInline: 31,
                   borderRadius: 31,
-                  backgroundColor: "#015E90",
-                  color: "#f2f2f2",
                   marginTop: 5,
                   marginBottom: 13,
                 }}
@@ -340,9 +340,9 @@ const PatientModalVerificationCode: React.FC = () => {
               disabled={resendCodeDisable}
               style={{
                 backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
-                paddingInline: 13,
                 color: resendCodeDisable ? "#A0A0A0" : "#015E90",
                 borderColor: resendCodeDisable ? "#A0A0A0" : "#015E90",
+                paddingInline: 13,
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,

@@ -29,14 +29,19 @@ export const medicalReqApi = createApi({
   endpoints: (builder) => ({
     createMedicalReqPatient: builder.mutation<
       Partial<MedicalReq>,
-      { userId: string; medicalReqPatient: Partial<MedicalReq> }
+      {
+        userId: string;
+        medicalReqPatient: Partial<MedicalReq>;
+      }
     >({
-      query: ({ userId, medicalReqPatient }) => ({
-        url: `createMedicalReqPatient/${userId}`,
-        method: "POST",
-        params: { userId },
-        body: medicalReqPatient,
-      }),
+      query: ({ userId, medicalReqPatient }) => {
+        return {
+          url: `createMedicalReqPatient/${userId}`,
+          method: "POST",
+          params: { userId },
+          body: medicalReqPatient,
+        };
+      },
     }),
 
     createMedicalReqEps: builder.mutation<

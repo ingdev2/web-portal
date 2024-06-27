@@ -1,62 +1,112 @@
 "use client";
 
 import React from "react";
+import { useAppDispatch } from "@/redux/hooks";
 
-import { Upload, Button, message } from "antd";
-import type { UploadProps } from "antd";
+import { Upload, message } from "antd";
+import type { UploadFile, UploadProps } from "antd";
+import { titleStyleCss } from "@/theme/text_styles";
 import { FcPlus } from "react-icons/fc";
+import { RcFile, UploadChangeParam } from "antd/es/upload";
 
-const props: UploadProps = {
-  name: "file",
-  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
+import { getBufferFromFile } from "@/helpers/get_buffer_from_file/get_buffer_from_file";
+
+const CustomUpload: React.FC<{
+  titleCustomUpload: string;
+  fileStatusSetterCustomUpload: React.SetStateAction<any>;
+}> = ({ titleCustomUpload, fileStatusSetterCustomUpload }) => {
+  const dispatch = useAppDispatch();
+
+  const handleChange = async (info: UploadChangeParam<UploadFile<any>>) => {
+    const files = await Promise.all(
+      info.fileList.map(async (file: UploadFile) => {
+        const buffer = await getBufferFromFile(file);
+
+        return {
+          originalname: file.name,
+          mimetype: file.type,
+          size: file.size,
+          buffer: buffer,
+        } as Express.Multer.File;
+      })
+    );
+
     if (info.file.status === "done") {
-      message.success(`¡${info.file.name} cargado correctamente!`);
-    } else if (info.file.status === "error") {
-      message.error(`¡${info.file.name} error al cargar!`);
-    }
-  },
-  progress: {
-    strokeColor: {
-      "0%": "#8C1111",
-      "100%": "#137A2B",
-    },
-    size: 7,
-    format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
-  },
-};
+      message.success(`¡Documento ${info.file.name} cargado correctamente!`);
 
-const CustomUpload: React.FC<{ titleCustomUpload: string }> = ({
-  titleCustomUpload,
-}) => {
+      dispatch(fileStatusSetterCustomUpload(files));
+    }
+    if (info.file.status === "removed") {
+      message.warning(`¡Documento ${info.file.name} removido correctamente!`);
+    } else if (info.file.status === "error") {
+      message.error(`¡Error al cargar documento ${info.file.name}!`);
+    }
+  };
+
+  const props: UploadProps = {
+    name: "files",
+    multiple: true,
+    maxCount: Number(process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES),
+    accept: process.env.NEXT_PUBLIC_FILE_TYPES_ALLOWED,
+    listType: "picture-card",
+    beforeUpload: (file: RcFile) => {
+      const allowedTypes = process.env.NEXT_PUBLIC_SUPPORTED_FILE_FORMATS;
+
+      if (allowedTypes && !allowedTypes.includes(file.type)) {
+        message.error(`¡El archivo no es un formato compatible!`);
+
+        return Upload.LIST_IGNORE;
+      }
+
+      const isLt2M =
+        file.size / 1024 / 1024 <
+        Number(process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES);
+
+      if (!isLt2M) {
+        message.error(
+          `¡El peso del archivo debe ser menor a ${Number(
+            process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES
+          )}MB!`
+        );
+
+        return Upload.LIST_IGNORE;
+      }
+
+      return true;
+    },
+    progress: {
+      strokeColor: {
+        "0%": "#8C1111",
+        "100%": "#137A2B",
+      },
+      size: 7,
+      format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
+    },
+    onDrop(e) {
+      console.log("Dropped files", e.dataTransfer.files);
+    },
+  };
+
   return (
-    <Upload {...props}>
-      <Button
+    <Upload.Dragger
+      {...props}
+      onChange={handleChange}
+      style={{ margin: "7px 0px" }}
+    >
+      <div
         style={{
-          paddingInline: 17,
-          color: "#015E90",
-          borderColor: "#015E90",
-          fontWeight: "bold",
-          borderRadius: 7,
-          borderWidth: 1.3,
+          ...titleStyleCss,
           display: "flex",
-          flexFlow: "row wrap",
-          alignContent: "center",
+          flexFlow: "column wrap",
           alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
         }}
-        type="default"
-        className="upload-file-button"
-        icon={<FcPlus size={17} />}
       >
+        {<FcPlus size={27} />}
         {titleCustomUpload}
-      </Button>
-    </Upload>
+      </div>
+    </Upload.Dragger>
   );
 };
 

@@ -25,6 +25,7 @@ import { DeptsAndCitiesModule } from './depts_and_cities/depts_and_cities.module
 import { ReasonsForRejectionModule } from './reasons_for_rejection/reasons_for_rejection.module';
 import { PositionLevelModule } from './position_level/position_level.module';
 import { AuthenticationMethodModule } from './authentication_method/authentication_method.module';
+import { S3FileUploaderModule } from './s3_file_uploader/s3_file_uploader.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { AuthenticationMethodModule } from './authentication_method/authenticati
     ReasonsForRejectionModule,
     PositionLevelModule,
     AuthenticationMethodModule,
+    S3FileUploaderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

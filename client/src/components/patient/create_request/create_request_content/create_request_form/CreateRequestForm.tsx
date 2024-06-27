@@ -17,6 +17,7 @@ import {
   setTypesMedicalReq,
   setReqTypeMedicalReq,
   setUserMessageMedicalReq,
+  setFilesUserMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
@@ -24,6 +25,7 @@ import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useCreateMedicalReqPatientMutation } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
 const CreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -42,6 +44,9 @@ const CreateRequestForm: React.FC = () => {
   );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
+  );
+  const userMessageFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_user_message_documents
   );
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
@@ -86,6 +91,18 @@ const CreateRequestForm: React.FC = () => {
     },
   ] = useCreateMedicalReqPatientMutation({
     fixedCacheKey: "createMedicalReqPatientData",
+  });
+
+  const [
+    uploadFileToS3,
+    {
+      data: uploadFileToS3Data,
+      isLoading: uploadFileToS3Loading,
+      isSuccess: uploadFileToS3Success,
+      isError: uploadFileToS3Error,
+    },
+  ] = useUploadFileMutation({
+    fixedCacheKey: "uploadFileToS3Data",
   });
 
   useEffect(() => {
@@ -136,34 +153,98 @@ const CreateRequestForm: React.FC = () => {
     try {
       setIsSubmittingNewMedicalReq(true);
 
+      const responses: Record<string, string[]> = {};
+      let errors: string[] = [];
+
+      if (
+        userMessageFilesMedicalReqState &&
+        userMessageFilesMedicalReqState.length > 0
+      ) {
+        const statesToUpload = [
+          {
+            files: userMessageFilesMedicalReqState,
+            paramName: "user_message_documents",
+          },
+        ];
+
+        const processAndUploadFiles = async (
+          files: Array<Express.Multer.File>
+        ): Promise<{ success: string[]; error: string | null }> => {
+          const formData = new FormData();
+
+          files.forEach((file) => {
+            formData.append(
+              "files",
+              new Blob([file.buffer], { type: file.mimetype }),
+              file.originalname
+            );
+          });
+
+          try {
+            var s3Response: any = await uploadFileToS3(formData);
+
+            if (s3Response.error) {
+              const errorMessage = s3Response.error?.data?.message;
+
+              return {
+                success: [],
+                error: Array.isArray(errorMessage)
+                  ? errorMessage[0]
+                  : errorMessage,
+              };
+            }
+            return { success: s3Response.data || [], error: null };
+          } catch (error: any) {
+            return {
+              success: [],
+              error: error || "Error desconocido al subir archivos",
+            };
+          }
+        };
+
+        for (const { files, paramName } of statesToUpload) {
+          if (files && files.length > 0) {
+            const { success, error } = await processAndUploadFiles(files);
+            if (error) {
+              errors.push(error);
+            } else {
+              responses[paramName] = success;
+            }
+          }
+        }
+
+        if (errors.length > 0) {
+          dispatch(setErrorsMedicalReq(errors[0]));
+          setShowErrorMessageMedicalReq(true);
+
+          return;
+        }
+      }
+
       const response: any = await createMedicalReqPatient({
         userId: idUserPatientState,
         medicalReqPatient: {
           requirement_type: reqTypeState,
           user_message: userMessageMedicalReqState,
+          ...responses,
         },
       });
 
-      var createMedicalReqError = response.error;
+      if (response.error) {
+        const errorMessage = response.error?.data?.message;
 
-      var createMedicalReqSuccess = response.data;
+        dispatch(
+          setErrorsMedicalReq(
+            Array.isArray(errorMessage) ? errorMessage[0] : errorMessage
+          )
+        );
 
-      if (createMedicalReqError) {
-        const errorMessage = createMedicalReqError?.data.message;
-
-        if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsMedicalReq(errorMessage[0]));
-          setShowErrorMessageMedicalReq(true);
-        }
-        if (typeof errorMessage === "string") {
-          dispatch(setErrorsMedicalReq(errorMessage));
-          setShowErrorMessageMedicalReq(true);
-        }
-      }
-
-      if (createMedicalReqSuccess && !createMedicalReqError) {
+        setShowErrorMessageMedicalReq(true);
+      } else {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
+
+        dispatch(setFilesUserMessageMedicalReq([]));
       }
     } catch (error) {
       console.error(error);
@@ -317,6 +398,7 @@ const CreateRequestForm: React.FC = () => {
           handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
           familiarReqTypeListDataForm={typesMedicalReqState}
           userMessageMedicalReqDataForm={userMessageMedicalReqState}
+          fileStatusSetterDataform={setFilesUserMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
             dispatch(setUserMessageMedicalReq(e.target.value))
           }

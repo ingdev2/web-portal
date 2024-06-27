@@ -25,6 +25,7 @@ import { RequirementStatusEnum } from '../enums/requirement_status.enum';
 import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { S3FileUploaderService } from 'src/s3_file_uploader/services/s3_file_uploader.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import { generateFilingNumber } from '../helpers/generate_filing_number.helper';
@@ -72,6 +73,7 @@ export class MedicalReqService {
     private relWithPatientRepository: Repository<RelWithPatient>,
 
     private usersService: UsersService,
+    private s3FileUploaderService: S3FileUploaderService,
     private nodemailerService: NodemailerService,
     private requirementTypeService: RequirementTypeService,
 
@@ -985,6 +987,7 @@ export class MedicalReqService {
       where: {
         medicalReqUserType: userRolePatient.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1012,6 +1015,7 @@ export class MedicalReqService {
       where: {
         medicalReqUserType: userRoleFamiliar.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1039,6 +1043,7 @@ export class MedicalReqService {
       where: {
         medicalReqUserType: userRoleEps.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1067,6 +1072,7 @@ export class MedicalReqService {
         id: id,
         medicalReqUserType: userRolePatient.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1095,6 +1101,7 @@ export class MedicalReqService {
         id: id,
         medicalReqUserType: userRoleFamiliar.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1123,6 +1130,7 @@ export class MedicalReqService {
         id: id,
         medicalReqUserType: userRoleEps.id,
         is_deleted: false,
+        is_it_reviewed: false,
       },
       order: {
         createdAt: 'ASC',
@@ -1144,6 +1152,7 @@ export class MedicalReqService {
       where: {
         filing_number: filingNumber,
         is_deleted: false,
+        is_it_reviewed: false,
       },
     });
 
