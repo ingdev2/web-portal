@@ -1,6 +1,11 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
@@ -18,10 +23,25 @@ import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
+import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patient.dto';
+import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
+import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
+import { nanoid } from 'nanoid';
+import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+import {
+  ACCOUNT_CREATED,
+  PASSWORD_RESET,
+  RESET_PASSWORD_TEMPLATE,
+  SUBJECT_ACCOUNT_CREATED,
+} from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
+import { CONTACT_PBX } from 'src/utils/constants/constants';
+
+const schedule = require('node-schedule');
 
 @Injectable()
 export class UsersService {
@@ -43,7 +63,7 @@ export class UsersService {
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
-    private locationService: DeptsAndCitiesService,
+    private readonly nodemailerService: NodemailerService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -131,7 +151,7 @@ export class UsersService {
       default:
         throw new HttpException(
           `Tipo de identificación ingresado no válido.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
     }
   }
@@ -168,7 +188,7 @@ export class UsersService {
       default:
         throw new HttpException(
           `Tipo de sexo ingresado no válido.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
     }
   }
@@ -316,7 +336,7 @@ export class UsersService {
     if (!rolePatientFound) {
       throw new HttpException(
         'El rol "Paciente" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -390,7 +410,7 @@ export class UsersService {
     if (!userRolePatient) {
       throw new HttpException(
         'El usuario debe tener el rol "Paciente".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -399,6 +419,17 @@ export class UsersService {
     const newUserPatient = await this.userRepository.findOne({
       where: { id: userPatientWithRole.id },
     });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [newUserPatient.email];
+    emailDetailsToSend.userNameToEmail = newUserPatient.name;
+    emailDetailsToSend.subject = SUBJECT_ACCOUNT_CREATED;
+    emailDetailsToSend.emailTemplate = ACCOUNT_CREATED;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return newUserPatient;
   }
@@ -440,7 +471,7 @@ export class UsersService {
     if (!authenticationMethodFound) {
       return new HttpException(
         `El método de autenticación "Email" no existe.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -451,10 +482,7 @@ export class UsersService {
     });
 
     if (!roleEpsFound) {
-      throw new HttpException(
-        'El rol "Eps" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('El rol "Eps" no existe.', HttpStatus.NOT_FOUND);
     }
 
     const insertRoleUserEps = await this.userRepository.create({
@@ -476,7 +504,7 @@ export class UsersService {
     if (!userRoleEps) {
       throw new HttpException(
         'El usuario debe tener el rol "Eps".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -485,6 +513,17 @@ export class UsersService {
     const newUserEps = await this.userRepository.findOne({
       where: { id: userEpsWithRole.id },
     });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [newUserEps.email];
+    emailDetailsToSend.userNameToEmail = newUserEps.name;
+    emailDetailsToSend.subject = SUBJECT_ACCOUNT_CREATED;
+    emailDetailsToSend.emailTemplate = ACCOUNT_CREATED;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return newUserEps;
   }
@@ -532,7 +571,7 @@ export class UsersService {
       if (!allUsersPerson.length) {
         return new HttpException(
           `No hay usuarios registrados en la base de datos`,
-          HttpStatus.CONFLICT,
+          HttpStatus.NOT_FOUND,
         );
       } else {
         return allUsersPerson;
@@ -540,7 +579,7 @@ export class UsersService {
     } else {
       throw new HttpException(
         'No hay role creado de "Paciente".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }
@@ -566,7 +605,7 @@ export class UsersService {
       if (!allUsersEps.length) {
         return new HttpException(
           `No hay usuarios registrados en la base de datos`,
-          HttpStatus.CONFLICT,
+          HttpStatus.NOT_FOUND,
         );
       } else {
         return allUsersEps;
@@ -574,7 +613,7 @@ export class UsersService {
     } else {
       throw new HttpException(
         'No hay role creado de "Eps".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }
@@ -608,7 +647,7 @@ export class UsersService {
     if (!userRolePatient) {
       throw new HttpException(
         'El rol "Paciente" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -638,10 +677,7 @@ export class UsersService {
     });
 
     if (!userRoleEps) {
-      throw new HttpException(
-        'El rol "Eps" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('El rol "Eps" no existe.', HttpStatus.NOT_FOUND);
     }
 
     const epsUserFound = await this.userRepository.findOne({
@@ -696,8 +732,9 @@ export class UsersService {
     }
   }
 
-  async getUserFoundByIdNumber(idNumber: number) {
+  async getUserFoundByIdNumber(idType: number, idNumber: number) {
     return await this.userRepository.findOneBy({
+      user_id_type: idType,
       id_number: idNumber,
     });
   }
@@ -715,6 +752,7 @@ export class UsersService {
         'id_number',
         'password',
         'email',
+        'authentication_method',
         'role',
       ],
     });
@@ -750,6 +788,34 @@ export class UsersService {
       return new HttpException(
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const emailUserPatientValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        email: userPatient.email,
+      },
+    });
+
+    if (emailUserPatientValidate) {
+      return new HttpException(
+        `El correo electrónico ${userPatient.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const cellphoneUserPatientValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        cellphone: userPatient.cellphone,
+      },
+    });
+
+    if (cellphoneUserPatientValidate) {
+      return new HttpException(
+        `El número de celular ${userPatient.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -837,6 +903,34 @@ export class UsersService {
       );
     }
 
+    const emailUserEpsValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        email: userEps.email,
+      },
+    });
+
+    if (emailUserEpsValidate) {
+      return new HttpException(
+        `El correo electrónico ${userEps.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const cellphoneUserEpsValidate = await this.userRepository.findOne({
+      where: {
+        id: Not(userFound.id),
+        cellphone: userEps.cellphone,
+      },
+    });
+
+    if (cellphoneUserEpsValidate) {
+      return new HttpException(
+        `El número de celular ${userEps.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const authenticationMethodEmailFound =
       await this.authenticationMethodRepository.findOne({
         where: {
@@ -915,6 +1009,7 @@ export class UsersService {
       passwords.oldPassword,
       userFound.password,
     );
+
     if (!isPasswordValid) {
       throw new HttpException(
         `Contraseña antigua incorrecta.`,
@@ -926,10 +1021,11 @@ export class UsersService {
       passwords.newPassword,
       userFound.password,
     );
+
     if (isNewPasswordSameAsOld) {
       throw new HttpException(
         `La nueva contraseña no puede ser igual a la antigua.`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -938,7 +1034,142 @@ export class UsersService {
     await this.userRepository.update(id, { password: hashedNewPassword });
 
     return new HttpException(
-      `Contraseña actualizada correctamente.`,
+      `¡Contraseña actualizada correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  async forgotUserPatientPassword({
+    id_type,
+    id_number,
+    birthdate,
+  }: ForgotPasswordUserPatientDto) {
+    const userFound = await this.userRepository.findOne({
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+        birthdate: birthdate,
+        is_active: true,
+      },
+    });
+
+    if (userFound) {
+      const resetPasswordToken = nanoid(64);
+
+      await this.userRepository.update(
+        {
+          id: userFound.id,
+        },
+        { reset_password_token: resetPasswordToken },
+      );
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [userFound.email];
+      emailDetailsToSend.userNameToEmail = userFound.name;
+      emailDetailsToSend.subject = PASSWORD_RESET;
+      emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.userRepository.update(
+          { id: userFound.id },
+          { reset_password_token: null },
+        );
+      });
+
+      return new HttpException(
+        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        HttpStatus.ACCEPTED,
+      );
+    } else {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+  }
+
+  async forgotUserEpsPassword({
+    id_type,
+    id_number,
+    eps_company,
+  }: ForgotPasswordUserEpsDto) {
+    const userFound = await this.userRepository.findOne({
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+        eps_company: eps_company,
+        is_active: true,
+      },
+    });
+
+    if (userFound) {
+      const resetPasswordToken = nanoid(64);
+
+      await this.userRepository.update(
+        {
+          id: userFound.id,
+        },
+        { reset_password_token: resetPasswordToken },
+      );
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [userFound.email];
+      emailDetailsToSend.userNameToEmail = userFound.name;
+      emailDetailsToSend.subject = PASSWORD_RESET;
+      emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.userRepository.update(
+          { id: userFound.id },
+          { reset_password_token: null },
+        );
+      });
+
+      return new HttpException(
+        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        HttpStatus.ACCEPTED,
+      );
+    } else {
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+  }
+
+  async resetUserPassword(
+    token: string,
+    { new_password }: ResetPasswordUserDto,
+  ) {
+    const tokenFound = await this.userRepository.findOne({
+      where: {
+        reset_password_token: token,
+      },
+    });
+
+    if (!tokenFound) {
+      throw new UnauthorizedException('¡Link invalido o caducado!');
+    }
+
+    const userFound = await this.userRepository.findOneBy({
+      id: tokenFound.id,
+    });
+
+    if (!userFound) {
+      throw new UnauthorizedException('¡Usuario no encontrado!');
+    }
+
+    const hashedNewPassword = await bcryptjs.hash(new_password, 10);
+
+    await this.userRepository.update(userFound.id, {
+      password: hashedNewPassword,
+      reset_password_token: null,
+    });
+
+    return new HttpException(
+      `¡Contraseña restablecida correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }

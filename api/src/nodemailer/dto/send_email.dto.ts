@@ -20,15 +20,15 @@ export class SendEmailDto {
 
   @IsNotEmpty()
   @IsString()
-  userName: string;
+  userNameToEmail: string;
 
   @IsNotEmpty()
   @IsString()
-  pacientName: string;
+  patientNameToEmail: string;
 
   @IsNotEmpty()
   @IsNumber()
-  pacientIdNumber: number;
+  patientIdNumberToEmail: number;
 
   @IsOptional()
   @IsString()
@@ -47,6 +47,22 @@ export class SendEmailDto {
   requestStatusReq?: string;
 
   @IsOptional()
+  @IsString()
+  portalWebUrl: string;
+
+  @IsOptional()
+  @IsString()
+  personalDataProcessingPolicy: string;
+
+  @IsOptional()
   @IsNumber()
   verificationCode: number;
+
+  @IsOptional()
+  @IsString()
+  resetPasswordUrl: string;
+
+  @IsOptional()
+  @IsString()
+  contactPbx: string;
 }

@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AdminsService } from '../../admins/services/admins.service';
 import { UsersService } from '../../users/services/users.service';
 import { AuthorizedFamiliarService } from '../../authorized_familiar/services/authorized_familiar.service';
@@ -16,7 +16,9 @@ import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
 import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/create-authorized_familiar.dto';
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
+import { Admin } from '../../admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
+import { AdminRole } from 'src/admin_roles/entities/admin_role.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { LoginDto } from '../dto/login.dto';
@@ -36,15 +38,18 @@ import {
 } from '../../nodemailer/constants/email_config.constant';
 
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from '../constants/jwt.constants';
 import { Tokens } from '../interfaces/tokens.interface';
 import * as bcryptjs from 'bcryptjs';
+import { AdminRolType } from 'src/utils/enums/admin_roles.enum';
 
 const schedule = require('node-schedule');
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(Admin)
+    private adminRepository: Repository<Admin>,
+
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
@@ -53,6 +58,9 @@ export class AuthService {
 
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
+
+    @InjectRepository(AdminRole)
+    private adminRoleRepository: Repository<AdminRole>,
 
     @InjectRepository(UserRole)
     private userRoleRepository: Repository<UserRole>,
@@ -164,6 +172,7 @@ export class AuthService {
     company_area,
     position_level,
     admin_role,
+    authentication_method,
   }: CreateAdminDto) {
     await this.adminsService.getAdminByIdNumber(id_number);
 
@@ -178,6 +187,7 @@ export class AuthService {
       company_area,
       position_level,
       admin_role,
+      authentication_method,
     });
   }
 
@@ -315,6 +325,14 @@ export class AuthService {
   // LOGIN FUNTIONS //
 
   async loginAdmins({ id_type, id_number, password }: LoginDto) {
+    const adminRoleFound = await this.adminRoleRepository.find({
+      where: { name: In([AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN]) },
+    });
+
+    if (!adminRoleFound.length) {
+      throw new UnauthorizedException(`¡Role de admin no encontrado!`);
+    }
+
     const adminFound =
       await this.adminsService.getAdminFoundByIdNumberWithPassword(
         id_type,
@@ -322,9 +340,18 @@ export class AuthService {
       );
 
     if (!adminFound) {
-      throw new UnauthorizedException(
-        `¡El número de identificación es incorrecto!`,
-      );
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+    }
+
+    const verifiedAdminRole = await this.adminRepository.findOne({
+      where: {
+        id_number: id_number,
+        admin_role: In(adminRoleFound.map((role) => role.id)),
+      },
+    });
+
+    if (!verifiedAdminRole) {
+      throw new UnauthorizedException(`¡Usuario no autorizado!`);
     }
 
     const isCorrectPassword = await bcryptjs.compare(
@@ -333,27 +360,142 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      throw new UnauthorizedException(`¡Contraseña incorrecta!`);
+      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
     }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.adminRepository.update(
+      {
+        id: adminFound.id,
+      },
+      { verification_code: verificationCode },
+    );
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new UnauthorizedException(
+        `El método de autenticación "Email" no existe.`,
+      );
+    }
+
+    if (
+      adminFound.authentication_method === authenticationMethodEmailFound.id
+    ) {
+      const adminWithCode = await this.adminRepository.findOne({
+        where: {
+          id: adminFound.id,
+        },
+      });
+
+      const emailDetailsToSend = new SendEmailDto();
+
+      emailDetailsToSend.recipients = [adminFound.corporate_email];
+      emailDetailsToSend.userNameToEmail = adminFound.name;
+      emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+      emailDetailsToSend.verificationCode = adminWithCode.verification_code;
+
+      await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+      schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+        await this.adminRepository.update(
+          { id: adminFound.id },
+          { verification_code: null },
+        );
+      });
+    } else {
+      throw new UnauthorizedException(
+        `El administrador no tiene método de autenticación asignado.`,
+      );
+    }
+
+    return { id_type, id_number };
+  }
+
+  async verifyCodeAndLoginAdmins(idNumber: number, verification_code: number) {
+    const adminFound = await this.adminsService.getAdminFoundByIdAndCode(
+      idNumber,
+      verification_code,
+    );
+
+    if (!adminFound) {
+      throw new UnauthorizedException(`¡Código de verificación incorrecto!`);
+    }
+
+    await this.adminRepository.update(
+      {
+        id: adminFound.id,
+      },
+      { verification_code: null },
+    );
 
     const payload = {
       sub: adminFound.id,
       name: adminFound.name,
       email: adminFound.corporate_email,
-      id_type: adminFound.id_type,
+      id_type: adminFound.admin_id_type,
       id_number: adminFound.id_number,
       role: adminFound.role,
     };
 
-    const { access_token, refresh_token } = await this.generateTokens(payload);
+    const { access_token, refresh_token, access_token_expires_in } =
+      await this.generateTokens(payload);
 
     return {
       access_token,
       refresh_token,
+      access_token_expires_in,
       id_type: adminFound.admin_id_type,
       id_number: adminFound.id_number,
       role: adminFound.role.name,
     };
+  }
+
+  async resendVerificationAdminCode({ id_type, id_number }: LoginDto) {
+    const adminFound = await this.adminsService.getAdminFoundByIdNumber(
+      id_type,
+      id_number,
+    );
+
+    if (!adminFound) {
+      throw new UnauthorizedException(`Usuario no encontrado`);
+    }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9999);
+
+    await this.adminRepository.update(
+      { id: adminFound.id },
+      { verification_code: verificationCode },
+    );
+
+    const adminWithCode = await this.adminRepository.findOne({
+      where: { id: adminFound.id },
+    });
+
+    const emailDetailsToSend = new SendEmailDto();
+    emailDetailsToSend.recipients = [adminFound.corporate_email];
+    emailDetailsToSend.userNameToEmail = adminFound.name;
+    emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
+    emailDetailsToSend.verificationCode = adminWithCode.verification_code;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    schedule.scheduleJob(new Date(Date.now() + 5 * 60 * 1000), async () => {
+      await this.adminRepository.update(
+        { id: adminFound.id },
+        { verification_code: null },
+      );
+    });
+
+    return { id_type, id_number };
   }
 
   async loginPatientUsers({ id_type, id_number, password }: LoginDto) {
@@ -440,7 +582,7 @@ export class AuthService {
       const emailDetailsToSend = new SendEmailDto();
 
       emailDetailsToSend.recipients = [userFound.email];
-      emailDetailsToSend.userName = userFound.name;
+      emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.verificationCode = userWithCode.verification_code;
@@ -548,7 +690,7 @@ export class AuthService {
       const emailDetailsToSend = new SendEmailDto();
 
       emailDetailsToSend.recipients = [userFound.email];
-      emailDetailsToSend.userName = userFound.name;
+      emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.verificationCode = userWithCode.verification_code;
@@ -613,7 +755,15 @@ export class AuthService {
         patient_id: patientOfFamiliar.id,
         user_role: familiarUserRoleFound.id,
       },
-      select: ['id', 'name', 'user_id_type', 'id_number', 'email', 'role'],
+      select: [
+        'id',
+        'name',
+        'user_id_type',
+        'id_number',
+        'email',
+        'authentication_method',
+        'role',
+      ],
     });
 
     if (!familiarVerified) {
@@ -668,7 +818,7 @@ export class AuthService {
       const emailDetailsToSend = new SendEmailDto();
 
       emailDetailsToSend.recipients = [familiarVerified.email];
-      emailDetailsToSend.userName = familiarVerified.name;
+      emailDetailsToSend.userNameToEmail = familiarVerified.name;
       emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
       emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
@@ -701,7 +851,10 @@ export class AuthService {
   }
 
   async resendVerificationUserCode({ id_type, id_number }: LoginDto) {
-    const userFound = await this.usersService.getUserFoundByIdNumber(id_number);
+    const userFound = await this.usersService.getUserFoundByIdNumber(
+      id_type,
+      id_number,
+    );
 
     if (!userFound) {
       throw new UnauthorizedException(`Usuario no encontrado`);
@@ -720,7 +873,7 @@ export class AuthService {
 
     const emailDetailsToSend = new SendEmailDto();
     emailDetailsToSend.recipients = [userFound.email];
-    emailDetailsToSend.userName = userFound.name;
+    emailDetailsToSend.userNameToEmail = userFound.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.verificationCode = userWithCode.verification_code;
@@ -738,12 +891,15 @@ export class AuthService {
   }
 
   async resendVerificationFamiliarCode({
-    id_type_familiar: id_type,
-    id_number_familiar: id_number,
-    email_familiar: email,
+    id_type_familiar,
+    id_number_familiar,
+    email_familiar,
   }: FamiliarLoginDto) {
-    const familiarFound =
-      await this.familiarService.getFamiliarFoundByIdNumber(id_number);
+    const familiarFound = await this.familiarService.getFamiliarFoundByIdNumber(
+      id_type_familiar,
+      id_number_familiar,
+      email_familiar,
+    );
 
     if (!familiarFound) {
       throw new UnauthorizedException(`Familiar no encontrado`);
@@ -751,9 +907,9 @@ export class AuthService {
 
     const familiarVerifiedFound = await this.familiarRepository.findOne({
       where: {
-        user_id_type: id_type,
-        id_number: id_number,
-        email: email,
+        user_id_type: id_type_familiar,
+        id_number: id_number_familiar,
+        email: email_familiar,
         rel_with_patient: familiarFound.rel_with_patient,
       },
     });
@@ -775,7 +931,7 @@ export class AuthService {
 
     const emailDetailsToSend = new SendEmailDto();
     emailDetailsToSend.recipients = [familiarFound.email];
-    emailDetailsToSend.userName = familiarFound.name;
+    emailDetailsToSend.userNameToEmail = familiarFound.name;
     emailDetailsToSend.subject = SUBJECT_EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.emailTemplate = EMAIL_VERIFICATION_CODE;
     emailDetailsToSend.verificationCode = familiarWithCode.verification_code;
@@ -789,7 +945,7 @@ export class AuthService {
       );
     });
 
-    return { id_type, id_number };
+    return { id_type_familiar, id_number_familiar };
   }
 
   private getExpirationInSeconds(expiresIn: string): number {
@@ -810,11 +966,11 @@ export class AuthService {
     const [accessToken, refreshToken, accessTokenExpiresIn] = await Promise.all(
       [
         await this.jwtService.signAsync(jwtUserPayload, {
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_CONSTANTS_SECRET,
           expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
         }),
         await this.jwtService.signAsync(jwtUserPayload, {
-          secret: jwtConstants.secret,
+          secret: process.env.JWT_CONSTANTS_SECRET,
           expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
         }),
         await this.getExpirationInSeconds(process.env.ACCESS_TOKEN_EXPIRES_IN),
@@ -831,7 +987,7 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<any> {
     try {
       const user = this.jwtService.verify(refreshToken, {
-        secret: jwtConstants.secret,
+        secret: process.env.JWT_CONSTANTS_SECRET,
       });
 
       const payload = {
@@ -941,22 +1097,32 @@ export class AuthService {
   }
 
   async profileAdmin({
+    admin_id_type,
     id_number,
     role,
   }: {
+    admin_id_type: number;
     id_number: number;
     role: Enumerator;
   }) {
-    return await this.adminsService.getAdminFoundByIdNumber(id_number);
+    return await this.adminsService.getAdminFoundByIdNumber(
+      admin_id_type,
+      id_number,
+    );
   }
 
   async profileUser({
+    user_id_type,
     id_number,
     role,
   }: {
+    user_id_type: number;
     id_number: number;
     role: Enumerator;
   }) {
-    return await this.usersService.getUserFoundByIdNumber(id_number);
+    return await this.usersService.getUserFoundByIdNumber(
+      user_id_type,
+      id_number,
+    );
   }
 }

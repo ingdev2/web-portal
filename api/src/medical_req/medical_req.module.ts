@@ -17,6 +17,7 @@ import { RequirementStatusModule } from '../requirement_status/requirement_statu
 import { PatientClassStatus } from '../patient_class_status/entities/patient_class_status.entity';
 import { RelWithPatient } from '../rel_with_patient/entities/rel_with_patient.entity';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
+import { S3FileUploaderModule } from 'src/s3_file_uploader/s3_file_uploader.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { NodemailerModule } from '../nodemailer/nodemailer.module';
     ]),
     UsersModule,
     NodemailerModule,
+    S3FileUploaderModule,
     RequirementTypeModule,
     RequirementStatusModule,
   ],

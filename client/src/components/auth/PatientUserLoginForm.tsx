@@ -6,12 +6,13 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
 
+import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
-import { titleStyleCss } from "@/theme/text_styles";
+import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
 
 import {
   setIdTypeOptionsLoginPatient,
@@ -23,10 +24,10 @@ import {
   resetLoginStatePatient,
 } from "@/redux/features/login/patientUserLoginSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
+import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
-import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 
 const PatientUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -63,6 +64,8 @@ const PatientUserLoginForm: React.FC = () => {
   const [passwordPatientLocalState, setPasswordPatientLocalState] =
     useState("");
 
+  const [modalForgotMyPasswordIsOpen, setModalForgotMyPasswordIsOpen] =
+    useState(false);
   const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
     useState(false);
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
@@ -315,10 +318,35 @@ const PatientUserLoginForm: React.FC = () => {
             />
           </Form.Item>
 
+          {modalForgotMyPasswordIsOpen && (
+            <CustomModalNoContent
+              key={"custom-modal-forgot-my-password-patient"}
+              widthCustomModalNoContent={"54%"}
+              openCustomModalState={modalForgotMyPasswordIsOpen}
+              closableCustomModal={true}
+              maskClosableCustomModal={true}
+              handleCancelCustomModal={() =>
+                setModalForgotMyPasswordIsOpen(false)
+              }
+              contentCustomModal={
+                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Fecha de cumpleaños"
+                // <CustomResultOneButton
+                //   key={"medical-req-created-custom-result"}
+                //   statusTypeResult={"success"}
+                //   titleCustomResult="¡Solicitud Creada Correctamente!"
+                //   subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
+                //   handleClickCustomResult={handleGoToListOfMedicalReq}
+                //   isSubmittingButton={isSubmittingGoToListOfMedicalReq}
+                //   textButtonCustomResult="Ver mis solicitudes hechas"
+                // />
+              }
+            />
+          )}
+
           <Form.Item style={{ textAlign: "center" }}>
             <a
               className="patient-login-form-forgot-user"
-              href=""
+              // href=""
               style={{
                 display: "flow",
                 color: "#960202",
@@ -326,6 +354,7 @@ const PatientUserLoginForm: React.FC = () => {
                 fontWeight: 500,
                 marginBottom: 13,
               }}
+              onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
               Olvide mi contraseña
             </a>

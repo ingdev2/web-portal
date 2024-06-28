@@ -8,12 +8,15 @@ import { TbEye } from "react-icons/tb";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import RequestDetailsModalContent from "./RequestDetailsModalContent";
 
+import { useViewFileQuery } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
+
 const RequestDetailsModal: React.FC<{
   modalOpenRequestDetailsModal: boolean;
   selectedRequestFilingNumberModal: string;
   selectedRequestTypeModal: ReactNode;
   selectedRequestStatusModal: ReactNode;
-  selectedRequestResponseDocumentsModal: ReactNode;
+  selectedRequestResponseDocumentsModal: string[];
+  selectedRequestDocumentExpirationDateModal: ReactNode;
   selectedRequestReasonsForRejectionModal: string[];
   selectedRequestUserCommentsModal: string;
   selectedRequestResponseCommentsModal: string;
@@ -24,11 +27,33 @@ const RequestDetailsModal: React.FC<{
   selectedRequestTypeModal,
   selectedRequestStatusModal,
   selectedRequestResponseDocumentsModal,
+  selectedRequestDocumentExpirationDateModal,
   selectedRequestReasonsForRejectionModal,
   selectedRequestUserCommentsModal,
   selectedRequestResponseCommentsModal,
   handleCancelRequestDetailsModal,
 }) => {
+  const {
+    data: userViewResponseDocumentsData,
+    isLoading: userViewResponseDocumentsLoading,
+    isFetching: userViewResponseDocumentsFetching,
+    error: userViewResponseDocumentsError,
+  } = useViewFileQuery(selectedRequestResponseDocumentsModal);
+
+  const handleButtonClick = () => {
+    if (
+      userViewResponseDocumentsData &&
+      userViewResponseDocumentsData.length > 0 &&
+      !userViewResponseDocumentsLoading &&
+      !userViewResponseDocumentsFetching &&
+      !userViewResponseDocumentsError
+    ) {
+      userViewResponseDocumentsData.map((url: string) => {
+        window.open(url, "_blank");
+      });
+    }
+  };
+
   return (
     <CustomModalNoContent
       key={"custom-details-medical-req-modal"}
@@ -53,8 +78,7 @@ const RequestDetailsModal: React.FC<{
                   backgroundColor: "#015E90",
                   color: "#F7F7F7",
                 }}
-                href={selectedRequestResponseDocumentsModal?.toString()}
-                target="_blank"
+                onClick={handleButtonClick}
               >
                 <div
                   style={{
@@ -71,6 +95,12 @@ const RequestDetailsModal: React.FC<{
               </Button>
             ) : (
               <b style={{ color: "#960202" }}>No hay documentos anexados</b>
+            )
+          }
+          labelDocumentExpirationDate="Fecha de expiración de documentos"
+          selectedRequestDocumentExpirationDate={
+            selectedRequestDocumentExpirationDateModal || (
+              <b style={{ color: "#960202" }}>No aplica</b>
             )
           }
           labelReasonsForRejection="Motivos de rechazo a solicitud"
@@ -92,7 +122,7 @@ const RequestDetailsModal: React.FC<{
           labelRequestResponse={"Mensaje de respuesta a solicitud"}
           selectedRequestResponse={
             selectedRequestResponseCommentsModal || (
-              <b style={{ color: "#960202" }}>En proceso de revisión</b>
+              <b style={{ color: "#960202" }}>En espera de respuesta</b>
             )
           }
         />

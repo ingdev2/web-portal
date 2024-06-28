@@ -143,6 +143,9 @@ export class MedicalReq {
   @DeleteDateColumn()
   deletedAt: Date;
 
+  @Column({ type: 'boolean', default: false })
+  is_it_reviewed: boolean;
+
   @ManyToOne(() => User, (aplicant) => aplicant.medical_req)
   aplicant: User;
 
@@ -156,6 +159,9 @@ export class MedicalReq {
   @Column({ nullable: true })
   currently_in_area: number;
 
+  @Column({ type: 'text', nullable: true })
+  area_redirection_message: string;
+
   @ManyToOne(() => RequirementStatus, (req_status) => req_status.medical_req)
   @JoinColumn({ name: 'requirement_status', referencedColumnName: 'id' })
   req_status: RequirementStatus;
@@ -165,6 +171,9 @@ export class MedicalReq {
 
   @Column({ type: 'text', nullable: true })
   user_message: string;
+
+  @Column({ type: 'text', array: true, nullable: true })
+  user_message_documents: string[];
 
   @Column({ type: 'text', nullable: true })
   response_comments: string;

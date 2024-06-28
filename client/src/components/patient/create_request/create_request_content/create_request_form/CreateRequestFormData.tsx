@@ -8,7 +8,7 @@ import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
-const CreateRequestDataForm: React.FC<{
+const CreateRequestFormData: React.FC<{
   handleCreateRequestDataForm: () => void;
   reqTypeSelectorLoadingDataForm: boolean;
   familiarReqTypeValueDataForm: number;
@@ -18,6 +18,8 @@ const CreateRequestDataForm: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
+  fileStatusSetterDataform: React.SetStateAction<any>;
+  fileStatusRemoverDataform: React.SetStateAction<any>;
 }> = ({
   handleCreateRequestDataForm,
   reqTypeSelectorLoadingDataForm,
@@ -28,6 +30,8 @@ const CreateRequestDataForm: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
+  fileStatusSetterDataform,
+  fileStatusRemoverDataform,
 }) => {
   return (
     <Form
@@ -90,7 +94,11 @@ const CreateRequestDataForm: React.FC<{
           },
         ]}
       >
-        <CustomUpload titleCustomUpload="Cargar documento" />
+        <CustomUpload
+          titleCustomUpload="Cargar Documento(s)"
+          fileStatusSetterCustomUpload={fileStatusSetterDataform}
+          removeFileStatusSetterCustomUpload={fileStatusRemoverDataform}
+        />
       </Form.Item>
 
       <Form.Item
@@ -138,4 +146,4 @@ const CreateRequestDataForm: React.FC<{
   );
 };
 
-export default CreateRequestDataForm;
+export default CreateRequestFormData;

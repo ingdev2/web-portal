@@ -190,8 +190,10 @@ const HomepageOptions: React.FC = () => {
             iconColorCustomOptionButton="#00B5E8"
             backgroundColorCustomOptionButton="#015E90"
             borderColorCustomOptionButton="#3F97AF"
-            handleClickCustomOptionButton={() => {
-              console.log("CLICK EN CARD");
+            handleClickCustomOptionButton={async () => {
+              await router.push("/patient/homepage/update_personal_data", {
+                scroll: true,
+              });
             }}
           />
         </Col>

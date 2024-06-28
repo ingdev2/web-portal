@@ -12,7 +12,10 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import PatientHomeLayout from "@/components/patient/homepage/PatientHomeLayout";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
-import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
+import {
+  setIsPageLoading,
+  setPatientModalIsOpen,
+} from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
@@ -25,6 +28,9 @@ const HomePagePatient = () => {
 
   const patientModalState = useAppSelector(
     (state) => state.modal.patientModalIsOpen
+  );
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
   );
 
   const idNumberUserPatientLoginState = useAppSelector(
@@ -60,6 +66,9 @@ const HomePagePatient = () => {
     }
     if (patientModalState) {
       dispatch(setPatientModalIsOpen(false));
+    }
+    if (isPageLoadingState) {
+      dispatch(setIsPageLoading(false));
     }
   }, [
     status,

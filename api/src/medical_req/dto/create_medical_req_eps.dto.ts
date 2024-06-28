@@ -7,6 +7,7 @@ import {
   IsDateString,
   IsUUID,
   IsEmail,
+  IsArray,
 } from 'class-validator';
 
 export class CreateMedicalReqEpsDto {
@@ -17,6 +18,10 @@ export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
   @IsNumber()
   requirement_type: number;
+
+  @IsOptional()
+  @IsUUID()
+  aplicantId: string;
 
   @IsOptional()
   @IsString()
@@ -91,14 +96,14 @@ export class CreateMedicalReqEpsDto {
   currently_in_area: number;
 
   @IsOptional()
-  @IsUUID()
-  aplicantId: string;
-
-  @IsOptional()
   @IsNumber()
   medicalReqUserType: number;
 
   @IsNotEmpty()
   @IsString()
   user_message: string;
+
+  @IsOptional()
+  @IsArray()
+  user_message_documents: string[];
 }

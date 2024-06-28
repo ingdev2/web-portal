@@ -25,6 +25,7 @@ import { loginAdminApi } from "./apis/auth/loginAdminApi";
 import { loginUsersApi } from "./apis/auth/loginUsersApi";
 import { loginRelativesApi } from "./apis/auth/loginRelativesApi";
 import { medicalReqApi } from "./apis/medical_req/medicalReqApi";
+import { uploadViewFilesApi } from "./apis/upload_view_files/uploadViewFilesApi";
 import { typesMedicalReqApi } from "./apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { statusMedicalReqApi } from "./apis/medical_req/status_medical_req/statusMedicalReqApi";
 import { reasonForRejectionMedicalReqApi } from "./apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
@@ -68,6 +69,7 @@ const rootReducer = combineReducers({
   [loginUsersApi.reducerPath]: loginUsersApi.reducer,
   [loginRelativesApi.reducerPath]: loginRelativesApi.reducer,
   [medicalReqApi.reducerPath]: medicalReqApi.reducer,
+  [uploadViewFilesApi.reducerPath]: uploadViewFilesApi.reducer,
   [typesMedicalReqApi.reducerPath]: typesMedicalReqApi.reducer,
   [statusMedicalReqApi.reducerPath]: statusMedicalReqApi.reducer,
   [reasonForRejectionMedicalReqApi.reducerPath]:
@@ -97,6 +99,7 @@ export const store = configureStore({
       loginUsersApi.middleware,
       loginRelativesApi.middleware,
       medicalReqApi.middleware,
+      uploadViewFilesApi.middleware,
       typesMedicalReqApi.middleware,
       statusMedicalReqApi.middleware,
       reasonForRejectionMedicalReqApi.middleware,

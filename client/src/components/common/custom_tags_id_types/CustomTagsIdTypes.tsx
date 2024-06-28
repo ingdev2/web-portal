@@ -52,7 +52,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#070707",
-            color: "#F4D03FB2",
+            color: "#9960B0B2",
             label: "MENOR DE EDAD SIN IDENTIFICACIÓN",
           }}
         />
@@ -61,8 +61,8 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
       return (
         <CustomTags
           tag={{
-            textColor: "#F7F7F7",
-            color: "#137A2BB2",
+            textColor: "#070707",
+            color: "#DDDDDDB2",
             label: "CÉDULA DE EXTRANJERÍA",
           }}
         />
@@ -72,7 +72,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
-            color: "#8C1111B2",
+            color: "#34495EB2",
             label: "PASAPORTE",
           }}
         />
@@ -82,7 +82,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
-            color: "#BA3400B2",
+            color: "#8E44ADB2",
             label: "PERMISO ESPECIAL DE PERMANENCIA",
           }}
         />

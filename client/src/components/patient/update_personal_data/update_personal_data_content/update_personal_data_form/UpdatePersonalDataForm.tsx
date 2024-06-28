@@ -4,29 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Input,
-  Typography,
-  Radio,
-  Space,
-  Form,
-} from "antd";
-import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
+import { Button, Card, Col } from "antd";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
-import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import {
-  MdDriveFileRenameOutline,
-  MdOutlineEmail,
-  MdOutlineHealthAndSafety,
-} from "react-icons/md";
-import { IdcardOutlined, WhatsAppOutlined } from "@ant-design/icons";
-import { TbGenderBigender } from "react-icons/tb";
-import { IoHomeOutline } from "react-icons/io5";
 
 import {
   setAuthMethodUserPatient,
@@ -41,7 +21,7 @@ import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useUpdateUserPatientMutation } from "@/redux/apis/users/usersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
-import { FiPhone } from "react-icons/fi";
+import UpdatePersonalDataFormData from "./UpdatePersonalDataFormData";
 
 const UpdatePersonalDataForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -180,22 +160,33 @@ const UpdatePersonalDataForm: React.FC = () => {
 
       var updatePersonalDataError = response.error;
 
-      var updatePersonalDataSuccess = response.data;
+      var updatePersonalDataStatus = response.data.status;
 
-      if (updatePersonalDataError) {
+      var updatePersonalDataValidationData = response.data?.message;
+
+      if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
         const errorMessage = updatePersonalDataError?.data.message;
+        const validationDataMessage = updatePersonalDataValidationData;
 
-        if (Array.isArray(errorMessage)) {
+        if (
+          Array.isArray(errorMessage) ||
+          Array.isArray(validationDataMessage)
+        ) {
           dispatch(setErrorsUserPatient(errorMessage[0]));
+          dispatch(setErrorsUserPatient(validationDataMessage[0]));
           setShowErrorMessagePatient(true);
         }
-        if (typeof errorMessage === "string") {
+        if (
+          typeof errorMessage === "string" ||
+          typeof validationDataMessage === "string"
+        ) {
           dispatch(setErrorsUserPatient(errorMessage));
+          dispatch(setErrorsUserPatient(validationDataMessage));
           setShowErrorMessagePatient(true);
         }
       }
 
-      if (updatePersonalDataSuccess) {
+      if (updatePersonalDataStatus === 202 && !updatePersonalDataError) {
         setHasChanges(false);
 
         dispatch(
@@ -232,6 +223,11 @@ const UpdatePersonalDataForm: React.FC = () => {
       console.error(error);
     } finally {
       setIsSubmittingUpdatePersonalData(false);
+      setEmailUserPatientLocalState("");
+      setCellphoneUserPatientLocalState(0);
+      setWhatsappUserPatientLocalState(0);
+      setAuthMethodPatientLocalState(0);
+      setResidendeAddressUserPatientLocalState("");
     }
   };
 
@@ -318,447 +314,75 @@ const UpdatePersonalDataForm: React.FC = () => {
           />
         )}
 
-        <Col xs={24} sm={24} md={24} lg={24} style={{ padding: "0 7px" }}>
-          <h2
-            className="title-update-personal-data-patient"
-            style={{
-              ...titleStyleCss,
-              marginBottom: 7,
-              textAlign: "center",
-            }}
-          >
-            Actualización de datos
-          </h2>
+        <UpdatePersonalDataFormData
+          nameUserPatientFormData={nameUserPatientState || NOT_REGISTER}
+          idTypeNameUserPatientFormData={
+            idTypeNameUserPatientState || NOT_REGISTER
+          }
+          idNumberUserPatientFormData={idNumberUserPatientState || NOT_REGISTER}
+          genderNameUserPatientFormData={
+            genderNameUserPatientState || NOT_REGISTER
+          }
+          affiliationEpsUserPatientFormData={
+            affiliationEpsUserPatientState || NOT_REGISTER
+          }
+          handleConfirmUpdatePersonalDataFormData={
+            handleConfirmUpdatePersonalData
+          }
+          initialValuesUpdatePersonalDataFormData={{
+            "email-patient-hosvital": emailUserPatientState || NOT_REGISTER,
+            "cellphone-patient-hosvital":
+              cellphoneUserPatientState || NOT_REGISTER,
+            "whatsapp-patient-hosvital":
+              whatsappUserPatientState || NOT_REGISTER,
+            "radio-select-auth-method-update-personal-data-patient":
+              authMethodUserPatientState,
+            "residence-address-patient-hosvital":
+              residendeAddressUserPatientState || NOT_REGISTER,
+          }}
+          emailUserPatientFormData={emailUserPatientState || NOT_REGISTER}
+          onChangeEmailUserPatientFormData={(e) => {
+            setHasChanges(true);
 
-          <p
-            className="warning-message-verify-data"
-            style={{
-              display: "flow",
-              color: "#960202",
-              fontWeight: 500,
-              textAlign: "center",
-            }}
-          >
-            Por favor, verifique si todos sus datos están correctos, de lo
-            contrario debe comunicarse a nuestra línea PBX: (601)3770055 para
-            realizar la actualización de sus datos personales que no se puedan
-            actualizar por este medio.
-          </p>
+            setEmailUserPatientLocalState(e.target.value.toLowerCase());
+          }}
+          cellphoneUserPatientFormData={
+            cellphoneUserPatientState || NOT_REGISTER
+          }
+          onChangeCellphoneUserPatientFormData={(e) => {
+            setHasChanges(true);
 
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Nombre de paciente:
-            </Typography.Title>
+            setCellphoneUserPatientLocalState(parseInt(e.target.value, 10));
+          }}
+          whatsappUserPatientFormData={whatsappUserPatientState || NOT_REGISTER}
+          onChangeWhatsappUserPatientFormData={(e) => {
+            setHasChanges(true);
 
-            <Input
-              id="name-patient-auto-input"
-              prefix={
-                <MdDriveFileRenameOutline className="site-form-item-icon" />
-              }
-              style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              value={nameUserPatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
+            setWhatsappUserPatientLocalState(parseInt(e.target.value, 10));
+          }}
+          authMethodUserPatientFormData={authMethodUserPatientState}
+          onChangeAuthMethodUserPatientFormData={(e) => {
+            setHasChanges(true);
 
-          <Row>
-            <Col
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              style={{ paddingInlineEnd: "7px" }}
-            >
-              <div style={{ textAlign: "start" }}>
-                <Typography.Title style={{ marginTop: 7 }} level={5}>
-                  Tipo de documento:
-                </Typography.Title>
+            setAuthMethodPatientLocalState(e.target.value);
+          }}
+          patientAuthMethodsListFormData={patientAuthMethodsListLocalState}
+          residendeAddressUserPatientFormData={
+            residendeAddressUserPatientState || NOT_REGISTER
+          }
+          onChangeResidendeAddressUserPatientFormData={(e) => {
+            setHasChanges(true);
 
-                <Input
-                  id="id-type-patient-auto-input"
-                  prefix={<IdcardOutlined className="site-form-item-icon" />}
-                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                  value={idTypeNameUserPatientState || NOT_REGISTER}
-                  disabled
-                />
-              </div>
-            </Col>
-
-            <Col
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              style={{ paddingInlineStart: "7px" }}
-            >
-              <div style={{ textAlign: "start" }}>
-                <Typography.Title style={{ marginTop: 7 }} level={5}>
-                  Número de documento:
-                </Typography.Title>
-
-                <Input
-                  id="id-number-patient-hosvital"
-                  prefix={<IdcardOutlined className="site-form-item-icon" />}
-                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                  value={idNumberUserPatientState || NOT_REGISTER}
-                  disabled
-                />
-              </div>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              style={{ paddingInlineEnd: "7px" }}
-            >
-              <div style={{ textAlign: "start" }}>
-                <Typography.Title style={{ marginTop: 7 }} level={5}>
-                  Sexo:
-                </Typography.Title>
-
-                <Input
-                  id="gender-patient-hosvital"
-                  prefix={<TbGenderBigender className="site-form-item-icon" />}
-                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                  value={genderNameUserPatientState || NOT_REGISTER}
-                  disabled
-                />
-              </div>
-            </Col>
-
-            <Col
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-              style={{ paddingInlineStart: "7px" }}
-            >
-              <div style={{ textAlign: "start" }}>
-                <Typography.Title style={{ marginTop: 7 }} level={5}>
-                  EPS de afiliación:
-                </Typography.Title>
-                <Input
-                  id="affiliation-eps-patient-hosvital"
-                  prefix={
-                    <MdOutlineHealthAndSafety className="site-form-item-icon" />
-                  }
-                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                  value={affiliationEpsUserPatientState || NOT_REGISTER}
-                  disabled
-                />
-              </div>
-            </Col>
-          </Row>
-
-          <Form
-            id="update-personal-data-form"
-            name="update-personal-data-form"
-            className="update-personal-data-form"
-            onFinish={handleConfirmUpdatePersonalData}
-            initialValues={{
-              "email-patient-hosvital": emailUserPatientState || NOT_REGISTER,
-              "cellphone-patient-hosvital":
-                cellphoneUserPatientState || NOT_REGISTER,
-              "whatsapp-patient-hosvital":
-                whatsappUserPatientState || NOT_REGISTER,
-              "radio-select-auth-method-update-personal-data-patient":
-                authMethodUserPatientState,
-              "residence-address-patient-hosvital":
-                residendeAddressUserPatientState || NOT_REGISTER,
-            }}
-            autoComplete="false"
-            layout="vertical"
-          >
-            <div style={{ textAlign: "start" }}>
-              <Typography.Title style={{ marginTop: 7 }} level={5}>
-                Correo electrónico:
-              </Typography.Title>
-
-              <Form.Item
-                name="email-patient-hosvital"
-                style={{ margin: "0px" }}
-                normalize={(value) => {
-                  if (!value) return "";
-
-                  return value.toLowerCase().replace(/[^a-z0-9@._-]/g, "");
-                }}
-                rules={[
-                  {
-                    required: false,
-                    message: "¡Por favor ingresa un correo electrónico!",
-                  },
-                  {
-                    type: "email",
-                    message: "¡Por favor ingresa un correo electrónico valido!",
-                  },
-                  {
-                    min: 10,
-                    message: "¡Por favor ingresa mínimo 10 caracteres!",
-                  },
-                  {
-                    max: 45,
-                    message: "¡Por favor ingresa máximo 45 caracteres!",
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<MdOutlineEmail className="site-form-item-icon" />}
-                  type="email"
-                  value={emailUserPatientState || NOT_REGISTER}
-                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                  onChange={(e) => {
-                    setHasChanges(true);
-
-                    setEmailUserPatientLocalState(e.target.value.toLowerCase());
-                  }}
-                  autoComplete="off"
-                />
-              </Form.Item>
-            </div>
-
-            <Row>
-              <Col
-                xs={12}
-                sm={12}
-                md={12}
-                lg={12}
-                style={{ paddingInlineEnd: "7px" }}
-              >
-                <div style={{ textAlign: "start" }}>
-                  <Typography.Title style={{ marginTop: 7 }} level={5}>
-                    Celular:
-                  </Typography.Title>
-
-                  <Form.Item
-                    name="cellphone-patient-hosvital"
-                    style={{ margin: "0px" }}
-                    normalize={(value) => {
-                      if (!value) return "";
-
-                      return value.replace(/[^0-9]/g, "");
-                    }}
-                    rules={[
-                      {
-                        required: false,
-                        message: "¡Por favor ingresa el número de celular!",
-                      },
-                      {
-                        pattern: /^[0-9]+$/,
-                        message:
-                          "¡Por favor ingresa número de celular sin puntos ni comas!",
-                      },
-                      {
-                        min: 7,
-                        message: "¡Por favor ingresa mínimo 7 números!",
-                      },
-                      {
-                        max: 11,
-                        message: "¡Por favor ingresa máximo 11 números!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      prefix={<FiPhone className="site-form-item-icon" />}
-                      type="tel"
-                      value={cellphoneUserPatientState || NOT_REGISTER}
-                      onChange={(e) => {
-                        setHasChanges(true);
-
-                        setCellphoneUserPatientLocalState(
-                          parseInt(e.target.value, 10)
-                        );
-                      }}
-                      autoComplete="off"
-                      min={0}
-                    />
-                  </Form.Item>
-                </div>
-              </Col>
-
-              <Col
-                xs={12}
-                sm={12}
-                md={12}
-                lg={12}
-                style={{ paddingInlineStart: "7px" }}
-              >
-                <div style={{ textAlign: "start" }}>
-                  <Typography.Title style={{ marginTop: 7 }} level={5}>
-                    Whatsapp:
-                  </Typography.Title>
-
-                  <Form.Item
-                    name="whatsapp-patient-hosvital"
-                    style={{ margin: "0px" }}
-                    normalize={(value) => {
-                      if (!value) return "";
-
-                      return value.replace(/[^0-9]/g, "");
-                    }}
-                    rules={[
-                      {
-                        required: false,
-                        message: "¡Por favor ingresa el número de Whatsapp!",
-                      },
-                      {
-                        pattern: /^[0-9]+$/,
-                        message:
-                          "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
-                      },
-                      {
-                        min: 7,
-                        message: "¡Por favor ingresa mínimo 7 números!",
-                      },
-                      {
-                        max: 11,
-                        message: "¡Por favor ingresa máximo 11 números!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      prefix={
-                        <WhatsAppOutlined className="site-form-item-icon" />
-                      }
-                      type="tel"
-                      value={whatsappUserPatientState || NOT_REGISTER}
-                      onChange={(e) => {
-                        setHasChanges(true);
-
-                        setWhatsappUserPatientLocalState(
-                          parseInt(e.target.value, 10)
-                        );
-                      }}
-                      autoComplete="off"
-                      min={0}
-                    />
-                  </Form.Item>
-                </div>
-              </Col>
-            </Row>
-
-            <div style={{ textAlign: "start" }}>
-              <Typography.Title style={{ marginTop: 7 }} level={5}>
-                Método de autenticación:
-              </Typography.Title>
-
-              <Form.Item
-                name="radio-select-auth-method-update-personal-data-patient"
-                style={{ margin: "0px" }}
-                rules={[
-                  {
-                    required: false,
-                    message:
-                      "¡Por favor selecciona un método de autenticación!",
-                  },
-                ]}
-              >
-                <Radio.Group
-                  value={authMethodUserPatientState}
-                  onChange={(e) => {
-                    setHasChanges(true);
-
-                    setAuthMethodPatientLocalState(e.target.value);
-                  }}
-                  style={{ textAlign: "start" }}
-                >
-                  <Space size={"small"} direction="horizontal">
-                    {patientAuthMethodsListLocalState?.map((option: any) => (
-                      <Radio key={option.id} value={option.id}>
-                        {option.name}
-                      </Radio>
-                    ))}
-                  </Space>
-                </Radio.Group>
-              </Form.Item>
-            </div>
-
-            <div style={{ textAlign: "start" }}>
-              <Typography.Title style={{ marginTop: 7 }} level={5}>
-                Dirección de residencia:
-              </Typography.Title>
-
-              <Form.Item
-                name="residence-address-patient-hosvital"
-                style={{ marginBottom: "13px" }}
-                normalize={(value) => {
-                  if (!value) return "";
-
-                  const filteredValue = value
-                    .toUpperCase()
-                    .replace(/[^A-ZÑ0-9\s.,#_/-]/g, "");
-                  return filteredValue;
-                }}
-                rules={[
-                  {
-                    required: false,
-                    message: "¡Por favor ingrese su dirección de residencia!",
-                  },
-                  {
-                    min: 10,
-                    message: "La dirección debe tener al menos 10 caracteres",
-                  },
-                  {
-                    max: 54,
-                    message: "La dirección no puede tener más de 54 caracteres",
-                  },
-                  {
-                    pattern: /^[A-ZÑ0-9\s.,#_/-]*$/i,
-                    message:
-                      "La dirección solo puede contener letras, números y los siguientes caracteres especiales: . , # -",
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<IoHomeOutline className="site-form-item-icon" />}
-                  type="text"
-                  value={residendeAddressUserPatientState || NOT_REGISTER}
-                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                  onChange={(e) => {
-                    setHasChanges(true);
-
-                    setResidendeAddressUserPatientLocalState(
-                      e.target.value.toUpperCase()
-                    );
-                  }}
-                  autoComplete="off"
-                />
-              </Form.Item>
-            </div>
-
-            <Form.Item
-              style={{
-                textAlign: "center",
-                marginBlock: "0px",
-                paddingBlock: "13px",
-              }}
-            >
-              {isSubmittingUpdatePersonalData ? (
-                <CustomSpin />
-              ) : (
-                <Button
-                  size="large"
-                  style={{
-                    backgroundColor: !hasChanges ? "#D8D8D8" : "#015E90",
-                    color: !hasChanges ? "#A0A0A0" : "#f2f2f2",
-                    fontWeight: "bold",
-                    paddingInline: 54,
-                    borderRadius: 31,
-                  }}
-                  htmlType="submit"
-                  className="update-personal-data-patient-form-button"
-                  onClick={handleButtonClick}
-                  disabled={!hasChanges}
-                >
-                  Actualizar datos personales
-                </Button>
-              )}
-            </Form.Item>
-          </Form>
-        </Col>
+            setResidendeAddressUserPatientLocalState(
+              e.target.value.toUpperCase()
+            );
+          }}
+          isSubmittingUpdatePersonalDataFormData={
+            isSubmittingUpdatePersonalData
+          }
+          hasChangesFormData={hasChanges}
+          handleButtonClickFormData={handleButtonClick}
+        />
       </Card>
     </Col>
   );

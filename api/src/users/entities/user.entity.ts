@@ -4,6 +4,8 @@ import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
 import { EpsCompany } from '../../eps_company/entities/eps_company.entity';
 import { CompanyArea } from '../../company_area/entities/company_area.entity';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
+import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
+import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 import {
   Column,
   CreateDateColumn,
@@ -17,8 +19,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
-import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 
 @Entity()
 export class User {
@@ -142,4 +142,7 @@ export class User {
 
   @Column({ nullable: true })
   verification_code: number;
+
+  @Column({ nullable: true })
+  reset_password_token: string;
 }

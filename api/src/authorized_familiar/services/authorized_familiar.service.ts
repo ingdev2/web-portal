@@ -203,7 +203,7 @@ export class AuthorizedFamiliarService {
     if (!roleFamiliarFound) {
       throw new HttpException(
         'El rol "Familiar Autorizado" no existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -228,7 +228,7 @@ export class AuthorizedFamiliarService {
     if (!familiarRole) {
       throw new HttpException(
         'El usuario debe tener el rol "Familiar Autorizado".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -281,7 +281,7 @@ export class AuthorizedFamiliarService {
       if (!allUsersFamiliar.length) {
         return new HttpException(
           `No hay familiares registrados en la base de datos`,
-          HttpStatus.CONFLICT,
+          HttpStatus.NOT_FOUND,
         );
       } else {
         return allUsersFamiliar;
@@ -289,7 +289,7 @@ export class AuthorizedFamiliarService {
     } else {
       throw new HttpException(
         'No hay role creado de "Familiar".',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.CONFLICT,
       );
     }
   }
@@ -313,9 +313,15 @@ export class AuthorizedFamiliarService {
     }
   }
 
-  async getFamiliarFoundByIdNumber(idNumber: number) {
+  async getFamiliarFoundByIdNumber(
+    idType: number,
+    idNumber: number,
+    familiarEmail: string,
+  ) {
     return await this.familiarRepository.findOneBy({
+      user_id_type: idType,
       id_number: idNumber,
+      email: familiarEmail,
     });
   }
 

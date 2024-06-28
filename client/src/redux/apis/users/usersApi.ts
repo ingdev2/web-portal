@@ -82,6 +82,7 @@ export const usersApi = createApi({
     getUserByIdNumberPatient: builder.query<User, number>({
       query: (idNumber) => `getPatientUserById/${idNumber}`,
     }),
+
     getUserByIdNumberEps: builder.query<User, number>({
       query: (idNumber) => `getEpsUserById/${idNumber}`,
     }),
@@ -110,6 +111,38 @@ export const usersApi = createApi({
       }),
     }),
 
+    updatePassword: builder.mutation<
+      any,
+      { id: string; passwords: UpdatePassword }
+    >({
+      query: ({ id, passwords }) => ({
+        url: `updatePassword/${id}`,
+        method: "PATCH",
+        params: { id },
+        body: { passwords },
+      }),
+    }),
+
+    forgotPassword: builder.mutation<any, { email: string }>({
+      query: ({ email }) => ({
+        url: "forgotPassword",
+        method: "PATCH",
+        body: { email },
+      }),
+    }),
+
+    resetPassword: builder.mutation<
+      any,
+      { token: string; new_password: string }
+    >({
+      query: ({ token, new_password }) => ({
+        url: "resetPassword",
+        method: "PATCH",
+        body: { new_password },
+        params: { token },
+      }),
+    }),
+
     banUser: builder.mutation<any, string>({
       query: (id) => ({
         url: `ban/${id}`,
@@ -135,5 +168,8 @@ export const {
   useGetUserByIdNumberEpsQuery,
   useUpdateUserPatientMutation,
   useUpdateUserEpsMutation,
+  useUpdatePasswordMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
   useBanUserMutation,
 } = usersApi;

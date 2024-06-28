@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
@@ -8,6 +16,9 @@ import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
+import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patient.dto';
+import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
+import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -126,6 +137,39 @@ export class UsersController {
     passwords: UpdatePasswordUserDto,
   ) {
     return await this.usersService.updateUserPassword(id, passwords);
+  }
+
+  @Patch('/forgotPatientPassword')
+  async forgotUserPatientPassword(
+    @Body()
+    { id_type, id_number, birthdate }: ForgotPasswordUserPatientDto,
+  ) {
+    return await this.usersService.forgotUserPatientPassword({
+      id_type,
+      id_number,
+      birthdate,
+    });
+  }
+
+  @Patch('/forgotEpsPassword')
+  async forgotUserEpsPassword(
+    @Body()
+    { id_type, id_number, eps_company }: ForgotPasswordUserEpsDto,
+  ) {
+    return await this.usersService.forgotUserEpsPassword({
+      id_type,
+      id_number,
+      eps_company,
+    });
+  }
+
+  @Patch('/resetPassword')
+  async resetUserPassword(
+    @Query('token') token: string,
+    @Body()
+    new_password: ResetPasswordUserDto,
+  ) {
+    return await this.usersService.resetUserPassword(token, new_password);
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

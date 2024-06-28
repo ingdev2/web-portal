@@ -9,7 +9,7 @@ import { IdcardOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
 
-const AddRelativeDataForm: React.FC<{
+const AddRelativeFormData: React.FC<{
   handleAddAuthFamiliarDataForm: () => void;
   relationshipSelectorLoadingDataForm: boolean;
   familiarRelationshipValueDataForm: number;
@@ -502,4 +502,4 @@ const AddRelativeDataForm: React.FC<{
   );
 };
 
-export default AddRelativeDataForm;
+export default AddRelativeFormData;

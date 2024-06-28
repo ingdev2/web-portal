@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsNumber,
   IsString,
   IsOptional,
   MinLength,
@@ -44,4 +43,7 @@ export class CreateAdminDto {
 
   @IsNotEmpty()
   position_level: number;
+
+  @IsOptional()
+  authentication_method: number;
 }

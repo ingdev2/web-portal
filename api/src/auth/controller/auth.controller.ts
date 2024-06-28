@@ -82,6 +82,22 @@ export class AuthController {
     return await this.authService.loginAdmins(loginAdmin);
   }
 
+  @Post('verifiedLoginAdmins/:id_number')
+  async verifyCodeAndLoginAdmins(
+    @Param('id_number') id_number: number,
+    @Body('verification_code') verification_code: number,
+  ) {
+    return await this.authService.verifyCodeAndLoginAdmins(
+      id_number,
+      verification_code,
+    );
+  }
+
+  @Post('resendVerificationAdminCode')
+  async resendVerificationAdminCode(@Body() loginDto: LoginDto) {
+    return await this.authService.resendVerificationAdminCode(loginDto);
+  }
+
   @Post('loginPatientUsers')
   async loginPatientUsers(@Body() loginPatient: LoginDto) {
     return await this.authService.loginPatientUsers(loginPatient);

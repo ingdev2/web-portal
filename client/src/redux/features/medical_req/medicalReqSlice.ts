@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: MedicalReq = {
   id: "",
@@ -36,6 +36,8 @@ const initialState: MedicalReq = {
   currently_in_area: 0,
   requirement_status: 0,
   user_message: "",
+  user_message_documents: [],
+  files_user_message_documents: [],
   response_comments: "",
   motive_for_rejection: [],
   documents_delivered: [],
@@ -156,6 +158,24 @@ export const medicalReqSlice = createSlice({
     setUserMessageMedicalReq: (state, action) => {
       state.user_message = action.payload;
     },
+    setDocsUserMessageMedicalReq: (state, action) => {
+      state.user_message_documents = action.payload;
+    },
+    setFilesUserMessageMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_user_message_documents = action.payload;
+    },
+    removeFileUserMessageMessageMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_user_message_documents =
+        state.files_user_message_documents.filter(
+          (file) => file.originalname !== action.payload
+        );
+    },
     setResponseCommentsMedicalReq: (state, action) => {
       state.response_comments = action.payload;
     },
@@ -219,6 +239,8 @@ export const medicalReqSlice = createSlice({
       state.currently_in_area = 0;
       state.requirement_status = 0;
       state.user_message = "";
+      state.user_message_documents = [];
+      state.files_user_message_documents = [];
       state.response_comments = "";
       state.motive_for_rejection = [];
       state.documents_delivered = [];
@@ -264,6 +286,9 @@ export const {
   setCurrentlyInAreaMedicalReq,
   setRequirementStatusMedicalReq,
   setUserMessageMedicalReq,
+  setDocsUserMessageMedicalReq,
+  setFilesUserMessageMedicalReq,
+  removeFileUserMessageMessageMedicalReq,
   setResponseCommentsMedicalReq,
   setMotiveForRejectionMedicalReq,
   setDocumentsDeliveredMedicalReq,

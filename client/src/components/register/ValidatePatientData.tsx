@@ -39,6 +39,8 @@ import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodAp
 import CustomModalTwoOptions from "../common/custom_modal_two_options/CustomModalTwoOptions";
 import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
 
+import { CONTACT_PBX } from "@/utils/constants/constants";
+
 const ValidatePatientData: React.FC = () => {
   const { data: session, status } = useSession();
 
@@ -319,8 +321,8 @@ const ValidatePatientData: React.FC = () => {
             }}
           >
             Por favor, verifique si todos sus datos están correctos, de lo
-            contrario debe comunicarse a nuestra línea PBX: (601)3770055 para
-            realizar la actualización de sus datos personales.
+            contrario debe comunicarse a nuestra línea PBX: <b>{CONTACT_PBX}</b>
+            para realizar la actualización de sus datos personales.
           </p>
 
           <div style={{ textAlign: "start" }}>

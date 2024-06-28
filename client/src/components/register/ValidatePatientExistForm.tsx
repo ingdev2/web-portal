@@ -61,7 +61,7 @@ const ValidatePatientExistForm: React.FC = () => {
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
   const [idTypeAbbrevLocalState, setIdTypeAbbrevLocalState] = useState("");
-  const [idNumberLocalState, setIdNumberLocalState] = useState(0);
+  const [idNumberLocalState, setIdNumberLocalState] = useState("");
 
   const [idTypePatientLocalState, setIdTypePatientLocalState] = useState("");
   const [genderPatientLocalState, setGenderPatientLocalState] = useState("");
@@ -202,9 +202,13 @@ const ValidatePatientExistForm: React.FC = () => {
     try {
       setIsSubmittingPatient(true);
 
-      if (idTypeAbbrevLocalState && idNumberLocalState) {
+      const idNumberLocalStateNumber = idNumberLocalState
+        ? parseInt(idNumberLocalState?.toString(), 10)
+        : 0;
+
+      if (idTypeAbbrevLocalState && idNumberLocalStateNumber) {
         const searchPatientUser: any = await validatePatientRegister({
-          id_number: idNumberLocalState,
+          id_number: idNumberLocalStateNumber,
         });
 
         var validationPatientRegisterData = searchPatientUser?.data;
@@ -218,7 +222,7 @@ const ValidatePatientExistForm: React.FC = () => {
         if (validationPatientRegisterData?.status === 200) {
           const response: any = await validatePatient({
             idType: idTypeAbbrevLocalState,
-            idNumber: idNumberLocalState,
+            idNumber: idNumberLocalStateNumber,
           });
 
           var validationPatientData = response.data?.[0].count;
@@ -417,7 +421,7 @@ const ValidatePatientExistForm: React.FC = () => {
               type="tel"
               value={idNumberLocalState}
               placeholder="Número de identificación"
-              onChange={(e) => setIdNumberLocalState(e.target.valueAsNumber)}
+              onChange={(e) => setIdNumberLocalState(e.target.value)}
               autoComplete="off"
               min={0}
             />
