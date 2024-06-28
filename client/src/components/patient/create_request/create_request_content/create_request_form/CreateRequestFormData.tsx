@@ -19,6 +19,7 @@ const CreateRequestFormData: React.FC<{
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
   fileStatusSetterDataform: React.SetStateAction<any>;
+  fileStatusRemoverDataform: React.SetStateAction<any>;
 }> = ({
   handleCreateRequestDataForm,
   reqTypeSelectorLoadingDataForm,
@@ -30,6 +31,7 @@ const CreateRequestFormData: React.FC<{
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
   fileStatusSetterDataform,
+  fileStatusRemoverDataform,
 }) => {
   return (
     <Form
@@ -95,6 +97,7 @@ const CreateRequestFormData: React.FC<{
         <CustomUpload
           titleCustomUpload="Cargar Documento(s)"
           fileStatusSetterCustomUpload={fileStatusSetterDataform}
+          removeFileStatusSetterCustomUpload={fileStatusRemoverDataform}
         />
       </Form.Item>
 

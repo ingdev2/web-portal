@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: MedicalReq = {
   id: "",
@@ -161,8 +161,20 @@ export const medicalReqSlice = createSlice({
     setDocsUserMessageMedicalReq: (state, action) => {
       state.user_message_documents = action.payload;
     },
-    setFilesUserMessageMedicalReq: (state, action) => {
+    setFilesUserMessageMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
       state.files_user_message_documents = action.payload;
+    },
+    removeFileUserMessageMessageMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_user_message_documents =
+        state.files_user_message_documents.filter(
+          (file) => file.originalname !== action.payload
+        );
     },
     setResponseCommentsMedicalReq: (state, action) => {
       state.response_comments = action.payload;
@@ -276,6 +288,7 @@ export const {
   setUserMessageMedicalReq,
   setDocsUserMessageMedicalReq,
   setFilesUserMessageMedicalReq,
+  removeFileUserMessageMessageMedicalReq,
   setResponseCommentsMedicalReq,
   setMotiveForRejectionMedicalReq,
   setDocumentsDeliveredMedicalReq,

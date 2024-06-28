@@ -30,11 +30,15 @@ export const uploadViewFilesApi = createApi({
     }),
 
     viewFile: builder.query<string[], string[]>({
-      query: (key) => ({
-        url: `viewFileFromS3`,
-        method: "GET",
-        params: { key },
-      }),
+      query: (keys) => {
+        const params = keys
+          ?.map((key) => `key=${encodeURIComponent(key)}`)
+          .join("&");
+        return {
+          url: `viewFileFromS3?${params}`,
+          method: "GET",
+        };
+      },
     }),
   }),
 });

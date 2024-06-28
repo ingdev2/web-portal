@@ -18,6 +18,7 @@ import {
   setReqTypeMedicalReq,
   setUserMessageMedicalReq,
   setFilesUserMessageMedicalReq,
+  removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
@@ -135,6 +136,7 @@ const CreateRequestForm: React.FC = () => {
     userPatientLoading,
     userPatientFetching,
     idUserPatientState,
+    userMessageFilesMedicalReqState,
   ]);
 
   const handleCreateRequest = () => {
@@ -399,6 +401,7 @@ const CreateRequestForm: React.FC = () => {
           familiarReqTypeListDataForm={typesMedicalReqState}
           userMessageMedicalReqDataForm={userMessageMedicalReqState}
           fileStatusSetterDataform={setFilesUserMessageMedicalReq}
+          fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
             dispatch(setUserMessageMedicalReq(e.target.value))
           }

@@ -14,7 +14,12 @@ import { getBufferFromFile } from "@/helpers/get_buffer_from_file/get_buffer_fro
 const CustomUpload: React.FC<{
   titleCustomUpload: string;
   fileStatusSetterCustomUpload: React.SetStateAction<any>;
-}> = ({ titleCustomUpload, fileStatusSetterCustomUpload }) => {
+  removeFileStatusSetterCustomUpload: React.SetStateAction<any>;
+}> = ({
+  titleCustomUpload,
+  fileStatusSetterCustomUpload,
+  removeFileStatusSetterCustomUpload,
+}) => {
   const dispatch = useAppDispatch();
 
   const handleChange = async (info: UploadChangeParam<UploadFile<any>>) => {
@@ -38,6 +43,8 @@ const CustomUpload: React.FC<{
     }
     if (info.file.status === "removed") {
       message.warning(`¡Documento ${info.file.name} removido correctamente!`);
+
+      dispatch(removeFileStatusSetterCustomUpload(info.file.name));
     } else if (info.file.status === "error") {
       message.error(`¡Error al cargar documento ${info.file.name}!`);
     }

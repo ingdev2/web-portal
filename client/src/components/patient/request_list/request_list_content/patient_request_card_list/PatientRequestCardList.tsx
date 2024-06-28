@@ -3,7 +3,7 @@
 import React, { useEffect, useState, ReactNode } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Avatar, Col, Row, Select, SelectProps } from "antd";
+import { Col, Row, SelectProps } from "antd";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import RequestDetailsModal from "./request_details_content/RequestDetailsModal";
 import CustomCardOptionsButtons from "../../../../common/custom_content_card/CustomCardOptionsButtons";
@@ -60,6 +60,10 @@ const PatientRequestCardList: React.FC<{
   const [
     selectedRequestResponseDocumentsLocalState,
     setSelectedRequestResponseDocumentsLocalState,
+  ] = useState<string[]>([]);
+  const [
+    selectedRequestDocumentsExpirationDateLocalState,
+    setSelectedRequestDocumentsExpirationDateLocalState,
   ] = useState<ReactNode>(null);
   const [
     selectedRequestReasonsForRejectionLocalState,
@@ -266,6 +270,9 @@ const PatientRequestCardList: React.FC<{
           getTagComponentStatus(statusMapList[item.requirement_status])
         );
         setSelectedRequestResponseDocumentsLocalState(item.documents_delivered);
+        setSelectedRequestDocumentsExpirationDateLocalState(
+          item.download_expiration_date
+        );
         setSelectedRequestUserCommentsLocalState(item.user_message);
         setSelectedRequestResponseCommentsLocalState(item.response_comments);
         updateSelectedRequestReasonsForRejection(
@@ -328,6 +335,9 @@ const PatientRequestCardList: React.FC<{
           selectedRequestStatusModal={selectedRequestStatusLocalState}
           selectedRequestResponseDocumentsModal={
             selectedRequestResponseDocumentsLocalState
+          }
+          selectedRequestDocumentExpirationDateModal={
+            selectedRequestDocumentsExpirationDateLocalState
           }
           selectedRequestReasonsForRejectionModal={
             selectedRequestReasonsForRejectionLocalState

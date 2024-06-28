@@ -329,7 +329,7 @@ const PatientUserLoginForm: React.FC = () => {
                 setModalForgotMyPasswordIsOpen(false)
               }
               contentCustomModal={
-                "Hola"
+                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Fecha de cumpleaños"
                 // <CustomResultOneButton
                 //   key={"medical-req-created-custom-result"}
                 //   statusTypeResult={"success"}
