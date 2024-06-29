@@ -18,7 +18,7 @@ import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useGetAllMedicalReqOfAUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
-const ListOfRequests: React.FC = () => {
+const PatientListOfRequests: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -197,4 +197,4 @@ const ListOfRequests: React.FC = () => {
   );
 };
 
-export default ListOfRequests;
+export default PatientListOfRequests;

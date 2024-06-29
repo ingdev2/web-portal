@@ -5,11 +5,11 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import { Col, Row, SelectProps } from "antd";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
-import RequestDetailsModal from "./request_details_content/RequestDetailsModal";
+import PatientRequestDetailsModal from "./request_details_content/PatientRequestDetailsModal";
 import CustomCardOptionsButtons from "../../../../common/custom_content_card/CustomCardOptionsButtons";
 import CustomFilterBy from "../../../../common/custom_filter_by/CustomFilterBy";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import ListOfRequestsCards from "./list_of_requests_cards/ListOfRequestsCards";
+import PatientListOfRequestsCards from "./list_of_requests_cards/PatientListOfRequestsCards";
 import { FcHighPriority } from "react-icons/fc";
 import { FaRegEye } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
@@ -326,7 +326,7 @@ const PatientRequestCardList: React.FC<{
       )}
 
       {modalOpenRequestDetails && (
-        <RequestDetailsModal
+        <PatientRequestDetailsModal
           modalOpenRequestDetailsModal={modalOpenRequestDetails}
           selectedRequestFilingNumberModal={formatFilingNumber(
             selectedRequestFilingNumberLocalState
@@ -441,7 +441,7 @@ const PatientRequestCardList: React.FC<{
         </Col>
       </Row>
 
-      <ListOfRequestsCards
+      <PatientListOfRequestsCards
         dataSourceList={filteredRequests}
         optionsButtonSectionListOfRequest={renderOptionsButtons}
       />

@@ -8,13 +8,14 @@ import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.en
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import CreateRequestLayout from "@/components/patient/create_request/CreateRequestLayout";
+import PatientCreateRequestLayout from "@/components/patient/create_request/PatientCreateRequestLayout";
+import CustomLoadingOverlay from "@/components/common/custom_loading_overlay/CustomLoadingOverlay";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-const CreateRequestPage = () => {
+const CreateRequestPatientPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -26,6 +27,9 @@ const CreateRequestPage = () => {
   );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
+  );
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
   );
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -61,15 +65,17 @@ const CreateRequestPage = () => {
         />
       )}
 
+      <CustomLoadingOverlay isLoading={isPageLoadingState} />
+
       {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div className="create-request-page-patient-content">
-          <CreateRequestLayout />
+          <PatientCreateRequestLayout />
         </div>
       )}
     </>
   );
 };
 
-export default CreateRequestPage;
+export default CreateRequestPatientPage;

@@ -75,15 +75,15 @@ export const usersApi = createApi({
       query: () => "getAllEps",
     }),
 
-    getUserById: builder.query<User, string>({
+    getUserById: builder.query<Partial<User>, string>({
       query: (id) => `getUser/${id}`,
     }),
 
-    getUserByIdNumberPatient: builder.query<User, number>({
+    getUserByIdNumberPatient: builder.query<Partial<User>, number>({
       query: (idNumber) => `getPatientUserById/${idNumber}`,
     }),
 
-    getUserByIdNumberEps: builder.query<User, number>({
+    getUserByIdNumberEps: builder.query<Partial<User>, number>({
       query: (idNumber) => `getEpsUserById/${idNumber}`,
     }),
 

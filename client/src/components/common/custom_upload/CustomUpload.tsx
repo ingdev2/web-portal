@@ -89,9 +89,7 @@ const CustomUpload: React.FC<{
       size: 7,
       format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
     },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
+    onDrop(e) {},
   };
 
   return (

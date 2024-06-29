@@ -22,6 +22,7 @@ export class CompanyAreaController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
   createCompanyArea(@Body() createCompanyArea: CreateCompanyAreaDto) {
     return this.companyAreaService.createCompanyArea(createCompanyArea);
@@ -29,15 +30,19 @@ export class CompanyAreaController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Get('/getAll')
   getAllCompanyAreas() {
     return this.companyAreaService.getAllCompanyAreas();
   }
 
+  @Get('/getCompanyArea/:id')
+  getCompanyAreaById(@Param('id') id: number) {
+    return this.companyAreaService.getCompanyAreaById(id);
+  }
+
   // PATCH METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/update/:id')
   updateCompanyArea(
     @Param('id') id: number,

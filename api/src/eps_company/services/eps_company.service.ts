@@ -52,6 +52,23 @@ export class EpsCompanyService {
     }
   }
 
+  async getCompanyById(id: number) {
+    const companyFound = await this.epsCompanyRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!companyFound) {
+      return new HttpException(
+        `La empresa con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return companyFound;
+    }
+  }
+
   // UPDATE FUNTIONS //
 
   async updateEpsCompany(id: number, epsCompany: UpdateEpsCompanyDto) {

@@ -8,7 +8,7 @@ import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
-const CreateRequestFormData: React.FC<{
+const PatientCreateRequestFormData: React.FC<{
   handleCreateRequestDataForm: () => void;
   reqTypeSelectorLoadingDataForm: boolean;
   familiarReqTypeValueDataForm: number;
@@ -35,16 +35,16 @@ const CreateRequestFormData: React.FC<{
 }) => {
   return (
     <Form
-      id="create-medical-req-form"
-      name="create-medical-req-form"
-      className="create-medical-req-form"
+      id="create-medical-req-form-patient"
+      name="create-medical-req-form-patient"
+      className="create-medical-req-form-patient"
       onFinish={handleCreateRequestDataForm}
       initialValues={{ remember: false }}
       autoComplete="false"
       layout="vertical"
     >
       <h2
-        className="title-create-medical-req-form"
+        className="title-create-medical-req-form-patient"
         style={{
           ...titleStyleCss,
           textAlign: "center",
@@ -55,7 +55,7 @@ const CreateRequestFormData: React.FC<{
       </h2>
 
       <Form.Item
-        name="medical-req-types"
+        name="medical-req-types-patient"
         label="Tipo de requerimiento médico"
         style={{ marginBottom: "13px" }}
         rules={[
@@ -84,7 +84,7 @@ const CreateRequestFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="upload-files-reference-documents"
+        name="upload-files-reference-documents-patient"
         label="Documento(s) de referencia (opcional)"
         style={{ marginBottom: "13px" }}
         rules={[
@@ -102,7 +102,7 @@ const CreateRequestFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="especifications"
+        name="especifications-patient"
         label="Observaciones y/o detalles"
         style={{ marginBottom: "31px" }}
         rules={[
@@ -135,7 +135,7 @@ const CreateRequestFormData: React.FC<{
               color: "#f2f2f2",
             }}
             htmlType="submit"
-            className="create-medical-req-form-button"
+            className="create-medical-req-form-button-patient"
             onClick={handleButtonSubmitFormDataForm}
           >
             Crear solicitud
@@ -146,4 +146,4 @@ const CreateRequestFormData: React.FC<{
   );
 };
 
-export default CreateRequestFormData;
+export default PatientCreateRequestFormData;

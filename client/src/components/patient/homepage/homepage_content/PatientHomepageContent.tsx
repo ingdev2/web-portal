@@ -3,14 +3,14 @@
 import React from "react";
 
 import PatientDataCard from "./patient_data_card/PatientDataCard";
-import HomepageOptions from "./homepage_options/HomepageOptions";
+import HomepageOptionsPatient from "./homepage_options/HomepageOptionsPatient";
 
 const PatientHomepageContent: React.FC = () => {
   return (
     <>
       <PatientDataCard />
 
-      <HomepageOptions />
+      <HomepageOptionsPatient />
     </>
   );
 };

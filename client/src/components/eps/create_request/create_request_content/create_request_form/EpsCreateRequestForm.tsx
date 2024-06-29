@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
-import CreateRequestFormData from "./CreateRequestFormData";
+import EpsCreateRequestFormData from "./EpsCreateRequestFormData";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
@@ -21,27 +21,34 @@ import {
   removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
-import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
+import { setIdUserEps } from "@/redux/features/eps/epsSlice";
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
-import { useCreateMedicalReqPatientMutation } from "@/redux/apis/medical_req/medicalReqApi";
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { useCreateMedicalReqEpsMutation } from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
-const CreateRequestForm: React.FC = () => {
+const EpsCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const nameUserPatientState = useAppSelector((state) => state.patient.name);
-  const idNumberUserPatientState = useAppSelector(
-    (state) => state.patientUserLogin.id_number
+  const nameUserEpsState = useAppSelector((state) => state.eps.name);
+  const idNumberUserEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
   );
-  const idUserPatientState = useAppSelector((state) => state.patient.id);
+  const idUserEpsState = useAppSelector((state) => state.eps.id);
   const typesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.typesMedicalReq
   );
   const reqTypeState = useAppSelector(
     (state) => state.medicalReq.requirement_type
+  );
+  const patientIdTypeMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.patient_id_type
+  );
+  const patientIdNumberMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.patient_id_number
   );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
@@ -76,21 +83,21 @@ const CreateRequestForm: React.FC = () => {
   } = useGetAllMedicalReqTypesQuery(null);
 
   const {
-    data: userPatientData,
-    isLoading: userPatientLoading,
-    isFetching: userPatientFetching,
-    error: userPatientError,
-  } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
+    data: userEpsData,
+    isLoading: userEpsLoading,
+    isFetching: userEpsFetching,
+    error: userEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsState);
 
   const [
-    createMedicalReqPatient,
+    createMedicalReqEps,
     {
-      data: createMedicalReqPatientData,
-      isLoading: createMedicalReqPatientLoading,
-      isSuccess: createMedicalReqPatientSuccess,
-      isError: createMedicalReqPatientError,
+      data: createMedicalReqEpsData,
+      isLoading: createMedicalReqEpsLoading,
+      isSuccess: createMedicalReqEpsSuccess,
+      isError: createMedicalReqEpsError,
     },
-  ] = useCreateMedicalReqPatientMutation({
+  ] = useCreateMedicalReqEpsMutation({
     fixedCacheKey: "createMedicalReqPatientData",
   });
 
@@ -110,13 +117,8 @@ const CreateRequestForm: React.FC = () => {
     if (!reqTypesLoading && !reqTypesFetching && reqTypesData) {
       dispatch(setTypesMedicalReq(reqTypesData));
     }
-    if (
-      !userPatientLoading &&
-      !userPatientFetching &&
-      userPatientData &&
-      !idUserPatientState
-    ) {
-      dispatch(setIdUserPatient(userPatientData.id));
+    if (!userEpsLoading && !userEpsFetching && userEpsData && !idUserEpsState) {
+      dispatch(setIdUserEps(userEpsData.id));
     }
     if (reqTypesError) {
       dispatch(
@@ -132,10 +134,10 @@ const CreateRequestForm: React.FC = () => {
     reqTypesLoading,
     reqTypesFetching,
     reqTypesError,
-    userPatientData,
-    userPatientLoading,
-    userPatientFetching,
-    idUserPatientState,
+    userEpsData,
+    userEpsLoading,
+    userEpsFetching,
+    idUserEpsState,
     userMessageFilesMedicalReqState,
   ]);
 
@@ -223,9 +225,11 @@ const CreateRequestForm: React.FC = () => {
         }
       }
 
-      const response: any = await createMedicalReqPatient({
-        userId: idUserPatientState,
-        medicalReqPatient: {
+      const response: any = await createMedicalReqEps({
+        userId: idUserEpsState,
+        medicalReqEps: {
+          patient_id_type: patientIdTypeMedicalReqState,
+          patient_id_number: patientIdNumberMedicalReqState,
           requirement_type: reqTypeState,
           user_message: userMessageMedicalReqState,
           ...responses,
@@ -266,7 +270,9 @@ const CreateRequestForm: React.FC = () => {
 
   const handleGoToListOfMedicalReq = async () => {
     try {
-      await router.replace("/patient/homepage/request_list", {
+      dispatch(setIsPageLoading(true));
+
+      await router.replace("/eps/homepage/request_list", {
         scroll: false,
       });
     } catch (error) {
@@ -329,7 +335,7 @@ const CreateRequestForm: React.FC = () => {
       </div>
 
       <Card
-        key={"card-create-medical-req-form"}
+        key={"card-create-medical-req-form-eps"}
         style={{
           width: "100%",
           maxWidth: "450px",
@@ -343,7 +349,7 @@ const CreateRequestForm: React.FC = () => {
       >
         {modalIsOpenConfirm && (
           <CustomModalTwoOptions
-            key={"custom-confirm-modal-create-medical-req"}
+            key={"custom-confirm-modal-create-medical-req-eps"}
             openCustomModalState={modalIsOpenConfirm}
             iconCustomModal={<FcInfo size={77} />}
             titleCustomModal="¿Deseas crear una nueva solicitud?"
@@ -351,7 +357,7 @@ const CreateRequestForm: React.FC = () => {
               <p>
                 Se realizará un nuevo requerimiento de tipo&nbsp;
                 <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
-                <b>{nameUserPatientState}</b>
+                <b>{nameUserEpsState}</b>
               </p>
             }
             handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
@@ -363,7 +369,7 @@ const CreateRequestForm: React.FC = () => {
 
         {modalIsOpenSuccess && (
           <CustomModalNoContent
-            key={"custom-success-modal-create-medical-req"}
+            key={"custom-success-modal-create-medical-req-eps"}
             widthCustomModalNoContent={"54%"}
             openCustomModalState={modalIsOpenSuccess}
             closableCustomModal={false}
@@ -391,7 +397,7 @@ const CreateRequestForm: React.FC = () => {
           />
         )}
 
-        <CreateRequestFormData
+        <EpsCreateRequestFormData
           handleCreateRequestDataForm={handleCreateRequest}
           reqTypeSelectorLoadingDataForm={
             reqTypesLoading && reqTypesFetching && !reqTypesData
@@ -415,4 +421,4 @@ const CreateRequestForm: React.FC = () => {
   );
 };
 
-export default CreateRequestForm;
+export default EpsCreateRequestForm;

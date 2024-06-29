@@ -30,7 +30,9 @@ const EpsModalVerificationCode: React.FC = () => {
   const router = useRouter();
 
   const epsModalIsOpen = useAppSelector((state) => state.modal.epsModalIsOpen);
-  const isPageLoading = useAppSelector((state) => state.modal.isPageLoading);
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
+  );
 
   const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
   const idNumberEpsState = useAppSelector(
@@ -231,7 +233,7 @@ const EpsModalVerificationCode: React.FC = () => {
             {isUserEpsData?.email}
           </h5>
 
-          <CustomLoadingOverlay isLoading={isPageLoading} />
+          <CustomLoadingOverlay isLoading={isPageLoadingState} />
 
           <Form
             id="form-verify-code-modal-eps"
@@ -303,10 +305,10 @@ const EpsModalVerificationCode: React.FC = () => {
                 key="confirm-code-button-eps"
                 className="confirm-code-button-eps"
                 size="large"
-                disabled={isPageLoading}
+                disabled={isPageLoadingState}
                 style={{
-                  backgroundColor: isPageLoading ? "#D8D8D8" : "#015E90",
-                  color: isPageLoading ? "#A0A0A0" : "#f2f2f2",
+                  backgroundColor: isPageLoadingState ? "#D8D8D8" : "#015E90",
+                  color: isPageLoadingState ? "#A0A0A0" : "#f2f2f2",
                   paddingInline: 31,
                   borderRadius: 31,
                   marginTop: 5,

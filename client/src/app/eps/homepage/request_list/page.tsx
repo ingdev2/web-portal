@@ -15,7 +15,7 @@ import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-const PatientRequestListPage = () => {
+const EpsRequestListPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -79,4 +79,4 @@ const PatientRequestListPage = () => {
   );
 };
 
-export default PatientRequestListPage;
+export default EpsRequestListPage;

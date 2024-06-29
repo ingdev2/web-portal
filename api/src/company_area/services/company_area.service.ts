@@ -52,6 +52,23 @@ export class CompanyAreaService {
     }
   }
 
+  async getCompanyAreaById(id: number) {
+    const companyAreaFound = await this.companyAreaRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!companyAreaFound) {
+      return new HttpException(
+        `El área de empresa con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return companyAreaFound;
+    }
+  }
+
   // UPDATE FUNTIONS //
 
   async updateCompanyArea(id: number, companyArea: UpdateCompanyAreaDto) {

@@ -9,116 +9,112 @@ import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 
 import {
-  setIdUserPatient,
-  setNameUserPatient,
-  setIdTypeUserPatient,
-  setIdNumberUserPatient,
-  setEmailUserPatient,
-  setCellphoneUserPatient,
-  setWhatsappUserPatient,
-  setResidenceAddressUserPatient,
-  setAffiliationEpsUserPatient,
-  setErrorsUserPatient,
-  setDefaultValuesUserPatient,
-  setIdTypeAbbrevUserPatient,
-  setGenderUserPatient,
-  setGenderAbbrevUserPatient,
-  setAuthMethodUserPatient,
-} from "@/redux/features/patient/patientSlice";
+  setIdUserEps,
+  setNameUserEps,
+  setIdTypeUserEps,
+  setIdNumberUserEps,
+  setEmailUserEps,
+  setCellphoneUserEps,
+  setCompanyAreaUserEps,
+  setEpsCompanyUserEps,
+  setErrorsUserEps,
+  setDefaultValuesUserEps,
+  setIdTypeAbbrevUserEps,
+  setGenderUserEps,
+  setGenderAbbrevUserEps,
+  setEpsCompanyAbbrevUserEps,
+  setAuthMethodUserEps,
+} from "@/redux/features/eps/epsSlice";
 
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
+import { useGetEpsCompanyByIdQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetGenderByIdQuery } from "@/redux/apis/genders/gendersApi";
 
-const PatientDataCard: React.FC = () => {
+const EpsDataCard: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const namePatientState = useAppSelector((state) => state.patient.name);
-  const idTypeNumberPatientState = useAppSelector(
-    (state) => state.patient.user_id_type
+  const nameEpsState = useAppSelector((state) => state.eps.name);
+  const idTypeNumberEpsState = useAppSelector(
+    (state) => state.eps.user_id_type
   );
-  const idTypeNamePatientState = useAppSelector(
-    (state) => state.patient.id_type_abbrev
+  const idTypeNameEpsState = useAppSelector(
+    (state) => state.eps.id_type_abbrev
   );
-  const idNumberPatientState = useAppSelector(
-    (state) => state.patient.id_number
+  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
+  const genderNumberEpsState = useAppSelector((state) => state.eps.user_gender);
+  const genderNameEpsState = useAppSelector(
+    (state) => state.eps.user_gender_abbrev
   );
-  const genderNumberPatientState = useAppSelector(
-    (state) => state.patient.user_gender
+  const emailEpsState = useAppSelector((state) => state.eps.email);
+  const cellphoneEpsState = useAppSelector((state) => state.eps.cellphone);
+  const epsCompanyEpsState = useAppSelector((state) => state.eps.eps_company);
+  const epsCompanyNameEpsState = useAppSelector(
+    (state) => state.eps.eps_company_abbrev
   );
-  const genderNamePatientState = useAppSelector(
-    (state) => state.patient.user_gender_abbrev
-  );
-  const emailPatientState = useAppSelector((state) => state.patient.email);
-  const cellphonePatientState = useAppSelector(
-    (state) => state.patient.cellphone
-  );
-  const whatsappPatientState = useAppSelector(
-    (state) => state.patient.whatsapp
-  );
-  const affiliationEpsPatientState = useAppSelector(
-    (state) => state.patient.affiliation_eps
-  );
-  const residenceAddressPatientState = useAppSelector(
-    (state) => state.patient.residence_address
-  );
-  const errorsPatientState = useAppSelector((state) => state.patient.errors);
+  const errorsPatientState = useAppSelector((state) => state.eps.errors);
 
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
+  const [showErrorMessageEps, setShowErrorMessagePatient] = useState(false);
 
   const {
-    data: userPatientData,
-    isLoading: userPatientLoading,
-    isFetching: userPatientFetching,
-    error: userPatientError,
-  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
+    data: userEpsData,
+    isLoading: userEpsLoading,
+    isFetching: userEpsFetching,
+    error: userEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
   const {
     data: idTypeNameUserData,
     isLoading: idTypeNameUserLoading,
     isFetching: idTypeNameUserFetching,
     error: idTypeNameUserError,
-  } = useGetIdTypeByIdQuery(idTypeNumberPatientState);
+  } = useGetIdTypeByIdQuery(idTypeNumberEpsState);
 
   const {
     data: genderNameUserData,
     isLoading: genderNameUserLoading,
     isFetching: genderNameUserFetching,
     error: genderNameUserError,
-  } = useGetGenderByIdQuery(genderNumberPatientState);
+  } = useGetGenderByIdQuery(genderNumberEpsState);
+
+  const {
+    data: epsCompanyUserEpsData,
+    isLoading: epsCompanyUserEpsLoading,
+    isFetching: epsCompanyUserEpsFetching,
+    error: epsCompanyUserEpsError,
+  } = useGetEpsCompanyByIdQuery(epsCompanyEpsState);
 
   useEffect(() => {
-    if (idNumberPatientState && userPatientData) {
-      dispatch(setNameUserPatient(userPatientData?.name));
-      dispatch(setIdTypeUserPatient(userPatientData?.user_id_type));
-      dispatch(setGenderUserPatient(userPatientData?.user_gender));
-      dispatch(setEmailUserPatient(userPatientData?.email));
-      dispatch(setCellphoneUserPatient(userPatientData?.cellphone));
-      dispatch(setWhatsappUserPatient(userPatientData?.whatsapp));
-      dispatch(
-        setResidenceAddressUserPatient(userPatientData?.residence_address)
-      );
-      dispatch(setAffiliationEpsUserPatient(userPatientData?.affiliation_eps));
-      dispatch(
-        setAuthMethodUserPatient(userPatientData?.authentication_method)
-      );
+    if (idNumberEpsState && userEpsData) {
+      dispatch(setNameUserEps(userEpsData?.name));
+      dispatch(setIdTypeUserEps(userEpsData?.user_id_type));
+      dispatch(setGenderUserEps(userEpsData?.user_gender));
+      dispatch(setEmailUserEps(userEpsData?.email));
+      dispatch(setCellphoneUserEps(userEpsData?.cellphone));
+      dispatch(setAuthMethodUserEps(userEpsData?.authentication_method));
+      dispatch(setEpsCompanyUserEps(userEpsData?.eps_company));
+      dispatch(setCompanyAreaUserEps(userEpsData?.company_area));
     }
-    if (idTypeNumberPatientState && idTypeNameUserData) {
-      dispatch(setIdTypeAbbrevUserPatient(idTypeNameUserData.name));
+    if (idTypeNumberEpsState && idTypeNameUserData) {
+      dispatch(setIdTypeAbbrevUserEps(idTypeNameUserData.name));
     }
-    if (genderNumberPatientState && genderNameUserData) {
-      dispatch(setGenderAbbrevUserPatient(genderNameUserData.name));
+    if (genderNumberEpsState && genderNameUserData) {
+      dispatch(setGenderAbbrevUserEps(genderNameUserData.name));
+    }
+    if (epsCompanyEpsState && epsCompanyUserEpsData) {
+      dispatch(setEpsCompanyAbbrevUserEps(epsCompanyUserEpsData.name));
     }
   }, [
-    idNumberPatientState,
-    userPatientData,
-    idTypeNumberPatientState,
+    idNumberEpsState,
+    userEpsData,
+    idTypeNumberEpsState,
     idTypeNameUserData,
+    epsCompanyUserEpsData,
   ]);
 
   return (
     <>
-      {userPatientLoading && userPatientFetching ? (
+      {userEpsLoading && userEpsFetching && !epsCompanyUserEpsData ? (
         <CustomSpin />
       ) : (
         <Col
@@ -137,7 +133,7 @@ const PatientDataCard: React.FC = () => {
             margin: "0px",
           }}
         >
-          {showErrorMessagePatient && (
+          {showErrorMessageEps && (
             <CustomMessage
               typeMessage="error"
               message={
@@ -147,7 +143,7 @@ const PatientDataCard: React.FC = () => {
           )}
 
           <Card
-            key={"card-patient-data-homepage"}
+            key={"card-eps-data-homepage"}
             style={{
               width: "100%",
               maxWidth: "702px",
@@ -176,7 +172,7 @@ const PatientDataCard: React.FC = () => {
                 }}
               >
                 <h3
-                  className="patient-welcome-card-title"
+                  className="eps-welcome-card-title"
                   style={{
                     ...titleStyleCss,
                     marginBottom: "0px",
@@ -186,7 +182,7 @@ const PatientDataCard: React.FC = () => {
                 </h3>
 
                 <h3
-                  className="patient-name-data"
+                  className="eps-name-data"
                   style={{
                     color: "#3F97AF",
                     fontSize: 20,
@@ -197,7 +193,7 @@ const PatientDataCard: React.FC = () => {
                     marginBottom: "8px",
                   }}
                 >
-                  {namePatientState}
+                  {nameEpsState}
                 </h3>
               </Col>
 
@@ -212,7 +208,7 @@ const PatientDataCard: React.FC = () => {
                 }}
               >
                 <h3
-                  className="patient-id-type-subtitle"
+                  className="eps-id-type-subtitle"
                   style={{
                     ...titleStyleCss,
                   }}
@@ -221,36 +217,36 @@ const PatientDataCard: React.FC = () => {
                 </h3>
 
                 <h3
-                  className="patient-id-type-data"
+                  className="eps-id-type-data"
                   style={{
                     ...subtitleStyleCss,
                     color: "#3F97AF",
                     textAlign: "end",
                   }}
                 >
-                  {idNumberPatientState}
+                  {idNumberEpsState}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
 
                 <h3
-                  className="patient-affiliation-eps-subtitle"
+                  className="eps-affiliation-eps-subtitle"
                   style={{
                     ...titleStyleCss,
                   }}
                 >
-                  EPS de afiliación:
+                  EPS de usuario:
                 </h3>
 
                 <h3
-                  className="patient-affiliation-eps-data"
+                  className="eps-company-eps-data"
                   style={{
                     ...subtitleStyleCss,
                     color: "#3F97AF",
                     textAlign: "end",
                   }}
                 >
-                  {affiliationEpsPatientState}
+                  {epsCompanyNameEpsState}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
@@ -267,7 +263,7 @@ const PatientDataCard: React.FC = () => {
                 }}
               >
                 <h3
-                  className="patient-email-subtitle"
+                  className="eps-email-subtitle"
                   style={{
                     ...titleStyleCss,
                   }}
@@ -276,20 +272,20 @@ const PatientDataCard: React.FC = () => {
                 </h3>
 
                 <h3
-                  className="patient-email-data"
+                  className="eps-email-data"
                   style={{
                     ...subtitleStyleCss,
                     color: "#3F97AF",
                     textAlign: "end",
                   }}
                 >
-                  {emailPatientState}
+                  {emailEpsState}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
 
                 <h3
-                  className="patient-cellphone-subtitle"
+                  className="eps-cellphone-subtitle"
                   style={{
                     ...titleStyleCss,
                   }}
@@ -298,14 +294,14 @@ const PatientDataCard: React.FC = () => {
                 </h3>
 
                 <h3
-                  className="patient-cellphone-data"
+                  className="eps-cellphone-data"
                   style={{
                     ...subtitleStyleCss,
                     color: "#3F97AF",
                     textAlign: "end",
                   }}
                 >
-                  {cellphonePatientState}
+                  {cellphoneEpsState}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
@@ -318,4 +314,4 @@ const PatientDataCard: React.FC = () => {
   );
 };
 
-export default PatientDataCard;
+export default EpsDataCard;

@@ -13,40 +13,40 @@ import { PiUserListBold } from "react-icons/pi";
 import { UserOutlined } from "@ant-design/icons";
 
 import {
-  setNameUserPatient,
-  setDefaultValuesUserPatient,
-} from "@/redux/features/patient/patientSlice";
-import { resetLoginStatePatient } from "@/redux/features/login/patientUserLoginSlice";
+  setNameUserEps,
+  setDefaultValuesUserEps,
+} from "@/redux/features/eps/epsSlice";
+import { resetLoginStateLoginEps } from "@/redux/features/login/epsUserLoginSlice";
 import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 
-const PatientHeaderLayout: React.FC = () => {
+const EpsHeaderLayout: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const idNumberUserPatientState = useAppSelector(
-    (state) => state.patientUserLogin.id_number
+  const idNumberUserEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
   );
 
-  const nameUserPatientState = useAppSelector((state) => state.patient.name);
+  const nameUserEpsState = useAppSelector((state) => state.eps.name);
 
   const {
-    data: userPatientData,
-    isLoading: userPatientLoading,
-    isFetching: userPatientFetching,
-    error: userPatientError,
-  } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
+    data: userEpsData,
+    isLoading: userEpsLoading,
+    isFetching: userEpsFetching,
+    error: userEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsState);
 
   useEffect(() => {
-    if (!nameUserPatientState) {
-      dispatch(setNameUserPatient(userPatientData?.name));
+    if (!nameUserEpsState) {
+      dispatch(setNameUserEps(userEpsData?.name));
     }
-  }, [nameUserPatientState]);
+  }, [nameUserEpsState]);
 
   const handleClickUpdatePersonalData = async () => {
     try {
-      await router.push("/patient/homepage/update_personal_data", {
+      await router.push("/eps/homepage/update_personal_data", {
         scroll: true,
       });
     } catch (error) {
@@ -57,8 +57,8 @@ const PatientHeaderLayout: React.FC = () => {
 
   const handleClickSignOut = () => {
     try {
-      dispatch(resetLoginStatePatient());
-      dispatch(setDefaultValuesUserPatient());
+      dispatch(resetLoginStateLoginEps());
+      dispatch(setDefaultValuesUserEps());
       dispatch(setDefaultValuesMedicalReq());
       signOut();
     } catch (error) {
@@ -94,7 +94,7 @@ const PatientHeaderLayout: React.FC = () => {
         }}
       >
         <a
-          className="custom-layout-logo-header-patient"
+          className="custom-layout-logo-header-eps"
           style={{
             display: "flex",
             flexFlow: "column wrap",
@@ -108,7 +108,7 @@ const PatientHeaderLayout: React.FC = () => {
             overflow: "hidden",
           }}
           onClick={() => {
-            router.replace("/patient/homepage", { scroll: true });
+            router.replace("/eps/homepage", { scroll: true });
           }}
         >
           <img
@@ -135,7 +135,7 @@ const PatientHeaderLayout: React.FC = () => {
         }}
       >
         <div
-          className="custom-layout-avatar-dropdown-patient"
+          className="custom-layout-avatar-dropdown-eps"
           style={{
             display: "flex",
             flexFlow: "row wrap",
@@ -143,11 +143,11 @@ const PatientHeaderLayout: React.FC = () => {
             alignContent: "center",
           }}
         >
-          {userPatientFetching && userPatientLoading ? (
+          {userEpsFetching && userEpsLoading ? (
             <CustomSpin />
           ) : (
             <CustomDropdown
-              titleCustomDropdown={getFirstName(nameUserPatientState)}
+              titleCustomDropdown={getFirstName(nameUserEpsState)}
               iconCustomItem1={<PiUserListBold />}
               iconCustomItem2={<FaSignOutAlt />}
               titleCustomItem1="Actualizar Datos"
@@ -163,4 +163,4 @@ const PatientHeaderLayout: React.FC = () => {
   );
 };
 
-export default PatientHeaderLayout;
+export default EpsHeaderLayout;

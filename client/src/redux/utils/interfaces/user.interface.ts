@@ -21,6 +21,7 @@ interface User {
   is_active: boolean;
   accept_terms: boolean;
   eps_company: number;
+  eps_company_abbrev: string;
   company_area: number;
   user_role: number;
   verification_code: number;

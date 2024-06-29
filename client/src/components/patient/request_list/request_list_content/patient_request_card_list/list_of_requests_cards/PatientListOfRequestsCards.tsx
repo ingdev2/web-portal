@@ -14,7 +14,7 @@ import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing
 import { typesMap } from "@/helpers/medical_req_type_map/types_map";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
 
-const ListOfRequestsCards: React.FC<{
+const PatientListOfRequestsCards: React.FC<{
   dataSourceList: MedicalReq[];
   optionsButtonSectionListOfRequest: (item: MedicalReq) => ReactNode;
 }> = ({ dataSourceList, optionsButtonSectionListOfRequest }) => {
@@ -110,4 +110,4 @@ const ListOfRequestsCards: React.FC<{
   );
 };
 
-export default ListOfRequestsCards;
+export default PatientListOfRequestsCards;

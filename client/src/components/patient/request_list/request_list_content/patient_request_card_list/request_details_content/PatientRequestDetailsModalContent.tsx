@@ -6,7 +6,7 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const RequestDetailsModalContent: React.FC<{
+const PatientRequestDetailsModalContent: React.FC<{
   titleDescription: string;
   labelFilingNumber: string;
   selectedRequestFilingNumber: string;
@@ -176,4 +176,4 @@ const RequestDetailsModalContent: React.FC<{
   );
 };
 
-export default RequestDetailsModalContent;
+export default PatientRequestDetailsModalContent;

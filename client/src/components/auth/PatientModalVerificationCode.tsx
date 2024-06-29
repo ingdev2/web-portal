@@ -32,7 +32,9 @@ const PatientModalVerificationCode: React.FC = () => {
   const patientModalIsOpen = useAppSelector(
     (state) => state.modal.patientModalIsOpen
   );
-  const isPageLoading = useAppSelector((state) => state.modal.isPageLoading);
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
+  );
 
   const idTypePatientState = useAppSelector(
     (state) => state.patientUserLogin.id_type
@@ -233,7 +235,7 @@ const PatientModalVerificationCode: React.FC = () => {
             {isUserPatientData?.email}
           </h5>
 
-          <CustomLoadingOverlay isLoading={isPageLoading} />
+          <CustomLoadingOverlay isLoading={isPageLoadingState} />
 
           <Form
             id="form-verify-code-modal-patient"
@@ -305,10 +307,10 @@ const PatientModalVerificationCode: React.FC = () => {
                 key={"confirm-code-button-patient"}
                 className="confirm-code-button-patient"
                 size="large"
-                disabled={isPageLoading}
+                disabled={isPageLoadingState}
                 style={{
-                  backgroundColor: isPageLoading ? "#D8D8D8" : "#015E90",
-                  color: isPageLoading ? "#A0A0A0" : "#f2f2f2",
+                  backgroundColor: isPageLoadingState ? "#D8D8D8" : "#015E90",
+                  color: isPageLoadingState ? "#A0A0A0" : "#f2f2f2",
                   paddingInline: 31,
                   borderRadius: 31,
                   marginTop: 5,

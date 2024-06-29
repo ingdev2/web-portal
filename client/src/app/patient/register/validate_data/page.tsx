@@ -8,9 +8,7 @@ import { RiPassValidLine } from "react-icons/ri";
 import ValidatePatientData from "@/components/register/ValidatePatientData";
 
 const ValidateDataPage: React.FC = () => {
-  const onChange = (key: string) => {
-    console.log(key);
-  };
+  const onChange = () => {};
 
   return (
     <div
