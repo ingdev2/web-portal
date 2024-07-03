@@ -5,12 +5,12 @@ import React, { ReactNode } from "react";
 import { Button } from "antd";
 import { TbEye } from "react-icons/tb";
 
+import EpsRequestDetailsModalContent from "./EpsRequestDetailsModalContent";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
-import PatientRequestDetailsModalContent from "./PatientRequestDetailsModalContent";
 
 import { useViewFileQuery } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
-const PatientRequestDetailsModal: React.FC<{
+const EpsRequestDetailsModal: React.FC<{
   modalOpenRequestDetailsModal: boolean;
   selectedRequestFilingNumberModal: string;
   selectedRequestTypeModal: ReactNode;
@@ -56,11 +56,11 @@ const PatientRequestDetailsModal: React.FC<{
 
   return (
     <CustomModalNoContent
-      key={"custom-details-medical-req-modal-patient"}
+      key={"custom-details-medical-req-modal-eps"}
       widthCustomModalNoContent={"45%"}
       openCustomModalState={modalOpenRequestDetailsModal}
       contentCustomModal={
-        <PatientRequestDetailsModalContent
+        <EpsRequestDetailsModalContent
           titleDescription={"Detalles de solicitud"}
           labelFilingNumber={"N° de Radicado:"}
           selectedRequestFilingNumber={selectedRequestFilingNumberModal}
@@ -134,4 +134,4 @@ const PatientRequestDetailsModal: React.FC<{
   );
 };
 
-export default PatientRequestDetailsModal;
+export default EpsRequestDetailsModal;

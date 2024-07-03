@@ -8,26 +8,24 @@ import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.en
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import PatientRequestListLayout from "@/components/patient/request_list/PatientRequestListLayout";
+import EpsRequestListLayout from "@/components/eps/request_list/EpsRequestListLayout";
 
-import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
+import { setIdNumberUserEps } from "@/redux/features/eps/epsSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 
 const EpsRequestListPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  const allowedRoles = [UserRolType.PATIENT];
+  const allowedRoles = [UserRolType.EPS];
   useRoleValidation(allowedRoles);
 
-  const idNumberUserPatientLoginState = useAppSelector(
-    (state) => state.patientUserLogin.id_number
+  const idNumberUserEpsLoginState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
   );
-  const idNumberPatientState = useAppSelector(
-    (state) => state.patient.id_number
-  );
+  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
@@ -36,19 +34,19 @@ const EpsRequestListPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: userPatientData,
-    isLoading: userPatientLoading,
-    isFetching: userPatientFetching,
-    error: userPatientError,
-  } = useGetUserByIdNumberPatientQuery(idNumberUserPatientLoginState);
+    data: userEpsData,
+    isLoading: userEpsLoading,
+    isFetching: userEpsFetching,
+    error: userEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsLoginState);
 
   useEffect(() => {
-    if (!idNumberUserPatientLoginState) {
+    if (!idNumberUserEpsLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
     }
-    if (!idNumberPatientState) {
-      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
+    if (!idNumberEpsState) {
+      dispatch(setIdNumberUserEps(userEpsData?.id_number));
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
@@ -57,7 +55,7 @@ const EpsRequestListPage = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [status, idNumberUserPatientLoginState, idNumberPatientState]);
+  }, [status, idNumberUserEpsLoginState, idNumberEpsState]);
 
   return (
     <>
@@ -68,11 +66,11 @@ const EpsRequestListPage = () => {
         />
       )}
 
-      {!idNumberUserPatientLoginState || status === "unauthenticated" ? (
+      {!idNumberUserEpsLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="request-list-page-patient-content">
-          <PatientRequestListLayout />
+        <div className="request-list-page-eps-content">
+          <EpsRequestListLayout />
         </div>
       )}
     </>

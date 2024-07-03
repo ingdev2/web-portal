@@ -77,7 +77,7 @@ const HomepageOptionsEps: React.FC = () => {
             backgroundColorCustomOptionButton="#015E90"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
-              await router.push("/patient/homepage/request_list", {
+              await router.push("/eps/homepage/request_list", {
                 scroll: true,
               });
             }}
@@ -105,7 +105,7 @@ const HomepageOptionsEps: React.FC = () => {
             backgroundColorCustomOptionButton="#015E90"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
-              await router.push("/patient/homepage/update_personal_data", {
+              await router.push("/eps/homepage/update_personal_data", {
                 scroll: true,
               });
             }}

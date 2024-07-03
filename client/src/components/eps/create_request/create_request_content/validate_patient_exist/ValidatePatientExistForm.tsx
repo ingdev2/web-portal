@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
-import CustomLoadingOverlay from "../common/custom_loading_overlay/CustomLoadingOverlay";
+import CustomLoadingOverlay from "@/components/common/custom_loading_overlay/CustomLoadingOverlay";
 import { IdcardOutlined } from "@ant-design/icons";
-import CustomSpin from "../common/custom_spin/CustomSpin";
-import CustomMessage from "../common/custom_messages/CustomMessage";
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
   setNameUserPatient,
@@ -29,7 +29,7 @@ import {
   setErrorsUserPatient,
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import { setComponentChange } from "@/redux/features/common/modal/modalSlice";
 
 import {
   useValidateThatThePatientExistMutation,
@@ -42,44 +42,33 @@ import {
   useTransformGenderNumberMutation,
 } from "@/redux/apis/users/usersApi";
 
-import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
+import { IdTypeAbbrev } from "@/../../api/src/users/enums/id_type_abbrev.enum";
 
-const ValidatePatientExistForm: React.FC = () => {
+const ValidatePatientExistEps: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const idTypeAbbrevPatientState = useAppSelector(
-    (state) => state.patient.id_type_abbrev
+  const componentChangeState = useAppSelector(
+    (state) => state.modal.componentChange
   );
+
   const idTypePatientState = useAppSelector(
     (state) => state.patient.user_id_type
   );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
   );
-  const genderPatientState = useAppSelector(
-    (state) => state.patient.user_gender
-  );
-  const genderAbbrevPatientState = useAppSelector(
-    (state) => state.patient.user_gender_abbrev
-  );
-  const affiliationEpsPatientState = useAppSelector(
-    (state) => state.patient.affiliation_eps
-  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
-  const [idTypeAbbrevLocalState, setIdTypeAbbrevLocalState] = useState("");
-  const [idNumberLocalState, setIdNumberLocalState] = useState("");
-
-  const [genderAbbrevPatientLocalState, setGenderAbbrevPatientLocalState] =
+  const [idTypeAbbrevPatientLocalState, setIdTypeAbbrevPatientLocalState] =
+    useState("");
+  const [idNumberPatientLocalState, setIdNumberPatientLocalState] =
     useState("");
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
-  const [isSubmittingGoToUserLogin, setIsSubmittingGoToUserLogin] =
-    useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 
@@ -93,18 +82,6 @@ const ValidatePatientExistForm: React.FC = () => {
     },
   ] = useValidateThatThePatientExistMutation({
     fixedCacheKey: "validatePatientData",
-  });
-
-  const [
-    validatePatientRegister,
-    {
-      data: isValidatePatientRegisterData,
-      isLoading: isValidatePatientRegisterLoading,
-      isSuccess: isValidatePatientRegisterSuccess,
-      isError: isValidatePatientRegisterError,
-    },
-  ] = useValidatePatientRegisterMutation({
-    fixedCacheKey: "validatePatientRegisterData",
   });
 
   const [
@@ -130,42 +107,20 @@ const ValidatePatientExistForm: React.FC = () => {
     fixedCacheKey: "transformIdTypeNumberData",
   });
 
-  const [
-    transformGenderName,
-    {
-      data: isTransformGenderNameData,
-      isLoading: isTransformGenderNameLoading,
-      isSuccess: isTransformGenderNameSuccess,
-      isError: isTransformGenderNameError,
-    },
-  ] = useTransformGenderNameMutation({
-    fixedCacheKey: "transformGenderNameData",
-  });
-  const [
-    transformGenderNumber,
-    {
-      data: isTransformGenderNumberData,
-      isLoading: isTransformGenderNumberLoading,
-      isSuccess: isTransformGenderNumberSuccess,
-      isError: isTransformGenderNumberError,
-    },
-  ] = useTransformGenderNumberMutation({
-    fixedCacheKey: "transformGenderNumberData",
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       if (
-        affiliationEpsPatientState &&
-        !idTypeAbbrevLocalState &&
-        !idNumberLocalState
+        !idTypeAbbrevPatientLocalState &&
+        !idNumberPatientLocalState &&
+        idTypePatientState
       ) {
+        dispatch(setComponentChange(false));
         dispatch(setDefaultValuesUserPatient());
       }
 
-      if (idTypeAbbrevLocalState) {
+      if (idTypeAbbrevPatientLocalState) {
         const responseIdTypeName: any = await transformIdTypeName({
-          idTypeAbbrev: idTypeAbbrevLocalState,
+          idTypeAbbrev: idTypeAbbrevPatientLocalState,
         });
 
         var idTypeName = responseIdTypeName?.error?.data;
@@ -173,121 +128,62 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setIdTypeAbbrevUserPatient(idTypeName));
 
         const responseIdTypeNumber: any = await transformIdTypeNumber({
-          idTypeAbbrev: idTypeAbbrevLocalState,
+          idTypeAbbrev: idTypeAbbrevPatientLocalState,
         });
 
         var idTypeNumber = responseIdTypeNumber?.data;
 
         dispatch(setIdTypeUserPatient(idTypeNumber));
       }
-
-      if (genderAbbrevPatientLocalState) {
-        const responseGenderName: any = await transformGenderName({
-          genderAbbrev: genderAbbrevPatientLocalState,
-        });
-
-        var genderName = responseGenderName?.error?.data;
-
-        dispatch(setGenderAbbrevUserPatient(genderName));
-
-        const responseGenderNumber: any = await transformGenderNumber({
-          genderAbbrev: genderAbbrevPatientLocalState,
-        });
-
-        var genderNumber = responseGenderNumber?.data;
-
-        dispatch(setGenderUserPatient(genderNumber));
-      }
     };
 
     fetchData();
   }, [
+    idTypeAbbrevPatientLocalState,
+    idNumberPatientLocalState,
     idTypePatientState,
-    idNumberLocalState,
-    idTypeAbbrevLocalState,
-    genderAbbrevPatientLocalState,
-    affiliationEpsPatientState,
   ]);
 
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingPatient(true);
 
-      const idNumberLocalStateNumber = idNumberLocalState
-        ? parseInt(idNumberLocalState?.toString(), 10)
+      const idNumberLocalStateNumber = idNumberPatientLocalState
+        ? parseInt(idNumberPatientLocalState?.toString(), 10)
         : 0;
 
       if (
-        idTypeAbbrevLocalState &&
+        idTypeAbbrevPatientLocalState &&
         idTypePatientState &&
         idNumberLocalStateNumber
       ) {
-        const searchPatientUser: any = await validatePatientRegister({
-          id_type: idTypePatientState,
-          id_number: idNumberLocalStateNumber,
+        const response: any = await validatePatient({
+          idType: idTypeAbbrevPatientLocalState,
+          idNumber: idNumberLocalStateNumber,
         });
 
-        var validationPatientRegisterData = searchPatientUser?.data;
+        var validationPatientData = response.data?.[0].status;
 
-        if (validationPatientRegisterData?.status === 409) {
-          const errorMessage = validationPatientRegisterData?.message;
+        var validationPatientError = response.error?.status;
+
+        if (validationPatientData === 404 || validationPatientError === 404) {
+          const errorMessage =
+            "El paciente no se encuentra registrado en la clínica";
 
           dispatch(setErrorsUserPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }
-        if (validationPatientRegisterData?.status === 200) {
-          const response: any = await validatePatient({
-            idType: idTypeAbbrevLocalState,
-            idNumber: idNumberLocalStateNumber,
-          });
+        if (validationPatientData === 200 && response.data?.[0].data?.[0]) {
+          setShowSuccessMessage(true);
 
-          var validationPatientData = response.data?.[0].status;
+          setTimeout(() => {
+            dispatch(setIdNumberUserPatient(idNumberLocalStateNumber));
 
-          var validationPatientError = response.error?.status;
+            setIdTypeAbbrevPatientLocalState("");
+            setIdNumberPatientLocalState("");
 
-          if (validationPatientData === 404 || validationPatientError === 404) {
-            const errorMessage =
-              "El paciente no se encuentra registrado en la clínica";
-
-            dispatch(setErrorsUserPatient(errorMessage));
-            setShowErrorMessagePatient(true);
-          }
-          if (validationPatientData === 200 && response.data?.[0].data?.[0]) {
-            setIdTypeAbbrevLocalState("");
-            setGenderAbbrevPatientLocalState("");
-
-            const patientData = response.data[0].data[0];
-
-            const {
-              NOMBRE: name,
-              TIPO: idType,
-              ID: idNumber,
-              SEXO: gender,
-              FECHA_NACIMIENTO: birthDate,
-              CORREO: email,
-              CELULAR: cellPhone,
-              EMPRESA: affiliationEps,
-              DIRECCION: residenceAddress,
-            } = patientData;
-
-            setIdTypeAbbrevLocalState(idType);
-            setGenderAbbrevPatientLocalState(gender);
-
-            dispatch(setNameUserPatient(name));
-            dispatch(setIdNumberUserPatient(idNumber));
-            dispatch(setBirthdateUserPatient(birthDate));
-            dispatch(setEmailUserPatient(email));
-            dispatch(setCellphoneUserPatient(cellPhone));
-            dispatch(setAffiliationEpsUserPatient(affiliationEps));
-            dispatch(setResidenceAddressUserPatient(residenceAddress));
-
-            dispatch(setIsPageLoading(true));
-            setShowSuccessMessage(true);
-
-            await router.push("/patient/register/validate_data", {
-              scroll: true,
-            });
-          }
+            dispatch(setComponentChange(true));
+          }, 400);
         }
       } else {
         dispatch(setErrorsUserPatient("Datos del paciente no encontrados"));
@@ -303,21 +199,8 @@ const ValidatePatientExistForm: React.FC = () => {
   const handleIdTypeChange = (value: string | undefined) => {
     if (value) {
       var idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
-      setIdTypeAbbrevLocalState(idTypeAbbrevPatientString);
-    }
-  };
 
-  const handleGoToUserLogin = async () => {
-    try {
-      setIsSubmittingGoToUserLogin(true);
-
-      await router.push("/login", { scroll: true });
-
-      dispatch(setDefaultValuesUserPatient());
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSubmittingGoToUserLogin(false);
+      setIdTypeAbbrevPatientLocalState(idTypeAbbrevPatientString);
     }
   };
 
@@ -330,16 +213,13 @@ const ValidatePatientExistForm: React.FC = () => {
   return (
     <Card
       style={{
-        width: "max-content",
-        height: "max-content",
-        display: "flex",
-        flexDirection: "column",
+        width: "100%",
+        maxWidth: "405px",
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#fcfcfc",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: 31,
-        marginInline: 31,
+        marginBottom: "31px",
       }}
     >
       <CustomLoadingOverlay isLoading={isPageLoadingState} />
@@ -360,28 +240,32 @@ const ValidatePatientExistForm: React.FC = () => {
 
       <Col
         xs={24}
+        sm={24}
         md={24}
         lg={24}
-        style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
+        style={{
+          padding: "0 7px",
+          margin: "0px",
+        }}
       >
         <Form
-          id="patient-user-validate-form-patient"
-          name="patient-user-validate-form-patient"
-          className="patient-user-validate-form-patient"
+          id="patient-user-validate-form-eps"
+          name="patient-user-validate-form-eps"
+          className="patient-user-validate-form-eps"
           onFinish={handleValidatePatient}
           initialValues={{ remember: false }}
           autoComplete="false"
           layout="vertical"
         >
           <h2
-            className="title-validate-patient-patient"
+            className="title-validate-patient-eps"
             style={{
               ...titleStyleCss,
-              marginBottom: 13,
+              marginBlock: 22,
               textAlign: "center",
             }}
           >
-            Activación de usuario Paciente
+            Validación existencia Paciente
           </h2>
 
           <Form.Item
@@ -396,7 +280,7 @@ const ValidatePatientExistForm: React.FC = () => {
             ]}
           >
             <Select
-              value={idTypeAbbrevLocalState}
+              value={idTypeAbbrevPatientLocalState}
               placeholder="Tipo de identificación"
               onChange={handleIdTypeChange}
             >
@@ -440,9 +324,9 @@ const ValidatePatientExistForm: React.FC = () => {
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               type="tel"
-              value={idNumberLocalState}
+              value={idNumberPatientLocalState}
               placeholder="Número de identificación"
-              onChange={(e) => setIdNumberLocalState(e.target.value)}
+              onChange={(e) => setIdNumberPatientLocalState(e.target.value)}
               autoComplete="off"
               min={0}
             />
@@ -472,39 +356,6 @@ const ValidatePatientExistForm: React.FC = () => {
                 Validar Paciente
               </Button>
             )}
-
-            <Divider
-              style={{
-                fontSize: 13,
-                fontWeight: "normal",
-                marginBlock: 4,
-                borderWidth: 1.3,
-              }}
-            >
-              ¿Ya tienes cuenta?
-            </Divider>
-
-            {isSubmittingGoToUserLogin ? (
-              <CustomSpin />
-            ) : (
-              <Button
-                style={{
-                  paddingInline: 22,
-                  color: "#015E90",
-                  borderColor: "#015E90",
-                  fontWeight: "bold",
-                  borderRadius: 7,
-                  borderWidth: 1.3,
-                  marginTop: 7,
-                }}
-                htmlType="button"
-                className="patient-validate-button"
-                onClick={handleGoToUserLogin}
-                onMouseDown={handleButtonClick}
-              >
-                Ingresar con mi cuenta
-              </Button>
-            )}
           </Form.Item>
         </Form>
       </Col>
@@ -512,4 +363,4 @@ const ValidatePatientExistForm: React.FC = () => {
   );
 };
 
-export default ValidatePatientExistForm;
+export default ValidatePatientExistEps;

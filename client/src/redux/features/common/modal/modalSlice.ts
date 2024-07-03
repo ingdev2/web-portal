@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isPageLoading: false,
+  componentChange: false,
   patientModalIsOpen: false,
   epsModalIsOpen: false,
 };
@@ -13,6 +14,9 @@ export const modalSlice = createSlice({
     setIsPageLoading: (state, action) => {
       state.isPageLoading = action.payload;
     },
+    setComponentChange: (state, action) => {
+      state.componentChange = action.payload;
+    },
     setPatientModalIsOpen: (state, action) => {
       state.patientModalIsOpen = action.payload;
     },
@@ -22,7 +26,11 @@ export const modalSlice = createSlice({
   },
 });
 
-export const { setIsPageLoading, setPatientModalIsOpen, setEpsModalIsOpen } =
-  modalSlice.actions;
+export const {
+  setIsPageLoading,
+  setComponentChange,
+  setPatientModalIsOpen,
+  setEpsModalIsOpen,
+} = modalSlice.actions;
 
 export default modalSlice.reducer;

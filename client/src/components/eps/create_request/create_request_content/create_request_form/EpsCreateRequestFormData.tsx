@@ -1,14 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
-import { Button, Form, Select } from "antd";
+import { Button, Form, Input, Select, Typography } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
 const EpsCreateRequestFormData: React.FC<{
+  patientNameDataForm: string;
+  patientIdTypeDataForm: string;
+  iconButtonValidatorOtherPatientDataForm: ReactNode;
+  onClickButtonValidatorOtherPatientDataForm: () => void;
+  patientIdNumberDataForm: number;
   handleCreateRequestDataForm: () => void;
   reqTypeSelectorLoadingDataForm: boolean;
   familiarReqTypeValueDataForm: number;
@@ -21,6 +26,11 @@ const EpsCreateRequestFormData: React.FC<{
   fileStatusSetterDataform: React.SetStateAction<any>;
   fileStatusRemoverDataform: React.SetStateAction<any>;
 }> = ({
+  patientNameDataForm,
+  patientIdTypeDataForm,
+  patientIdNumberDataForm,
+  iconButtonValidatorOtherPatientDataForm,
+  onClickButtonValidatorOtherPatientDataForm,
   handleCreateRequestDataForm,
   reqTypeSelectorLoadingDataForm,
   familiarReqTypeValueDataForm,
@@ -48,11 +58,77 @@ const EpsCreateRequestFormData: React.FC<{
         style={{
           ...titleStyleCss,
           textAlign: "center",
-          marginBottom: "22px",
+          marginBottom: "13px",
         }}
       >
         Crear nueva solicitud de requerimiento médico
       </h2>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Nombre de paciente:
+        </Typography.Title>
+        <Input
+          id="name-patient-auto-input-eps"
+          value={patientNameDataForm}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Tipo de documento:
+        </Typography.Title>
+        <Input
+          id="id-type-patient-auto-input-eps"
+          value={patientIdTypeDataForm}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Número de documento:
+        </Typography.Title>
+        <Input
+          id="patient-id-number-hosvital-eps"
+          value={patientIdNumberDataForm}
+          disabled
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "column wrap",
+          alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
+          paddingBlock: "13px",
+        }}
+      >
+        <Button
+          style={{
+            paddingInline: 13,
+            color: "#015E90",
+            borderColor: "#015E90",
+            fontWeight: "bold",
+            borderRadius: 7,
+            borderWidth: 2,
+            display: "flex",
+            flexFlow: "row wrap",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+          type="text"
+          size="middle"
+          className="back-to-validate-patient"
+          icon={iconButtonValidatorOtherPatientDataForm}
+          onClick={onClickButtonValidatorOtherPatientDataForm}
+        >
+          Cambiar paciente
+        </Button>
+      </div>
 
       <Form.Item
         name="medical-req-types-eps"

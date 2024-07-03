@@ -95,41 +95,48 @@ export class AuthService {
 
       const allData = response.data;
 
-      const idTypeAbbrev = allData.data[0]?.TIPO;
+      const patientFound = response.data?.count;
 
-      const idTypeAbbreviations: Record<IdTypeAbbrev, IdType> = {
-        [IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA]: IdType.CITIZENSHIP_CARD,
-        [IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA]: IdType.FOREIGNER_ID,
-        [IdTypeAbbrev.TARJETA_DE_IDENTIDAD]: IdType.IDENTITY_CARD,
-        [IdTypeAbbrev.REGISTRO_CIVIL]: IdType.CIVIL_REGISTRATION,
-        [IdTypeAbbrev.PASAPORTE]: IdType.PASSPORT,
-        [IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA]:
-          IdType.SPECIAL_RESIDENCE_PERMIT,
-        [IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL]:
-          IdType.TEMPORARY_PROTECTION_PERMIT,
-        [IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN]:
-          IdType.MINOR_WITHOUT_IDENTIFICATION,
-        [IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN]:
-          IdType.ADULT_WITHOUT_IDENTIFICATION,
-      };
+      if (patientFound === 1) {
+        const foundDataPatient = response?.data;
 
-      const idTypeNumberForInsert = idTypeAbbreviations[idTypeAbbrev];
+        const idTypeAbbrev = foundDataPatient?.TIPO;
 
-      const idTypeOfUserIdNumber = await this.idTypeRepository.findOne({
-        where: {
-          name: idTypeNumberForInsert,
-        },
-      });
+        const idTypeAbbreviations: Record<IdTypeAbbrev, IdType> = {
+          [IdTypeAbbrev.CÉDULA_DE_CIUDADANÍA]: IdType.CITIZENSHIP_CARD,
+          [IdTypeAbbrev.CÉDULA_DE_EXTRANJERÍA]: IdType.FOREIGNER_ID,
+          [IdTypeAbbrev.TARJETA_DE_IDENTIDAD]: IdType.IDENTITY_CARD,
+          [IdTypeAbbrev.REGISTRO_CIVIL]: IdType.CIVIL_REGISTRATION,
+          [IdTypeAbbrev.PASAPORTE]: IdType.PASSPORT,
+          [IdTypeAbbrev.PERMISO_ESPECIAL_PERMANENCIA]:
+            IdType.SPECIAL_RESIDENCE_PERMIT,
+          [IdTypeAbbrev.PERMISO_PROTECCIÓN_TEMPORAL]:
+            IdType.TEMPORARY_PROTECTION_PERMIT,
+          [IdTypeAbbrev.MENOR_SIN_IDENTIFICACIÓN]:
+            IdType.MINOR_WITHOUT_IDENTIFICATION,
+          [IdTypeAbbrev.MAYOR_SIN_IDENTIFICACIÓN]:
+            IdType.ADULT_WITHOUT_IDENTIFICATION,
+        };
 
-      const idTypeId = idTypeOfUserIdNumber.id;
+        const idTypeNumberForInsert = idTypeAbbreviations[idTypeAbbrev];
 
-      return [allData, { 'Número de ID de tipo de documento': idTypeId }];
+        const idTypeOfUserIdNumber = await this.idTypeRepository.findOne({
+          where: {
+            name: idTypeNumberForInsert,
+          },
+        });
+
+        const idTypeId = idTypeOfUserIdNumber.id;
+
+        return [allData, { 'Número de ID de tipo de documento': idTypeId }];
+      } else {
+        throw new HttpException(
+          'No se encontraron registros de pacientes.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
     } catch (error) {
-      throw new HttpException(
-        'Hubo un error al consultar en la base de datos.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        error,
-      );
+      throw error;
     }
   }
 
@@ -191,9 +198,12 @@ export class AuthService {
     });
   }
 
-  async validatePatientRegister({ id_number }: IdNumberDto) {
+  async validatePatientRegister({ id_type, id_number }: IdNumberDto) {
     const patientUserFound = await this.userRepository.findOne({
-      where: { id_number: id_number },
+      where: {
+        user_id_type: id_type,
+        id_number: id_number,
+      },
     });
 
     if (patientUserFound) {
