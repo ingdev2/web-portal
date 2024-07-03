@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
+import CustomLoadingOverlay from "../common/custom_loading_overlay/CustomLoadingOverlay";
 import { IdcardOutlined } from "@ant-design/icons";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
@@ -28,6 +29,7 @@ import {
   setErrorsUserPatient,
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
 import {
   useValidateThatThePatientExistMutation,
@@ -49,8 +51,14 @@ const ValidatePatientExistForm: React.FC = () => {
   const idTypeAbbrevPatientState = useAppSelector(
     (state) => state.patient.id_type_abbrev
   );
+  const idTypePatientState = useAppSelector(
+    (state) => state.patient.user_id_type
+  );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
+  );
+  const genderPatientState = useAppSelector(
+    (state) => state.patient.user_gender
   );
   const genderAbbrevPatientState = useAppSelector(
     (state) => state.patient.user_gender_abbrev
@@ -58,13 +66,16 @@ const ValidatePatientExistForm: React.FC = () => {
   const affiliationEpsPatientState = useAppSelector(
     (state) => state.patient.affiliation_eps
   );
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
+  );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
   const [idTypeAbbrevLocalState, setIdTypeAbbrevLocalState] = useState("");
   const [idNumberLocalState, setIdNumberLocalState] = useState("");
 
-  const [idTypePatientLocalState, setIdTypePatientLocalState] = useState("");
-  const [genderPatientLocalState, setGenderPatientLocalState] = useState("");
+  const [genderAbbrevPatientLocalState, setGenderAbbrevPatientLocalState] =
+    useState("");
 
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
   const [isSubmittingGoToUserLogin, setIsSubmittingGoToUserLogin] =
@@ -152,9 +163,9 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setDefaultValuesUserPatient());
       }
 
-      if (idTypePatientLocalState) {
+      if (idTypeAbbrevLocalState) {
         const responseIdTypeName: any = await transformIdTypeName({
-          idTypeAbbrev: idTypePatientLocalState,
+          idTypeAbbrev: idTypeAbbrevLocalState,
         });
 
         var idTypeName = responseIdTypeName?.error?.data;
@@ -162,7 +173,7 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setIdTypeAbbrevUserPatient(idTypeName));
 
         const responseIdTypeNumber: any = await transformIdTypeNumber({
-          idTypeAbbrev: idTypePatientLocalState,
+          idTypeAbbrev: idTypeAbbrevLocalState,
         });
 
         var idTypeNumber = responseIdTypeNumber?.data;
@@ -170,9 +181,9 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setIdTypeUserPatient(idTypeNumber));
       }
 
-      if (genderPatientLocalState) {
+      if (genderAbbrevPatientLocalState) {
         const responseGenderName: any = await transformGenderName({
-          genderAbbrev: genderPatientLocalState,
+          genderAbbrev: genderAbbrevPatientLocalState,
         });
 
         var genderName = responseGenderName?.error?.data;
@@ -180,7 +191,7 @@ const ValidatePatientExistForm: React.FC = () => {
         dispatch(setGenderAbbrevUserPatient(genderName));
 
         const responseGenderNumber: any = await transformGenderNumber({
-          genderAbbrev: genderPatientLocalState,
+          genderAbbrev: genderAbbrevPatientLocalState,
         });
 
         var genderNumber = responseGenderNumber?.data;
@@ -191,11 +202,11 @@ const ValidatePatientExistForm: React.FC = () => {
 
     fetchData();
   }, [
-    affiliationEpsPatientState,
-    idTypeAbbrevLocalState,
+    idTypePatientState,
     idNumberLocalState,
-    idTypePatientLocalState,
-    genderPatientLocalState,
+    idTypeAbbrevLocalState,
+    genderAbbrevPatientLocalState,
+    affiliationEpsPatientState,
   ]);
 
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -206,8 +217,13 @@ const ValidatePatientExistForm: React.FC = () => {
         ? parseInt(idNumberLocalState?.toString(), 10)
         : 0;
 
-      if (idTypeAbbrevLocalState && idNumberLocalStateNumber) {
+      if (
+        idTypeAbbrevLocalState &&
+        idTypePatientState &&
+        idNumberLocalStateNumber
+      ) {
         const searchPatientUser: any = await validatePatientRegister({
+          id_type: idTypePatientState,
           id_number: idNumberLocalStateNumber,
         });
 
@@ -225,18 +241,20 @@ const ValidatePatientExistForm: React.FC = () => {
             idNumber: idNumberLocalStateNumber,
           });
 
-          var validationPatientData = response.data?.[0].count;
+          var validationPatientData = response.data?.[0].status;
 
-          if (validationPatientData === 0) {
+          var validationPatientError = response.error?.status;
+
+          if (validationPatientData === 404 || validationPatientError === 404) {
             const errorMessage =
               "El paciente no se encuentra registrado en la clínica";
 
             dispatch(setErrorsUserPatient(errorMessage));
             setShowErrorMessagePatient(true);
           }
-          if (validationPatientData === 1 && response.data?.[0].data?.[0]) {
-            setIdTypePatientLocalState("");
-            setGenderPatientLocalState("");
+          if (validationPatientData === 200 && response.data?.[0].data?.[0]) {
+            setIdTypeAbbrevLocalState("");
+            setGenderAbbrevPatientLocalState("");
 
             const patientData = response.data[0].data[0];
 
@@ -252,8 +270,8 @@ const ValidatePatientExistForm: React.FC = () => {
               DIRECCION: residenceAddress,
             } = patientData;
 
-            setIdTypePatientLocalState(idType);
-            setGenderPatientLocalState(gender);
+            setIdTypeAbbrevLocalState(idType);
+            setGenderAbbrevPatientLocalState(gender);
 
             dispatch(setNameUserPatient(name));
             dispatch(setIdNumberUserPatient(idNumber));
@@ -263,6 +281,7 @@ const ValidatePatientExistForm: React.FC = () => {
             dispatch(setAffiliationEpsUserPatient(affiliationEps));
             dispatch(setResidenceAddressUserPatient(residenceAddress));
 
+            dispatch(setIsPageLoading(true));
             setShowSuccessMessage(true);
 
             await router.push("/patient/register/validate_data", {
@@ -323,6 +342,8 @@ const ValidatePatientExistForm: React.FC = () => {
         marginInline: 31,
       }}
     >
+      <CustomLoadingOverlay isLoading={isPageLoadingState} />
+
       {showErrorMessagePatient && (
         <CustomMessage
           typeMessage="error"
@@ -344,16 +365,16 @@ const ValidatePatientExistForm: React.FC = () => {
         style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
       >
         <Form
-          id="patient-user-validate-form"
-          name="patient-user-validate-form"
-          className="patient-user-validate-form"
+          id="patient-user-validate-form-patient"
+          name="patient-user-validate-form-patient"
+          className="patient-user-validate-form-patient"
           onFinish={handleValidatePatient}
           initialValues={{ remember: false }}
           autoComplete="false"
           layout="vertical"
         >
           <h2
-            className="title-validate-patient"
+            className="title-validate-patient-patient"
             style={{
               ...titleStyleCss,
               marginBottom: 13,

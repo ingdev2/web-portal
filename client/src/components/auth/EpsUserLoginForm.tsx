@@ -8,6 +8,7 @@ import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
 import { Button, Card, Col, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import EpsModalVerificationCode from "./EpsModalVerificationCode";
+import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 import { titleStyleCss } from "@/theme/text_styles";
@@ -50,6 +51,11 @@ const EpsUserLoginForm: React.FC = () => {
   const [idTypeEpsLocalState, setIdTypeEpsLocalState] = useState(0);
   const [idNumberEpsLocalState, setIdNumberEpsLocalState] = useState("");
   const [passwordEpsLocalState, setPasswordEpsLocalState] = useState("");
+
+  const [modalForgotMyPasswordIsOpen, setModalForgotMyPasswordIsOpen] =
+    useState(false);
+  const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
+    useState(false);
 
   const [isSubmittingEps, setIsSubmittingEps] = useState(false);
   const [showErrorMessageEps, setShowErrorMessageEps] = useState(false);
@@ -291,10 +297,35 @@ const EpsUserLoginForm: React.FC = () => {
             />
           </Form.Item>
 
+          {modalForgotMyPasswordIsOpen && (
+            <CustomModalNoContent
+              key={"custom-modal-forgot-my-password-patient"}
+              widthCustomModalNoContent={"54%"}
+              openCustomModalState={modalForgotMyPasswordIsOpen}
+              closableCustomModal={true}
+              maskClosableCustomModal={true}
+              handleCancelCustomModal={() =>
+                setModalForgotMyPasswordIsOpen(false)
+              }
+              contentCustomModal={
+                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Empresa(EPS)"
+                // <CustomResultOneButton
+                //   key={"medical-req-created-custom-result"}
+                //   statusTypeResult={"success"}
+                //   titleCustomResult="¡Solicitud Creada Correctamente!"
+                //   subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
+                //   handleClickCustomResult={handleGoToListOfMedicalReq}
+                //   isSubmittingButton={isSubmittingGoToListOfMedicalReq}
+                //   textButtonCustomResult="Ver mis solicitudes hechas"
+                // />
+              }
+            />
+          )}
+
           <Form.Item style={{ textAlign: "center" }}>
             <a
               className="eps-login-form-forgot-user"
-              href=""
+              // href=""
               style={{
                 display: "flow",
                 color: "#960202",
@@ -302,6 +333,7 @@ const EpsUserLoginForm: React.FC = () => {
                 fontWeight: 500,
                 marginBottom: 13,
               }}
+              onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
               Olvide mi contraseña
             </a>

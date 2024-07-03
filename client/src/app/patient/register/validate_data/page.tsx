@@ -1,16 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 
 import { Tabs } from "antd";
 import { RiPassValidLine } from "react-icons/ri";
-
 import ValidatePatientData from "@/components/register/ValidatePatientData";
 
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+
 const ValidateDataPage: React.FC = () => {
-  const onChange = (key: string) => {
-    console.log(key);
-  };
+  const dispatch = useAppDispatch();
+
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
+  );
+
+  useEffect(() => {
+    if (isPageLoadingState) {
+      dispatch(setIsPageLoading(false));
+    }
+  }, []);
+
+  const onChange = () => {};
 
   return (
     <div

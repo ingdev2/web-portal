@@ -25,12 +25,23 @@ export class AuthController {
   @Post('/validatePatient')
   async validateThatThePatientExist(
     @Body()
-    patientData: ValidatePatientDto,
+    { idType, idNumber }: ValidatePatientDto,
   ) {
-    return await this.authService.validateThatThePatientExist(patientData);
+    return await this.authService.validateThatThePatientExist({
+      idType,
+      idNumber,
+    });
   }
 
   // REGISTER
+
+  @Post('validatePatientRegister')
+  async validatePatientRegister(@Body() { id_type, id_number }: IdNumberDto) {
+    return await this.authService.validatePatientRegister({
+      id_type,
+      id_number,
+    });
+  }
 
   @Post('registerSuperAdmin')
   async registerSuperAdmin(@Body() registerSuperAdmin: CreateSuperAdminDto) {
@@ -41,11 +52,6 @@ export class AuthController {
   @Post('registerAdmin')
   async registerAdmin(@Body() registerAdmin: CreateAdminDto) {
     return await this.authService.registerAdmin(registerAdmin);
-  }
-
-  @Post('validatePatientRegister')
-  async validatePatientRegister(@Body() id_number: IdNumberDto) {
-    return await this.authService.validatePatientRegister(id_number);
   }
 
   @Post('registerUserPatient')

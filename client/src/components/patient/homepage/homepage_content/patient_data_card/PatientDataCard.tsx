@@ -29,7 +29,6 @@ import {
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetGenderByIdQuery } from "@/redux/apis/genders/gendersApi";
-import { setAuthMethodUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
 const PatientDataCard: React.FC = () => {
   const dispatch = useAppDispatch();

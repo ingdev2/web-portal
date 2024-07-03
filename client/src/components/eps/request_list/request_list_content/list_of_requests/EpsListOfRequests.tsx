@@ -8,24 +8,24 @@ import { Button, Card } from "antd";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import PatientRequestCardList from "@/components/patient/request_list/request_list_content/patient_request_card_list/PatientRequestCardList";
+import EpsRequestCardList from "../eps_request_card_list/EpsRequestCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdPostAdd } from "react-icons/md";
 
-import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
+import { setIdUserEps } from "@/redux/features/eps/epsSlice";
 
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
+import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useGetAllMedicalReqOfAUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
-const ListOfRequests: React.FC = () => {
+const EpsListOfRequests: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const idNumberUserPatientState = useAppSelector(
-    (state) => state.patientUserLogin.id_number
+  const idNumberUserEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
   );
-  const idUserPatientState = useAppSelector((state) => state.patient.id);
+  const idUserEpsState = useAppSelector((state) => state.eps.id);
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
   );
@@ -34,37 +34,27 @@ const ListOfRequests: React.FC = () => {
     useState(false);
 
   const {
-    data: userPatientData,
-    isLoading: userPatientLoading,
-    isFetching: userPatientFetching,
-    error: userPatientError,
-  } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
+    data: userEpsData,
+    isLoading: userEpsLoading,
+    isFetching: userEpsFetching,
+    error: userEpsError,
+  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsState);
 
   const {
     data: userMedicalReqData,
     isLoading: userMedicalReqLoading,
     isFetching: userMedicalReqFetching,
     error: userMedicalReqError,
-  } = useGetAllMedicalReqOfAUsersQuery(idUserPatientState, {
+  } = useGetAllMedicalReqOfAUsersQuery(idUserEpsState, {
     // pollingInterval: 7000,
     // skipPollingIfUnfocused: true,
   });
 
   useEffect(() => {
-    if (
-      userPatientData &&
-      !userPatientLoading &&
-      !userPatientFetching &&
-      !idUserPatientState
-    ) {
-      dispatch(setIdUserPatient(userPatientData.id));
+    if (userEpsData && !userEpsLoading && !userEpsFetching && !idUserEpsState) {
+      dispatch(setIdUserEps(userEpsData.id));
     }
-  }, [
-    userPatientData,
-    userPatientLoading,
-    userPatientFetching,
-    idUserPatientState,
-  ]);
+  }, [userEpsData, userEpsLoading, userEpsFetching, idUserEpsState]);
 
   return (
     <div
@@ -110,7 +100,7 @@ const ListOfRequests: React.FC = () => {
           className="back-to-homepage-button"
           icon={<IoMdArrowRoundBack size={17} />}
           onClick={() => {
-            router.push("/patient/homepage", {
+            router.push("/eps/homepage", {
               scroll: true,
             });
           }}
@@ -134,7 +124,7 @@ const ListOfRequests: React.FC = () => {
           className="go-to-create-request-page-button"
           icon={<MdPostAdd size={17} />}
           onClick={() => {
-            router.push("/patient/homepage/create_request", {
+            router.push("/eps/homepage/create_request", {
               scroll: true,
             });
           }}
@@ -149,7 +139,7 @@ const ListOfRequests: React.FC = () => {
         <CustomSpin />
       ) : Array.isArray(userMedicalReqData) ? (
         <Card
-          key={"card-list-of-request-content"}
+          key={"card-list-of-request-content-eps"}
           style={{
             width: "100%",
             maxWidth: "609px",
@@ -169,11 +159,11 @@ const ListOfRequests: React.FC = () => {
             Total de <b>{userMedicalReqData.length} solicitud(es)</b>
           </h2>
 
-          <PatientRequestCardList requestCardListData={userMedicalReqData} />
+          <EpsRequestCardList requestCardListData={userMedicalReqData} />
         </Card>
       ) : (
         <Card
-          key={"card-list-of-request-content"}
+          key={"card-list-of-request-content-eps"}
           style={{
             width: "100%",
             maxWidth: "540px",
@@ -186,7 +176,7 @@ const ListOfRequests: React.FC = () => {
             titleCustomEmpty="Sin solicitudes"
             buttonCustomEmpty="Crear nueva solicitud"
             handleClickCustomEmpty={() => {
-              router.push("/patient/homepage/create_request", {
+              router.push("/eps/homepage/create_request", {
                 scroll: true,
               });
             }}
@@ -197,4 +187,4 @@ const ListOfRequests: React.FC = () => {
   );
 };
 
-export default ListOfRequests;
+export default EpsListOfRequests;

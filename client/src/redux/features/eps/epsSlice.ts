@@ -23,6 +23,7 @@ const initialState: User = {
   is_active: true,
   accept_terms: false,
   eps_company: 0,
+  eps_company_abbrev: "",
   company_area: 0,
   user_role: 0,
   verification_code: 0,
@@ -48,6 +49,9 @@ export const patientSlice = createSlice({
     },
     setGenderUserEps: (state, action) => {
       state.user_gender = action.payload;
+    },
+    setGenderAbbrevUserEps: (state, action) => {
+      state.user_gender_abbrev = action.payload;
     },
     setIdTypeUserEps: (state, action) => {
       state.user_id_type = action.payload;
@@ -82,6 +86,9 @@ export const patientSlice = createSlice({
     setEpsCompanyUserEps: (state, action) => {
       state.eps_company = action.payload;
     },
+    setEpsCompanyAbbrevUserEps: (state, action) => {
+      state.eps_company_abbrev = action.payload;
+    },
     setMedicalReqUserEps: (state, action) => {
       state.medical_req = action.payload;
     },
@@ -101,9 +108,10 @@ export const patientSlice = createSlice({
       state.cellphone = 0;
       state.authentication_method = 0;
       state.password = "";
+      state.residence_address = "";
       state.company_area = 0;
       state.eps_company = 0;
-      state.errors = [];
+      (state.eps_company_abbrev = ""), (state.errors = []);
     },
   },
 });
@@ -113,6 +121,7 @@ export const {
   setNameUserEps,
   setLastNameUserEps,
   setGenderUserEps,
+  setGenderAbbrevUserEps,
   setIdTypeUserEps,
   setIdTypeAbbrevUserEps,
   setIdNumberUserEps,
@@ -124,6 +133,7 @@ export const {
   setRoleUserEps,
   setCompanyAreaUserEps,
   setEpsCompanyUserEps,
+  setEpsCompanyAbbrevUserEps,
   setMedicalReqUserEps,
   setErrorsUserEps,
   setDefaultValuesUserEps,

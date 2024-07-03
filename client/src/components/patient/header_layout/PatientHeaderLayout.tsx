@@ -17,10 +17,11 @@ import {
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
 import { resetLoginStatePatient } from "@/redux/features/login/patientUserLoginSlice";
+import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-const PatienHeaderLayout: React.FC = () => {
+const PatientHeaderLayout: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -58,6 +59,7 @@ const PatienHeaderLayout: React.FC = () => {
     try {
       dispatch(resetLoginStatePatient());
       dispatch(setDefaultValuesUserPatient());
+      dispatch(setDefaultValuesMedicalReq());
       signOut();
     } catch (error) {
       console.error(error);
@@ -92,7 +94,7 @@ const PatienHeaderLayout: React.FC = () => {
         }}
       >
         <a
-          className="custom-layout-logo-header"
+          className="custom-layout-logo-header-patient"
           style={{
             display: "flex",
             flexFlow: "column wrap",
@@ -133,7 +135,7 @@ const PatienHeaderLayout: React.FC = () => {
         }}
       >
         <div
-          className="custom-layout-avatar-dropdown"
+          className="custom-layout-avatar-dropdown-patient"
           style={{
             display: "flex",
             flexFlow: "row wrap",
@@ -161,4 +163,4 @@ const PatienHeaderLayout: React.FC = () => {
   );
 };
 
-export default PatienHeaderLayout;
+export default PatientHeaderLayout;

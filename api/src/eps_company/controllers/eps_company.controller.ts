@@ -16,13 +16,13 @@ import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('eps-company')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
 @Controller('eps-company')
 export class EpsCompanyController {
   constructor(private readonly epsCompanyService: EpsCompanyService) {}
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
   createEpsCompany(@Body() createEpsCompany: CreateEpsCompanyDto) {
     return this.epsCompanyService.createEpsCompany(createEpsCompany);
@@ -35,8 +35,14 @@ export class EpsCompanyController {
     return this.epsCompanyService.getAllEpsCompanies();
   }
 
+  @Get('/getCompany/:id')
+  getCompanyById(@Param('id') id: number) {
+    return this.epsCompanyService.getCompanyById(id);
+  }
+
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/update/:id')
   updateEpsCompany(
     @Param('id') id: number,

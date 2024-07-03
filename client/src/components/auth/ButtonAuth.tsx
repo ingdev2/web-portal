@@ -42,8 +42,6 @@ const ButtonAuth = () => {
     isError: isUserEpsError,
   } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
-  console.log({ session, status });
-
   if (status === "loading") {
     return <CustomSpin />;
   }

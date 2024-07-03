@@ -8,13 +8,14 @@ import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.en
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import RequestListLayout from "@/components/patient/request_list/RequestListLayout";
+import PatientRequestListLayout from "@/components/patient/request_list/PatientRequestListLayout";
 
 import { setIdNumberUserPatient } from "@/redux/features/patient/patientSlice";
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-const RequestListPage = () => {
+const PatientRequestListPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -26,6 +27,9 @@ const RequestListPage = () => {
   );
   const idNumberPatientState = useAppSelector(
     (state) => state.patient.id_number
+  );
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
   );
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
@@ -50,6 +54,9 @@ const RequestListPage = () => {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
     }
+    if (isPageLoadingState) {
+      dispatch(setIsPageLoading(false));
+    }
   }, [status, idNumberUserPatientLoginState, idNumberPatientState]);
 
   return (
@@ -65,11 +72,11 @@ const RequestListPage = () => {
         <CustomSpin />
       ) : (
         <div className="request-list-page-patient-content">
-          <RequestListLayout />
+          <PatientRequestListLayout />
         </div>
       )}
     </>
   );
 };
 
-export default RequestListPage;
+export default PatientRequestListPage;

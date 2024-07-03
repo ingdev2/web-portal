@@ -23,6 +23,7 @@ const initialState: User = {
   is_active: true,
   accept_terms: false,
   eps_company: 0,
+  eps_company_abbrev: "",
   company_area: 0,
   user_role: 0,
   verification_code: 0,

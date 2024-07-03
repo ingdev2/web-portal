@@ -28,15 +28,6 @@ export class UsersController {
 
   // GET METHODS //
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
-  @Get('/validatePatient')
-  async validateThatThePatientExist(
-    @Body()
-    patientData: ValidatePatientDto,
-  ) {
-    return await this.usersService.validateThatThePatientExist(patientData);
-  }
-
   @Post('/transformIdTypeName')
   async transformIdTypeName(
     @Body('idTypeAbbrev')

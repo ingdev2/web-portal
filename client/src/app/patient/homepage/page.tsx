@@ -78,7 +78,7 @@ const HomePagePatient = () => {
   ]);
 
   return (
-    <>
+    <div>
       {showErrorMessage && (
         <CustomMessage
           typeMessage="error"
@@ -93,7 +93,7 @@ const HomePagePatient = () => {
           <PatientHomeLayout />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

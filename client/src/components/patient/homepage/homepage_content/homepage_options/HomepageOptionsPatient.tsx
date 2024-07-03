@@ -13,7 +13,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import CustomOptionButton from "@/components/common/custom_option_card_button/CustomOptionButton";
 import CustomPopover from "@/components/common/custom_popover/CustomPopover";
 
-const HomepageOptions: React.FC = () => {
+const HomepageOptionsPatient: React.FC = () => {
   const router = useRouter();
 
   return (
@@ -246,4 +246,4 @@ const HomepageOptions: React.FC = () => {
   );
 };
 
-export default HomepageOptions;
+export default HomepageOptionsPatient;

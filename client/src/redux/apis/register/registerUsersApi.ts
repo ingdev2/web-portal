@@ -10,7 +10,7 @@ export const registerUsersApi = createApi({
   endpoints: (builder) => ({
     validateThatThePatientExist: builder.mutation<
       [],
-      { idType: string; idNumber: Number }
+      { idType: string; idNumber: number }
     >({
       query: ({ idType, idNumber }) => ({
         url: `validatePatient`,
@@ -19,11 +19,14 @@ export const registerUsersApi = createApi({
       }),
     }),
 
-    validatePatientRegister: builder.mutation<[], { id_number: number }>({
-      query: ({ id_number }) => ({
+    validatePatientRegister: builder.mutation<
+      [],
+      { id_type: number; id_number: number }
+    >({
+      query: ({ id_type, id_number }) => ({
         url: `validatePatientRegister`,
         method: "POST",
-        body: { id_number },
+        body: { id_type, id_number },
       }),
     }),
 

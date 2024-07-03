@@ -10,9 +10,9 @@ import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
+import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
-import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
 
 import {
   setIdTypeOptionsLoginPatient,
@@ -68,6 +68,7 @@ const PatientUserLoginForm: React.FC = () => {
     useState(false);
   const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
     useState(false);
+
   const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
   const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
 

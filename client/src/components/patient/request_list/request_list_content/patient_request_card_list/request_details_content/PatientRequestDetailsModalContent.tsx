@@ -6,7 +6,7 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const RequestDetailsModalContent: React.FC<{
+const PatientRequestDetailsModalContent: React.FC<{
   titleDescription: string;
   labelFilingNumber: string;
   selectedRequestFilingNumber: string;
@@ -58,7 +58,7 @@ const RequestDetailsModalContent: React.FC<{
       }}
     >
       <Descriptions
-        className="description1-request-details"
+        className="description1-request-details-patient"
         title={titleDescription}
         layout="vertical"
         size="middle"
@@ -135,7 +135,7 @@ const RequestDetailsModalContent: React.FC<{
       </Descriptions>
 
       <Descriptions
-        className="description2-request-details"
+        className="description2-request-details-patient"
         layout="vertical"
         size="middle"
         style={{ paddingBlock: "7px" }}
@@ -176,4 +176,4 @@ const RequestDetailsModalContent: React.FC<{
   );
 };
 
-export default RequestDetailsModalContent;
+export default PatientRequestDetailsModalContent;

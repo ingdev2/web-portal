@@ -1,14 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
-import { Button, Form, Select } from "antd";
+import { Button, Form, Input, Select, Typography } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
-const CreateRequestFormData: React.FC<{
+const EpsCreateRequestFormData: React.FC<{
+  patientNameDataForm: string;
+  patientIdTypeDataForm: string;
+  iconButtonValidatorOtherPatientDataForm: ReactNode;
+  onClickButtonValidatorOtherPatientDataForm: () => void;
+  patientIdNumberDataForm: number;
   handleCreateRequestDataForm: () => void;
   reqTypeSelectorLoadingDataForm: boolean;
   familiarReqTypeValueDataForm: number;
@@ -21,6 +26,11 @@ const CreateRequestFormData: React.FC<{
   fileStatusSetterDataform: React.SetStateAction<any>;
   fileStatusRemoverDataform: React.SetStateAction<any>;
 }> = ({
+  patientNameDataForm,
+  patientIdTypeDataForm,
+  patientIdNumberDataForm,
+  iconButtonValidatorOtherPatientDataForm,
+  onClickButtonValidatorOtherPatientDataForm,
   handleCreateRequestDataForm,
   reqTypeSelectorLoadingDataForm,
   familiarReqTypeValueDataForm,
@@ -35,27 +45,93 @@ const CreateRequestFormData: React.FC<{
 }) => {
   return (
     <Form
-      id="create-medical-req-form"
-      name="create-medical-req-form"
-      className="create-medical-req-form"
+      id="create-medical-req-form-eps"
+      name="create-medical-req-form-eps"
+      className="create-medical-req-form-eps"
       onFinish={handleCreateRequestDataForm}
       initialValues={{ remember: false }}
       autoComplete="false"
       layout="vertical"
     >
       <h2
-        className="title-create-medical-req-form"
+        className="title-create-medical-req-form-eps"
         style={{
           ...titleStyleCss,
           textAlign: "center",
-          marginBottom: "22px",
+          marginBottom: "13px",
         }}
       >
         Crear nueva solicitud de requerimiento médico
       </h2>
 
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Nombre de paciente:
+        </Typography.Title>
+        <Input
+          id="name-patient-auto-input-eps"
+          value={patientNameDataForm}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Tipo de documento:
+        </Typography.Title>
+        <Input
+          id="id-type-patient-auto-input-eps"
+          value={patientIdTypeDataForm}
+          disabled
+        />
+      </div>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Número de documento:
+        </Typography.Title>
+        <Input
+          id="patient-id-number-hosvital-eps"
+          value={patientIdNumberDataForm}
+          disabled
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "column wrap",
+          alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
+          paddingBlock: "13px",
+        }}
+      >
+        <Button
+          style={{
+            paddingInline: 13,
+            color: "#015E90",
+            borderColor: "#015E90",
+            fontWeight: "bold",
+            borderRadius: 7,
+            borderWidth: 2,
+            display: "flex",
+            flexFlow: "row wrap",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+          type="text"
+          size="middle"
+          className="back-to-validate-patient"
+          icon={iconButtonValidatorOtherPatientDataForm}
+          onClick={onClickButtonValidatorOtherPatientDataForm}
+        >
+          Cambiar paciente
+        </Button>
+      </div>
+
       <Form.Item
-        name="medical-req-types"
+        name="medical-req-types-eps"
         label="Tipo de requerimiento médico"
         style={{ marginBottom: "13px" }}
         rules={[
@@ -84,7 +160,7 @@ const CreateRequestFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="upload-files-reference-documents"
+        name="upload-files-reference-documents-eps"
         label="Documento(s) de referencia (opcional)"
         style={{ marginBottom: "13px" }}
         rules={[
@@ -102,7 +178,7 @@ const CreateRequestFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="especifications"
+        name="especifications-eps"
         label="Observaciones y/o detalles"
         style={{ marginBottom: "31px" }}
         rules={[
@@ -135,7 +211,7 @@ const CreateRequestFormData: React.FC<{
               color: "#f2f2f2",
             }}
             htmlType="submit"
-            className="create-medical-req-form-button"
+            className="create-medical-req-form-button-eps"
             onClick={handleButtonSubmitFormDataForm}
           >
             Crear solicitud
@@ -146,4 +222,4 @@ const CreateRequestFormData: React.FC<{
   );
 };
 
-export default CreateRequestFormData;
+export default EpsCreateRequestFormData;

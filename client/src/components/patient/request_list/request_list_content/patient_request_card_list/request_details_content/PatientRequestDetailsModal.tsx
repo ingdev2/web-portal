@@ -6,11 +6,11 @@ import { Button } from "antd";
 import { TbEye } from "react-icons/tb";
 
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
-import RequestDetailsModalContent from "./RequestDetailsModalContent";
+import PatientRequestDetailsModalContent from "./PatientRequestDetailsModalContent";
 
 import { useViewFileQuery } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
-const RequestDetailsModal: React.FC<{
+const PatientRequestDetailsModal: React.FC<{
   modalOpenRequestDetailsModal: boolean;
   selectedRequestFilingNumberModal: string;
   selectedRequestTypeModal: ReactNode;
@@ -56,11 +56,11 @@ const RequestDetailsModal: React.FC<{
 
   return (
     <CustomModalNoContent
-      key={"custom-details-medical-req-modal"}
+      key={"custom-details-medical-req-modal-patient"}
       widthCustomModalNoContent={"45%"}
       openCustomModalState={modalOpenRequestDetailsModal}
       contentCustomModal={
-        <RequestDetailsModalContent
+        <PatientRequestDetailsModalContent
           titleDescription={"Detalles de solicitud"}
           labelFilingNumber={"N° de Radicado:"}
           selectedRequestFilingNumber={selectedRequestFilingNumberModal}
@@ -134,4 +134,4 @@ const RequestDetailsModal: React.FC<{
   );
 };
 
-export default RequestDetailsModal;
+export default PatientRequestDetailsModal;
