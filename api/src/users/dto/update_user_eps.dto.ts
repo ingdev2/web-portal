@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateUserEpsDto {
   // @IsOptional()
@@ -18,4 +18,7 @@ export class UpdateUserEpsDto {
 
   @IsOptional()
   authentication_method: number;
+
+  @IsOptional()
+  company_area: number;
 }

@@ -105,12 +105,16 @@ export class S3FileUploaderService {
     try {
       const urls = await Promise.all(urlPromises);
 
-      return urls;
+      if (urls) {
+        return urls;
+      } else {
+        throw new HttpException(
+          'No hay documentos anexados',
+          HttpStatus.NOT_FOUND,
+        );
+      }
     } catch (error) {
-      throw new HttpException(
-        `Error: ${error}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(`Error: ${error}`, HttpStatus.BAD_REQUEST);
     }
   }
 }

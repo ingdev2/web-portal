@@ -18,7 +18,7 @@ import { FiPhone } from "react-icons/fi";
 
 import { CONTACT_PBX } from "@/utils/constants/constants";
 
-const UpdatePersonalDataFormData: React.FC<{
+const PatientUpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;
   idTypeNameUserPatientFormData: string;
   idNumberUserPatientFormData: number | string;
@@ -66,7 +66,7 @@ const UpdatePersonalDataFormData: React.FC<{
   handleButtonClickFormData,
 }) => {
   return (
-    <Col xs={24} sm={24} md={24} lg={24} style={{ padding: "0 7px" }}>
+    <Col xs={24} sm={24} md={24} lg={24} style={{ padding: "0px" }}>
       <h2
         className="title-update-personal-data-patient"
         style={{
@@ -469,4 +469,4 @@ const UpdatePersonalDataFormData: React.FC<{
   );
 };
 
-export default UpdatePersonalDataFormData;
+export default PatientUpdatePersonalDataFormData;

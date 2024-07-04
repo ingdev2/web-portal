@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
+import { Button, Card, Col, Form, Input, Select } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
 import CustomLoadingOverlay from "@/components/common/custom_loading_overlay/CustomLoadingOverlay";
 import { IdcardOutlined } from "@ant-design/icons";
@@ -13,19 +13,9 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
   setNameUserPatient,
-  setLastNameUserPatient,
   setIdTypeUserPatient,
   setIdTypeAbbrevUserPatient,
   setIdNumberUserPatient,
-  setGenderUserPatient,
-  setGenderAbbrevUserPatient,
-  setBirthdateUserPatient,
-  setEmailUserPatient,
-  setCellphoneUserPatient,
-  setPasswordUserPatient,
-  setAuthMethodUserPatient,
-  setResidenceAddressUserPatient,
-  setAffiliationEpsUserPatient,
   setErrorsUserPatient,
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
@@ -38,8 +28,6 @@ import {
 import {
   useTransformIdTypeNameMutation,
   useTransformIdTypeNumberMutation,
-  useTransformGenderNameMutation,
-  useTransformGenderNumberMutation,
 } from "@/redux/apis/users/usersApi";
 
 import { IdTypeAbbrev } from "@/../../api/src/users/enums/id_type_abbrev.enum";
@@ -48,10 +36,7 @@ const ValidatePatientExistEps: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const componentChangeState = useAppSelector(
-    (state) => state.modal.componentChange
-  );
-
+  const namePatientState = useAppSelector((state) => state.patient.name);
   const idTypePatientState = useAppSelector(
     (state) => state.patient.user_id_type
   );
@@ -112,9 +97,9 @@ const ValidatePatientExistEps: React.FC = () => {
       if (
         !idTypeAbbrevPatientLocalState &&
         !idNumberPatientLocalState &&
-        idTypePatientState
+        idTypePatientState &&
+        namePatientState
       ) {
-        dispatch(setComponentChange(false));
         dispatch(setDefaultValuesUserPatient());
       }
 
@@ -142,6 +127,7 @@ const ValidatePatientExistEps: React.FC = () => {
     idTypeAbbrevPatientLocalState,
     idNumberPatientLocalState,
     idTypePatientState,
+    namePatientState,
   ]);
 
   const handleValidatePatient = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -174,9 +160,12 @@ const ValidatePatientExistEps: React.FC = () => {
           setShowErrorMessagePatient(true);
         }
         if (validationPatientData === 200 && response.data?.[0].data?.[0]) {
+          const patientNameHosvital = response.data?.[0].data?.[0]?.NOMBRE;
+
           setShowSuccessMessage(true);
 
           setTimeout(() => {
+            dispatch(setNameUserPatient(patientNameHosvital));
             dispatch(setIdNumberUserPatient(idNumberLocalStateNumber));
 
             setIdTypeAbbrevPatientLocalState("");
