@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 
 import { Tabs } from "antd";
 import { RiPassValidLine } from "react-icons/ri";
-import ValidatePatientData from "@/components/register/ValidatePatientData";
+import ValidatePatientData from "@/components/register/patient/ValidatePatientData";
 
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
@@ -33,7 +33,7 @@ const ValidateDataPage: React.FC = () => {
         height: "100vh",
         alignContent: "center",
         alignItems: "center",
-        marginInline: "13px",
+        marginInline: "31px",
       }}
     >
       <div

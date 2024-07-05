@@ -201,7 +201,12 @@ const PatientUserLoginForm: React.FC = () => {
       <Col
         xs={24}
         lg={24}
-        style={{ padding: "0 2px", width: "100vw", maxWidth: "321px" }}
+        style={{
+          padding: "0 2px",
+          width: "100vw",
+          maxWidth: "321px",
+          minWidth: "270px",
+        }}
       >
         <Form
           id="patient-users-login-form"

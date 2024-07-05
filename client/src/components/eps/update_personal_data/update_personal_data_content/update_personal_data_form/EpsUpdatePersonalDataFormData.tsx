@@ -292,7 +292,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
 
         <div style={{ textAlign: "start" }}>
           <Typography.Title style={{ marginTop: 7 }} level={5}>
-            Área de empresa:
+            Área en la que se desempeña en la empresa:
           </Typography.Title>
 
           <Form.Item

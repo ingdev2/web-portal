@@ -252,12 +252,14 @@ const AddRelativeForm: React.FC = () => {
         const errorMessage = addAuthFamiliarError?.data.message;
         const validationDataMessage = addAuthFamiliarValidationData;
 
-        if (
-          Array.isArray(errorMessage) ||
-          Array.isArray(validationDataMessage)
-        ) {
+        if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserFamiliar(errorMessage[0]));
+
+          setShowErrorMessageUserFamiliar(true);
+        }
+        if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserFamiliar(validationDataMessage[0]));
+
           setShowErrorMessageUserFamiliar(true);
         }
         if (

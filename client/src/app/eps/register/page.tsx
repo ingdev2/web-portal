@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 import { Tabs } from "antd";
-import { FaUser } from "react-icons/fa";
+import { IoIosBusiness } from "react-icons/io";
 
-import ValidatePatientExistForm from "@/components/register/patient/ValidatePatientExistForm";
+import EpsRegistrationForm from "@/components/register/eps/EpsRegistrationForm";
 
 const RegisterPatientPage: React.FC = () => {
   const { data: session, status } = useSession();
@@ -27,7 +27,7 @@ const RegisterPatientPage: React.FC = () => {
 
   return (
     <div
-      className="register-user-page"
+      className="register-user-eps-page"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -37,7 +37,7 @@ const RegisterPatientPage: React.FC = () => {
       }}
     >
       <div
-        className="background-page"
+        className="background-page-register-eps"
         style={{
           position: "fixed",
           width: "100%",
@@ -50,11 +50,13 @@ const RegisterPatientPage: React.FC = () => {
       />
 
       <div
-        className="content-page"
+        className="content-page-eps"
         style={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
           zIndex: 1,
         }}
       >
@@ -80,11 +82,11 @@ const RegisterPatientPage: React.FC = () => {
             tabBarStyle={{ marginBottom: 13 }}
             items={[
               {
-                className: "patient-card-register",
+                className: "eps-card-register",
                 key: "1",
-                label: "Paciente",
-                icon: <FaUser />,
-                children: <ValidatePatientExistForm />,
+                label: "Eps",
+                icon: <IoIosBusiness />,
+                children: <EpsRegistrationForm />,
               },
             ]}
           />

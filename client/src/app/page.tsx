@@ -58,6 +58,7 @@ const HomePage = () => {
             className="content-card"
             style={{
               width: "max-content",
+              minWidth: "321px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -65,8 +66,9 @@ const HomePage = () => {
               backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
               paddingBlock: "13px",
-              marginBlock: "31px",
               paddingInline: "13px",
+              marginBlock: "31px",
+              marginInline: "31px",
             }}
           >
             <Col

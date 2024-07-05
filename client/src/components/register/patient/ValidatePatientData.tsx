@@ -20,8 +20,8 @@ import {
 } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
 import { LockOutlined, WhatsAppOutlined } from "@ant-design/icons";
-import CustomSpin from "../common/custom_spin/CustomSpin";
-import CustomMessage from "../common/custom_messages/CustomMessage";
+import CustomSpin from "../../common/custom_spin/CustomSpin";
+import CustomMessage from "../../common/custom_messages/CustomMessage";
 import { FcHighPriority } from "react-icons/fc";
 import { FcInfo } from "react-icons/fc";
 
@@ -36,7 +36,7 @@ import {
 import { useCreateUserPatientMutation } from "@/redux/apis/register/registerUsersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import CustomModalTwoOptions from "../common/custom_modal_two_options/CustomModalTwoOptions";
+import CustomModalTwoOptions from "../../common/custom_modal_two_options/CustomModalTwoOptions";
 import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
 
 import { CONTACT_PBX } from "@/utils/constants/constants";
@@ -251,6 +251,7 @@ const ValidatePatientData: React.FC = () => {
     <Card
       style={{
         maxWidth: "720px",
+        minWidth: "371px",
         width: "100%",
         height: "max-content",
         display: "flex",

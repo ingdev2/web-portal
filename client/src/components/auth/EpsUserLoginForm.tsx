@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
 import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
 
-import { Button, Card, Col, Form, Input, Select } from "antd";
+import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import EpsModalVerificationCode from "./EpsModalVerificationCode";
 import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
@@ -31,6 +32,7 @@ import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
 const EpsUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const idTypeOptionsEps = useAppSelector(
     (state) => state.epsUserLogin.idTypeOptions
@@ -54,7 +56,7 @@ const EpsUserLoginForm: React.FC = () => {
 
   const [modalForgotMyPasswordIsOpen, setModalForgotMyPasswordIsOpen] =
     useState(false);
-  const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
+  const [isSubmittingRegisterPageEps, setIsSubmittingRegisterPageEps] =
     useState(false);
 
   const [isSubmittingEps, setIsSubmittingEps] = useState(false);
@@ -178,7 +180,12 @@ const EpsUserLoginForm: React.FC = () => {
       <Col
         xs={24}
         lg={24}
-        style={{ padding: "0 2px", width: "100vw", maxWidth: "321px" }}
+        style={{
+          padding: "0 2px",
+          width: "100vw",
+          maxWidth: "321px",
+          minWidth: "270px",
+        }}
       >
         <Form
           id="eps-users-login-form"
@@ -354,6 +361,50 @@ const EpsUserLoginForm: React.FC = () => {
                 onClick={handleButtonClick}
               >
                 Ingresar
+              </Button>
+            )}
+
+            <Divider
+              style={{
+                fontSize: 13,
+                fontWeight: "normal",
+                marginBlock: 7,
+                borderWidth: 1.3,
+              }}
+            >
+              ¿No tienes cuenta?
+            </Divider>
+
+            {isSubmittingRegisterPageEps ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                style={{
+                  paddingInline: 22,
+                  color: "#015E90",
+                  borderColor: "#015E90",
+                  fontWeight: "bold",
+                  borderRadius: 7,
+                  borderWidth: 1.3,
+                  marginTop: 7,
+                }}
+                htmlType="button"
+                className="eps-register-button"
+                onClick={async () => {
+                  try {
+                    setIsSubmittingRegisterPageEps(true);
+
+                    await router.push("/eps/register", {
+                      scroll: true,
+                    });
+                  } catch (error) {
+                    console.error(error);
+                  } finally {
+                    setIsSubmittingRegisterPageEps(false);
+                  }
+                }}
+              >
+                Crear cuenta
               </Button>
             )}
           </Form.Item>

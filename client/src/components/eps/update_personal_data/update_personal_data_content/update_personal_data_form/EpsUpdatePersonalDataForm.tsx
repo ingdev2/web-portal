@@ -63,10 +63,6 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     companyAreaNumberUserEpsLocalState,
     setCompanyAreaNumberUserEpsLocalState,
   ] = useState(0);
-  const [
-    companyAreaNameUserEpsLocalState,
-    setCompanyAreaNameUserEpsLocalState,
-  ] = useState("");
   const [epsCompanyAreasListLocalState, setEpsCompanyAreasListLocalState]: any =
     useState([]);
 
@@ -161,12 +157,14 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 
-        if (
-          Array.isArray(errorMessage) ||
-          Array.isArray(validationDataMessage)
-        ) {
+        if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserEps(errorMessage[0]));
+
+          setShowErrorMessagePatient(true);
+        }
+        if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserEps(validationDataMessage[0]));
+
           setShowErrorMessagePatient(true);
         }
         if (
@@ -220,8 +218,6 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     const selectedCompanyArea: any = epsCompanyAreasListLocalState?.find(
       (type: any) => type.id === value
     );
-
-    setCompanyAreaNameUserEpsLocalState(selectedCompanyArea?.name);
   };
 
   const handleButtonClick = () => {

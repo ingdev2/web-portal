@@ -168,12 +168,14 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 
-        if (
-          Array.isArray(errorMessage) ||
-          Array.isArray(validationDataMessage)
-        ) {
+        if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserPatient(errorMessage[0]));
+
+          setShowErrorMessagePatient(true);
+        }
+        if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserPatient(validationDataMessage[0]));
+
           setShowErrorMessagePatient(true);
         }
         if (
