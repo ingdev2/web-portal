@@ -8,38 +8,42 @@ import { signIn } from "next-auth/react";
 
 import { Button, Divider, Form, Input, Modal } from "antd";
 import { MdPassword } from "react-icons/md";
-import CustomMessage from "../common/custom_messages/CustomMessage";
-import CustomLoadingOverlay from "../common/custom_loading_overlay/CustomLoadingOverlay";
-import CustomSpin from "../common/custom_spin/CustomSpin";
-import CountdownTimer from "../common/countdown_timer/CountdownTimer";
+import CustomMessage from "../../common/custom_messages/CustomMessage";
+import CustomLoadingOverlay from "../../common/custom_loading_overlay/CustomLoadingOverlay";
+import CustomSpin from "../../common/custom_spin/CustomSpin";
+import CountdownTimer from "../../common/countdown_timer/CountdownTimer";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
 import {
-  setIdTypeLoginEps,
-  setPasswordLoginEps,
-  setVerificationCodeLoginEps,
-  setErrorsLoginEps,
-} from "@/redux/features/login/epsUserLoginSlice";
+  setIdTypeLoginPatient,
+  setPasswordLoginPatient,
+  setVerificationCodeLoginPatient,
+  setErrorsLoginPatient,
+} from "@/redux/features/login/patientUserLoginSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
+import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
 
-const EpsModalVerificationCode: React.FC = () => {
+const PatientModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const epsModalIsOpen = useAppSelector((state) => state.modal.epsModalIsOpen);
+  const patientModalIsOpen = useAppSelector(
+    (state) => state.modal.patientModalIsOpen
+  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
 
-  const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
-  const idNumberEpsState = useAppSelector(
-    (state) => state.epsUserLogin.id_number
+  const idTypePatientState = useAppSelector(
+    (state) => state.patientUserLogin.id_type
   );
-  const verificationCodeEpsState = useAppSelector(
-    (state) => state.epsUserLogin.verification_code
+  const idNumberPatientState = useAppSelector(
+    (state) => state.patientUserLogin.id_number
+  );
+  const verificationCodePatientState = useAppSelector(
+    (state) => state.patientUserLogin.verification_code
   );
 
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
@@ -53,15 +57,15 @@ const EpsModalVerificationCode: React.FC = () => {
   const [resendCodeDisable, setResendCodeDisable] = useState(true);
 
   const {
-    data: isUserEpsData,
-    isLoading: isUserEpsLoading,
-    isFetching: isUserEpsFetching,
-    isSuccess: isUserEpsSuccess,
-    isError: isUserEpsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
+    data: isUserPatientData,
+    isLoading: isUserPatientLoading,
+    isFetching: isUserPatientFetching,
+    isSuccess: isUserPatientSuccess,
+    isError: isUserPatientError,
+  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
 
   const [
-    resendUserVerificationCodeEps,
+    resendUserVerificationCodePatient,
     {
       data: resendCodeData,
       isLoading: isResendCodeLoading,
@@ -69,26 +73,26 @@ const EpsModalVerificationCode: React.FC = () => {
       isError: isResendCodeError,
     },
   ] = useResendUserVerificationCodeMutation({
-    fixedCacheKey: "resendEpsCodeData",
+    fixedCacheKey: "resendPatientCodeData",
   });
 
   useEffect(() => {
-    if (!idNumberEpsState) {
+    if (!idNumberPatientState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-  }, [idNumberEpsState]);
+  }, [idNumberPatientState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirm(true);
 
-      const verificationCode = verificationCodeEpsState
-        ? parseInt(verificationCodeEpsState?.toString(), 10)
+      const verificationCode = verificationCodePatientState
+        ? parseInt(verificationCodePatientState?.toString(), 10)
         : "";
 
-      const idNumber = idNumberEpsState
-        ? parseInt(idNumberEpsState?.toString(), 10)
+      const idNumber = idNumberPatientState
+        ? parseInt(idNumberPatientState?.toString(), 10)
         : "";
 
       const responseNextAuth = await signIn("users-auth", {
@@ -98,7 +102,7 @@ const EpsModalVerificationCode: React.FC = () => {
       });
 
       if (responseNextAuth?.error) {
-        dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));
+        dispatch(setErrorsLoginPatient(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
 
@@ -107,13 +111,11 @@ const EpsModalVerificationCode: React.FC = () => {
 
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
-        dispatch(setIdTypeLoginEps(""));
-        dispatch(setPasswordLoginEps(""));
-        dispatch(setVerificationCodeLoginEps(""));
+        dispatch(setIdTypeLoginPatient(""));
+        dispatch(setPasswordLoginPatient(""));
+        dispatch(setVerificationCodeLoginPatient(""));
 
-        await router.replace("/eps/homepage", {
-          scroll: false,
-        });
+        await router.replace("/patient/homepage", { scroll: false });
 
         await new Promise((resolve) => setTimeout(resolve, 4000));
       }
@@ -128,15 +130,15 @@ const EpsModalVerificationCode: React.FC = () => {
     try {
       setIsSubmittingResendCode(true);
 
-      const response: any = await resendUserVerificationCodeEps({
-        id_type: idTypeEpsState,
-        id_number: idNumberEpsState,
+      const response: any = await resendUserVerificationCodePatient({
+        id_type: idTypePatientState,
+        id_number: idNumberPatientState,
       });
 
       var isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
-        dispatch(setErrorsLoginEps(isResponseError?.data.message));
+        dispatch(setErrorsLoginPatient(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
       if (!isResendCodeError && !isResponseError) {
@@ -157,7 +159,7 @@ const EpsModalVerificationCode: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsLoginEps([]));
+    dispatch(setErrorsLoginPatient([]));
     setShowErrorMessage(false);
     setShowSuccessMessage(false);
   };
@@ -178,8 +180,8 @@ const EpsModalVerificationCode: React.FC = () => {
       )}
 
       <Modal
-        className="modal-verification-code-eps"
-        open={epsModalIsOpen}
+        className="modal-verification-code-patient"
+        open={patientModalIsOpen}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancel}
         destroyOnClose={true}
@@ -189,7 +191,7 @@ const EpsModalVerificationCode: React.FC = () => {
         centered
       >
         <div
-          className="content-modal-eps"
+          className="content-modal-patient"
           style={{
             textAlign: "center",
             flexDirection: "column",
@@ -199,7 +201,7 @@ const EpsModalVerificationCode: React.FC = () => {
           }}
         >
           <h2
-            className="title-modal-eps"
+            className="title-modal-patient"
             style={{
               ...titleStyleCss,
               marginTop: 27,
@@ -210,7 +212,7 @@ const EpsModalVerificationCode: React.FC = () => {
           </h2>
 
           <h4
-            className="subtitle-modal-eps"
+            className="subtitle-modal-patient"
             style={{
               ...subtitleStyleCss,
               marginBlock: 7,
@@ -220,7 +222,7 @@ const EpsModalVerificationCode: React.FC = () => {
           </h4>
 
           <h5
-            className="user-email-eps"
+            className="user-email-patient"
             style={{
               fontWeight: "bold",
               fontSize: 13,
@@ -230,22 +232,22 @@ const EpsModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserEpsData?.email}
+            {isUserPatientData?.email}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />
 
           <Form
-            id="form-verify-code-modal-eps"
-            name="form-verify-code-modal-eps"
+            id="form-verify-code-modal-patient"
+            name="form-verify-code-modal-patient"
             initialValues={{ remember: false }}
             autoComplete="false"
             onFinish={handleSubmit}
           >
             <Form.Item
-              id="user-code-eps"
-              className="user-code-eps"
-              name={"user-code-eps"}
+              id="user-code-patient"
+              className="user-code-patient"
+              name={"user-code-patient"}
               style={{ textAlign: "center" }}
               normalize={(value) => {
                 if (!value) return "";
@@ -272,8 +274,8 @@ const EpsModalVerificationCode: React.FC = () => {
               ]}
             >
               <Input
-                id="input-code-eps"
-                className="input-code-eps"
+                id="input-code-patient"
+                className="input-code-patient"
                 prefix={
                   <MdPassword
                     className="input-code-item-icon"
@@ -289,9 +291,9 @@ const EpsModalVerificationCode: React.FC = () => {
                 }}
                 type="tel"
                 placeholder="Código"
-                value={verificationCodeEpsState}
+                value={verificationCodePatientState}
                 onChange={(e) =>
-                  dispatch(setVerificationCodeLoginEps(e.target.value))
+                  dispatch(setVerificationCodeLoginPatient(e.target.value))
                 }
                 autoComplete="off"
                 min={0}
@@ -302,8 +304,8 @@ const EpsModalVerificationCode: React.FC = () => {
               <CustomSpin />
             ) : (
               <Button
-                key="confirm-code-button-eps"
-                className="confirm-code-button-eps"
+                key={"confirm-code-button-patient"}
+                className="confirm-code-button-patient"
                 size="large"
                 disabled={isPageLoadingState}
                 style={{
@@ -335,14 +337,14 @@ const EpsModalVerificationCode: React.FC = () => {
             <CustomSpin />
           ) : (
             <Button
-              key="resend-button-eps"
-              className="resend-button-eps"
+              key="resend-button-patient"
+              className="resend-button-patient"
               disabled={resendCodeDisable}
               style={{
                 backgroundColor: resendCodeDisable ? "#D8D8D8" : "transparent",
-                paddingInline: 13,
                 color: resendCodeDisable ? "#A0A0A0" : "#015E90",
                 borderColor: resendCodeDisable ? "#A0A0A0" : "#015E90",
+                paddingInline: 13,
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,
@@ -364,8 +366,8 @@ const EpsModalVerificationCode: React.FC = () => {
           </div>
 
           <Button
-            key="cancel-button-eps"
-            className="cancel-button-eps"
+            key="cancel-button-patient"
+            className="cancel-button-patient"
             style={{
               paddingInline: 45,
               backgroundColor: "#8C1111",
@@ -382,4 +384,4 @@ const EpsModalVerificationCode: React.FC = () => {
   );
 };
 
-export default EpsModalVerificationCode;
+export default PatientModalVerificationCode;

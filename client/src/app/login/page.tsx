@@ -2,8 +2,9 @@
 
 import React from "react";
 
-import PatientUserLoginForm from "@/components/auth/PatientUserLoginForm";
-import EpsUserLoginForm from "@/components/auth/EpsUserLoginForm";
+import PatientUserLoginForm from "@/components/auth/patient/PatientUserLoginForm";
+import EpsUserLoginForm from "@/components/auth/eps/EpsUserLoginForm";
+import FamiliarUserLoginForm from "@/components/auth/relatives/FamiliarUserLoginForm";
 
 import { Tabs } from "antd";
 import { FaUser } from "react-icons/fa";
@@ -19,7 +20,6 @@ const UsersLoginPage: React.FC = () => {
         height: "100vh",
         alignContent: "center",
         alignItems: "center",
-        // paddingBlock: "31px",
       }}
     >
       <div
@@ -38,8 +38,10 @@ const UsersLoginPage: React.FC = () => {
         className="content-page"
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexFlow: "column wrap",
           justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
           zIndex: 1,
         }}
       >
@@ -56,41 +58,36 @@ const UsersLoginPage: React.FC = () => {
             style={{ height: 88 }}
           />
         </div>
-        <div>
-          <Tabs
-            type="card"
-            centered
-            style={{
-              display: "flex",
-              flexDirection: "column",
-            }}
-            tabBarGutter={13}
-            tabBarStyle={{ marginBottom: 13 }}
-            items={[
-              {
-                className: "patient-card-login",
-                key: "1",
-                label: "Pacientes",
-                icon: <FaUser />,
-                children: <PatientUserLoginForm />,
-              },
-              {
-                className: "eps-card-login",
-                key: "2",
-                children: <EpsUserLoginForm />,
-                label: "Eps",
-                icon: <IoIosBusiness />,
-              },
-              // {
-              //   className: "familiar-card-login",
-              //   key: "3",
-              //   children: <EpsUserLoginForm />,
-              //   label: "Familiares",
-              //   icon: <MdOutlineFamilyRestroom />,
-              // },
-            ]}
-          />
-        </div>
+
+        <Tabs
+          type="card"
+          centered
+          tabBarGutter={13}
+          tabBarStyle={{ marginBottom: 13 }}
+          items={[
+            {
+              className: "patient-card-login",
+              key: "1",
+              label: "Pacientes",
+              icon: <FaUser />,
+              children: <PatientUserLoginForm />,
+            },
+            {
+              className: "eps-card-login",
+              key: "2",
+              children: <EpsUserLoginForm />,
+              label: "Eps",
+              icon: <IoIosBusiness />,
+            },
+            {
+              className: "familiar-card-login",
+              key: "3",
+              children: <FamiliarUserLoginForm />,
+              label: "Familiares",
+              icon: <MdOutlineFamilyRestroom />,
+            },
+          ]}
+        />
       </div>
     </div>
   );

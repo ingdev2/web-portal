@@ -4,136 +4,116 @@ import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
-import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
-import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
-import PatientModalVerificationCode from "./PatientModalVerificationCode";
-import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
-import CustomSpin from "../common/custom_spin/CustomSpin";
-import CustomMessage from "../common/custom_messages/CustomMessage";
+import EpsModalVerificationCode from "./EpsModalVerificationCode";
+import CustomModalNoContent from "../../common/custom_modal_no_content/CustomModalNoContent";
+import CustomSpin from "../../common/custom_spin/CustomSpin";
+import CustomMessage from "../../common/custom_messages/CustomMessage";
+import { titleStyleCss } from "@/theme/text_styles";
 
 import {
-  setIdTypeOptionsLoginPatient,
-  setIdTypeLoginPatient,
-  setIdNumberLoginPatient,
-  setPasswordLoginPatient,
-  setVerificationCodeLoginPatient,
-  setErrorsLoginPatient,
-  resetLoginStatePatient,
-} from "@/redux/features/login/patientUserLoginSlice";
-import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
-import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
+  setIdTypeOptionsLoginEps,
+  setIdTypeLoginEps,
+  setIdNumberLoginEps,
+  setPasswordLoginEps,
+  setVerificationCodeLoginEps,
+  setErrorsLoginEps,
+  resetLoginStateLoginEps,
+} from "@/redux/features/login/epsUserLoginSlice";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
-import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
 
-const PatientUserLoginForm: React.FC = () => {
+const EpsUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const idTypeOptionsPatient = useAppSelector(
-    (state) => state.patientUserLogin.idTypeOptions
+  const idTypeOptionsEps = useAppSelector(
+    (state) => state.epsUserLogin.idTypeOptions
   );
-  const idTypePatientState = useAppSelector(
-    (state) => state.patientUserLogin.id_type
+  const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
+  const idNumberEpsState = useAppSelector(
+    (state) => state.epsUserLogin.id_number
   );
-  const idNumberPatientState = useAppSelector(
-    (state) => state.patientUserLogin.id_number
+  const passwordEpsState = useAppSelector(
+    (state) => state.epsUserLogin.password
   );
-  const passwordPatientState = useAppSelector(
-    (state) => state.patientUserLogin.password
-  );
-  const idPatientState = useAppSelector((state) => state.patient.id);
-  const affiliationEpsPatientState = useAppSelector(
-    (state) => state.patient.affiliation_eps
-  );
-  const errorsPatientState = useAppSelector(
-    (state) => state.patientUserLogin.errors
-  );
+  const idEpsState = useAppSelector((state) => state.eps.id);
+  const epsCompanyUserEps = useAppSelector((state) => state.eps.eps_company);
+  const errorsEpsState = useAppSelector((state) => state.epsUserLogin.errors);
 
-  const modalIsOpenPatient = useAppSelector(
-    (state) => state.modal.patientModalIsOpen
-  );
+  const modalIsOpenEps = useAppSelector((state) => state.modal.epsModalIsOpen);
 
-  const [idTypePatientLocalState, setIdTypePatientLocalState] = useState(0);
-  const [idNumberPatientLocalState, setIdNumberPatientLocalState] =
-    useState("");
-  const [passwordPatientLocalState, setPasswordPatientLocalState] =
-    useState("");
+  const [idTypeEpsLocalState, setIdTypeEpsLocalState] = useState(0);
+  const [idNumberEpsLocalState, setIdNumberEpsLocalState] = useState("");
+  const [passwordEpsLocalState, setPasswordEpsLocalState] = useState("");
 
   const [modalForgotMyPasswordIsOpen, setModalForgotMyPasswordIsOpen] =
     useState(false);
-  const [isSubmittingRegisterPagePatient, setIsSubmittingRegisterPagePatient] =
+  const [isSubmittingRegisterPageEps, setIsSubmittingRegisterPageEps] =
     useState(false);
 
-  const [isSubmittingPatient, setIsSubmittingPatient] = useState(false);
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
+  const [isSubmittingEps, setIsSubmittingEps] = useState(false);
+  const [showErrorMessageEps, setShowErrorMessageEps] = useState(false);
 
   const {
-    data: idTypesPatientData,
-    isLoading: idTypesPatientLoading,
-    isFetching: idTypesPatientFetching,
-    error: idTypesPatientError,
+    data: idTypesEpsData,
+    isLoading: idTypesEpsLoading,
+    isFetching: idTypesEpsFetching,
+    error: idTypesEpsError,
   } = useGetAllIdTypesQuery(null);
 
   const [
-    loginPatientUsers,
+    loginEpsUsers,
     {
-      data: isLoginPatientData,
-      isLoading: isLoginPatientLoading,
-      isSuccess: isLoginPatientSuccess,
-      isError: isLoginPatientError,
+      data: isLoginEpsData,
+      isLoading: isLoginEpsLoading,
+      isSuccess: isLoginEpsSuccess,
+      isError: isLoginEpsError,
     },
-  ] = useLoginPatientUsersMutation({ fixedCacheKey: "loginPatientData" });
+  ] = useLoginEpsUsersMutation({ fixedCacheKey: "loginEpsData" });
 
   useEffect(() => {
-    if (
-      !idTypesPatientLoading &&
-      !idTypesPatientFetching &&
-      idTypesPatientData
-    ) {
-      dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
+    if (!idTypesEpsLoading && !idTypesEpsFetching && idTypesEpsData) {
+      dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
-    if (idTypesPatientError) {
+    if (idTypesEpsError) {
       dispatch(
-        setErrorsLoginPatient(
-          "¡No se pudo obtener los tipos de identificación!"
-        )
+        setErrorsLoginEps("¡No se pudo obtener los tipos de identificación!")
       );
-      setShowErrorMessagePatient(true);
-      dispatch(setIdTypeOptionsLoginPatient(idTypesPatientData));
+      setShowErrorMessageEps(true);
+      dispatch(setIdTypeOptionsLoginEps(idTypesEpsData));
     }
     if (
       (status === "authenticated" &&
         session?.user.role === UserRolType.PATIENT) ||
-      session?.user.role === UserRolType.EPS
+      session?.user.role === UserRolType.EPS ||
+      session?.user.role === UserRolType.AUTHORIZED_FAMILIAR
     ) {
       signOut();
     }
-  }, [
-    idTypesPatientData,
-    idTypesPatientLoading,
-    idTypesPatientFetching,
-    idTypesPatientError,
-  ]);
+  }, [idTypesEpsData, idTypesEpsLoading, idTypesEpsFetching, idTypesEpsError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      setIsSubmittingPatient(true);
-      dispatch(resetLoginStatePatient());
-      dispatch(setDefaultValuesUserPatient());
+      setIsSubmittingEps(true);
+      dispatch(resetLoginStateLoginEps());
+      dispatch(setDefaultValuesUserEps());
 
-      const idNumberPatientLocalStateInt = idNumberPatientLocalState
-        ? parseInt(idNumberPatientLocalState?.toString(), 10)
+      const idNumberEpsLocalStateInt = idNumberEpsLocalState
+        ? parseInt(idNumberEpsLocalState?.toString(), 10)
         : 0;
 
-      const response: any = await loginPatientUsers({
-        id_type: idTypePatientLocalState,
-        id_number: idNumberPatientLocalStateInt,
-        password: passwordPatientLocalState,
+      const response: any = await loginEpsUsers({
+        id_type: idTypeEpsLocalState,
+        id_number: idNumberEpsLocalStateInt,
+        password: passwordEpsLocalState,
       });
 
       var isLoginUserError = response.error;
@@ -144,94 +124,91 @@ const PatientUserLoginForm: React.FC = () => {
         const errorMessage = isLoginUserError?.data.message;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsLoginPatient(errorMessage[0]));
-          setShowErrorMessagePatient(true);
+          dispatch(setErrorsLoginEps(errorMessage[0]));
+          setShowErrorMessageEps(true);
         }
         if (typeof errorMessage === "string") {
-          dispatch(setErrorsLoginPatient(errorMessage));
-          setShowErrorMessagePatient(true);
+          dispatch(setErrorsLoginEps(errorMessage));
+          setShowErrorMessageEps(true);
         }
       }
 
       if (isLoginUserSuccess) {
-        dispatch(setIdTypeLoginPatient(idTypePatientLocalState));
-        dispatch(setIdNumberLoginPatient(idNumberPatientLocalStateInt));
-        dispatch(setPasswordLoginPatient(passwordPatientLocalState));
-        dispatch(setErrorsLoginPatient([]));
-        setShowErrorMessagePatient(false);
-        dispatch(setPatientModalIsOpen(true));
+        dispatch(setIdTypeLoginEps(idTypeEpsLocalState));
+        dispatch(setIdNumberLoginEps(idNumberEpsLocalStateInt));
+        dispatch(setPasswordLoginEps(passwordEpsLocalState));
+        dispatch(setErrorsLoginEps([]));
+        setShowErrorMessageEps(false);
+        dispatch(setEpsModalIsOpen(true));
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingPatient(false);
+      setIsSubmittingEps(false);
     }
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsLoginPatient([]));
-    setShowErrorMessagePatient(false);
+    dispatch(setErrorsLoginEps([]));
+    setShowErrorMessageEps(false);
   };
 
   return (
-    <Card
-      key={"card-patient-user-login-form"}
+    <Col
+      xs={24}
+      lg={24}
       style={{
-        width: "max-content",
-        height: "max-content",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fcfcfc",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: "31px",
-        marginInline: "31px",
+        width: "100vw",
+        padding: "0 2px",
+        maxWidth: "450px",
+        minWidth: "231px",
       }}
     >
-      {modalIsOpenPatient && <PatientModalVerificationCode />}
+      {modalIsOpenEps && <EpsModalVerificationCode />}
 
-      {showErrorMessagePatient && (
+      {showErrorMessageEps && (
         <CustomMessage
           typeMessage="error"
-          message={errorsPatientState?.toString() || "¡Error en la petición!"}
+          message={errorsEpsState?.toString() || "¡Error en la petición!"}
         />
       )}
 
-      <Col
-        xs={24}
-        lg={24}
+      <Card
+        key={"card-eps-user-login-form"}
         style={{
-          padding: "0 2px",
-          width: "100vw",
-          maxWidth: "321px",
-          minWidth: "270px",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fcfcfc",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          marginBottom: "31px",
+          marginInline: "22px",
         }}
       >
         <Form
-          id="patient-users-login-form"
-          name="patient-users-login-form"
-          className="patient-users-login-form"
+          id="eps-users-login-form"
+          name="eps-users-login-form"
+          className="eps-users-login-form"
           onFinish={handleSubmit}
           initialValues={{ remember: false }}
           autoComplete="false"
           layout="vertical"
         >
           <h2
-            className="title-login-patient"
+            className="title-login-eps"
             style={{
               ...titleStyleCss,
               textAlign: "center",
             }}
           >
-            Ingreso de usuario <br /> Paciente
+            Ingreso de usuario <br />
+            Eps
           </h2>
 
-          {idTypesPatientLoading || idTypesPatientFetching ? (
+          {idTypesEpsLoading || idTypesEpsFetching ? (
             <CustomSpin />
           ) : (
             <Form.Item
-              name="patient-user-id-type"
+              name="eps-user-id-type"
               label="Tipo de identificación"
               style={{ marginBottom: 7 }}
               rules={[
@@ -242,11 +219,11 @@ const PatientUserLoginForm: React.FC = () => {
               ]}
             >
               <Select
-                value={idTypePatientLocalState}
+                value={idTypeEpsLocalState}
                 placeholder="Tipo de identificación"
-                onChange={(e) => setIdTypePatientLocalState(e)}
+                onChange={(e) => setIdTypeEpsLocalState(e)}
               >
-                {idTypeOptionsPatient?.map((option: any) => (
+                {idTypeOptionsEps?.map((option: any) => (
                   <Select.Option key={option.id} value={option.id}>
                     {option.name}
                   </Select.Option>
@@ -256,7 +233,7 @@ const PatientUserLoginForm: React.FC = () => {
           )}
 
           <Form.Item
-            name="patient-user-id-number"
+            name="eps-user-id-number"
             label="Número de identificación"
             style={{ marginBottom: 7 }}
             normalize={(value) => {
@@ -287,16 +264,16 @@ const PatientUserLoginForm: React.FC = () => {
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               type="tel"
-              value={idNumberPatientLocalState}
+              value={idNumberEpsLocalState}
               placeholder="Número de identificación"
-              onChange={(e) => setIdNumberPatientLocalState(e.target.value)}
+              onChange={(e) => setIdNumberEpsLocalState(e.target.value)}
               autoComplete="off"
               min={0}
             />
           </Form.Item>
 
           <Form.Item
-            name="patient-user-password"
+            name="eps-user-password"
             label="Contraseña"
             style={{ marginBottom: 13 }}
             rules={[
@@ -318,9 +295,9 @@ const PatientUserLoginForm: React.FC = () => {
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
-              value={passwordPatientLocalState}
+              value={passwordEpsLocalState}
               placeholder="Contraseña"
-              onChange={(e) => setPasswordPatientLocalState(e.target.value)}
+              onChange={(e) => setPasswordEpsLocalState(e.target.value)}
             />
           </Form.Item>
 
@@ -335,7 +312,7 @@ const PatientUserLoginForm: React.FC = () => {
                 setModalForgotMyPasswordIsOpen(false)
               }
               contentCustomModal={
-                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Fecha de cumpleaños"
+                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Empresa(EPS)"
                 // <CustomResultOneButton
                 //   key={"medical-req-created-custom-result"}
                 //   statusTypeResult={"success"}
@@ -351,7 +328,7 @@ const PatientUserLoginForm: React.FC = () => {
 
           <Form.Item style={{ textAlign: "center" }}>
             <a
-              className="patient-login-form-forgot-user"
+              className="eps-login-form-forgot-user"
               // href=""
               style={{
                 display: "flow",
@@ -365,7 +342,7 @@ const PatientUserLoginForm: React.FC = () => {
               Olvide mi contraseña
             </a>
 
-            {isSubmittingPatient && isLoginPatientLoading ? (
+            {isSubmittingEps && isLoginEpsLoading ? (
               <CustomSpin />
             ) : (
               <Button
@@ -375,10 +352,9 @@ const PatientUserLoginForm: React.FC = () => {
                   borderRadius: 31,
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
-                  marginBottom: 7,
                 }}
                 htmlType="submit"
-                className="patient-login-form-button"
+                className="eps-login-form-button"
                 onClick={handleButtonClick}
               >
                 Ingresar
@@ -396,7 +372,7 @@ const PatientUserLoginForm: React.FC = () => {
               ¿No tienes cuenta?
             </Divider>
 
-            {isSubmittingRegisterPagePatient ? (
+            {isSubmittingRegisterPageEps ? (
               <CustomSpin />
             ) : (
               <Button
@@ -410,22 +386,22 @@ const PatientUserLoginForm: React.FC = () => {
                   marginTop: 7,
                 }}
                 htmlType="button"
-                className="patient-register-button"
+                className="eps-register-button"
                 onClick={async () => {
                   try {
-                    setIsSubmittingRegisterPagePatient(true);
+                    setIsSubmittingRegisterPageEps(true);
 
-                    await router.push("/patient/register", {
+                    await router.push("/eps/register", {
                       scroll: true,
                     });
                   } catch (error) {
                     console.error(error);
                   } finally {
-                    setIsSubmittingRegisterPagePatient(false);
+                    setIsSubmittingRegisterPageEps(false);
                   }
                 }}
               >
-                Activar cuenta
+                Crear cuenta
               </Button>
             )}
           </Form.Item>
@@ -445,9 +421,9 @@ const PatientUserLoginForm: React.FC = () => {
           ))}
         /> */}
         </Form>
-      </Col>
-    </Card>
+      </Card>
+    </Col>
   );
 };
 
-export default PatientUserLoginForm;
+export default EpsUserLoginForm;

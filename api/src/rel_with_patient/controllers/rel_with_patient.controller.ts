@@ -17,13 +17,13 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('rel-with-patient')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN)
 @Controller('rel-with-patient')
 export class RelWithPatientController {
   constructor(private readonly relWithPatientService: RelWithPatientService) {}
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createRelWithPatient(@Body() createRelWithPatient: CreateRelWithPatientDto) {
     return this.relWithPatientService.createRelWithPatient(
@@ -33,7 +33,6 @@ export class RelWithPatientController {
 
   // GET METHODS //
 
-  @Auth(UserRolType.PATIENT, UserRolType.AUTHORIZED_FAMILIAR)
   @Get('/getAll')
   getAllRelWithPatient() {
     return this.relWithPatientService.getAllRelWithPatient();
@@ -46,6 +45,7 @@ export class RelWithPatientController {
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Patch('/update/:id')
   updateRelWithPatient(
     @Param('id') id: number,
