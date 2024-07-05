@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
-import CustomLoadingOverlay from "../common/custom_loading_overlay/CustomLoadingOverlay";
+import CustomLoadingOverlay from "../../common/custom_loading_overlay/CustomLoadingOverlay";
 import { IdcardOutlined } from "@ant-design/icons";
-import CustomSpin from "../common/custom_spin/CustomSpin";
-import CustomMessage from "../common/custom_messages/CustomMessage";
+import CustomSpin from "../../common/custom_spin/CustomSpin";
+import CustomMessage from "../../common/custom_messages/CustomMessage";
 
 import {
   setNameUserPatient,
@@ -42,7 +42,7 @@ import {
   useTransformGenderNumberMutation,
 } from "@/redux/apis/users/usersApi";
 
-import { IdTypeAbbrev } from "../../../../api/src/users/enums/id_type_abbrev.enum";
+import { IdTypeAbbrev } from "../../../../../api/src/users/enums/id_type_abbrev.enum";
 
 const ValidatePatientExistForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -362,7 +362,12 @@ const ValidatePatientExistForm: React.FC = () => {
         xs={24}
         md={24}
         lg={24}
-        style={{ padding: "0 7px", width: "100vw", maxWidth: 321 }}
+        style={{
+          padding: "0 7px",
+          width: "100vw",
+          maxWidth: "321px",
+          minWidth: "270px",
+        }}
       >
         <Form
           id="patient-user-validate-form-patient"
@@ -472,41 +477,49 @@ const ValidatePatientExistForm: React.FC = () => {
                 Validar Paciente
               </Button>
             )}
-
-            <Divider
-              style={{
-                fontSize: 13,
-                fontWeight: "normal",
-                marginBlock: 4,
-                borderWidth: 1.3,
-              }}
-            >
-              ¿Ya tienes cuenta?
-            </Divider>
-
-            {isSubmittingGoToUserLogin ? (
-              <CustomSpin />
-            ) : (
-              <Button
-                style={{
-                  paddingInline: 22,
-                  color: "#015E90",
-                  borderColor: "#015E90",
-                  fontWeight: "bold",
-                  borderRadius: 7,
-                  borderWidth: 1.3,
-                  marginTop: 7,
-                }}
-                htmlType="button"
-                className="patient-validate-button"
-                onClick={handleGoToUserLogin}
-                onMouseDown={handleButtonClick}
-              >
-                Ingresar con mi cuenta
-              </Button>
-            )}
           </Form.Item>
         </Form>
+
+        <Divider
+          style={{
+            fontSize: 13,
+            fontWeight: "normal",
+            marginBlock: 4,
+            borderWidth: 1.3,
+          }}
+        >
+          ¿Ya tienes cuenta?
+        </Divider>
+
+        {isSubmittingGoToUserLogin ? (
+          <CustomSpin />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexFlow: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              style={{
+                paddingInline: 22,
+                color: "#015E90",
+                borderColor: "#015E90",
+                fontWeight: "bold",
+                borderRadius: 7,
+                borderWidth: 1.3,
+                marginTop: 7,
+              }}
+              htmlType="button"
+              className="patient-validate-button"
+              onClick={handleGoToUserLogin}
+              onMouseDown={handleButtonClick}
+            >
+              Ingresar con mi cuenta
+            </Button>
+          </div>
+        )}
       </Col>
     </Card>
   );

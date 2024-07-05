@@ -38,7 +38,9 @@ const EpsRequestDetailsModal: React.FC<{
     isLoading: userViewResponseDocumentsLoading,
     isFetching: userViewResponseDocumentsFetching,
     error: userViewResponseDocumentsError,
-  } = useViewFileQuery(selectedRequestResponseDocumentsModal);
+  } = useViewFileQuery(selectedRequestResponseDocumentsModal, {
+    skip: !selectedRequestResponseDocumentsModal,
+  });
 
   const handleButtonClick = () => {
     if (

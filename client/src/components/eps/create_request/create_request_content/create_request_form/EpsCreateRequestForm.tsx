@@ -24,10 +24,7 @@ import {
   removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
-import {
-  setDefaultValuesUserPatient,
-  setNameUserPatient,
-} from "@/redux/features/patient/patientSlice";
+import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setIdUserEps } from "@/redux/features/eps/epsSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import { setComponentChange } from "@/redux/features/common/modal/modalSlice";
@@ -58,7 +55,6 @@ const EpsCreateRequestForm: React.FC = () => {
     (state) => state.patient.id_type_abbrev
   );
 
-  const nameUserEpsState = useAppSelector((state) => state.eps.name);
   const idNumberUserEpsState = useAppSelector(
     (state) => state.epsUserLogin.id_number
   );
@@ -68,12 +64,6 @@ const EpsCreateRequestForm: React.FC = () => {
   );
   const reqTypeState = useAppSelector(
     (state) => state.medicalReq.requirement_type
-  );
-  const patientIdTypeMedicalReqState = useAppSelector(
-    (state) => state.medicalReq.patient_id_type
-  );
-  const patientIdNumberMedicalReqState = useAppSelector(
-    (state) => state.medicalReq.patient_id_number
   );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
@@ -99,13 +89,6 @@ const EpsCreateRequestForm: React.FC = () => {
   ] = useState(false);
   const [showErrorMessageMedicalReq, setShowErrorMessageMedicalReq] =
     useState(false);
-
-  const {
-    data: patientData,
-    isLoading: patientDataLoading,
-    isFetching: patientDataFetching,
-    error: patientDataError,
-  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
 
   const {
     data: reqTypesData,
@@ -146,8 +129,6 @@ const EpsCreateRequestForm: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log(namePatientState);
-
     if (!reqTypesLoading && !reqTypesFetching && reqTypesData) {
       dispatch(setTypesMedicalReq(reqTypesData));
     }
@@ -163,11 +144,13 @@ const EpsCreateRequestForm: React.FC = () => {
       setShowErrorMessageMedicalReq(true);
       dispatch(setTypesMedicalReq(reqTypesData));
     }
-    if (componentChangeState && !idTypePatientState && !idNumberPatientState) {
+    if (
+      componentChangeState &&
+      !idTypePatientState &&
+      !idNumberPatientState &&
+      !namePatientState
+    ) {
       dispatch(setComponentChange(false));
-    }
-    if (patientData && idNumberPatientState) {
-      dispatch(setNameUserPatient(patientData?.name));
     }
   }, [
     reqTypesData,
@@ -182,7 +165,7 @@ const EpsCreateRequestForm: React.FC = () => {
     componentChangeState,
     idTypePatientState,
     idNumberPatientState,
-    patientData,
+    namePatientState,
   ]);
 
   const handleCreateRequest = () => {
@@ -272,8 +255,8 @@ const EpsCreateRequestForm: React.FC = () => {
       const response: any = await createMedicalReqEps({
         userId: idUserEpsState,
         medicalReqEps: {
-          patient_id_type: patientIdTypeMedicalReqState,
-          patient_id_number: patientIdNumberMedicalReqState,
+          patient_id_type: idTypePatientState,
+          patient_id_number: idNumberPatientState,
           requirement_type: reqTypeState,
           user_message: userMessageMedicalReqState,
           ...responses,
@@ -379,6 +362,47 @@ const EpsCreateRequestForm: React.FC = () => {
         </Button>
       </div>
 
+      {modalIsOpenConfirm && (
+        <CustomModalTwoOptions
+          key={"custom-confirm-modal-create-medical-req-eps"}
+          openCustomModalState={modalIsOpenConfirm}
+          iconCustomModal={<FcInfo size={77} />}
+          titleCustomModal="¿Deseas crear una nueva solicitud?"
+          subtitleCustomModal={
+            <p>
+              Se realizará un nuevo requerimiento de tipo&nbsp;
+              <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
+              <b>{namePatientState}</b>
+            </p>
+          }
+          handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
+          handleConfirmCustomModal={handleConfirmDataModal}
+          isSubmittingConfirm={isSubmittingNewMedicalReq}
+          handleClickCustomModal={handleButtonClick}
+        ></CustomModalTwoOptions>
+      )}
+
+      {modalIsOpenSuccess && (
+        <CustomModalNoContent
+          key={"custom-success-modal-create-medical-req-eps"}
+          widthCustomModalNoContent={"54%"}
+          openCustomModalState={modalIsOpenSuccess}
+          closableCustomModal={false}
+          maskClosableCustomModal={false}
+          contentCustomModal={
+            <CustomResultOneButton
+              key={"medical-req-created-custom-result"}
+              statusTypeResult={"success"}
+              titleCustomResult="¡Solicitud Creada Correctamente!"
+              subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
+              handleClickCustomResult={handleGoToListOfMedicalReq}
+              isSubmittingButton={isSubmittingGoToListOfMedicalReq}
+              textButtonCustomResult="Ver mis solicitudes hechas"
+            />
+          }
+        ></CustomModalNoContent>
+      )}
+
       {idTypePatientState && idNumberPatientState && componentChangeState ? (
         <Card
           key={"card-create-medical-req-form-eps"}
@@ -393,47 +417,6 @@ const EpsCreateRequestForm: React.FC = () => {
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {modalIsOpenConfirm && (
-            <CustomModalTwoOptions
-              key={"custom-confirm-modal-create-medical-req-eps"}
-              openCustomModalState={modalIsOpenConfirm}
-              iconCustomModal={<FcInfo size={77} />}
-              titleCustomModal="¿Deseas crear una nueva solicitud?"
-              subtitleCustomModal={
-                <p>
-                  Se realizará un nuevo requerimiento de tipo&nbsp;
-                  <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
-                  <b>{nameUserEpsState}</b>
-                </p>
-              }
-              handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
-              handleConfirmCustomModal={handleConfirmDataModal}
-              isSubmittingConfirm={isSubmittingNewMedicalReq}
-              handleClickCustomModal={handleButtonClick}
-            ></CustomModalTwoOptions>
-          )}
-
-          {modalIsOpenSuccess && (
-            <CustomModalNoContent
-              key={"custom-success-modal-create-medical-req-eps"}
-              widthCustomModalNoContent={"54%"}
-              openCustomModalState={modalIsOpenSuccess}
-              closableCustomModal={false}
-              maskClosableCustomModal={false}
-              contentCustomModal={
-                <CustomResultOneButton
-                  key={"medical-req-created-custom-result"}
-                  statusTypeResult={"success"}
-                  titleCustomResult="¡Solicitud Creada Correctamente!"
-                  subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                  handleClickCustomResult={handleGoToListOfMedicalReq}
-                  isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                  textButtonCustomResult="Ver mis solicitudes hechas"
-                />
-              }
-            ></CustomModalNoContent>
-          )}
-
           {showErrorMessageMedicalReq && (
             <CustomMessage
               typeMessage="error"

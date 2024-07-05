@@ -8,6 +8,7 @@ import EpsUserLoginForm from "@/components/auth/EpsUserLoginForm";
 import { Tabs } from "antd";
 import { FaUser } from "react-icons/fa";
 import { IoIosBusiness } from "react-icons/io";
+import { MdOutlineFamilyRestroom } from "react-icons/md";
 
 const UsersLoginPage: React.FC = () => {
   return (
@@ -80,6 +81,13 @@ const UsersLoginPage: React.FC = () => {
                 label: "Eps",
                 icon: <IoIosBusiness />,
               },
+              // {
+              //   className: "familiar-card-login",
+              //   key: "3",
+              //   children: <EpsUserLoginForm />,
+              //   label: "Familiares",
+              //   icon: <MdOutlineFamilyRestroom />,
+              // },
             ]}
           />
         </div>

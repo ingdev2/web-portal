@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
+import PatientUpdatePersonalDataFormData from "./PatientUpdatePersonalDataFormData";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
@@ -21,9 +22,8 @@ import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useUpdateUserPatientMutation } from "@/redux/apis/users/usersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
-import UpdatePersonalDataFormData from "./UpdatePersonalDataFormData";
 
-const UpdatePersonalDataForm: React.FC = () => {
+const PatientUpdatePersonalDataForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -168,12 +168,14 @@ const UpdatePersonalDataForm: React.FC = () => {
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 
-        if (
-          Array.isArray(errorMessage) ||
-          Array.isArray(validationDataMessage)
-        ) {
+        if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserPatient(errorMessage[0]));
+
+          setShowErrorMessagePatient(true);
+        }
+        if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserPatient(validationDataMessage[0]));
+
           setShowErrorMessagePatient(true);
         }
         if (
@@ -314,7 +316,7 @@ const UpdatePersonalDataForm: React.FC = () => {
           />
         )}
 
-        <UpdatePersonalDataFormData
+        <PatientUpdatePersonalDataFormData
           nameUserPatientFormData={nameUserPatientState || NOT_REGISTER}
           idTypeNameUserPatientFormData={
             idTypeNameUserPatientState || NOT_REGISTER
@@ -388,4 +390,4 @@ const UpdatePersonalDataForm: React.FC = () => {
   );
 };
 
-export default UpdatePersonalDataForm;
+export default PatientUpdatePersonalDataForm;

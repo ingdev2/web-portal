@@ -19,6 +19,9 @@ export class CreateUserEpsDto {
   @MinLength(3)
   last_name: string;
 
+  @IsNotEmpty()
+  user_id_type: number;
+
   @IsNotEmpty({ message: '¡Por favor ingresa un número de identificación!' })
   id_number: number;
 
@@ -41,9 +44,6 @@ export class CreateUserEpsDto {
 
   @IsNotEmpty({ message: '¡Por favor selecciona el sexo del colaborador!' })
   user_gender: number;
-
-  @IsNotEmpty()
-  user_id_type: number;
 
   @IsNotEmpty({
     message: '¡Por favor selecciona la EPS a la que pertenece el colaborador!',

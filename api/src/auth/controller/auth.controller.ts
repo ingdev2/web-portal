@@ -68,7 +68,7 @@ export class AuthController {
     return await this.authService.registerFamiliar(patientId, registerFamiliar);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  // @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('registerUserEps')
   async registerUserEps(@Body() registerUserEps: CreateUserEpsDto) {
     return await this.authService.registerUserEps(registerUserEps);
