@@ -15,31 +15,47 @@ import CountdownTimer from "../../common/countdown_timer/CountdownTimer";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
 import {
-  setIdTypeLoginEps,
-  setPasswordLoginEps,
-  setVerificationCodeLoginEps,
-  setErrorsLoginEps,
-} from "@/redux/features/login/epsUserLoginSlice";
+  setIdTypeLoginFamiliar,
+  setIdNumberLoginFamiliar,
+  setEmailLoginFamiliar,
+  setPatientIdNumberLoginFamiliar,
+  setRelationWithPatientLoginFamiliar,
+  setVerificationCodeLoginFamiliar,
+  setErrorsLoginFamiliar,
+} from "@/redux/features/login/familiarLoginSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
-import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
+import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useResendFamiliarVerificationCodeMutation } from "@/redux/apis/auth/loginRelativesApi";
 
 const FamiliarModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const epsModalIsOpen = useAppSelector((state) => state.modal.epsModalIsOpen);
+  const familiarModalIsOpen = useAppSelector(
+    (state) => state.modal.familiarModalIsOpen
+  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
 
-  const idTypeEpsState = useAppSelector((state) => state.epsUserLogin.id_type);
-  const idNumberEpsState = useAppSelector(
-    (state) => state.epsUserLogin.id_number
+  const idTypeFamiliarState = useAppSelector(
+    (state) => state.familiarLogin.id_type_familiar
   );
-  const verificationCodeEpsState = useAppSelector(
-    (state) => state.epsUserLogin.verification_code
+  const idNumberFamiliarState = useAppSelector(
+    (state) => state.familiarLogin.id_number_familiar
+  );
+  const emailFamiliarState = useAppSelector(
+    (state) => state.familiarLogin.email_familiar
+  );
+  const idNumberPatientOfFamiliarState = useAppSelector(
+    (state) => state.familiarLogin.patient_id_number
+  );
+  const relationshipWithPatientState = useAppSelector(
+    (state) => state.familiarLogin.rel_with_patient
+  );
+  const verificationCodeFamiliarState = useAppSelector(
+    (state) => state.familiarLogin.verification_code
   );
 
   const [isSubmittingConfirm, setIsSubmittingConfirm] = useState(false);
@@ -53,52 +69,51 @@ const FamiliarModalVerificationCode: React.FC = () => {
   const [resendCodeDisable, setResendCodeDisable] = useState(true);
 
   const {
-    data: isUserEpsData,
-    isLoading: isUserEpsLoading,
-    isFetching: isUserEpsFetching,
-    isSuccess: isUserEpsSuccess,
-    isError: isUserEpsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
+    data: userFamiliarData,
+    isLoading: userFamiliarLoading,
+    isFetching: userFamiliarFetching,
+    isSuccess: userFamiliarSuccess,
+    isError: userFamiliarError,
+  } = useGetFamiliarByIdNumberQuery(idNumberFamiliarState);
 
   const [
-    resendUserVerificationCodeEps,
+    resendUserVerificationCodeFamiliar,
     {
       data: resendCodeData,
       isLoading: isResendCodeLoading,
       isSuccess: isResendCodeSuccess,
       isError: isResendCodeError,
     },
-  ] = useResendUserVerificationCodeMutation({
-    fixedCacheKey: "resendEpsCodeData",
+  ] = useResendFamiliarVerificationCodeMutation({
+    fixedCacheKey: "resendFamiliarCodeData",
   });
 
   useEffect(() => {
-    if (!idNumberEpsState) {
+    if (!idNumberFamiliarState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Error al obtener los datos del usuario!");
     }
-  }, [idNumberEpsState]);
+  }, [idNumberFamiliarState]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingConfirm(true);
 
-      const verificationCode = verificationCodeEpsState
-        ? parseInt(verificationCodeEpsState?.toString(), 10)
+      const idNumber = idNumberFamiliarState
+        ? parseInt(idNumberFamiliarState?.toString(), 10)
+        : "";
+      const verificationCode = verificationCodeFamiliarState
+        ? parseInt(verificationCodeFamiliarState?.toString(), 10)
         : "";
 
-      const idNumber = idNumberEpsState
-        ? parseInt(idNumberEpsState?.toString(), 10)
-        : "";
-
-      const responseNextAuth = await signIn("users-auth", {
-        verification_code: verificationCode,
+      const responseNextAuth = await signIn("relatives-auth", {
         id_number: idNumber,
+        verification_code: verificationCode,
         redirect: false,
       });
 
       if (responseNextAuth?.error) {
-        dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));
+        dispatch(setErrorsLoginFamiliar(responseNextAuth.error.split(",")));
         setShowErrorMessage(true);
       }
 
@@ -107,11 +122,13 @@ const FamiliarModalVerificationCode: React.FC = () => {
 
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
-        dispatch(setIdTypeLoginEps(""));
-        dispatch(setPasswordLoginEps(""));
-        dispatch(setVerificationCodeLoginEps(""));
+        dispatch(setIdTypeLoginFamiliar(0));
+        dispatch(setEmailLoginFamiliar(""));
+        dispatch(setPatientIdNumberLoginFamiliar(0));
+        dispatch(setRelationWithPatientLoginFamiliar(0));
+        dispatch(setVerificationCodeLoginFamiliar(0));
 
-        await router.replace("/eps/homepage", {
+        await router.replace("/familiar/homepage", {
           scroll: false,
         });
 
@@ -128,15 +145,15 @@ const FamiliarModalVerificationCode: React.FC = () => {
     try {
       setIsSubmittingResendCode(true);
 
-      const response: any = await resendUserVerificationCodeEps({
-        id_type: idTypeEpsState,
-        id_number: idNumberEpsState,
+      const response: any = await resendUserVerificationCodeFamiliar({
+        id_type: idTypeFamiliarState,
+        id_number: idNumberFamiliarState,
       });
 
       var isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
-        dispatch(setErrorsLoginEps(isResponseError?.data.message));
+        dispatch(setErrorsLoginFamiliar(isResponseError?.data.message));
         setShowErrorMessage(true);
       }
       if (!isResendCodeError && !isResponseError) {
@@ -157,7 +174,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsLoginEps([]));
+    dispatch(setErrorsLoginFamiliar([]));
     setShowErrorMessage(false);
     setShowSuccessMessage(false);
   };
@@ -179,7 +196,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
 
       <Modal
         className="modal-verification-code-eps"
-        open={epsModalIsOpen}
+        open={familiarModalIsOpen}
         confirmLoading={isSubmittingConfirm}
         onCancel={handleCancel}
         destroyOnClose={true}
@@ -230,7 +247,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserEpsData?.email}
+            {userFamiliarData?.email}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />
@@ -289,9 +306,9 @@ const FamiliarModalVerificationCode: React.FC = () => {
                 }}
                 type="tel"
                 placeholder="Código"
-                value={verificationCodeEpsState}
+                value={verificationCodeFamiliarState}
                 onChange={(e) =>
-                  dispatch(setVerificationCodeLoginEps(e.target.value))
+                  dispatch(setVerificationCodeLoginFamiliar(e.target.value))
                 }
                 autoComplete="off"
                 min={0}

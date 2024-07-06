@@ -135,13 +135,13 @@ export class AuthController {
     return await this.authService.resendVerificationUserCode(loginDto);
   }
 
-  @Post('verifiedLoginRelatives/:idNumber')
+  @Post('verifiedLoginRelatives/:id_number')
   async verifyCodeAndLoginRelatives(
-    @Param('idNumber') idNumber: number,
+    @Param('id_number') id_number: number,
     @Body('verification_code') verification_code: number,
   ) {
     return await this.authService.verifyCodeAndLoginRelatives(
-      idNumber,
+      id_number,
       verification_code,
     );
   }

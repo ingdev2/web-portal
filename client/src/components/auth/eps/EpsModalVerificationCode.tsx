@@ -107,9 +107,9 @@ const EpsModalVerificationCode: React.FC = () => {
 
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
-        dispatch(setIdTypeLoginEps(""));
+        dispatch(setIdTypeLoginEps(0));
         dispatch(setPasswordLoginEps(""));
-        dispatch(setVerificationCodeLoginEps(""));
+        dispatch(setVerificationCodeLoginEps(0));
 
         await router.replace("/eps/homepage", {
           scroll: false,

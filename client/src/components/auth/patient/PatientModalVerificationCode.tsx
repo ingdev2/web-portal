@@ -111,9 +111,9 @@ const PatientModalVerificationCode: React.FC = () => {
 
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
-        dispatch(setIdTypeLoginPatient(""));
+        dispatch(setIdTypeLoginPatient(0));
         dispatch(setPasswordLoginPatient(""));
-        dispatch(setVerificationCodeLoginPatient(""));
+        dispatch(setVerificationCodeLoginPatient(0));
 
         await router.replace("/patient/homepage", { scroll: false });
 

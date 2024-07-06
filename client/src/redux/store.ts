@@ -42,6 +42,7 @@ const persistConfig = {
   whitelist: [
     "patient",
     "eps",
+    "familiar",
     "adminLogin",
     "patientUserLogin",
     "epsUserLogin",

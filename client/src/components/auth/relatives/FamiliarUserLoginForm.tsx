@@ -149,40 +149,46 @@ const FamiliarUserLoginForm: React.FC = () => {
       dispatch(resetLoginFamiliarState());
       dispatch(setDefaultValuesUserFamiliar());
 
-      // const idNumberEpsLocalStateInt = idNumberEpsLocalState
-      //   ? parseInt(idNumberEpsLocalState?.toString(), 10)
-      //   : 0;
+      const idNumberFamiliarLocalStateInt = idNumberFamiliarLocalState
+        ? parseInt(idNumberFamiliarLocalState?.toString(), 10)
+        : 0;
+      const idNumberPatientLocalStateInt = idNumberPatientLocalState
+        ? parseInt(idNumberPatientLocalState?.toString(), 10)
+        : 0;
 
-      // const response: any = await loginEpsUsers({
-      //   id_type: idTypeEpsLocalState,
-      //   id_number: idNumberEpsLocalStateInt,
+      const response: any = await loginFamiliarUser({
+        id_type_familiar: idTypeFamiliarLocalState,
+        id_number_familiar: idNumberFamiliarLocalStateInt,
+        email_familiar: emailFamiliarLocalState,
+        patient_id_number: idNumberPatientLocalStateInt,
+        rel_with_patient: relationshipWithPatientLocalState,
+      });
 
-      // });
+      var isLoginUserFamiliarError = response.error;
 
-      // var isLoginUserError = response.error;
+      var isLoginUserFamiliarSuccess = response.data;
 
-      // var isLoginUserSuccess = response.data;
+      if (isLoginUserFamiliarError) {
+        const errorMessage = isLoginUserFamiliarError?.data.message;
 
-      // if (isLoginUserError) {
-      //   const errorMessage = isLoginUserError?.data.message;
+        if (Array.isArray(errorMessage)) {
+          dispatch(setErrorsLoginFamiliar(errorMessage[0]));
+          setShowErrorMessageFamiliar(true);
+        }
+        if (typeof errorMessage === "string") {
+          dispatch(setErrorsLoginFamiliar(errorMessage));
+          setShowErrorMessageFamiliar(true);
+        }
+      }
 
-      //   if (Array.isArray(errorMessage)) {
-      //     dispatch(setErrorsLoginEps(errorMessage[0]));
-      //     setShowErrorMessageEps(true);
-      //   }
-      //   if (typeof errorMessage === "string") {
-      //     dispatch(setErrorsLoginEps(errorMessage));
-      //     setShowErrorMessageEps(true);
-      //   }
-      // }
-
-      // if (isLoginUserSuccess) {
-      //   dispatch(setIdTypeLoginEps(idTypeEpsLocalState));
-      //   dispatch(setIdNumberLoginEps(idNumberEpsLocalStateInt));
-      //   dispatch(setErrorsLoginEps([]));
-      //   setShowErrorMessageEps(false);
-      //   dispatch(setFamiliarModalIsOpen(true));
-      // }
+      if (isLoginUserFamiliarSuccess) {
+        dispatch(setIdTypeLoginFamiliar(idTypeFamiliarLocalState));
+        dispatch(setIdNumberLoginFamiliar(idNumberFamiliarLocalStateInt));
+        dispatch(setEmailLoginFamiliar(emailFamiliarLocalState));
+        dispatch(setErrorsLoginFamiliar([]));
+        setShowErrorMessageFamiliar(false);
+        dispatch(setFamiliarModalIsOpen(true));
+      }
     } catch (error) {
       console.error(error);
     } finally {

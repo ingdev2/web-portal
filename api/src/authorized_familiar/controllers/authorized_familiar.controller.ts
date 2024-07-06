@@ -16,7 +16,6 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('authorized-familiar')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
 @Controller('authorized-familiar')
 export class AuthorizedFamiliarController {
   constructor(
@@ -25,19 +24,18 @@ export class AuthorizedFamiliarController {
 
   // GET METHODS //
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
   @Get('/getAllRelatives')
   async getAllRelatives() {
     return await this.authorizedFamiliarService.getAllRelatives();
   }
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
   @Get('/getFamiliar/:id')
   async getFamiliarById(@Param('id') id: string) {
     return await this.authorizedFamiliarService.getFamiliarById(id);
   }
 
-  @Auth(UserRolType.PATIENT)
   @Get('/getFamiliarById/:idNumber')
   async getFamiliarByIdNumber(@Param('idNumber') idNumber: number) {
     return await this.authorizedFamiliarService.getFamiliarCompleteByIdNumber(
@@ -47,7 +45,7 @@ export class AuthorizedFamiliarController {
 
   // PATCH METHODS //
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updateFamiliar/:id')
   async updateUserFamiliar(
     @Param('id') id: string,
@@ -56,7 +54,7 @@ export class AuthorizedFamiliarController {
     return await this.authorizedFamiliarService.updateUserFamiliar(id, familar);
   }
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
   @Patch('/ban/:id')
   async banRelatives(@Param('id') id: string) {
     return await this.authorizedFamiliarService.banRelatives(id);
