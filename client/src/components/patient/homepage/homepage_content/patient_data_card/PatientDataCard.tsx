@@ -117,204 +117,198 @@ const PatientDataCard: React.FC = () => {
   ]);
 
   return (
-    <>
+    <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
+      style={{
+        width: "100vw",
+        maxWidth: "720px",
+        minWidth: "231px",
+        alignItems: "center",
+        alignContent: "center",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
+      }}
+    >
+      {showErrorMessagePatient && (
+        <CustomMessage
+          typeMessage="error"
+          message={errorsPatientState?.toString() || "¡Error en la petición!"}
+        />
+      )}
+
       {userPatientLoading && userPatientFetching ? (
         <CustomSpin />
       ) : (
-        <Col
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
+        <Card
+          key={"card-patient-data-homepage"}
           style={{
-            width: "98vw",
-            display: "flex",
-            flexFlow: "column wrap",
             alignItems: "center",
             alignContent: "center",
             justifyContent: "center",
-            padding: "0px 22px",
-            margin: "0px",
+            backgroundColor: "#fcfcfc",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
+            padding: "0px",
+            marginInline: "13px",
           }}
         >
-          {showErrorMessagePatient && (
-            <CustomMessage
-              typeMessage="error"
-              message={
-                errorsPatientState?.toString() || "¡Error en la petición!"
-              }
-            />
-          )}
-
-          <Card
-            key={"card-patient-data-homepage"}
-            style={{
-              width: "100%",
-              maxWidth: "702px",
-              minWidth: "405px",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#f7f7f7",
-              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
-              margin: "0px",
-              padding: "0px",
-            }}
+          <Row
+            justify={"space-between"}
+            align={"top"}
+            style={{ width: "100%", display: "flex", flexFlow: "row wrap" }}
           >
-            <Row
-              justify={"space-between"}
-              align={"top"}
-              style={{ width: "100%", display: "flex", flexFlow: "row wrap" }}
+            <Col
+              xs={24}
+              sm={24}
+              md={24}
+              lg={24}
+              style={{
+                padding: "2px 2px",
+                textAlign: "center",
+              }}
             >
-              <Col
-                xs={24}
-                sm={24}
-                md={24}
-                lg={24}
+              <h3
+                className="patient-welcome-card-title"
                 style={{
-                  padding: "2px 2px",
+                  ...titleStyleCss,
+                  marginBottom: "0px",
+                }}
+              >
+                Bienvenido señor(a):
+              </h3>
+
+              <h3
+                className="patient-name-data"
+                style={{
+                  color: "#3F97AF",
+                  fontSize: 20,
+                  lineHeight: 1.3,
+                  fontWeight: "bold",
                   textAlign: "center",
+                  marginTop: "0px",
+                  marginBottom: "8px",
                 }}
               >
-                <h3
-                  className="patient-welcome-card-title"
-                  style={{
-                    ...titleStyleCss,
-                    marginBottom: "0px",
-                  }}
-                >
-                  Bienvenido señor(a):
-                </h3>
+                {namePatientState}
+              </h3>
+            </Col>
 
-                <h3
-                  className="patient-name-data"
-                  style={{
-                    color: "#3F97AF",
-                    fontSize: 20,
-                    lineHeight: 1.3,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    marginTop: "0px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {namePatientState}
-                </h3>
-              </Col>
-
-              <Col
-                xs={24}
-                sm={10}
-                md={10}
-                lg={10}
+            <Col
+              xs={24}
+              sm={10}
+              md={10}
+              lg={10}
+              style={{
+                padding: "2px 13px",
+                textAlign: "start",
+              }}
+            >
+              <h3
+                className="patient-id-type-subtitle"
                 style={{
-                  padding: "2px 13px",
-                  textAlign: "start",
+                  ...titleStyleCss,
                 }}
               >
-                <h3
-                  className="patient-id-type-subtitle"
-                  style={{
-                    ...titleStyleCss,
-                  }}
-                >
-                  Número de identificación:
-                </h3>
+                Número de identificación:
+              </h3>
 
-                <h3
-                  className="patient-id-type-data"
-                  style={{
-                    ...subtitleStyleCss,
-                    color: "#3F97AF",
-                    textAlign: "end",
-                  }}
-                >
-                  {idNumberPatientState}
-                </h3>
-
-                <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
-
-                <h3
-                  className="patient-affiliation-eps-subtitle"
-                  style={{
-                    ...titleStyleCss,
-                  }}
-                >
-                  EPS de afiliación:
-                </h3>
-
-                <h3
-                  className="patient-affiliation-eps-data"
-                  style={{
-                    ...subtitleStyleCss,
-                    color: "#3F97AF",
-                    textAlign: "end",
-                  }}
-                >
-                  {affiliationEpsPatientState}
-                </h3>
-
-                <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
-              </Col>
-
-              <Col
-                xs={24}
-                sm={14}
-                md={14}
-                lg={14}
+              <h3
+                className="patient-id-type-data"
                 style={{
-                  padding: "2px 13px",
-                  textAlign: "start",
+                  ...subtitleStyleCss,
+                  color: "#3F97AF",
+                  textAlign: "end",
                 }}
               >
-                <h3
-                  className="patient-email-subtitle"
-                  style={{
-                    ...titleStyleCss,
-                  }}
-                >
-                  Correo electrónico:
-                </h3>
+                {idNumberPatientState}
+              </h3>
 
-                <h3
-                  className="patient-email-data"
-                  style={{
-                    ...subtitleStyleCss,
-                    color: "#3F97AF",
-                    textAlign: "end",
-                  }}
-                >
-                  {emailPatientState}
-                </h3>
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
 
-                <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+              <h3
+                className="patient-affiliation-eps-subtitle"
+                style={{
+                  ...titleStyleCss,
+                }}
+              >
+                EPS de afiliación:
+              </h3>
 
-                <h3
-                  className="patient-cellphone-subtitle"
-                  style={{
-                    ...titleStyleCss,
-                  }}
-                >
-                  Número de celular:
-                </h3>
+              <h3
+                className="patient-affiliation-eps-data"
+                style={{
+                  ...subtitleStyleCss,
+                  color: "#3F97AF",
+                  textAlign: "end",
+                }}
+              >
+                {affiliationEpsPatientState}
+              </h3>
 
-                <h3
-                  className="patient-cellphone-data"
-                  style={{
-                    ...subtitleStyleCss,
-                    color: "#3F97AF",
-                    textAlign: "end",
-                  }}
-                >
-                  {cellphonePatientState}
-                </h3>
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+            </Col>
 
-                <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
-              </Col>
-            </Row>
-          </Card>
-        </Col>
+            <Col
+              xs={24}
+              sm={14}
+              md={14}
+              lg={14}
+              style={{
+                padding: "2px 13px",
+                textAlign: "start",
+              }}
+            >
+              <h3
+                className="patient-email-subtitle"
+                style={{
+                  ...titleStyleCss,
+                }}
+              >
+                Correo electrónico:
+              </h3>
+
+              <h3
+                className="patient-email-data"
+                style={{
+                  ...subtitleStyleCss,
+                  color: "#3F97AF",
+                  textAlign: "end",
+                }}
+              >
+                {emailPatientState}
+              </h3>
+
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+
+              <h3
+                className="patient-cellphone-subtitle"
+                style={{
+                  ...titleStyleCss,
+                }}
+              >
+                Número de celular:
+              </h3>
+
+              <h3
+                className="patient-cellphone-data"
+                style={{
+                  ...subtitleStyleCss,
+                  color: "#3F97AF",
+                  textAlign: "end",
+                }}
+              >
+                {cellphonePatientState}
+              </h3>
+
+              <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />
+            </Col>
+          </Row>
+        </Card>
       )}
-    </>
+    </Col>
   );
 };
 

@@ -21,12 +21,12 @@ const CustomLayout: React.FC<{
     <Layout
       className="custom-layout"
       style={{
+        width: "100%",
+        height: "100%",
+        minWidth: "96vw",
+        minHeight: "100vh",
         display: "flex",
         flexFlow: "column wrap",
-        width: "100%",
-        minWidth: "405px",
-        minHeight: "100vh",
-        height: "100%",
         backgroundColor: "transparent",
         margin: "0px",
         padding: "0px",

@@ -291,11 +291,14 @@ const PatientCreateRequestForm: React.FC = () => {
       md={24}
       lg={24}
       style={{
-        width: "100%",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "450px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "31px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       <div
@@ -304,7 +307,7 @@ const PatientCreateRequestForm: React.FC = () => {
           flexFlow: "row wrap",
           justifyContent: "flex-start",
           paddingBlock: "7px",
-          paddingInline: "7px",
+          paddingInline: "13px",
         }}
       >
         <Button
@@ -334,14 +337,13 @@ const PatientCreateRequestForm: React.FC = () => {
       <Card
         key={"card-create-medical-req-form-patient"}
         style={{
-          width: "100%",
-          maxWidth: "450px",
-          display: "flex",
-          flexFlow: "column wrap",
           alignItems: "center",
+          alignContent: "center",
           justifyContent: "center",
           backgroundColor: "#fcfcfc",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          padding: "0px",
+          marginInline: "13px",
         }}
       >
         {modalIsOpenConfirm && (

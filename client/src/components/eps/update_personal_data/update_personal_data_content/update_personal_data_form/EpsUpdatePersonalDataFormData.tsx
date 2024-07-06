@@ -25,8 +25,6 @@ import { IdcardOutlined } from "@ant-design/icons";
 import { TbGenderBigender } from "react-icons/tb";
 import { FiPhone } from "react-icons/fi";
 
-import { CONTACT_PBX } from "@/utils/constants/constants";
-
 const EpsUpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;
   idTypeNameUserPatientFormData: string;
@@ -75,7 +73,13 @@ const EpsUpdatePersonalDataFormData: React.FC<{
   handleButtonClickFormData,
 }) => {
   return (
-    <Col xs={24} sm={24} md={24} lg={24} style={{ padding: "0px" }}>
+    <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
+      style={{ padding: "0px", margin: "0px" }}
+    >
       <h2
         className="title-update-personal-data-patient"
         style={{
@@ -364,22 +368,30 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           {isSubmittingUpdatePersonalDataFormData ? (
             <CustomSpin />
           ) : (
-            <Button
-              size="large"
+            <div
               style={{
-                backgroundColor: !hasChangesFormData ? "#D8D8D8" : "#015E90",
-                color: !hasChangesFormData ? "#A0A0A0" : "#f2f2f2",
-                fontWeight: "bold",
-                paddingInline: 54,
-                borderRadius: 31,
+                display: "flex",
+                flexFlow: "row",
+                justifyContent: "center",
               }}
-              htmlType="submit"
-              className="update-personal-data-patient-form-button"
-              onClick={handleButtonClickFormData}
-              disabled={!hasChangesFormData}
             >
-              Actualizar datos personales
-            </Button>
+              <Button
+                size="large"
+                style={{
+                  backgroundColor: !hasChangesFormData ? "#D8D8D8" : "#015E90",
+                  color: !hasChangesFormData ? "#A0A0A0" : "#f2f2f2",
+                  fontWeight: "bold",
+                  paddingInline: 54,
+                  borderRadius: 31,
+                }}
+                htmlType="submit"
+                className="update-personal-data-patient-form-button"
+                onClick={handleButtonClickFormData}
+                disabled={!hasChangesFormData}
+              >
+                Actualizar datos personales
+              </Button>
+            </div>
           )}
         </Form.Item>
       </Form>

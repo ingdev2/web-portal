@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card } from "antd";
+import { Button, Card, Col } from "antd";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
@@ -57,13 +57,20 @@ const EpsListOfRequests: React.FC = () => {
   }, [userEpsData, userEpsLoading, userEpsFetching, idUserEpsState]);
 
   return (
-    <div
+    <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
       style={{
-        width: "98vw",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "450px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "22px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       {showErrorMessageMedicalReq && (
@@ -141,13 +148,14 @@ const EpsListOfRequests: React.FC = () => {
         <Card
           key={"card-list-of-request-content-eps"}
           style={{
-            width: "100%",
-            maxWidth: "609px",
-            minWidth: "405px",
+            alignItems: "center",
             alignContent: "center",
+            justifyContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            marginTop: "7px",
+            padding: "0px",
+            marginInline: "13px",
+            marginBlock: "7px",
           }}
         >
           <h2
@@ -183,7 +191,7 @@ const EpsListOfRequests: React.FC = () => {
           />
         </Card>
       )}
-    </div>
+    </Col>
   );
 };
 

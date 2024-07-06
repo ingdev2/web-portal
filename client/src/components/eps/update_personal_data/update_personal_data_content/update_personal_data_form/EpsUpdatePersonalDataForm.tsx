@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
 import EpsUpdatePersonalDataFormData from "./EpsUpdatePersonalDataFormData";
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
@@ -234,11 +235,14 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
       md={24}
       lg={24}
       style={{
-        width: "100%",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "450px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "31px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       <div
@@ -274,83 +278,90 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         </Button>
       </div>
 
-      <Card
-        key={"card-update-personal-data-eps-form"}
-        style={{
-          width: "100%",
-          maxWidth: "450px",
-          display: "flex",
-          flexFlow: "column wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#fcfcfc",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-          margin: "0px",
-          padding: "0px",
-        }}
-      >
-        {showErrorMessagePatient && (
-          <CustomMessage
-            typeMessage="error"
-            message={epsErrorsState?.toString() || "¡Error en la petición!"}
+      {userEpsLoading && userEpsFetching ? (
+        <CustomSpin />
+      ) : (
+        <Card
+          key={"card-update-personal-data-eps-form"}
+          style={{
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            backgroundColor: "#fcfcfc",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
+            padding: "0px",
+            marginInline: "13px",
+          }}
+        >
+          {showErrorMessagePatient && (
+            <CustomMessage
+              typeMessage="error"
+              message={epsErrorsState?.toString() || "¡Error en la petición!"}
+            />
+          )}
+
+          {showSuccessMessage && (
+            <CustomMessage
+              typeMessage="success"
+              message={successMessage || "¡Proceso finalizado con éxito!"}
+            />
+          )}
+
+          <EpsUpdatePersonalDataFormData
+            nameUserPatientFormData={nameUserEpsState || NOT_REGISTER}
+            idTypeNameUserPatientFormData={
+              idTypeNameUserEpsState || NOT_REGISTER
+            }
+            idNumberUserPatientFormData={idNumberUserEpsState || NOT_REGISTER}
+            genderNameUserPatientFormData={
+              genderNameUserEpsState || NOT_REGISTER
+            }
+            epsCompanyUserPatientFormData={
+              epsCompanyAbbrevUserEpsState || NOT_REGISTER
+            }
+            handleConfirmUpdatePersonalDataFormData={
+              handleConfirmUpdatePersonalData
+            }
+            initialValuesUpdatePersonalDataFormData={{
+              "email-patient-hosvital": emailUserEpsState || NOT_REGISTER,
+              "cellphone-patient-hosvital":
+                cellphoneUserEpsState || NOT_REGISTER,
+              "areas-company-eps":
+                companyAreaNumberUserEpsState || NOT_REGISTER,
+              "radio-select-auth-method-update-personal-data-patient":
+                authMethodUserEpsState,
+            }}
+            emailUserPatientFormData={emailUserEpsState || NOT_REGISTER}
+            onChangeEmailUserPatientFormData={(e) => {
+              setHasChanges(true);
+
+              setEmailUserEpsLocalState(e.target.value.toLowerCase());
+            }}
+            cellphoneUserPatientFormData={cellphoneUserEpsState || NOT_REGISTER}
+            onChangeCellphoneUserPatientFormData={(e) => {
+              setHasChanges(true);
+
+              setCellphoneUserEpsLocalState(parseInt(e.target.value, 10));
+            }}
+            companyAreasLoadingDataForm={companyAreaLoading}
+            companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
+            handleOnChangeCompanyAreaDataForm={handleOnChangeCompanyArea}
+            epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
+            authMethodUserPatientFormData={authMethodUserEpsState}
+            onChangeAuthMethodUserPatientFormData={(e) => {
+              setHasChanges(true);
+
+              setAuthMethodEpsLocalState(e.target.value);
+            }}
+            patientAuthMethodsListFormData={epsAuthMethodsListLocalState}
+            isSubmittingUpdatePersonalDataFormData={
+              isSubmittingUpdatePersonalData
+            }
+            hasChangesFormData={hasChanges}
+            handleButtonClickFormData={handleButtonClick}
           />
-        )}
-
-        {showSuccessMessage && (
-          <CustomMessage
-            typeMessage="success"
-            message={successMessage || "¡Proceso finalizado con éxito!"}
-          />
-        )}
-
-        <EpsUpdatePersonalDataFormData
-          nameUserPatientFormData={nameUserEpsState || NOT_REGISTER}
-          idTypeNameUserPatientFormData={idTypeNameUserEpsState || NOT_REGISTER}
-          idNumberUserPatientFormData={idNumberUserEpsState || NOT_REGISTER}
-          genderNameUserPatientFormData={genderNameUserEpsState || NOT_REGISTER}
-          epsCompanyUserPatientFormData={
-            epsCompanyAbbrevUserEpsState || NOT_REGISTER
-          }
-          handleConfirmUpdatePersonalDataFormData={
-            handleConfirmUpdatePersonalData
-          }
-          initialValuesUpdatePersonalDataFormData={{
-            "email-patient-hosvital": emailUserEpsState || NOT_REGISTER,
-            "cellphone-patient-hosvital": cellphoneUserEpsState || NOT_REGISTER,
-            "areas-company-eps": companyAreaNumberUserEpsState || NOT_REGISTER,
-            "radio-select-auth-method-update-personal-data-patient":
-              authMethodUserEpsState,
-          }}
-          emailUserPatientFormData={emailUserEpsState || NOT_REGISTER}
-          onChangeEmailUserPatientFormData={(e) => {
-            setHasChanges(true);
-
-            setEmailUserEpsLocalState(e.target.value.toLowerCase());
-          }}
-          cellphoneUserPatientFormData={cellphoneUserEpsState || NOT_REGISTER}
-          onChangeCellphoneUserPatientFormData={(e) => {
-            setHasChanges(true);
-
-            setCellphoneUserEpsLocalState(parseInt(e.target.value, 10));
-          }}
-          companyAreasLoadingDataForm={companyAreaLoading}
-          companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
-          handleOnChangeCompanyAreaDataForm={handleOnChangeCompanyArea}
-          epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
-          authMethodUserPatientFormData={authMethodUserEpsState}
-          onChangeAuthMethodUserPatientFormData={(e) => {
-            setHasChanges(true);
-
-            setAuthMethodEpsLocalState(e.target.value);
-          }}
-          patientAuthMethodsListFormData={epsAuthMethodsListLocalState}
-          isSubmittingUpdatePersonalDataFormData={
-            isSubmittingUpdatePersonalData
-          }
-          hasChangesFormData={hasChanges}
-          handleButtonClickFormData={handleButtonClick}
-        />
-      </Card>
+        </Card>
+      )}
     </Col>
   );
 };
