@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { getFirstName } from "@/helpers/get_first_name/get_first_name";
 
 import { Col, Row } from "antd";
 import CustomDropdown from "@/components/common/custom_dropdown/CustomDropdown";
@@ -65,13 +66,6 @@ const EpsHeaderLayout: React.FC = () => {
       console.error(error);
     } finally {
     }
-  };
-
-  const getFirstName = (fullName: string) => {
-    if (!fullName) return "";
-
-    const words = fullName.split(" ");
-    return words[0];
   };
 
   return (

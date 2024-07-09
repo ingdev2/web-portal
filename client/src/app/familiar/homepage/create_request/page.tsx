@@ -2,30 +2,33 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import EpsCreateRequestLayout from "@/components/eps/create_request/EpsCreateRequestLayout";
+import FamiliarCreateRequestLayout from "@/components/familiar/create_request/FamiliarCreateRequestLayout";
 import CustomLoadingOverlay from "@/components/common/custom_loading_overlay/CustomLoadingOverlay";
 
-import { setIdNumberUserEps } from "@/redux/features/eps/epsSlice";
+import { setIdNumberUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
+import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
 
-const CreateRequestEpsPage = () => {
+const CreateRequestFamiliarPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  const allowedRoles = [UserRolType.EPS];
+  const allowedRoles = [UserRolType.AUTHORIZED_FAMILIAR];
   useRoleValidation(allowedRoles);
 
-  const idNumberUserEpsLoginState = useAppSelector(
-    (state) => state.epsUserLogin.id_number
+  const idNumberUserFamiliarLoginState = useAppSelector(
+    (state) => state.familiarLogin.id_number_familiar
   );
-  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
+  const idNumberFamiliarState = useAppSelector(
+    (state) => state.familiar.id_number
+  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
@@ -34,25 +37,27 @@ const CreateRequestEpsPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: userEpsData,
-    isLoading: userEpsLoading,
-    isFetching: userEpsFetching,
-    error: userEpsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsLoginState);
+    data: userFamiliarData,
+    isLoading: userFamiliarLoading,
+    isFetching: userFamiliarFetching,
+    error: userFamiliarError,
+  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarLoginState);
 
   useEffect(() => {
-    if (!idNumberUserEpsLoginState) {
+    if (!idNumberFamiliarState) {
+      dispatch(setIdNumberUserFamiliar(userFamiliarData?.id_number));
+    }
+    if (!idNumberUserFamiliarLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
-    }
-    if (!idNumberEpsState) {
-      dispatch(setIdNumberUserEps(userEpsData?.id_number));
+      redirect("/login");
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
+      redirect("/login");
     }
-  }, [status, idNumberUserEpsLoginState, idNumberEpsState]);
+  }, [status, idNumberUserFamiliarLoginState, idNumberFamiliarState]);
 
   return (
     <>
@@ -65,15 +70,15 @@ const CreateRequestEpsPage = () => {
 
       <CustomLoadingOverlay isLoading={isPageLoadingState} />
 
-      {!idNumberUserEpsLoginState || status === "unauthenticated" ? (
+      {!idNumberUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="create-request-page-eps-content">
-          <EpsCreateRequestLayout />
+        <div className="create-request-page-familiar-content">
+          <FamiliarCreateRequestLayout />
         </div>
       )}
     </>
   );
 };
 
-export default CreateRequestEpsPage;
+export default CreateRequestFamiliarPage;

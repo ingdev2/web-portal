@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
-import EpsHomeLayout from "@/components/eps/homepage/EpsHomeLayout";
+import FamiliarHomeLayout from "@/components/familiar/homepage/FamiliarHomeLayout";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -89,10 +89,9 @@ const HomePageFamiliar = () => {
       {!idNumberUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        // <div className="homepage-eps-content">
-        //   <EpsHomeLayout />
-        // </div>
-        "FAMILIAR HOMEPAGE"
+        <div className="homepage-familiar-content">
+          <FamiliarHomeLayout />
+        </div>
       )}
     </div>
   );

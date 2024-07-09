@@ -48,6 +48,7 @@ const EpsRegistrationFormData: React.FC<{
   handleCheckboxChangeDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
+  handleOnChangeValidatorPasswordDataForm: (_: any, value: any) => void;
 }> = ({
   epsCompanyLoadingDataForm,
   epsCompanyValueDataForm,
@@ -86,6 +87,7 @@ const EpsRegistrationFormData: React.FC<{
   handleCheckboxChangeDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
+  handleOnChangeValidatorPasswordDataForm,
 }) => {
   return (
     <Form
@@ -459,12 +461,38 @@ const EpsRegistrationFormData: React.FC<{
             message: "¡Por favor ingresa tu contraseña!",
           },
           {
-            min: 7,
-            message: "¡La contraseña debe tener mínimo 7 caracteres!",
+            min: 8,
+            message: "¡La contraseña debe tener mínimo 8 caracteres!",
           },
           {
-            max: 14,
-            message: "¡La contraseña debe tener máximo 14 caracteres!",
+            max: 31,
+            message: "¡La contraseña debe tener máximo 31 caracteres!",
+          },
+          {
+            validator: (_, value) => {
+              const containsLowercase = /[a-z]/.test(value ?? "");
+              const containsUppercase = /[A-Z]/.test(value ?? "");
+              if (!containsLowercase || !containsUppercase) {
+                return Promise.reject(
+                  "¡La contraseña debe contener al menos una letra minúscula y una letra mayúscula!"
+                );
+              }
+              return Promise.resolve();
+            },
+          },
+          {
+            validator: (_, value) => {
+              const containsSpecialChar = /[_\-*&%#$\/.,+=]/.test(value ?? "");
+              if (!containsSpecialChar) {
+                return Promise.reject(
+                  "La contraseña debe contener al menos un carácter especial (_ - * & % # $ / . , + =)"
+                );
+              }
+              return Promise.resolve();
+            },
+          },
+          {
+            validator: handleOnChangeValidatorPasswordDataForm,
           },
         ]}
         hasFeedback

@@ -3,7 +3,9 @@ interface Familiar {
   name: string;
   last_name: string;
   user_gender: number;
+  user_gender_abbrev: string;
   user_id_type: number;
+  id_type_abbrev: string;
   id_number: number;
   email: string;
   cellphone: number;
@@ -12,8 +14,11 @@ interface Familiar {
   is_active: boolean;
   accept_terms: boolean;
   user_role: number;
-  rel_with_patient: number;
   patient_id: string;
+  patient_id_number: number;
+  patient_name: string;
+  patient_id_type_abbrev: string;
+  rel_with_patient: number;
   verification_code: number;
   idTypesFamiliar: string[];
   createdAt: string;

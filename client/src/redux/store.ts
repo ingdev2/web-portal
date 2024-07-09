@@ -16,6 +16,7 @@ import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
 import { usersApi } from "./apis/users/usersApi";
+import { patientClassStatusApi } from "./apis/patient_class_status/patientClassStatusApi";
 import { relativesApi } from "./apis/relatives/relativesApi";
 import { relationshipTypesApi } from "./apis/relatives/relationship_types/relationshipTypesApi";
 import { registerAdminApi } from "./apis/register/registerAdminApi";
@@ -64,6 +65,7 @@ const rootReducer = combineReducers({
   modal: modalReducer,
   [adminsApi.reducerPath]: adminsApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [patientClassStatusApi.reducerPath]: patientClassStatusApi.reducer,
   [relativesApi.reducerPath]: relativesApi.reducer,
   [relationshipTypesApi.reducerPath]: relationshipTypesApi.reducer,
   [registerAdminApi.reducerPath]: registerAdminApi.reducer,
@@ -96,6 +98,7 @@ export const store = configureStore({
     }).concat([
       adminsApi.middleware,
       usersApi.middleware,
+      patientClassStatusApi.middleware,
       relativesApi.middleware,
       relationshipTypesApi.middleware,
       registerAdminApi.middleware,

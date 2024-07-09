@@ -8,6 +8,7 @@ interface MedicalReq {
   familiar_id: string;
   aplicantId: string;
   patient_class_status: number;
+  patient_class_status_abbrev: string;
   relationship_with_patient: number;
   patient_name: string;
   patient_id_type: number;

@@ -248,429 +248,549 @@ const ValidatePatientData: React.FC = () => {
   };
 
   return (
-    <Card
+    <Col
+      xs={24}
+      lg={24}
       style={{
+        width: "100vw",
+        padding: "0 2px",
         maxWidth: "720px",
-        minWidth: "371px",
-        width: "100%",
-        height: "max-content",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fcfcfc",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: 31,
-        padding: 7,
+        minWidth: "231px",
       }}
     >
-      {showCustomConfirmModal && (
-        <CustomModalTwoOptions
-          key={"custom-confirm-modal"}
-          iconCustomModal={<FcInfo size={77} />}
-          openCustomModalState={showCustomConfirmModal}
-          titleCustomModal="¿Deseas activar tu cuenta?"
-          subtitleCustomModal="Tu cuenta se activará inmediatamente con el correo electrónico y celular que observaste en la pantalla anterior, si no tienes acceso a ninguno de esos medios de comunicación no podrás ingresar a tu cuenta."
-          handleCancelCustomModal={() => setShowCustomConfirmModal(false)}
-          handleConfirmCustomModal={handleConfirmConfirmDataModal}
-          handleClickCustomModal={handleButtonClick}
-          isSubmittingConfirm={isSubmittingConfirmData}
-        ></CustomModalTwoOptions>
-      )}
+      <Card
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fcfcfc",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          marginBottom: "72px",
+          marginInline: "13px",
+        }}
+      >
+        {showCustomConfirmModal && (
+          <CustomModalTwoOptions
+            key={"custom-confirm-modal"}
+            iconCustomModal={<FcInfo size={77} />}
+            openCustomModalState={showCustomConfirmModal}
+            titleCustomModal="¿Deseas activar tu cuenta?"
+            subtitleCustomModal="Tu cuenta se activará inmediatamente con el correo electrónico y celular que observaste en la pantalla anterior, si no tienes acceso a ninguno de esos medios de comunicación no podrás ingresar a tu cuenta."
+            handleCancelCustomModal={() => setShowCustomConfirmModal(false)}
+            handleConfirmCustomModal={handleConfirmConfirmDataModal}
+            handleClickCustomModal={handleButtonClick}
+            isSubmittingConfirm={isSubmittingConfirmData}
+          ></CustomModalTwoOptions>
+        )}
 
-      {showCustomCancelModal && (
-        <CustomModalTwoOptions
-          key={"custom-cancel-modal"}
-          iconCustomModal={<FcHighPriority size={77} />}
-          openCustomModalState={showCustomCancelModal}
-          titleCustomModal="¿Tus datos son incorrectos?"
-          subtitleCustomModal="Si tus datos no son correctos, te recomendamos no activar tu cuenta y comunicarte a nuestra línea de PBX para realizar la actualización de tus datos personales."
-          handleCancelCustomModal={() => setShowCustomCancelModal(false)}
-          handleConfirmCustomModal={handleConfirmIncorrectDataModal}
-          handleClickCustomModal={handleButtonClick}
-          isSubmittingConfirm={isSubmittingIncorrectData}
-        ></CustomModalTwoOptions>
-      )}
+        {showCustomCancelModal && (
+          <CustomModalTwoOptions
+            key={"custom-cancel-modal"}
+            iconCustomModal={<FcHighPriority size={77} />}
+            openCustomModalState={showCustomCancelModal}
+            titleCustomModal="¿Tus datos son incorrectos?"
+            subtitleCustomModal="Si tus datos no son correctos, te recomendamos no activar tu cuenta y comunicarte a nuestra línea de PBX para realizar la actualización de tus datos personales."
+            handleCancelCustomModal={() => setShowCustomCancelModal(false)}
+            handleConfirmCustomModal={handleConfirmIncorrectDataModal}
+            handleClickCustomModal={handleButtonClick}
+            isSubmittingConfirm={isSubmittingIncorrectData}
+          ></CustomModalTwoOptions>
+        )}
 
-      {showErrorMessagePatient && (
-        <CustomMessage
-          typeMessage="error"
-          message={errorsPatientState?.toString() || "¡Error en la petición!"}
-        />
-      )}
+        {showErrorMessagePatient && (
+          <CustomMessage
+            typeMessage="error"
+            message={errorsPatientState?.toString() || "¡Error en la petición!"}
+          />
+        )}
 
-      <Row>
-        <Col xs={24} md={12} lg={12} style={{ padding: "0 7px" }}>
-          <h2
-            className="title-register-patient"
-            style={{
-              ...titleStyleCss,
-              marginBottom: 7,
-              textAlign: "center",
-            }}
-          >
-            Verificar datos
-          </h2>
-
-          <p
-            className="warning-message-verify-data"
-            style={{
-              display: "flow",
-              color: "#960202",
-              fontWeight: 500,
-              textAlign: "center",
-            }}
-          >
-            Por favor, verifique si todos sus datos están correctos, de lo
-            contrario debe comunicarse a nuestra línea PBX: <b>{CONTACT_PBX}</b>
-            para realizar la actualización de sus datos personales.
-          </p>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Nombre de paciente:
-            </Typography.Title>
-            <Input
-              id="name-patient-auto-input"
-              value={namePatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Tipo de documento:
-            </Typography.Title>
-            <Input
-              id="id-type-patient-auto-input"
-              value={idTypeAbbrevPatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Número de documento:
-            </Typography.Title>
-            <Input
-              id="patient-id-number-hosvital"
-              value={idNumberPatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <p
-            className="warning-message-auth-method"
-            style={{
-              display: "flow",
-              color: "#960202",
-              fontWeight: 500,
-              textAlign: "center",
-            }}
-          >
-            El correo electrónico y el número de celular que se muestran a
-            continuación serán los canales autorizados que se tomarán para
-            realizar el proceso de autenticación.
-          </p>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Correo electrónico:
-            </Typography.Title>
-            <Input
-              id="patient-email-hosvital"
-              value={emailPatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Número de celular:
-            </Typography.Title>
-            <Input
-              id="patient-cellphone-hosvital"
-              value={cellphonePatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Sexo:
-            </Typography.Title>
-            <Input
-              id="patient-gender-hosvital"
-              value={genderPatientAbbrevState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Fecha de nacimiento:
-            </Typography.Title>
-            <Input
-              id="patient-birthdate-hosvital"
-              value={birthdatePatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Afiliado a EPS:
-            </Typography.Title>
-            <Input
-              id="patient-affiliationeps-hosvital"
-              value={affiliationEpsPatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-
-          <div style={{ textAlign: "start" }}>
-            <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Dirección de residencia:
-            </Typography.Title>
-            <Input
-              id="patient-residenceaddress-hosvital"
-              value={residenceAddressPatientState || NOT_REGISTER}
-              disabled
-            />
-          </div>
-        </Col>
-
-        <Col xs={24} md={12} lg={12} style={{ padding: "0 13px" }}>
-          <h2
-            className="title-register-patient"
-            style={{
-              ...titleStyleCss,
-              marginBottom: 22,
-              textAlign: "center",
-            }}
-          >
-            Ingresar datos adicionales
-          </h2>
-
-          <Form
-            id="patient-user-register-form"
-            name="patient-user-register-form"
-            className="patient-user-register-form"
-            onFinish={handleCorrectData}
-            initialValues={{ remember: false }}
-            autoComplete="false"
-            layout="vertical"
-          >
-            <Form.Item
-              name="radio-select-auth-method"
-              label="Método de autenticación"
-              style={{ marginBottom: 22 }}
-              rules={[
-                {
-                  required: true,
-                  message: "¡Por favor selecciona un método de autenticación!",
-                },
-              ]}
-            >
-              <Radio.Group
-                value={authMethodUserPatientLocalState}
-                onChange={(e) =>
-                  setAuthMethodUserPatientLocalState(e.target.value)
-                }
-                style={{ textAlign: "start" }}
-              >
-                <Space size={"small"} direction="horizontal">
-                  {allAuthMethodsData?.map((option: any) => (
-                    <Radio key={option.id} value={option.id}>
-                      {option.name}
-                    </Radio>
-                  ))}
-                </Space>
-              </Radio.Group>
-            </Form.Item>
-
-            <Form.Item
-              name="patient-user-whatsapp-register"
-              label="WhatsApp (opcional)"
-              style={{ marginBottom: 13 }}
-              normalize={(value) => {
-                if (!value) return "";
-
-                return value.replace(/[^0-9]/g, "");
+        <Row>
+          <Col xs={24} md={12} lg={12} style={{ padding: "0 7px" }}>
+            <h2
+              className="title-register-patient"
+              style={{
+                ...titleStyleCss,
+                marginBottom: 7,
+                textAlign: "center",
               }}
-              rules={[
-                {
-                  required: false,
-                },
-                {
-                  pattern: /^[0-9]+$/,
-                  message:
-                    "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
-                },
-                {
-                  min: 7,
-                  message: "¡Por favor ingresa mínimo 7 números!",
-                },
-                {
-                  max: 11,
-                  message: "¡Por favor ingresa máximo 11 números!",
-                },
-              ]}
             >
+              Verificar datos
+            </h2>
+
+            <p
+              className="warning-message-verify-data"
+              style={{
+                display: "flow",
+                color: "#960202",
+                fontWeight: 500,
+                textAlign: "center",
+              }}
+            >
+              Por favor, verifique si todos sus datos están correctos, de lo
+              contrario debe comunicarse a nuestra línea PBX:{" "}
+              <b>{CONTACT_PBX}</b>
+              para realizar la actualización de sus datos personales.
+            </p>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Nombre de paciente:
+              </Typography.Title>
               <Input
-                prefix={<WhatsAppOutlined className="site-form-item-icon" />}
-                type="tel"
-                value={whatsappPatientState}
-                placeholder="Número de WhatsApp"
-                onChange={(e) =>
-                  dispatch(setWhatsappUserPatient(e.target.value))
-                }
-                autoComplete="off"
-                min={0}
+                id="name-patient-auto-input"
+                name="name-patient-auto-input"
+                className="name-patient-auto-input"
+                value={namePatientState || NOT_REGISTER}
+                disabled
               />
-            </Form.Item>
+            </div>
 
-            <Form.Item
-              name="patient-user-password-register"
-              label="Contraseña"
-              style={{ marginBottom: 22 }}
-              rules={[
-                {
-                  required: true,
-                  message: "¡Por favor ingresa tu contraseña!",
-                },
-                {
-                  min: 7,
-                  message: "¡La contraseña debe tener mínimo 7 caracteres!",
-                },
-                {
-                  max: 14,
-                  message: "¡La contraseña debe tener máximo 14 caracteres!",
-                },
-              ]}
-              hasFeedback
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Tipo de documento:
+              </Typography.Title>
+              <Input
+                id="id-type-patient-auto-input"
+                name="id-type-patient-auto-input"
+                className="id-type-patient-auto-input"
+                value={idTypeAbbrevPatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Número de documento:
+              </Typography.Title>
+              <Input
+                id="patient-id-number-hosvital"
+                name="patient-id-number-hosvital"
+                className="patient-id-number-hosvital"
+                value={idNumberPatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <p
+              className="warning-message-auth-method"
+              style={{
+                display: "flow",
+                color: "#960202",
+                fontWeight: 500,
+                textAlign: "center",
+              }}
             >
-              <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                value={passwordUserPatientLocalState}
-                placeholder="Contraseña"
-                onChange={(e) =>
-                  setPasswordUserPatientLocalState(e.target.value.trim())
-                }
-              />
-            </Form.Item>
+              El correo electrónico y el número de celular que se muestran a
+              continuación serán los canales autorizados que se tomarán para
+              realizar el proceso de autenticación.
+            </p>
 
-            <Form.Item
-              name="patient-user-password-verify-register"
-              label="Verificar contraseña"
-              style={{ marginBottom: 22 }}
-              dependencies={["patient-user-password-register"]}
-              rules={[
-                {
-                  required: true,
-                  message: "¡Por favor verifica tu contraseña!",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (
-                      !value ||
-                      getFieldValue("patient-user-password-register") === value
-                    ) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject("Las contraseñas no coinciden.");
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Correo electrónico:
+              </Typography.Title>
+              <Input
+                id="patient-email-hosvital"
+                name="patient-email-hosvital"
+                className="patient-email-hosvital"
+                value={emailPatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Número de celular:
+              </Typography.Title>
+              <Input
+                id="patient-cellphone-hosvital"
+                name="patient-cellphone-hosvital"
+                className="patient-cellphone-hosvital"
+                value={cellphonePatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Sexo:
+              </Typography.Title>
+              <Input
+                id="patient-gender-hosvital"
+                name="patient-gender-hosvital"
+                className="patient-gender-hosvital"
+                value={genderPatientAbbrevState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Fecha de nacimiento:
+              </Typography.Title>
+              <Input
+                id="patient-birthdate-hosvital"
+                name="patient-birthdate-hosvital"
+                className="patient-birthdate-hosvital"
+                value={birthdatePatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Afiliado a EPS:
+              </Typography.Title>
+              <Input
+                id="patient-affiliationeps-hosvital"
+                name="patient-affiliationeps-hosvital"
+                className="patient-affiliationeps-hosvital"
+                value={affiliationEpsPatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Dirección de residencia:
+              </Typography.Title>
+              <Input
+                id="patient-residenceaddress-hosvital"
+                name="patient-residenceaddress-hosvital"
+                className="patient-residenceaddress-hosvital"
+                value={residenceAddressPatientState || NOT_REGISTER}
+                disabled
+              />
+            </div>
+          </Col>
+
+          <Col xs={24} md={12} lg={12} style={{ padding: "0 13px" }}>
+            <h2
+              className="title-register-patient"
+              style={{
+                ...titleStyleCss,
+                marginBottom: 22,
+                textAlign: "center",
+              }}
+            >
+              Ingresar datos adicionales
+            </h2>
+
+            <Form
+              id="patient-user-register-form"
+              name="patient-user-register-form"
+              className="patient-user-register-form"
+              onFinish={handleCorrectData}
+              initialValues={{ remember: false }}
+              autoComplete="false"
+              layout="vertical"
+            >
+              <Form.Item
+                id="radio-select-auth-method"
+                name="radio-select-auth-method"
+                label="Método de autenticación"
+                style={{ marginBottom: 22 }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor selecciona un método de autenticación!",
                   },
-                }),
-              ]}
-              hasFeedback
-            >
-              <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                value={passwordUserPatientLocalState}
-                placeholder="Verificar contraseña"
-                onChange={(e) =>
-                  setPasswordUserPatientLocalState(e.target.value.trim())
-                }
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="checkbox-data-autorization"
-              valuePropName="checked"
-              style={{ textAlign: "center", marginBottom: 13 }}
-              rules={[
-                {
-                  validator: checkboxValidator,
-                },
-              ]}
-            >
-              <div style={{ marginBlock: 7 }}>
-                <div style={{ marginBottom: 13 }}>
-                  <a
-                    className="data-processing-autorization-link"
-                    href={
-                      process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK
-                    }
-                    target="_blank"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Leer Política de Tratamiento de Datos
-                  </a>
-                </div>
-                <Checkbox
-                  checked={isCheckboxChecked}
-                  onChange={handleCheckboxChange}
+                ]}
+              >
+                <Radio.Group
+                  value={authMethodUserPatientLocalState}
+                  onChange={(e) =>
+                    setAuthMethodUserPatientLocalState(e.target.value)
+                  }
+                  style={{ textAlign: "start" }}
                 >
-                  Acepto las políticas de tratamiento de datos personales
-                </Checkbox>
-              </div>
-            </Form.Item>
+                  <Space size={"small"} direction="horizontal">
+                    {allAuthMethodsData?.map((option: any) => (
+                      <Radio key={option.id} value={option.id}>
+                        {option.name}
+                      </Radio>
+                    ))}
+                  </Space>
+                </Radio.Group>
+              </Form.Item>
 
-            <Form.Item style={{ textAlign: "center" }}>
-              {isSubmittingConfirmData ? (
-                <CustomSpin />
-              ) : (
+              <Form.Item
+                id="patient-user-whatsapp-register"
+                name="patient-user-whatsapp-register"
+                className="patient-user-whatsapp-register"
+                label="WhatsApp (opcional)"
+                style={{ marginBottom: 13 }}
+                normalize={(value) => {
+                  if (!value) return "";
+
+                  return value.replace(/[^0-9]/g, "");
+                }}
+                rules={[
+                  {
+                    required: false,
+                  },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message:
+                      "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
+                  },
+                  {
+                    min: 7,
+                    message: "¡Por favor ingresa mínimo 7 números!",
+                  },
+                  {
+                    max: 11,
+                    message: "¡Por favor ingresa máximo 11 números!",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<WhatsAppOutlined className="site-form-item-icon" />}
+                  type="tel"
+                  value={whatsappPatientState}
+                  placeholder="Número de WhatsApp"
+                  onChange={(e) =>
+                    dispatch(setWhatsappUserPatient(e.target.value))
+                  }
+                  autoComplete="off"
+                  min={0}
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="patient-user-password-register"
+                name="patient-user-password-register"
+                className="patient-user-password-register"
+                label="Contraseña"
+                style={{ marginBottom: 22 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "¡Por favor ingresa tu contraseña!",
+                  },
+                  {
+                    min: 8,
+                    message: "¡La contraseña debe tener mínimo 8 caracteres!",
+                  },
+                  {
+                    max: 31,
+                    message: "¡La contraseña debe tener máximo 31 caracteres!",
+                  },
+                  {
+                    validator: (_, value) => {
+                      const containsLowercase = /[a-z]/.test(value ?? "");
+                      const containsUppercase = /[A-Z]/.test(value ?? "");
+                      if (!containsLowercase || !containsUppercase) {
+                        return Promise.reject(
+                          "¡La contraseña debe contener al menos una letra minúscula y una letra mayúscula!"
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                  {
+                    validator: (_, value) => {
+                      const containsSpecialChar = /[_\-*&%#$\/.,+=]/.test(
+                        value ?? ""
+                      );
+                      if (!containsSpecialChar) {
+                        return Promise.reject(
+                          "La contraseña debe contener al menos un carácter especial (_ - * & % # $ / . , + =)"
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                  {
+                    validator: (_, value) => {
+                      const passwordUpperCase = value?.toUpperCase();
+
+                      const nameWords = namePatientState
+                        ?.toUpperCase()
+                        .split(" ");
+
+                      const idNumber = String(idNumberPatientState);
+
+                      const cellphoneNumber = String(cellphonePatientState);
+
+                      const birthdate = birthdatePatientState
+                        ?.replace(/\s+/g, "")
+                        .split("-");
+
+                      if (
+                        nameWords?.some((word) =>
+                          passwordUpperCase?.includes(word)
+                        )
+                      ) {
+                        return Promise.reject(
+                          new Error(
+                            "¡La contraseña no puede contener datos del nombre del usuario!"
+                          )
+                        );
+                      }
+
+                      if (passwordUpperCase?.includes(idNumber)) {
+                        return Promise.reject(
+                          new Error(
+                            "¡La contraseña no puede contener datos del número de cédula del usuario!"
+                          )
+                        );
+                      }
+
+                      if (passwordUpperCase?.includes(cellphoneNumber)) {
+                        return Promise.reject(
+                          new Error(
+                            "¡La contraseña no puede contener datos del número de celular del usuario!"
+                          )
+                        );
+                      }
+
+                      if (
+                        birthdate?.some((date) =>
+                          passwordUpperCase?.includes(date)
+                        )
+                      ) {
+                        return Promise.reject(
+                          new Error(
+                            "¡La contraseña no puede contener datos de la fecha de nacimiento del usuario!"
+                          )
+                        );
+                      }
+
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  value={passwordUserPatientLocalState}
+                  placeholder="Contraseña"
+                  onChange={(e) =>
+                    setPasswordUserPatientLocalState(e.target.value.trim())
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="patient-user-password-verify-register"
+                name="patient-user-password-verify-register"
+                className="patient-user-password-verify-register"
+                label="Verificar contraseña"
+                style={{ marginBottom: 22 }}
+                dependencies={["patient-user-password-register"]}
+                rules={[
+                  {
+                    required: true,
+                    message: "¡Por favor verifica tu contraseña!",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (
+                        !value ||
+                        getFieldValue("patient-user-password-register") ===
+                          value
+                      ) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("Las contraseñas no coinciden.");
+                    },
+                  }),
+                ]}
+                hasFeedback
+              >
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  value={passwordUserPatientLocalState}
+                  placeholder="Verificar contraseña"
+                  onChange={(e) =>
+                    setPasswordUserPatientLocalState(e.target.value.trim())
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="checkbox-data-autorization"
+                name="checkbox-data-autorization"
+                className="checkbox-data-autorization"
+                valuePropName="checked"
+                style={{ textAlign: "center", marginBottom: 13 }}
+                rules={[
+                  {
+                    validator: checkboxValidator,
+                  },
+                ]}
+              >
+                <div style={{ marginBlock: 7 }}>
+                  <div style={{ marginBottom: 13 }}>
+                    <a
+                      className="data-processing-autorization-link"
+                      href={
+                        process.env
+                          .NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK
+                      }
+                      target="_blank"
+                      style={{ textDecoration: "underline" }}
+                    >
+                      Leer Política de Tratamiento de Datos
+                    </a>
+                  </div>
+                  <Checkbox
+                    checked={isCheckboxChecked}
+                    onChange={handleCheckboxChange}
+                  >
+                    Acepto las políticas de tratamiento de datos personales
+                  </Checkbox>
+                </div>
+              </Form.Item>
+
+              <Form.Item style={{ textAlign: "center" }}>
+                {isSubmittingConfirmData ? (
+                  <CustomSpin />
+                ) : (
+                  <Button
+                    size="large"
+                    style={{
+                      paddingInline: 31,
+                      borderRadius: 31,
+                      backgroundColor: "#015E90",
+                      color: "#f2f2f2",
+                      marginBlock: 7,
+                      marginInline: 7,
+                    }}
+                    htmlType="submit"
+                    className="patient-confirm-data-button"
+                    onClick={handleButtonClick}
+                  >
+                    Datos Correctos
+                  </Button>
+                )}
+
                 <Button
                   size="large"
                   style={{
                     paddingInline: 31,
                     borderRadius: 31,
-                    backgroundColor: "#015E90",
+                    backgroundColor: "#8C1111",
                     color: "#f2f2f2",
-                    marginBlock: 7,
+                    marginTop: 7,
                     marginInline: 7,
                   }}
-                  htmlType="submit"
-                  className="patient-confirm-data-button"
-                  onClick={handleButtonClick}
+                  className="patient-incorrect-data-button"
+                  onClick={handleIncorrectData}
+                  onMouseDown={handleButtonClick}
                 >
-                  Datos Correctos
+                  Datos Incorrectos
                 </Button>
-              )}
-
-              <Button
-                size="large"
-                style={{
-                  paddingInline: 31,
-                  borderRadius: 31,
-                  backgroundColor: "#8C1111",
-                  color: "#f2f2f2",
-                  marginTop: 7,
-                  marginInline: 7,
-                }}
-                className="patient-incorrect-data-button"
-                onClick={handleIncorrectData}
-                onMouseDown={handleButtonClick}
-              >
-                Datos Incorrectos
-              </Button>
-            </Form.Item>
-          </Form>
-        </Col>
-      </Row>
-    </Card>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </Card>
+    </Col>
   );
 };
 

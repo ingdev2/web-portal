@@ -10,6 +10,7 @@ const initialState: MedicalReq = {
   familiar_id: "",
   aplicantId: "",
   patient_class_status: 0,
+  patient_class_status_abbrev: "",
   relationship_with_patient: 0,
   patient_name: "",
   patient_id_type: 0,
@@ -79,6 +80,9 @@ export const medicalReqSlice = createSlice({
     },
     setPatientClassStatusMedicalReq: (state, action) => {
       state.patient_class_status = action.payload;
+    },
+    setPatientClassStatusAbbrevMedicalReq: (state, action) => {
+      state.patient_class_status_abbrev = action.payload;
     },
     setRelationShipWithPatientMedicalReq: (state, action) => {
       state.relationship_with_patient = action.payload;
@@ -213,6 +217,7 @@ export const medicalReqSlice = createSlice({
       state.familiar_id = "";
       state.aplicantId = "";
       state.patient_class_status = 0;
+      state.patient_class_status_abbrev = "";
       state.relationship_with_patient = 0;
       state.patient_name = "";
       state.patient_id_type = 0;
@@ -260,6 +265,7 @@ export const {
   setFamiliarIdMedicalReq,
   setAplicantIdMedicalReq,
   setPatientClassStatusMedicalReq,
+  setPatientClassStatusAbbrevMedicalReq,
   setRelationShipWithPatientMedicalReq,
   setPatientNameMedicalReq,
   setPatientIdTypeMedicalReq,

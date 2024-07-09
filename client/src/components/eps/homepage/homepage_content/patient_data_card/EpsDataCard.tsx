@@ -11,6 +11,7 @@ import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import {
   setIdUserEps,
   setNameUserEps,
+  setLastNameUserEps,
   setIdTypeUserEps,
   setIdNumberUserEps,
   setEmailUserEps,
@@ -34,7 +35,10 @@ import { useGetGenderByIdQuery } from "@/redux/apis/genders/gendersApi";
 const EpsDataCard: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const NOT_REGISTER: string = "NO REGISTRA";
+
   const nameEpsState = useAppSelector((state) => state.eps.name);
+  const lastNameEpsState = useAppSelector((state) => state.eps.last_name);
   const idTypeNumberEpsState = useAppSelector(
     (state) => state.eps.user_id_type
   );
@@ -87,6 +91,7 @@ const EpsDataCard: React.FC = () => {
   useEffect(() => {
     if (idNumberEpsState && userEpsData) {
       dispatch(setNameUserEps(userEpsData?.name));
+      dispatch(setLastNameUserEps(userEpsData?.last_name));
       dispatch(setIdTypeUserEps(userEpsData?.user_id_type));
       dispatch(setGenderUserEps(userEpsData?.user_gender));
       dispatch(setEmailUserEps(userEpsData?.email));
@@ -191,7 +196,7 @@ const EpsDataCard: React.FC = () => {
                     marginBottom: "8px",
                   }}
                 >
-                  {nameEpsState}
+                  {`${nameEpsState} ${lastNameEpsState}`}
                 </h3>
               </Col>
 
@@ -299,7 +304,7 @@ const EpsDataCard: React.FC = () => {
                     textAlign: "end",
                   }}
                 >
-                  {cellphoneEpsState}
+                  {cellphoneEpsState || NOT_REGISTER}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />

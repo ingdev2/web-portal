@@ -5,13 +5,18 @@ const initialState: Familiar = {
   name: "",
   last_name: "",
   user_gender: 0,
+  user_gender_abbrev: "",
   user_id_type: 0,
+  id_type_abbrev: "",
   id_number: 0,
   email: "",
   cellphone: 0,
   whatsapp: 0,
   authentication_method: 0,
   patient_id: "",
+  patient_id_number: 0,
+  patient_name: "",
+  patient_id_type_abbrev: "",
   rel_with_patient: 0,
   user_role: 0,
   verification_code: 0,
@@ -42,11 +47,17 @@ export const familiarSlice = createSlice({
     setGenderUserFamiliar: (state, action) => {
       state.user_gender = action.payload;
     },
+    setGenderAbbrevUserFamiliar: (state, action) => {
+      state.user_gender_abbrev = action.payload;
+    },
     setIdTypesUserFamiliar: (state, action) => {
       state.idTypesFamiliar = action.payload;
     },
     setIdTypeUserFamiliar: (state, action) => {
       state.user_id_type = action.payload;
+    },
+    setIdTypeAbbrevUserFamiliar: (state, action) => {
+      state.id_type_abbrev = action.payload;
     },
     setIdNumberUserFamiliar: (state, action) => {
       state.id_number = action.payload;
@@ -65,6 +76,15 @@ export const familiarSlice = createSlice({
     },
     setPatientIdFamiliar: (state, action) => {
       state.patient_id = action.payload;
+    },
+    setPatientIdNumberFamiliar: (state, action) => {
+      state.patient_id_number = action.payload;
+    },
+    setPatientNameFamiliar: (state, action) => {
+      state.patient_name = action.payload;
+    },
+    setPatientIdTypeAbbrevFamiliar: (state, action) => {
+      state.patient_id_type_abbrev = action.payload;
     },
     setRelWithPatientFamiliar: (state, action) => {
       state.rel_with_patient = action.payload;
@@ -89,14 +109,21 @@ export const familiarSlice = createSlice({
       state.name = "";
       state.last_name = "";
       state.user_gender = 0;
+      state.user_gender_abbrev;
       state.user_id_type = 0;
+      state.id_type_abbrev;
       state.id_number = 0;
       state.email = "";
       state.cellphone = 0;
       state.whatsapp = 0;
       state.authentication_method = 0;
       state.patient_id = "";
+      state.patient_id_number = 0;
+      state.patient_name = "";
       state.rel_with_patient = 0;
+      state.idTypesFamiliar = [];
+      state.copy_familiar_citizenship_card = [];
+      state.medical_req = [];
       state.errors = [];
     },
   },
@@ -107,7 +134,9 @@ export const {
   setNameUserFamiliar,
   setLastNameUserFamiliar,
   setGenderUserFamiliar,
+  setGenderAbbrevUserFamiliar,
   setIdTypeUserFamiliar,
+  setIdTypeAbbrevUserFamiliar,
   setIdTypesUserFamiliar,
   setIdNumberUserFamiliar,
   setEmailUserFamiliar,
@@ -115,6 +144,9 @@ export const {
   setWhatsappUserFamiliar,
   setAuthMethodUserFamiliar,
   setPatientIdFamiliar,
+  setPatientIdNumberFamiliar,
+  setPatientNameFamiliar,
+  setPatientIdTypeAbbrevFamiliar,
   setRelWithPatientFamiliar,
   setRoleUserFamiliar,
   setIsActiveUserPatient,

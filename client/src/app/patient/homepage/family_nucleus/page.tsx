@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.enum";
@@ -39,16 +40,18 @@ const FamilyNucleusPage = () => {
   } = useGetUserByIdNumberPatientQuery(idNumberUserPatientLoginState);
 
   useEffect(() => {
+    if (!idNumberPatientState) {
+      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
+    }
     if (!idNumberUserPatientLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
-    }
-    if (!idNumberPatientState) {
-      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
+      redirect("/login");
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
+      redirect("/login");
     }
   }, [status, idNumberUserPatientLoginState, idNumberPatientState]);
 
