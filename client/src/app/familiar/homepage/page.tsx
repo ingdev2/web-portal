@@ -11,13 +11,13 @@ import FamiliarHomeLayout from "@/components/familiar/homepage/FamiliarHomeLayou
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
-import { setIdNumberUserFamiliar } from "@/redux/features/familiar/familiarSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 import {
   setFamiliarModalIsOpen,
   setIsPageLoading,
 } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 
 const HomePageFamiliar = () => {
   const { data: session, status } = useSession();
@@ -33,6 +33,7 @@ const HomePageFamiliar = () => {
     (state) => state.modal.isPageLoading
   );
 
+  const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
   const idNumberUserFamiliarLoginState = useAppSelector(
     (state) => state.familiarLogin.id_number_familiar
   );
@@ -48,13 +49,15 @@ const HomePageFamiliar = () => {
     isLoading: userEpsLoading,
     isFetching: userEpsFetching,
     error: userEpsError,
-  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarLoginState);
+  } = useGetFamiliarByIdQuery(idUserFamiliarState, {
+    skip: !idUserFamiliarState,
+  });
 
   useEffect(() => {
-    if (!idNumberFamiliarState) {
-      dispatch(setIdNumberUserFamiliar(userFamiliarData?.id_number));
+    if (!idUserFamiliarState) {
+      dispatch(setIdUserFamiliar(userFamiliarData?.id));
     }
-    if (!idNumberUserFamiliarLoginState) {
+    if (!idUserFamiliarState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
       redirect("/login");
@@ -70,12 +73,7 @@ const HomePageFamiliar = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [
-    status,
-    idNumberUserFamiliarLoginState,
-    idNumberFamiliarState,
-    familiarModalState,
-  ]);
+  }, [status, idUserFamiliarState, familiarModalState]);
 
   return (
     <div>
@@ -86,7 +84,7 @@ const HomePageFamiliar = () => {
         />
       )}
 
-      {!idNumberUserFamiliarLoginState || status === "unauthenticated" ? (
+      {!idUserFamiliarState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div className="homepage-familiar-content">

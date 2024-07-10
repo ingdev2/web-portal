@@ -12,9 +12,9 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import FamiliarCreateRequestLayout from "@/components/familiar/create_request/FamiliarCreateRequestLayout";
 import CustomLoadingOverlay from "@/components/common/custom_loading_overlay/CustomLoadingOverlay";
 
-import { setIdNumberUserFamiliar } from "@/redux/features/familiar/familiarSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 
 const CreateRequestFamiliarPage = () => {
   const { data: session, status } = useSession();
@@ -23,6 +23,7 @@ const CreateRequestFamiliarPage = () => {
   const allowedRoles = [UserRolType.AUTHORIZED_FAMILIAR];
   useRoleValidation(allowedRoles);
 
+  const idUserFamiliarLoginState = useAppSelector((state) => state.familiar.id);
   const idNumberUserFamiliarLoginState = useAppSelector(
     (state) => state.familiarLogin.id_number_familiar
   );
@@ -41,13 +42,15 @@ const CreateRequestFamiliarPage = () => {
     isLoading: userFamiliarLoading,
     isFetching: userFamiliarFetching,
     error: userFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarLoginState);
+  } = useGetFamiliarByIdQuery(idUserFamiliarLoginState, {
+    skip: !idUserFamiliarLoginState,
+  });
 
   useEffect(() => {
-    if (!idNumberFamiliarState) {
-      dispatch(setIdNumberUserFamiliar(userFamiliarData?.id_number));
+    if (!idUserFamiliarLoginState) {
+      dispatch(setIdUserFamiliar(userFamiliarData?.id));
     }
-    if (!idNumberUserFamiliarLoginState) {
+    if (!idUserFamiliarLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
       redirect("/login");
@@ -57,7 +60,7 @@ const CreateRequestFamiliarPage = () => {
       setErrorMessage("¡No autenticado!");
       redirect("/login");
     }
-  }, [status, idNumberUserFamiliarLoginState, idNumberFamiliarState]);
+  }, [status, idUserFamiliarLoginState]);
 
   return (
     <>
@@ -70,7 +73,7 @@ const CreateRequestFamiliarPage = () => {
 
       <CustomLoadingOverlay isLoading={isPageLoadingState} />
 
-      {!idNumberUserFamiliarLoginState || status === "unauthenticated" ? (
+      {!idUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div className="create-request-page-familiar-content">

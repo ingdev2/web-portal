@@ -13,7 +13,7 @@ import {
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
 } from "@/redux/apis/users/usersApi";
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 
 const ButtonAuth = () => {
   const { data: session, status } = useSession();
@@ -24,9 +24,7 @@ const ButtonAuth = () => {
   const idNumberEpsState = useAppSelector(
     (state) => state.epsUserLogin.id_number
   );
-  const idNumberFamiliarState = useAppSelector(
-    (state) => state.familiarLogin.id_number_familiar
-  );
+  const idFamiliarState = useAppSelector((state) => state.familiarLogin.id);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -50,7 +48,9 @@ const ButtonAuth = () => {
     isLoading: isUserFamiliarLoading,
     isFetching: isUserFamiliarFetching,
     isError: isUserFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberFamiliarState);
+  } = useGetFamiliarByIdQuery(idFamiliarState, {
+    skip: !idFamiliarState,
+  });
 
   if (status === "loading") {
     return <CustomSpin />;

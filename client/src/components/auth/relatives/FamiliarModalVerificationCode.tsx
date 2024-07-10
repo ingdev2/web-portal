@@ -16,17 +16,18 @@ import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
 import {
   setIdTypeLoginFamiliar,
-  setIdNumberLoginFamiliar,
   setEmailLoginFamiliar,
   setPatientIdNumberLoginFamiliar,
   setRelationWithPatientLoginFamiliar,
   setVerificationCodeLoginFamiliar,
   setErrorsLoginFamiliar,
+  setIdLoginFamiliar,
 } from "@/redux/features/login/familiarLoginSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useResendFamiliarVerificationCodeMutation } from "@/redux/apis/auth/loginRelativesApi";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
 const FamiliarModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +40,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
     (state) => state.modal.isPageLoading
   );
 
+  const idFamiliarState = useAppSelector((state) => state.familiarLogin.id);
   const idTypeFamiliarState = useAppSelector(
     (state) => state.familiarLogin.id_type_familiar
   );
@@ -74,7 +76,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
     isFetching: userFamiliarFetching,
     isSuccess: userFamiliarSuccess,
     isError: userFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberFamiliarState);
+  } = useGetFamiliarByIdQuery(idFamiliarState, { skip: !idFamiliarState });
 
   const [
     resendUserVerificationCodeFamiliar,
@@ -122,6 +124,9 @@ const FamiliarModalVerificationCode: React.FC = () => {
 
         setShowSuccessMessage(true);
         setSuccessMessage("Ingresando al portal, por favor espere...");
+        dispatch(setIdUserFamiliar(userFamiliarData?.id));
+        dispatch(setIdLoginFamiliar(userFamiliarData?.id));
+
         dispatch(setIdTypeLoginFamiliar(0));
         dispatch(setEmailLoginFamiliar(""));
         dispatch(setPatientIdNumberLoginFamiliar(0));

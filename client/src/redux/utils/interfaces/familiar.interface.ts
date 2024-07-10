@@ -19,6 +19,7 @@ interface Familiar {
   patient_name: string;
   patient_id_type_abbrev: string;
   rel_with_patient: number;
+  rel_with_patient_abbrev: string;
   verification_code: number;
   idTypesFamiliar: string[];
   createdAt: string;

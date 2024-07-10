@@ -25,11 +25,13 @@ import {
   setIdTypeOptionsLoginFamiliar,
   setRelationshipTypesOptionsLoginFamiliar,
   resetLoginFamiliarState,
+  setIdLoginFamiliar,
 } from "@/redux/features/login/familiarLoginSlice";
 import { setDefaultValuesUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 import { setFamiliarModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useLoginRelativesMutation } from "@/redux/apis/auth/loginRelativesApi";
+import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllRelationshipTypesQuery } from "@/redux/apis/relatives/relationship_types/relationshipTypesApi";
 
@@ -72,6 +74,17 @@ const FamiliarUserLoginForm: React.FC = () => {
   const [isSubmittingFamiliar, setIsSubmittingFamiliar] = useState(false);
   const [showErrorMessageFamiliar, setShowErrorMessageFamiliar] =
     useState(false);
+
+  const {
+    data: userFamiliarData,
+    isLoading: userFamiliarLoading,
+    isFetching: userFamiliarFetching,
+    isSuccess: userFamiliarSuccess,
+    isError: userFamiliarError,
+  } = useGetFamiliarByIdNumberQuery(
+    parseInt(idNumberFamiliarLocalState?.toString(), 10),
+    { skip: !idNumberFamiliarLocalState }
+  );
 
   const {
     data: idTypesFamiliarData,
@@ -182,6 +195,9 @@ const FamiliarUserLoginForm: React.FC = () => {
       }
 
       if (isLoginUserFamiliarSuccess) {
+        if (userFamiliarData && !userFamiliarError) {
+          dispatch(setIdLoginFamiliar(userFamiliarData.id));
+        }
         dispatch(setIdTypeLoginFamiliar(idTypeFamiliarLocalState));
         dispatch(setIdNumberLoginFamiliar(idNumberFamiliarLocalStateInt));
         dispatch(setEmailLoginFamiliar(emailFamiliarLocalState));

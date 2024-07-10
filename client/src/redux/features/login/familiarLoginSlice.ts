@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: FamiliarLogin = {
+  id: "",
   id_type_familiar: 0,
   id_number_familiar: 0,
   email_familiar: "",
@@ -16,6 +17,9 @@ export const familiarLoginSlice = createSlice({
   name: "familiarLogin",
   initialState,
   reducers: {
+    setIdLoginFamiliar: (state, action) => {
+      state.id = action.payload;
+    },
     setIdTypeLoginFamiliar: (state, action) => {
       state.id_type_familiar = action.payload;
     },
@@ -56,6 +60,7 @@ export const familiarLoginSlice = createSlice({
 });
 
 export const {
+  setIdLoginFamiliar,
   setIdTypeOptionsLoginFamiliar,
   setRelationshipTypesOptionsLoginFamiliar,
   setIdTypeLoginFamiliar,

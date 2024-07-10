@@ -302,12 +302,12 @@ const PatientUserLoginForm: React.FC = () => {
                 message: "¡Por favor ingresa tu contraseña!",
               },
               {
-                min: 7,
-                message: "¡La contraseña debe tener mínimo 7 caracteres!",
+                min: 8,
+                message: "¡La contraseña debe tener mínimo 8 caracteres!",
               },
               {
-                max: 14,
-                message: "¡La contraseña debe tener máximo 14 caracteres!",
+                max: 31,
+                message: "¡La contraseña debe tener máximo 31 caracteres!",
               },
             ]}
             hasFeedback

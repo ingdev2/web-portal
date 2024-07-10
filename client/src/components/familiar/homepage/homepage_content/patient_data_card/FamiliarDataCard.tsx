@@ -22,21 +22,25 @@ import {
   setPatientNameFamiliar,
   setEmailUserFamiliar,
   setCellphoneUserFamiliar,
+  setAuthMethodUserFamiliar,
+  setRelWithPatientFamiliar,
+  setRelWithPatientAbbrevFamiliar,
   setErrorsUserFamiliar,
   setDefaultValuesUserFamiliar,
-  setAuthMethodUserFamiliar,
 } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetGenderByIdQuery } from "@/redux/apis/genders/gendersApi";
+import { useGetRelationshipTypeByIdQuery } from "@/redux/apis/relatives/relationship_types/relationshipTypesApi";
 
 const FamiliarDataCard: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
 
+  const idFamiliarState = useAppSelector((state) => state.familiar.id);
   const nameFamiliarState = useAppSelector((state) => state.familiar.name);
   const lastNameFamiliarState = useAppSelector(
     (state) => state.familiar.last_name
@@ -60,6 +64,9 @@ const FamiliarDataCard: React.FC = () => {
   const patientNameState = useAppSelector(
     (state) => state.familiar.patient_name
   );
+  const relWithPatientNumberState = useAppSelector(
+    (state) => state.familiar.rel_with_patient
+  );
   const errorsFamiliarState = useAppSelector((state) => state.familiar.errors);
 
   const [showErrorMessageFamiliar, setShowErrorMessageFamiliar] =
@@ -70,7 +77,9 @@ const FamiliarDataCard: React.FC = () => {
     isLoading: userFamiliarLoading,
     isFetching: userFamiliarFetching,
     error: userFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberFamiliarState);
+  } = useGetFamiliarByIdQuery(idFamiliarState, {
+    skip: !idFamiliarState,
+  });
 
   const {
     data: patientUserData,
@@ -93,9 +102,16 @@ const FamiliarDataCard: React.FC = () => {
     error: genderNameUserError,
   } = useGetGenderByIdQuery(genderNumberFamiliarState);
 
+  const {
+    data: relWithPatientFamiliarData,
+    isLoading: relWithPatientFamiliarLoading,
+    isFetching: relWithPatientFamiliarFetching,
+    error: relWithPatientFamiliarError,
+  } = useGetRelationshipTypeByIdQuery(relWithPatientNumberState);
+
   useEffect(() => {
     if (
-      idNumberFamiliarState &&
+      idFamiliarState &&
       userFamiliarData &&
       !userFamiliarFetching &&
       !userFamiliarLoading &&
@@ -104,12 +120,14 @@ const FamiliarDataCard: React.FC = () => {
       dispatch(setNameUserFamiliar(userFamiliarData?.name));
       dispatch(setLastNameUserFamiliar(userFamiliarData?.last_name));
       dispatch(setIdTypeUserFamiliar(userFamiliarData?.user_id_type));
+      dispatch(setIdNumberUserFamiliar(userFamiliarData?.id_number));
       dispatch(setGenderUserFamiliar(userFamiliarData?.user_gender));
       dispatch(setEmailUserFamiliar(userFamiliarData?.email));
       dispatch(setCellphoneUserFamiliar(userFamiliarData?.cellphone));
       dispatch(
         setAuthMethodUserFamiliar(userFamiliarData?.authentication_method)
       );
+      dispatch(setRelWithPatientFamiliar(userFamiliarData?.rel_with_patient));
       dispatch(setPatientIdNumberFamiliar(userFamiliarData.patient_id_number));
     }
     if (idTypeNumberFamiliarState && idTypeNameUserData) {
@@ -131,21 +149,31 @@ const FamiliarDataCard: React.FC = () => {
         )
       );
     }
+    if (
+      relWithPatientFamiliarData &&
+      !relWithPatientFamiliarFetching &&
+      !relWithPatientFamiliarLoading &&
+      !relWithPatientFamiliarError &&
+      relWithPatientNumberState
+    ) {
+      dispatch(
+        setRelWithPatientAbbrevFamiliar(relWithPatientFamiliarData.name)
+      );
+    }
   }, [
-    idNumberFamiliarState,
+    idFamiliarState,
     userFamiliarData,
-    userFamiliarFetching,
-    userFamiliarLoading,
     userFamiliarError,
     idTypeNumberFamiliarState,
     idTypeNameUserData,
     genderNumberFamiliarState,
     genderNameUserData,
     patientUserData,
-    patientUserFetching,
-    patientUserLoading,
     patientUserError,
     patientIdNumberState,
+    relWithPatientFamiliarData,
+    relWithPatientFamiliarError,
+    relWithPatientNumberState,
   ]);
 
   return (

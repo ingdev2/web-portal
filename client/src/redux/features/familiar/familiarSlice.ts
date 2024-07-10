@@ -18,6 +18,7 @@ const initialState: Familiar = {
   patient_name: "",
   patient_id_type_abbrev: "",
   rel_with_patient: 0,
+  rel_with_patient_abbrev: "",
   user_role: 0,
   verification_code: 0,
   is_active: true,
@@ -89,6 +90,9 @@ export const familiarSlice = createSlice({
     setRelWithPatientFamiliar: (state, action) => {
       state.rel_with_patient = action.payload;
     },
+    setRelWithPatientAbbrevFamiliar: (state, action) => {
+      state.rel_with_patient_abbrev = action.payload;
+    },
     setRoleUserFamiliar: (state, action) => {
       state.user_role = action.payload;
     },
@@ -148,6 +152,7 @@ export const {
   setPatientNameFamiliar,
   setPatientIdTypeAbbrevFamiliar,
   setRelWithPatientFamiliar,
+  setRelWithPatientAbbrevFamiliar,
   setRoleUserFamiliar,
   setIsActiveUserPatient,
   setCopyFamiliarCitizenshipCard,

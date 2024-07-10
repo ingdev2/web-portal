@@ -30,7 +30,6 @@ export class AuthorizedFamiliarController {
     return await this.authorizedFamiliarService.getAllRelatives();
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
   @Get('/getFamiliar/:id')
   async getFamiliarById(@Param('id') id: string) {
     return await this.authorizedFamiliarService.getFamiliarById(id);

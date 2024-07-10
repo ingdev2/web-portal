@@ -1,4 +1,5 @@
 interface UserLogin {
+  id: string;
   id_type: number;
   id_type_abbrev: string;
   id_number: number;

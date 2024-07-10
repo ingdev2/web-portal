@@ -20,16 +20,14 @@ import {
 import { resetLoginFamiliarState } from "@/redux/features/login/familiarLoginSlice";
 import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 
 const FamiliarHeaderLayout: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const idNumberUserFamiliarState = useAppSelector(
-    (state) => state.familiarLogin.id_number_familiar
-  );
+  const idUserFamiliarState = useAppSelector((state) => state.familiarLogin.id);
 
   const nameUserFamiliarState = useAppSelector((state) => state.familiar.name);
 
@@ -38,7 +36,9 @@ const FamiliarHeaderLayout: React.FC = () => {
     isLoading: userFamiliarLoading,
     isFetching: userFamiliarFetching,
     error: userFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarState);
+  } = useGetFamiliarByIdQuery(idUserFamiliarState, {
+    skip: !idUserFamiliarState,
+  });
 
   useEffect(() => {
     if (!nameUserFamiliarState) {

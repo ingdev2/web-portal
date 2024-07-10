@@ -26,12 +26,13 @@ import {
   removeFileCopyPatientCitizenshipCardMedicalReq,
   setDefaultValuesMedicalReq,
   setErrorsMedicalReq,
+  setRightPetitionMedicalReq,
+  setFileCopyRightPetitionMedicalReq,
+  removeFileCopyRightPetitionMedicalReq,
+  setFileCopyPatientCivilRegistrationMedicalReq,
+  removeFileCopyPatientCivilRegistrationMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
-import {
-  setIdUserFamiliar,
-  setPatientIdNumberFamiliar,
-  setPatientIdTypeAbbrevFamiliar,
-} from "@/redux/features/familiar/familiarSlice";
+import { setPatientIdTypeAbbrevFamiliar } from "@/redux/features/familiar/familiarSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import {
   setNameUserPatient,
@@ -44,7 +45,7 @@ import { useCreateMedicalReqFamiliarMutation } from "@/redux/apis/medical_req/me
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllPatientClassStatusQuery } from "@/redux/apis/patient_class_status/patientClassStatusApi";
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
@@ -69,6 +70,12 @@ const FamiliarCreateRequestForm: React.FC = () => {
     (state) => state.patient.birthdate
   );
 
+  const relWithPatientNumberFamiliarState = useAppSelector(
+    (state) => state.familiar.rel_with_patient
+  );
+  const relWithPatientAbbrevFamiliarState = useAppSelector(
+    (state) => state.familiar.rel_with_patient_abbrev
+  );
   const idTypeAbbrevPatientOfFamiliarState = useAppSelector(
     (state) => state.familiar.patient_id_type_abbrev
   );
@@ -88,6 +95,9 @@ const FamiliarCreateRequestForm: React.FC = () => {
   const reqTypeState = useAppSelector(
     (state) => state.medicalReq.requirement_type
   );
+  const haveRightPetitionState = useAppSelector(
+    (state) => state.medicalReq.right_petition
+  );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
   );
@@ -102,6 +112,8 @@ const FamiliarCreateRequestForm: React.FC = () => {
   );
 
   const [reqTypeNameLocalState, setReqTypeNameLocalState] = useState("");
+  const [thePatienHasDiedLocalState, setThePatienHasDiedLocalState] =
+    useState(false);
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
 
@@ -135,7 +147,9 @@ const FamiliarCreateRequestForm: React.FC = () => {
     isLoading: userFamiliarLoading,
     isFetching: userFamiliarFetching,
     error: userFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarState);
+  } = useGetFamiliarByIdQuery(idUserFamiliarState, {
+    skip: !idUserFamiliarState,
+  });
 
   const {
     data: userPatientOfFamiliarData,
@@ -176,42 +190,25 @@ const FamiliarCreateRequestForm: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log(medicalReqFiles);
-
     if (
-      !userFamiliarLoading &&
-      !userFamiliarFetching &&
-      userFamiliarData &&
-      !idUserFamiliarState
-    ) {
-      dispatch(setIdUserFamiliar(userFamiliarData.id));
-    }
-    if (
-      !userFamiliarLoading &&
-      !userFamiliarFetching &&
-      userFamiliarData &&
-      !idNumberPatientOfFamiliarState
-    ) {
-      dispatch(setPatientIdNumberFamiliar(userFamiliarData.patient_id_number));
-    }
-    if (
+      userPatientOfFamiliarData &&
       !userPatientOfFamiliarLoading &&
       !userPatientOfFamiliarFetching &&
-      userPatientOfFamiliarData
+      !userPatientOfFamiliarError
     ) {
       dispatch(setNameUserPatient(userPatientOfFamiliarData.name));
       dispatch(setIdTypeUserPatient(userPatientOfFamiliarData.user_id_type));
       dispatch(setBirthdateUserPatient(userPatientOfFamiliarData.birthdate));
     }
-    if (
-      !idTypeLoading &&
-      !idTypeFetching &&
-      idTypeData &&
-      !idTypeAbbrevPatientOfFamiliarState
-    ) {
+    if (idTypeData && !idTypeLoading && !idTypeFetching && !idTypeError) {
       dispatch(setPatientIdTypeAbbrevFamiliar(idTypeData.name));
     }
-    if (!reqTypesLoading && !reqTypesFetching && reqTypesData) {
+    if (
+      reqTypesData &&
+      !reqTypesLoading &&
+      !reqTypesFetching &&
+      !reqTypesError
+    ) {
       dispatch(setTypesMedicalReq(reqTypesData));
     }
     if (reqTypesError) {
@@ -223,7 +220,12 @@ const FamiliarCreateRequestForm: React.FC = () => {
       setShowErrorMessageMedicalReq(true);
       dispatch(setTypesMedicalReq(reqTypesData));
     }
-    if (birthdatePatientOfFamiliarState && patientClassStatusData) {
+    if (
+      birthdatePatientOfFamiliarState &&
+      patientClassStatusData &&
+      !thePatienHasDiedLocalState &&
+      !patientClassStatusError
+    ) {
       const birthDate = new Date(birthdatePatientOfFamiliarState);
 
       const today = new Date();
@@ -261,18 +263,39 @@ const FamiliarCreateRequestForm: React.FC = () => {
         dispatch(setPatientClassStatusAbbrevMedicalReq(patientClassName || ""));
       }
     }
+    if (thePatienHasDiedLocalState && patientClassStatusData) {
+      let patientClassStatusId: number | null = null;
+      let patientClassName: string | null = null;
+
+      patientClassName = PatientClassificationStatus.DECEASED;
+
+      const matchedClass = patientClassStatusData.find(
+        (patientClass: any) => patientClass.name === patientClassName
+      );
+
+      if (matchedClass) {
+        patientClassStatusId = matchedClass.id;
+      }
+
+      if (patientClassStatusId) {
+        dispatch(setPatientClassStatusMedicalReq(patientClassStatusId || 0));
+        dispatch(setPatientClassStatusAbbrevMedicalReq(patientClassName || ""));
+      }
+    }
   }, [
-    userFamiliarData,
-    idUserFamiliarState,
-    idNumberPatientOfFamiliarState,
     userPatientOfFamiliarData,
+    userPatientOfFamiliarError,
     idTypePatientOfFamiliarState,
     idTypeData,
+    idTypeError,
     idTypeAbbrevPatientOfFamiliarState,
     reqTypesData,
+    reqTypesError,
     birthdatePatientOfFamiliarState,
     patientClassStatusData,
-    medicalReqFiles,
+    patientClassStatusError,
+    thePatienHasDiedLocalState,
+    haveRightPetitionState,
   ]);
 
   const handleCreateRequest = () => {
@@ -537,6 +560,9 @@ const FamiliarCreateRequestForm: React.FC = () => {
           <CustomSpin />
         ) : (
           <FamiliarCreateRequestFormData
+            relWithPatientAbbrevFamiliarDataForm={
+              relWithPatientAbbrevFamiliarState
+            }
             patientNameDataForm={namePatientOfFamiliarState}
             patientIdTypeDataForm={idTypeAbbrevPatientOfFamiliarState}
             patientIdNumberDataForm={idNumberPatientOfFamiliarState}
@@ -547,6 +573,26 @@ const FamiliarCreateRequestForm: React.FC = () => {
             familiarReqTypeValueDataForm={reqTypeState}
             handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
             familiarReqTypeListDataForm={typesMedicalReqState}
+            haveRightPetitionFamiliarDataForm={
+              haveRightPetitionState ? true : false
+            }
+            onChangeHaveRightPetitionFamiliarDataForm={(e) => {
+              const newValue = e.target.value === true;
+
+              dispatch(setRightPetitionMedicalReq(newValue));
+            }}
+            copyRightPetitionSetterDataform={setFileCopyRightPetitionMedicalReq}
+            copyRightPetitionRemoverDataform={
+              removeFileCopyRightPetitionMedicalReq
+            }
+            thePatientHasDiedDataForm={
+              thePatienHasDiedLocalState ? true : false
+            }
+            onChangeThePatientHasDiedDataForm={(e) => {
+              const newValue = e.target.value === true;
+
+              setThePatienHasDiedLocalState(newValue);
+            }}
             patientCategoryDataForm={patientCategoryNameState}
             userMessageMedicalReqDataForm={userMessageMedicalReqState}
             copyAplicantIdentificationDocumentSetterDataform={
@@ -560,6 +606,12 @@ const FamiliarCreateRequestForm: React.FC = () => {
             }
             copyPatientCitizenshipCardRemoverDataform={
               removeFileCopyPatientCitizenshipCardMedicalReq
+            }
+            copyPatientCivilRegistrySetterDataform={
+              setFileCopyPatientCivilRegistrationMedicalReq
+            }
+            copyPatientCivilRegistryRemoverDataform={
+              removeFileCopyPatientCivilRegistrationMedicalReq
             }
             handleOnChangeUserMessageMedicalReqDataForm={(e) =>
               dispatch(setUserMessageMedicalReq(e.target.value))

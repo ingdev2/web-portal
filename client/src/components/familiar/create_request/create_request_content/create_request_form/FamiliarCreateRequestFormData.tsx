@@ -3,15 +3,27 @@
 import React, { ReactNode } from "react";
 import { useAppSelector } from "@/redux/hooks";
 
-import { Button, Col, Form, Input, Row, Select, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Typography,
+} from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
 import { PatientClassificationStatus } from "@/../../api/src/medical_req/enums/patient_classification_status.enum";
+import { RelationshipWithPatient } from "@/../../api/src/medical_req/enums/relationship_with_patient.enum";
 
 const FamiliarCreateRequestFormData: React.FC<{
+  relWithPatientAbbrevFamiliarDataForm: string;
   patientNameDataForm: string;
   patientIdTypeDataForm: string;
   patientIdNumberDataForm: number;
@@ -20,6 +32,12 @@ const FamiliarCreateRequestFormData: React.FC<{
   familiarReqTypeValueDataForm: number;
   handleOnChangeSelectReqTypeDataForm: (value: number) => void;
   familiarReqTypeListDataForm: string[];
+  haveRightPetitionFamiliarDataForm: boolean;
+  onChangeHaveRightPetitionFamiliarDataForm: (value: any) => void;
+  copyRightPetitionSetterDataform: React.SetStateAction<any>;
+  copyRightPetitionRemoverDataform: React.SetStateAction<any>;
+  thePatientHasDiedDataForm: boolean;
+  onChangeThePatientHasDiedDataForm: (value: any) => void;
   patientCategoryDataForm: string;
   userMessageMedicalReqDataForm: string;
   handleOnChangeUserMessageMedicalReqDataForm: (e: any) => void;
@@ -29,7 +47,10 @@ const FamiliarCreateRequestFormData: React.FC<{
   copyAplicantIdentificationDocumentRemoverDataform: React.SetStateAction<any>;
   copyPatientCitizenshipCardSetterDataform: React.SetStateAction<any>;
   copyPatientCitizenshipCardRemoverDataform: React.SetStateAction<any>;
+  copyPatientCivilRegistrySetterDataform: React.SetStateAction<any>;
+  copyPatientCivilRegistryRemoverDataform: React.SetStateAction<any>;
 }> = ({
+  relWithPatientAbbrevFamiliarDataForm,
   patientNameDataForm,
   patientIdTypeDataForm,
   patientIdNumberDataForm,
@@ -38,6 +59,12 @@ const FamiliarCreateRequestFormData: React.FC<{
   familiarReqTypeValueDataForm,
   handleOnChangeSelectReqTypeDataForm,
   familiarReqTypeListDataForm,
+  haveRightPetitionFamiliarDataForm,
+  onChangeHaveRightPetitionFamiliarDataForm,
+  copyRightPetitionSetterDataform,
+  copyRightPetitionRemoverDataform,
+  thePatientHasDiedDataForm,
+  onChangeThePatientHasDiedDataForm,
   patientCategoryDataForm,
   userMessageMedicalReqDataForm,
   handleOnChangeUserMessageMedicalReqDataForm,
@@ -47,6 +74,8 @@ const FamiliarCreateRequestFormData: React.FC<{
   copyAplicantIdentificationDocumentRemoverDataform,
   copyPatientCitizenshipCardSetterDataform,
   copyPatientCitizenshipCardRemoverDataform,
+  copyPatientCivilRegistrySetterDataform,
+  copyPatientCivilRegistryRemoverDataform,
 }) => {
   const patientCategoryNameState = useAppSelector(
     (state) => state.medicalReq.patient_class_status_abbrev
@@ -132,12 +161,18 @@ const FamiliarCreateRequestFormData: React.FC<{
         name="create-medical-req-form-familiar"
         className="create-medical-req-form-familiar"
         onFinish={handleCreateRequestDataForm}
-        initialValues={{ remember: false }}
+        initialValues={{
+          "radio-select-have-right-petition": haveRightPetitionFamiliarDataForm,
+          "radio-select-the-patient-has-died": thePatientHasDiedDataForm,
+          remember: false,
+        }}
         autoComplete="false"
         layout="vertical"
       >
         <Form.Item
+          id="medical-req-types-familiar"
           name="medical-req-types-familiar"
+          className="medical-req-types-familiar"
           label="Tipo de requerimiento médico"
           style={{ marginBlock: "13px" }}
           rules={[
@@ -166,54 +201,448 @@ const FamiliarCreateRequestFormData: React.FC<{
         </Form.Item>
 
         <Form.Item
-          name="upload-aplicant-identification-document-familiar"
-          label="Documento de identidad familiar (Solicitante)"
+          id="radio-select-have-right-petition"
+          name="radio-select-have-right-petition"
+          className="radio-select-have-right-petition"
+          label="¿Desea adjuntar un derecho de petición a la solicitud?"
           style={{ marginBottom: "13px" }}
           rules={[
             {
               required: true,
-              message: "¡Por favor adjunta copia de tu documento de identidad!",
+              message: "¡Por favor selecciona si tiene derecho de petición!",
             },
           ]}
         >
-          <CustomUpload
-            titleCustomUpload="Cargar Documento(s)"
-            fileStatusSetterCustomUpload={
-              copyAplicantIdentificationDocumentSetterDataform
-            }
-            removeFileStatusSetterCustomUpload={
-              copyAplicantIdentificationDocumentRemoverDataform
-            }
-          />
+          <Radio.Group
+            value={haveRightPetitionFamiliarDataForm}
+            onChange={onChangeHaveRightPetitionFamiliarDataForm}
+            style={{ textAlign: "start" }}
+          >
+            <Space size={"small"} direction="horizontal">
+              <Radio value={true}>SÍ</Radio>
+
+              <Radio value={false}>NO</Radio>
+            </Space>
+          </Radio.Group>
         </Form.Item>
 
-        {patientCategoryNameState === PatientClassificationStatus.ADULT && (
+        {haveRightPetitionFamiliarDataForm && (
           <Form.Item
-            name="upload-patient-citizenship-card"
-            label="Cédula de ciudadania del paciente"
+            id="upload-right-petition-to-request-familiar"
+            name="upload-right-petition-to-request-familiar"
+            className="upload-right-petition-to-request-familiar"
+            label="Adjuntar derecho de petición"
             style={{ marginBottom: "13px" }}
             rules={[
               {
                 required: true,
-                message:
-                  "¡Por favor adjunta copia de cédula de ciudadania del paciente!",
+                message: "¡Por favor adjuntar derecho de petición!",
               },
             ]}
           >
             <CustomUpload
               titleCustomUpload="Cargar Documento(s)"
-              fileStatusSetterCustomUpload={
-                copyPatientCitizenshipCardSetterDataform
-              }
+              fileStatusSetterCustomUpload={copyRightPetitionSetterDataform}
               removeFileStatusSetterCustomUpload={
-                copyPatientCitizenshipCardRemoverDataform
+                copyRightPetitionRemoverDataform
               }
             />
           </Form.Item>
         )}
 
         <Form.Item
+          id="radio-select-the-patient-has-died"
+          name="radio-select-the-patient-has-died"
+          className="radio-select-the-patient-has-died"
+          label="¿El paciente ha fallecido?"
+          style={{ marginBottom: "13px" }}
+          rules={[
+            {
+              required: true,
+              message: "¡Por favor selecciona si el paciente ha fallecido!",
+            },
+          ]}
+        >
+          <Radio.Group
+            value={thePatientHasDiedDataForm}
+            onChange={onChangeThePatientHasDiedDataForm}
+            style={{ textAlign: "start" }}
+          >
+            <Space size={"small"} direction="horizontal">
+              <Radio value={true}>SÍ</Radio>
+
+              <Radio value={false}>NO</Radio>
+            </Space>
+          </Radio.Group>
+        </Form.Item>
+
+        {thePatientHasDiedDataForm &&
+          relWithPatientAbbrevFamiliarDataForm ===
+            RelationshipWithPatient.PARENT && (
+            <Form.Item
+              id="upload-patient-citizenship-card-parent"
+              name="upload-patient-citizenship-card-parent"
+              className="upload-patient-citizenship-card-parent"
+              label="Adjuntar documento de identidad del paciente"
+              style={{ marginBottom: "13px" }}
+              rules={[
+                {
+                  required: true,
+                  message:
+                    "¡Por favor adjuntar documento de identidad del paciente!",
+                },
+              ]}
+            >
+              <CustomUpload
+                titleCustomUpload="Cargar Documento(s)"
+                fileStatusSetterCustomUpload={
+                  copyPatientCitizenshipCardSetterDataform
+                }
+                removeFileStatusSetterCustomUpload={
+                  copyPatientCitizenshipCardRemoverDataform
+                }
+              />
+            </Form.Item>
+          )}
+
+        {thePatientHasDiedDataForm &&
+          relWithPatientAbbrevFamiliarDataForm ===
+            RelationshipWithPatient.SON && (
+            <>
+              <Form.Item
+                id="upload-patient-citizenship-card-son"
+                name="upload-patient-citizenship-card-son"
+                className="upload-patient-citizenship-card-son"
+                label="Adjuntar documento de identidad del paciente"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor adjuntar documento de identidad del paciente!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="upload-patient-civil-registry-son"
+                name="upload-patient-civil-registry-son"
+                className="upload-patient-civil-registry-son"
+                label="Adjuntar registro civil del paciente"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "¡Por favor adjuntar registro civil del paciente!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCivilRegistrySetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCivilRegistryRemoverDataform
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+        {thePatientHasDiedDataForm &&
+          relWithPatientAbbrevFamiliarDataForm ===
+            RelationshipWithPatient.BROTHER && (
+            <>
+              <Form.Item
+                id="upload-patient-citizenship-card-brother"
+                name="upload-patient-citizenship-card-brother"
+                className="upload-patient-citizenship-card-brother"
+                label="Adjuntar documento de identidad del paciente"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor adjuntar documento de identidad del paciente!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="upload-patient-civil-registry-brother"
+                name="upload-patient-civil-registry-brother"
+                className="upload-patient-civil-registry-brother"
+                label="Adjuntar registro civil del paciente"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "¡Por favor adjuntar registro civil del paciente!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+        {thePatientHasDiedDataForm &&
+          relWithPatientAbbrevFamiliarDataForm ===
+            RelationshipWithPatient.SPOUSE && (
+            <>
+              <Form.Item
+                id="upload-patient-citizenship-card-spouse"
+                name="upload-patient-citizenship-card-spouse"
+                className="upload-patient-citizenship-card-spouse"
+                label="Adjuntar documento de identidad del paciente"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor adjuntar documento de identidad del paciente!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="upload-marriage-certificate-spouse"
+                name="upload-marriage-certificate-spouse"
+                className="upload-marriage-certificate-spouse"
+                label="Adjuntar partida de matrimonio o certificado de unión libre"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor adjuntar partida de matrimonio o certificado de unión libre!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+        {thePatientHasDiedDataForm &&
+          relWithPatientAbbrevFamiliarDataForm ===
+            RelationshipWithPatient.FAMILIAR && (
+            <>
+              <Form.Item
+                id="upload-patient-citizenship-card-familiar"
+                name="upload-patient-citizenship-card-familiar"
+                className="upload-patient-citizenship-card-familiar"
+                label="Adjuntar documento de identidad del paciente"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor adjuntar documento de identidad del paciente!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                id="upload-cohabitation-certificate-familiar"
+                name="upload-cohabitation-certificate-familiar"
+                className="upload-cohabitation-certificate-familiar"
+                label="Adjuntar certificado de convivencia o extra-juicio por una notaria"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message:
+                      "¡Por favor adjuntar certificado de convivencia o extra-juicio por una notaria!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+        {relWithPatientAbbrevFamiliarDataForm !==
+          RelationshipWithPatient.PARENT && (
+          <Form.Item
+            id="upload-aplicant-identification-document-familiar"
+            name="upload-aplicant-identification-document-familiar"
+            className="upload-aplicant-identification-document-familiar"
+            label="Adjuntar documento de identidad familiar (Solicitante)"
+            style={{ marginBottom: "13px" }}
+            rules={[
+              {
+                required: true,
+                message: "¡Por favor adjuntar tu documento de identidad!",
+              },
+            ]}
+          >
+            <CustomUpload
+              titleCustomUpload="Cargar Documento(s)"
+              fileStatusSetterCustomUpload={
+                copyAplicantIdentificationDocumentSetterDataform
+              }
+              removeFileStatusSetterCustomUpload={
+                copyAplicantIdentificationDocumentRemoverDataform
+              }
+            />
+          </Form.Item>
+        )}
+
+        {patientCategoryNameState === PatientClassificationStatus.ADULT &&
+          !thePatientHasDiedDataForm && (
+            <Form.Item
+              id="upload-patient-citizenship-card"
+              name="upload-patient-citizenship-card"
+              className="upload-patient-citizenship-card"
+              label="Adjuntar cédula de ciudadania del paciente"
+              style={{ marginBottom: "13px" }}
+              rules={[
+                {
+                  required: true,
+                  message:
+                    "¡Por favor adjuntar cédula de ciudadania del paciente!",
+                },
+              ]}
+            >
+              <CustomUpload
+                titleCustomUpload="Cargar Documento(s)"
+                fileStatusSetterCustomUpload={
+                  copyPatientCitizenshipCardSetterDataform
+                }
+                removeFileStatusSetterCustomUpload={
+                  copyPatientCitizenshipCardRemoverDataform
+                }
+              />
+            </Form.Item>
+          )}
+
+        {patientCategoryNameState === PatientClassificationStatus.YOUNGER &&
+          !thePatientHasDiedDataForm && (
+            <>
+              {relWithPatientAbbrevFamiliarDataForm !==
+                RelationshipWithPatient.PARENT && (
+                <Form.Item
+                  id="upload-citizenship-card-father-or-mother"
+                  name="upload-citizenship-card-father-or-mother"
+                  className="upload-citizenship-card-father-or-mother"
+                  label="Adjuntar cédula de ciudadania del padre o madre"
+                  style={{ marginBottom: "13px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message:
+                        "¡Por favor adjuntar cédula de ciudadania del padre o madre!",
+                    },
+                  ]}
+                >
+                  <CustomUpload
+                    titleCustomUpload="Cargar Documento(s)"
+                    fileStatusSetterCustomUpload={
+                      copyPatientCitizenshipCardSetterDataform
+                    }
+                    removeFileStatusSetterCustomUpload={
+                      copyPatientCitizenshipCardRemoverDataform
+                    }
+                  />
+                </Form.Item>
+              )}
+
+              <Form.Item
+                id="upload-minor-civil-registry"
+                name="upload-minor-civil-registry"
+                className="upload-minor-civil-registry"
+                label="Adjuntar registro civil del menor"
+                style={{ marginBottom: "13px" }}
+                rules={[
+                  {
+                    required: true,
+                    message: "¡Por favor adjuntar registro civil del menor!",
+                  },
+                ]}
+              >
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardSetterDataform
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    copyPatientCitizenshipCardRemoverDataform
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+        <Form.Item
+          id="especifications-familiar"
           name="especifications-familiar"
+          className="especifications-familiar"
           label="Observaciones y/o detalles"
           style={{ marginBottom: "31px" }}
           rules={[
