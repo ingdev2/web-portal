@@ -4,6 +4,7 @@ interface MedicalReq {
   requirement_type: number;
   right_petition: boolean;
   copy_right_petition: string[];
+  files_copy_right_petition: Array<Express.Multer.File>;
   medicalReqUserType: number;
   familiar_id: string;
   aplicantId: string;
@@ -22,12 +23,18 @@ interface MedicalReq {
   aplicant_cellphone: number;
   aplicant_eps_company: number;
   aplicant_company_area: number;
-  copy_applicant_citizenship_card: string[];
+  copy_applicant_identification_document: string[];
+  files_copy_applicant_identification_document: Array<Express.Multer.File>;
   copy_patient_citizenship_card: string[];
+  files_copy_patient_citizenship_card: Array<Express.Multer.File>;
   copy_patient_civil_registration: string[];
+  files_copy_patient_civil_registration: Array<Express.Multer.File>;
   copy_parents_citizenship_card: string[];
+  files_copy_parents_citizenship_card: Array<Express.Multer.File>;
   copy_marriage_certificate: string[];
+  files_copy_marriage_certificate: Array<Express.Multer.File>;
   copy_cohabitation_certificate: string[];
+  files_copy_cohabitation_certificate: Array<Express.Multer.File>;
   date_of_admission: string;
   answer_date: string;
   download_expiration_date: string;
@@ -40,6 +47,7 @@ interface MedicalReq {
   response_comments: string;
   motive_for_rejection: number[];
   documents_delivered: string[];
+  files_documents_delivered: Array<Express.Multer.File>;
   delegate_id: string;
   typesMedicalReq: string[];
   createdAt: string;

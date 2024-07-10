@@ -405,18 +405,18 @@ export class MedicalReqService {
       },
     });
 
-    if (medicalReqCompleted.copy_applicant_citizenship_card) {
-      const citizenshipCard =
-        medicalReqCompleted.copy_applicant_citizenship_card;
+    if (medicalReqCompleted.copy_applicant_identification_document) {
+      const identificationDocument =
+        medicalReqCompleted.copy_applicant_identification_document;
 
       await this.familiarRepository.update(
         { id: verifiedFamiliar.id },
-        { copy_familiar_citizenship_card: null },
+        { copy_familiar_identification_document: null },
       );
 
       await this.familiarRepository.update(
         { id: verifiedFamiliar.id },
-        { copy_familiar_citizenship_card: citizenshipCard },
+        { copy_familiar_identification_document: identificationDocument },
       );
     }
 

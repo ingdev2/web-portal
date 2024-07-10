@@ -130,7 +130,7 @@ const EpsDataCard: React.FC = () => {
           style={{
             width: "100vw",
             maxWidth: "720px",
-            minWidth: "231px",
+            minWidth: "345px",
             alignItems: "center",
             alignContent: "center",
             justifyContent: "center",

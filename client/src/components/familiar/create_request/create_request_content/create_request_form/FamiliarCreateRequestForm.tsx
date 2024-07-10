@@ -20,8 +20,10 @@ import {
   setPatientClassStatusMedicalReq,
   setPatientClassStatusAbbrevMedicalReq,
   setUserMessageMedicalReq,
-  setFilesUserMessageMedicalReq,
-  removeFileUserMessageMessageMedicalReq,
+  setFileCopyApplicantIdentificationDocumentMedicalReq,
+  removeFileCopyApplicantIdentificationDocumentMedicalReq,
+  setFileCopyPatientCitizenshipCardMedicalReq,
+  removeFileCopyPatientCitizenshipCardMedicalReq,
   setDefaultValuesMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
@@ -94,6 +96,9 @@ const FamiliarCreateRequestForm: React.FC = () => {
   );
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
+  );
+  const medicalReqFiles = useAppSelector(
+    (state) => state.medicalReq.files_user_message_documents
   );
 
   const [reqTypeNameLocalState, setReqTypeNameLocalState] = useState("");
@@ -171,6 +176,8 @@ const FamiliarCreateRequestForm: React.FC = () => {
   });
 
   useEffect(() => {
+    console.log(medicalReqFiles);
+
     if (
       !userFamiliarLoading &&
       !userFamiliarFetching &&
@@ -265,6 +272,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
     reqTypesData,
     birthdatePatientOfFamiliarState,
     patientClassStatusData,
+    medicalReqFiles,
   ]);
 
   const handleCreateRequest = () => {
@@ -541,8 +549,18 @@ const FamiliarCreateRequestForm: React.FC = () => {
             familiarReqTypeListDataForm={typesMedicalReqState}
             patientCategoryDataForm={patientCategoryNameState}
             userMessageMedicalReqDataForm={userMessageMedicalReqState}
-            fileStatusSetterDataform={setFilesUserMessageMedicalReq}
-            fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
+            copyAplicantIdentificationDocumentSetterDataform={
+              setFileCopyApplicantIdentificationDocumentMedicalReq
+            }
+            copyAplicantIdentificationDocumentRemoverDataform={
+              removeFileCopyApplicantIdentificationDocumentMedicalReq
+            }
+            copyPatientCitizenshipCardSetterDataform={
+              setFileCopyPatientCitizenshipCardMedicalReq
+            }
+            copyPatientCitizenshipCardRemoverDataform={
+              removeFileCopyPatientCitizenshipCardMedicalReq
+            }
             handleOnChangeUserMessageMedicalReqDataForm={(e) =>
               dispatch(setUserMessageMedicalReq(e.target.value))
             }

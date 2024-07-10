@@ -17,7 +17,7 @@ import {
   setTypesMedicalReq,
   setReqTypeMedicalReq,
   setUserMessageMedicalReq,
-  setFilesUserMessageMedicalReq,
+  setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
@@ -247,7 +247,7 @@ const PatientCreateRequestForm: React.FC = () => {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
 
-        dispatch(setFilesUserMessageMedicalReq([]));
+        dispatch(setFileUserMessageMedicalReq([]));
       }
     } catch (error) {
       console.error(error);
@@ -405,7 +405,7 @@ const PatientCreateRequestForm: React.FC = () => {
           handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
           familiarReqTypeListDataForm={typesMedicalReqState}
           userMessageMedicalReqDataForm={userMessageMedicalReqState}
-          fileStatusSetterDataform={setFilesUserMessageMedicalReq}
+          fileStatusSetterDataform={setFileUserMessageMedicalReq}
           fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
             dispatch(setUserMessageMedicalReq(e.target.value))

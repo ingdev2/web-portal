@@ -20,7 +20,7 @@ import {
   setTypesMedicalReq,
   setReqTypeMedicalReq,
   setUserMessageMedicalReq,
-  setFilesUserMessageMedicalReq,
+  setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
@@ -278,7 +278,7 @@ const EpsCreateRequestForm: React.FC = () => {
         setModalIsOpenSuccess(true);
 
         dispatch(setDefaultValuesUserPatient());
-        dispatch(setFilesUserMessageMedicalReq([]));
+        dispatch(setFileUserMessageMedicalReq([]));
       }
     } catch (error) {
       console.error(error);
@@ -445,7 +445,7 @@ const EpsCreateRequestForm: React.FC = () => {
             handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
             familiarReqTypeListDataForm={typesMedicalReqState}
             userMessageMedicalReqDataForm={userMessageMedicalReqState}
-            fileStatusSetterDataform={setFilesUserMessageMedicalReq}
+            fileStatusSetterDataform={setFileUserMessageMedicalReq}
             fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
             handleOnChangeUserMessageMedicalReqDataForm={(e) =>
               dispatch(setUserMessageMedicalReq(e.target.value))

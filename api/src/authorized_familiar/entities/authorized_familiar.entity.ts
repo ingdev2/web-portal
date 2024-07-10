@@ -96,7 +96,7 @@ export class AuthorizedFamiliar {
   deletedAt: Date;
 
   @Column({ type: 'text', array: true, nullable: true })
-  copy_familiar_citizenship_card: string[];
+  copy_familiar_identification_document: string[];
 
   @Column({ type: 'uuid' })
   patient_id: string;

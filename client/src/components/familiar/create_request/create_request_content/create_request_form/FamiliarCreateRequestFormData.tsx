@@ -3,11 +3,13 @@
 import React, { ReactNode } from "react";
 import { useAppSelector } from "@/redux/hooks";
 
-import { Button, Form, Input, Select, Typography } from "antd";
+import { Button, Col, Form, Input, Row, Select, Typography } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
+
+import { PatientClassificationStatus } from "@/../../api/src/medical_req/enums/patient_classification_status.enum";
 
 const FamiliarCreateRequestFormData: React.FC<{
   patientNameDataForm: string;
@@ -23,8 +25,10 @@ const FamiliarCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
-  fileStatusSetterDataform: React.SetStateAction<any>;
-  fileStatusRemoverDataform: React.SetStateAction<any>;
+  copyAplicantIdentificationDocumentSetterDataform: React.SetStateAction<any>;
+  copyAplicantIdentificationDocumentRemoverDataform: React.SetStateAction<any>;
+  copyPatientCitizenshipCardSetterDataform: React.SetStateAction<any>;
+  copyPatientCitizenshipCardRemoverDataform: React.SetStateAction<any>;
 }> = ({
   patientNameDataForm,
   patientIdTypeDataForm,
@@ -39,19 +43,17 @@ const FamiliarCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
-  fileStatusSetterDataform,
-  fileStatusRemoverDataform,
+  copyAplicantIdentificationDocumentSetterDataform,
+  copyAplicantIdentificationDocumentRemoverDataform,
+  copyPatientCitizenshipCardSetterDataform,
+  copyPatientCitizenshipCardRemoverDataform,
 }) => {
+  const patientCategoryNameState = useAppSelector(
+    (state) => state.medicalReq.patient_class_status_abbrev
+  );
+
   return (
-    <Form
-      id="create-medical-req-form-familiar"
-      name="create-medical-req-form-familiar"
-      className="create-medical-req-form-familiar"
-      onFinish={handleCreateRequestDataForm}
-      initialValues={{ remember: false }}
-      autoComplete="false"
-      layout="vertical"
-    >
+    <>
       <h2
         className="title-create-medical-req-form-familiar"
         style={{
@@ -85,117 +87,174 @@ const FamiliarCreateRequestFormData: React.FC<{
         />
       </div>
 
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Número de documento:
-        </Typography.Title>
-        <Input
-          id="patient-id-number-hosvital-familiar"
-          value={patientIdNumberDataForm}
-          disabled
-        />
-      </div>
+      <Row>
+        <Col
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          style={{ paddingInlineEnd: "7px" }}
+        >
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Número de documento:
+            </Typography.Title>
+            <Input
+              id="patient-id-number-hosvital-familiar"
+              value={patientIdNumberDataForm}
+              disabled
+            />
+          </div>
+        </Col>
 
-      <div style={{ textAlign: "start" }}>
-        <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Categoria del paciente:
-        </Typography.Title>
-        <Input
-          id="patient-category-familiar"
-          value={patientCategoryDataForm}
-          disabled
-        />
-      </div>
+        <Col
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
+          style={{ paddingInlineStart: "7px" }}
+        >
+          <div style={{ textAlign: "start" }}>
+            <Typography.Title style={{ marginTop: 7 }} level={5}>
+              Categoria del paciente:
+            </Typography.Title>
+            <Input
+              id="patient-category-familiar"
+              value={patientCategoryDataForm}
+              disabled
+            />
+          </div>
+        </Col>
+      </Row>
 
-      <Form.Item
-        name="medical-req-types-familiar"
-        label="Tipo de requerimiento médico"
-        style={{ marginBlock: "13px" }}
-        rules={[
-          {
-            required: true,
-            message:
-              "¡Por favor selecciona el tipo de requerimiento a solicitar!",
-          },
-        ]}
+      <Form
+        id="create-medical-req-form-familiar"
+        name="create-medical-req-form-familiar"
+        className="create-medical-req-form-familiar"
+        onFinish={handleCreateRequestDataForm}
+        initialValues={{ remember: false }}
+        autoComplete="false"
+        layout="vertical"
       >
-        {reqTypeSelectorLoadingDataForm ? (
-          <CustomSpin />
-        ) : (
-          <Select
-            value={familiarReqTypeValueDataForm}
-            placeholder="Tipo de requerimiento"
-            onChange={handleOnChangeSelectReqTypeDataForm}
+        <Form.Item
+          name="medical-req-types-familiar"
+          label="Tipo de requerimiento médico"
+          style={{ marginBlock: "13px" }}
+          rules={[
+            {
+              required: true,
+              message:
+                "¡Por favor selecciona el tipo de requerimiento a solicitar!",
+            },
+          ]}
+        >
+          {reqTypeSelectorLoadingDataForm ? (
+            <CustomSpin />
+          ) : (
+            <Select
+              value={familiarReqTypeValueDataForm}
+              placeholder="Tipo de requerimiento"
+              onChange={handleOnChangeSelectReqTypeDataForm}
+            >
+              {familiarReqTypeListDataForm?.map((option: any) => (
+                <Select.Option key={option.id} value={option.id}>
+                  {option.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item
+          name="upload-aplicant-identification-document-familiar"
+          label="Documento de identidad familiar (Solicitante)"
+          style={{ marginBottom: "13px" }}
+          rules={[
+            {
+              required: true,
+              message: "¡Por favor adjunta copia de tu documento de identidad!",
+            },
+          ]}
+        >
+          <CustomUpload
+            titleCustomUpload="Cargar Documento(s)"
+            fileStatusSetterCustomUpload={
+              copyAplicantIdentificationDocumentSetterDataform
+            }
+            removeFileStatusSetterCustomUpload={
+              copyAplicantIdentificationDocumentRemoverDataform
+            }
+          />
+        </Form.Item>
+
+        {patientCategoryNameState === PatientClassificationStatus.ADULT && (
+          <Form.Item
+            name="upload-patient-citizenship-card"
+            label="Cédula de ciudadania del paciente"
+            style={{ marginBottom: "13px" }}
+            rules={[
+              {
+                required: true,
+                message:
+                  "¡Por favor adjunta copia de cédula de ciudadania del paciente!",
+              },
+            ]}
           >
-            {familiarReqTypeListDataForm?.map((option: any) => (
-              <Select.Option key={option.id} value={option.id}>
-                {option.name}
-              </Select.Option>
-            ))}
-          </Select>
+            <CustomUpload
+              titleCustomUpload="Cargar Documento(s)"
+              fileStatusSetterCustomUpload={
+                copyPatientCitizenshipCardSetterDataform
+              }
+              removeFileStatusSetterCustomUpload={
+                copyPatientCitizenshipCardRemoverDataform
+              }
+            />
+          </Form.Item>
         )}
-      </Form.Item>
 
-      <Form.Item
-        name="upload-files-reference-documents-familiar"
-        label="Documento(s) de referencia (opcional)"
-        style={{ marginBottom: "13px" }}
-        rules={[
-          {
-            required: false,
-            message: "¡Por favor adjunta mínimo un documento!",
-          },
-        ]}
-      >
-        <CustomUpload
-          titleCustomUpload="Cargar Documento(s)"
-          fileStatusSetterCustomUpload={fileStatusSetterDataform}
-          removeFileStatusSetterCustomUpload={fileStatusRemoverDataform}
-        />
-      </Form.Item>
+        <Form.Item
+          name="especifications-familiar"
+          label="Observaciones y/o detalles"
+          style={{ marginBottom: "31px" }}
+          rules={[
+            {
+              required: true,
+              message:
+                "¡Por favor, especifique detalles a tener en cuenta de su solicitud!",
+            },
+          ]}
+        >
+          <TextArea
+            autoSize={{ minRows: 2, maxRows: 10 }}
+            maxLength={301}
+            value={userMessageMedicalReqDataForm}
+            placeholder="Especifique detalles a tener en cuenta de su solicitud. Ej. Fecha aprox. de procedimiento"
+            onChange={handleOnChangeUserMessageMedicalReqDataForm}
+          />
+        </Form.Item>
 
-      <Form.Item
-        name="especifications-familiar"
-        label="Observaciones y/o detalles"
-        style={{ marginBottom: "31px" }}
-        rules={[
-          {
-            required: true,
-            message:
-              "¡Por favor, especifique detalles a tener en cuenta de su solicitud!",
-          },
-        ]}
-      >
-        <TextArea
-          autoSize={{ minRows: 2, maxRows: 10 }}
-          maxLength={301}
-          value={userMessageMedicalReqDataForm}
-          placeholder="Especifique detalles a tener en cuenta de su solicitud. Ej. Fecha aprox. de procedimiento"
-          onChange={handleOnChangeUserMessageMedicalReqDataForm}
-        />
-      </Form.Item>
-
-      <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
-        {buttonSubmitFormLoadingDataForm ? (
-          <CustomSpin />
-        ) : (
-          <Button
-            size="large"
-            style={{
-              paddingInline: 62,
-              borderRadius: 31,
-              backgroundColor: "#015E90",
-              color: "#f2f2f2",
-            }}
-            htmlType="submit"
-            className="create-medical-req-form-button-familiar"
-            onClick={handleButtonSubmitFormDataForm}
-          >
-            Crear solicitud
-          </Button>
-        )}
-      </Form.Item>
-    </Form>
+        <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
+          {buttonSubmitFormLoadingDataForm ? (
+            <CustomSpin />
+          ) : (
+            <Button
+              size="large"
+              style={{
+                paddingInline: 62,
+                borderRadius: 31,
+                backgroundColor: "#015E90",
+                color: "#f2f2f2",
+              }}
+              htmlType="submit"
+              className="create-medical-req-form-button-familiar"
+              onClick={handleButtonSubmitFormDataForm}
+            >
+              Crear solicitud
+            </Button>
+          )}
+        </Form.Item>
+      </Form>
+    </>
   );
 };
 
