@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React from "react";
 import { useAppSelector } from "@/redux/hooks";
 
 import {
@@ -49,6 +49,14 @@ const FamiliarCreateRequestFormData: React.FC<{
   copyPatientCitizenshipCardRemoverDataform: React.SetStateAction<any>;
   copyPatientCivilRegistrySetterDataform: React.SetStateAction<any>;
   copyPatientCivilRegistryRemoverDataform: React.SetStateAction<any>;
+  copyMarriageCertificateSetterDataform: React.SetStateAction<any>;
+  copyMarriageCertificateRemoverDataform: React.SetStateAction<any>;
+  copyCohabitationCertificateSetterDataform: React.SetStateAction<any>;
+  copyCohabitationCertificateRemoverDataform: React.SetStateAction<any>;
+  copyParentCitizenshipCardSetterDataform: React.SetStateAction<any>;
+  copyParentCitizenshipCardRemoverDataform: React.SetStateAction<any>;
+  copyReferenceDocumentsRequestSetterDataform: React.SetStateAction<any>;
+  copyReferenceDocumentsRequestRemoverDataform: React.SetStateAction<any>;
 }> = ({
   relWithPatientAbbrevFamiliarDataForm,
   patientNameDataForm,
@@ -76,6 +84,14 @@ const FamiliarCreateRequestFormData: React.FC<{
   copyPatientCitizenshipCardRemoverDataform,
   copyPatientCivilRegistrySetterDataform,
   copyPatientCivilRegistryRemoverDataform,
+  copyMarriageCertificateSetterDataform,
+  copyMarriageCertificateRemoverDataform,
+  copyCohabitationCertificateSetterDataform,
+  copyCohabitationCertificateRemoverDataform,
+  copyParentCitizenshipCardSetterDataform,
+  copyParentCitizenshipCardRemoverDataform,
+  copyReferenceDocumentsRequestSetterDataform,
+  copyReferenceDocumentsRequestRemoverDataform,
 }) => {
   const patientCategoryNameState = useAppSelector(
     (state) => state.medicalReq.patient_class_status_abbrev
@@ -405,10 +421,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 <CustomUpload
                   titleCustomUpload="Cargar Documento(s)"
                   fileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardSetterDataform
+                    copyPatientCivilRegistrySetterDataform
                   }
                   removeFileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardRemoverDataform
+                    copyPatientCivilRegistryRemoverDataform
                   }
                 />
               </Form.Item>
@@ -461,10 +477,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 <CustomUpload
                   titleCustomUpload="Cargar Documento(s)"
                   fileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardSetterDataform
+                    copyMarriageCertificateSetterDataform
                   }
                   removeFileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardRemoverDataform
+                    copyMarriageCertificateRemoverDataform
                   }
                 />
               </Form.Item>
@@ -517,10 +533,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 <CustomUpload
                   titleCustomUpload="Cargar Documento(s)"
                   fileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardSetterDataform
+                    copyCohabitationCertificateSetterDataform
                   }
                   removeFileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardRemoverDataform
+                    copyCohabitationCertificateRemoverDataform
                   }
                 />
               </Form.Item>
@@ -560,13 +576,13 @@ const FamiliarCreateRequestFormData: React.FC<{
               id="upload-patient-citizenship-card"
               name="upload-patient-citizenship-card"
               className="upload-patient-citizenship-card"
-              label="Adjuntar cédula de ciudadania del paciente"
+              label="Adjuntar documento de identidad del paciente"
               style={{ marginBottom: "13px" }}
               rules={[
                 {
                   required: true,
                   message:
-                    "¡Por favor adjuntar cédula de ciudadania del paciente!",
+                    "¡Por favor adjuntar documento de identidad del paciente!",
                 },
               ]}
             >
@@ -604,10 +620,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                   <CustomUpload
                     titleCustomUpload="Cargar Documento(s)"
                     fileStatusSetterCustomUpload={
-                      copyPatientCitizenshipCardSetterDataform
+                      copyParentCitizenshipCardSetterDataform
                     }
                     removeFileStatusSetterCustomUpload={
-                      copyPatientCitizenshipCardRemoverDataform
+                      copyParentCitizenshipCardRemoverDataform
                     }
                   />
                 </Form.Item>
@@ -629,15 +645,39 @@ const FamiliarCreateRequestFormData: React.FC<{
                 <CustomUpload
                   titleCustomUpload="Cargar Documento(s)"
                   fileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardSetterDataform
+                    copyPatientCivilRegistrySetterDataform
                   }
                   removeFileStatusSetterCustomUpload={
-                    copyPatientCitizenshipCardRemoverDataform
+                    copyPatientCivilRegistryRemoverDataform
                   }
                 />
               </Form.Item>
             </>
           )}
+
+        <Form.Item
+          id="upload-files-reference-documents-familiar"
+          name="upload-files-reference-documents-familiar"
+          className="upload-files-reference-documents-familiar"
+          label="Documento(s) de referencia (opcional)"
+          style={{ marginBottom: "13px" }}
+          rules={[
+            {
+              required: false,
+              message: "¡Por favor adjunta mínimo un documento!",
+            },
+          ]}
+        >
+          <CustomUpload
+            titleCustomUpload="Cargar Documento(s)"
+            fileStatusSetterCustomUpload={
+              copyReferenceDocumentsRequestSetterDataform
+            }
+            removeFileStatusSetterCustomUpload={
+              copyReferenceDocumentsRequestRemoverDataform
+            }
+          />
+        </Form.Item>
 
         <Form.Item
           id="especifications-familiar"

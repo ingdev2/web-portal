@@ -31,6 +31,14 @@ import {
   removeFileCopyRightPetitionMedicalReq,
   setFileCopyPatientCivilRegistrationMedicalReq,
   removeFileCopyPatientCivilRegistrationMedicalReq,
+  setFileCopyMarriageCertificateMedicalReq,
+  removeFileCopyMarriageCertificateMedicalReq,
+  setFileCopyCohabitationCertificateMedicalReq,
+  removeFileCopyCohabitationCertificateMedicalReq,
+  setFileCopyParentsCitizenshipCardMedicalReq,
+  removeFileCopyParentsCitizenshipCardMedicalReq,
+  setFileUserMessageMedicalReq,
+  removeFileUserMessageMessageMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setPatientIdTypeAbbrevFamiliar } from "@/redux/features/familiar/familiarSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
@@ -612,6 +620,30 @@ const FamiliarCreateRequestForm: React.FC = () => {
             }
             copyPatientCivilRegistryRemoverDataform={
               removeFileCopyPatientCivilRegistrationMedicalReq
+            }
+            copyMarriageCertificateSetterDataform={
+              setFileCopyMarriageCertificateMedicalReq
+            }
+            copyMarriageCertificateRemoverDataform={
+              removeFileCopyMarriageCertificateMedicalReq
+            }
+            copyCohabitationCertificateSetterDataform={
+              setFileCopyCohabitationCertificateMedicalReq
+            }
+            copyCohabitationCertificateRemoverDataform={
+              removeFileCopyCohabitationCertificateMedicalReq
+            }
+            copyParentCitizenshipCardSetterDataform={
+              setFileCopyParentsCitizenshipCardMedicalReq
+            }
+            copyParentCitizenshipCardRemoverDataform={
+              removeFileCopyParentsCitizenshipCardMedicalReq
+            }
+            copyReferenceDocumentsRequestSetterDataform={
+              setFileUserMessageMedicalReq
+            }
+            copyReferenceDocumentsRequestRemoverDataform={
+              removeFileUserMessageMessageMedicalReq
             }
             handleOnChangeUserMessageMedicalReqDataForm={(e) =>
               dispatch(setUserMessageMedicalReq(e.target.value))
