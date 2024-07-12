@@ -19,6 +19,8 @@ import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
+import { validateRequiredFiles } from "@/helpers/validate_required_files/validate_required_files";
+
 import { PatientClassificationStatus } from "@/../../api/src/medical_req/enums/patient_classification_status.enum";
 import { RelationshipWithPatient } from "@/../../api/src/medical_req/enums/relationship_with_patient.enum";
 
@@ -95,6 +97,30 @@ const FamiliarCreateRequestFormData: React.FC<{
 }) => {
   const patientCategoryNameState = useAppSelector(
     (state) => state.medicalReq.patient_class_status_abbrev
+  );
+  const rightPetitionFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_right_petition
+  );
+  const userMessageFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_user_message_documents
+  );
+  const copyApplicantIdentificationFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_applicant_identification_document
+  );
+  const copyPatientCitizenshipCardFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_patient_citizenship_card
+  );
+  const copyPatientCivilRegistrationFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_patient_civil_registration
+  );
+  const copyParentsCitizenshipFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_parents_citizenship_card
+  );
+  const copyMarriageCertificateFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_marriage_certificate
+  );
+  const copyCohabitationCertificateFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_cohabitation_certificate
   );
 
   return (
@@ -247,12 +273,14 @@ const FamiliarCreateRequestFormData: React.FC<{
             id="upload-right-petition-to-request-familiar"
             name="upload-right-petition-to-request-familiar"
             className="upload-right-petition-to-request-familiar"
-            label="Adjuntar derecho de petición"
             style={{ marginBottom: "13px" }}
             rules={[
               {
                 required: true,
-                message: "¡Por favor adjuntar derecho de petición!",
+                validator: validateRequiredFiles(
+                  rightPetitionFilesMedicalReqState,
+                  "¡Por favor adjuntar derecho de petición!"
+                ),
               },
             ]}
           >
@@ -304,8 +332,10 @@ const FamiliarCreateRequestFormData: React.FC<{
               rules={[
                 {
                   required: true,
-                  message:
-                    "¡Por favor adjuntar documento de identidad del paciente!",
+                  validator: validateRequiredFiles(
+                    copyPatientCitizenshipCardFilesMedicalReqState,
+                    "¡Por favor adjuntar documento de identidad del paciente!"
+                  ),
                 },
               ]}
             >
@@ -334,8 +364,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message:
-                      "¡Por favor adjuntar documento de identidad del paciente!",
+                    validator: validateRequiredFiles(
+                      copyPatientCitizenshipCardFilesMedicalReqState,
+                      "¡Por favor adjuntar documento de identidad del paciente!"
+                    ),
                   },
                 ]}
               >
@@ -359,7 +391,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message: "¡Por favor adjuntar registro civil del paciente!",
+                    validator: validateRequiredFiles(
+                      copyPatientCivilRegistrationFilesMedicalReqState,
+                      "¡Por favor adjuntar registro civil del paciente!"
+                    ),
                   },
                 ]}
               >
@@ -389,8 +424,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message:
-                      "¡Por favor adjuntar documento de identidad del paciente!",
+                    validator: validateRequiredFiles(
+                      copyPatientCitizenshipCardFilesMedicalReqState,
+                      "¡Por favor adjuntar documento de identidad del paciente!"
+                    ),
                   },
                 ]}
               >
@@ -414,7 +451,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message: "¡Por favor adjuntar registro civil del paciente!",
+                    validator: validateRequiredFiles(
+                      copyPatientCivilRegistrationFilesMedicalReqState,
+                      "¡Por favor adjuntar registro civil del paciente!"
+                    ),
                   },
                 ]}
               >
@@ -444,8 +484,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message:
-                      "¡Por favor adjuntar documento de identidad del paciente!",
+                    validator: validateRequiredFiles(
+                      copyPatientCitizenshipCardFilesMedicalReqState,
+                      "¡Por favor adjuntar documento de identidad del paciente!"
+                    ),
                   },
                 ]}
               >
@@ -469,8 +511,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message:
-                      "¡Por favor adjuntar partida de matrimonio o certificado de unión libre!",
+                    validator: validateRequiredFiles(
+                      copyMarriageCertificateFilesMedicalReqState,
+                      "¡Por favor adjuntar partida de matrimonio o certificado de unión libre!"
+                    ),
                   },
                 ]}
               >
@@ -500,8 +544,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message:
-                      "¡Por favor adjuntar documento de identidad del paciente!",
+                    validator: validateRequiredFiles(
+                      copyPatientCitizenshipCardFilesMedicalReqState,
+                      "¡Por favor adjuntar documento de identidad del paciente!"
+                    ),
                   },
                 ]}
               >
@@ -525,8 +571,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message:
-                      "¡Por favor adjuntar certificado de convivencia o extra-juicio por una notaria!",
+                    validator: validateRequiredFiles(
+                      copyCohabitationCertificateFilesMedicalReqState,
+                      "¡Por favor adjuntar certificado de convivencia o extra-juicio por una notaria!"
+                    ),
                   },
                 ]}
               >
@@ -554,7 +602,10 @@ const FamiliarCreateRequestFormData: React.FC<{
             rules={[
               {
                 required: true,
-                message: "¡Por favor adjuntar tu documento de identidad!",
+                validator: validateRequiredFiles(
+                  copyApplicantIdentificationFilesMedicalReqState,
+                  "¡Por favor adjunta tu documento de identidad!"
+                ),
               },
             ]}
           >
@@ -581,8 +632,10 @@ const FamiliarCreateRequestFormData: React.FC<{
               rules={[
                 {
                   required: true,
-                  message:
-                    "¡Por favor adjuntar documento de identidad del paciente!",
+                  validator: validateRequiredFiles(
+                    copyPatientCitizenshipCardFilesMedicalReqState,
+                    "¡Por favor adjuntar documento de identidad del paciente!"
+                  ),
                 },
               ]}
             >
@@ -612,8 +665,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                   rules={[
                     {
                       required: true,
-                      message:
-                        "¡Por favor adjuntar cédula de ciudadania del padre o madre!",
+                      validator: validateRequiredFiles(
+                        copyParentsCitizenshipFilesMedicalReqState,
+                        "¡Por favor adjuntar cédula de ciudadania del padre o madre!"
+                      ),
                     },
                   ]}
                 >
@@ -638,7 +693,10 @@ const FamiliarCreateRequestFormData: React.FC<{
                 rules={[
                   {
                     required: true,
-                    message: "¡Por favor adjuntar registro civil del menor!",
+                    validator: validateRequiredFiles(
+                      copyPatientCivilRegistrationFilesMedicalReqState,
+                      "¡Por favor adjuntar registro civil del menor!"
+                    ),
                   },
                 ]}
               >
@@ -664,7 +722,10 @@ const FamiliarCreateRequestFormData: React.FC<{
           rules={[
             {
               required: false,
-              message: "¡Por favor adjunta mínimo un documento!",
+              // validator: validateRequiredFiles(
+              //   userMessageFilesMedicalReqState,
+              //   "¡Por favor adjunta mínimo un documento!"
+              // ),
             },
           ]}
         >

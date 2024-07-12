@@ -67,6 +67,9 @@ const FamiliarDataCard: React.FC = () => {
   const relWithPatientNumberState = useAppSelector(
     (state) => state.familiar.rel_with_patient
   );
+  const relWithPatientAbbrevState = useAppSelector(
+    (state) => state.familiar.rel_with_patient_abbrev
+  );
   const errorsFamiliarState = useAppSelector((state) => state.familiar.errors);
 
   const [showErrorMessageFamiliar, setShowErrorMessageFamiliar] =
@@ -138,7 +141,6 @@ const FamiliarDataCard: React.FC = () => {
     }
     if (
       patientUserData &&
-      patientIdNumberState &&
       !patientUserFetching &&
       !patientUserLoading &&
       !patientUserError
@@ -170,7 +172,6 @@ const FamiliarDataCard: React.FC = () => {
     genderNameUserData,
     patientUserData,
     patientUserError,
-    patientIdNumberState,
     relWithPatientFamiliarData,
     relWithPatientFamiliarError,
     relWithPatientNumberState,
@@ -178,7 +179,10 @@ const FamiliarDataCard: React.FC = () => {
 
   return (
     <>
-      {userFamiliarLoading && userFamiliarFetching && !patientUserData ? (
+      {userFamiliarLoading &&
+      userFamiliarFetching &&
+      patientUserFetching &&
+      patientUserLoading ? (
         <CustomSpin />
       ) : (
         <Col
@@ -261,9 +265,9 @@ const FamiliarDataCard: React.FC = () => {
 
               <Col
                 xs={24}
-                sm={10}
-                md={10}
-                lg={10}
+                sm={12}
+                md={12}
+                lg={12}
                 style={{
                   padding: "2px 13px",
                   textAlign: "start",
@@ -275,7 +279,7 @@ const FamiliarDataCard: React.FC = () => {
                     ...titleStyleCss,
                   }}
                 >
-                  Número de identificación:
+                  Número de identificación familiar:
                 </h3>
 
                 <h3
@@ -297,7 +301,7 @@ const FamiliarDataCard: React.FC = () => {
                     ...titleStyleCss,
                   }}
                 >
-                  Nombre de paciente:
+                  Nombre de paciente asignado:
                 </h3>
 
                 <h3
@@ -316,9 +320,9 @@ const FamiliarDataCard: React.FC = () => {
 
               <Col
                 xs={24}
-                sm={14}
-                md={14}
-                lg={14}
+                sm={12}
+                md={12}
+                lg={12}
                 style={{
                   padding: "2px 13px",
                   textAlign: "start",
@@ -330,7 +334,7 @@ const FamiliarDataCard: React.FC = () => {
                     ...titleStyleCss,
                   }}
                 >
-                  Correo electrónico:
+                  Correo electrónico familiar:
                 </h3>
 
                 <h3
@@ -352,18 +356,18 @@ const FamiliarDataCard: React.FC = () => {
                     ...titleStyleCss,
                   }}
                 >
-                  Número de celular:
+                  Parentesco con el paciente asignado:
                 </h3>
 
                 <h3
-                  className="familiar-cellphone-data"
+                  className="familiar-relationship-with-patient-data"
                   style={{
                     ...subtitleStyleCss,
                     color: "#3F97AF",
                     textAlign: "end",
                   }}
                 >
-                  {cellphoneFamiliarState || NOT_REGISTER}
+                  {relWithPatientAbbrevState || NOT_REGISTER}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />

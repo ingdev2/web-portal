@@ -90,7 +90,7 @@ export class CreateMedicalReqFamiliarDto {
 
   @IsOptional()
   @IsArray()
-  copy_applicant_citizenship_card: string[];
+  copy_applicant_identification_document: string[];
 
   @IsOptional()
   @IsArray()

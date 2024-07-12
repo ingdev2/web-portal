@@ -49,6 +49,7 @@ const EpsUpdatePersonalDataPage = () => {
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
+      redirect("/login");
     }
   }, [status, idNumberUserEpsLoginState, idNumberEpsState]);
 

@@ -35,11 +35,13 @@ import {
   useGetUserByIdNumberEpsQuery,
   useGetUserByIdNumberPatientQuery,
 } from "@/redux/apis/users/usersApi";
-import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
+
+import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 
 const EpsCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { uploadFiles } = processAndUploadFiles();
 
   const componentChangeState = useAppSelector(
     (state) => state.modal.componentChange
@@ -113,19 +115,7 @@ const EpsCreateRequestForm: React.FC = () => {
       isError: createMedicalReqEpsError,
     },
   ] = useCreateMedicalReqEpsMutation({
-    fixedCacheKey: "createMedicalReqPatientData",
-  });
-
-  const [
-    uploadFileToS3,
-    {
-      data: uploadFileToS3Data,
-      isLoading: uploadFileToS3Loading,
-      isSuccess: uploadFileToS3Success,
-      isError: uploadFileToS3Error,
-    },
-  ] = useUploadFileMutation({
-    fixedCacheKey: "uploadFileToS3Data",
+    fixedCacheKey: "createMedicalReqEpsData",
   });
 
   useEffect(() => {
@@ -184,58 +174,21 @@ const EpsCreateRequestForm: React.FC = () => {
     try {
       setIsSubmittingNewMedicalReq(true);
 
+      const statesToUpload = [
+        {
+          state: userMessageFilesMedicalReqState,
+          paramName: "user_message_documents",
+        },
+      ];
+
       const responses: Record<string, string[]> = {};
+
       let errors: string[] = [];
 
-      if (
-        userMessageFilesMedicalReqState &&
-        userMessageFilesMedicalReqState.length > 0
-      ) {
-        const statesToUpload = [
-          {
-            files: userMessageFilesMedicalReqState,
-            paramName: "user_message_documents",
-          },
-        ];
-
-        const processAndUploadFiles = async (
-          files: Array<Express.Multer.File>
-        ): Promise<{ success: string[]; error: string | null }> => {
-          const formData = new FormData();
-
-          files.forEach((file) => {
-            formData.append(
-              "files",
-              new Blob([file.buffer], { type: file.mimetype }),
-              file.originalname
-            );
-          });
-
-          try {
-            var s3Response: any = await uploadFileToS3(formData);
-
-            if (s3Response.error) {
-              const errorMessage = s3Response.error?.data?.message;
-
-              return {
-                success: [],
-                error: Array.isArray(errorMessage)
-                  ? errorMessage[0]
-                  : errorMessage,
-              };
-            }
-            return { success: s3Response.data || [], error: null };
-          } catch (error: any) {
-            return {
-              success: [],
-              error: error || "Error desconocido al subir archivos",
-            };
-          }
-        };
-
-        for (const { files, paramName } of statesToUpload) {
-          if (files && files.length > 0) {
-            const { success, error } = await processAndUploadFiles(files);
+      if (statesToUpload.some(({ state }) => state && state.length > 0)) {
+        for (const { state, paramName } of statesToUpload) {
+          if (state && state.length > 0) {
+            const { success, error } = await uploadFiles(state);
             if (error) {
               errors.push(error);
             } else {
@@ -243,13 +196,13 @@ const EpsCreateRequestForm: React.FC = () => {
             }
           }
         }
+      }
 
-        if (errors.length > 0) {
-          dispatch(setErrorsMedicalReq(errors[0]));
-          setShowErrorMessageMedicalReq(true);
+      if (errors.length > 0) {
+        dispatch(setErrorsMedicalReq(errors[0]));
+        setShowErrorMessageMedicalReq(true);
 
-          return;
-        }
+        return;
       }
 
       const response: any = await createMedicalReqEps({

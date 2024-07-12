@@ -40,11 +40,15 @@ import {
   setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
-import { setPatientIdTypeAbbrevFamiliar } from "@/redux/features/familiar/familiarSlice";
+import {
+  setDefaultValuesUserFamiliar,
+  setPatientIdTypeAbbrevFamiliar,
+} from "@/redux/features/familiar/familiarSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import {
   setNameUserPatient,
   setIdTypeUserPatient,
+  setIdNumberUserPatient,
   setBirthdateUserPatient,
   setDefaultValuesUserPatient,
 } from "@/redux/features/patient/patientSlice";
@@ -55,13 +59,15 @@ import { useGetAllPatientClassStatusQuery } from "@/redux/apis/patient_class_sta
 import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
-import { PatientClassificationStatus } from "@/../../api/src/medical_req/enums/patient_classification_status.enum";
+import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { calculatePatientAge } from "@/helpers/calculate_patient_age/calculate_patient_age";
+import { handleDeceasedPatient } from "@/helpers/handle_deceased_patient/handle_deceased_patient";
 
 const FamiliarCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { uploadFiles } = processAndUploadFiles();
 
   const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
   const idNumberUserFamiliarState = useAppSelector(
@@ -73,6 +79,9 @@ const FamiliarCreateRequestForm: React.FC = () => {
   );
   const idTypePatientOfFamiliarState = useAppSelector(
     (state) => state.patient.user_id_type
+  );
+  const idNumberPatientOfFamiliarState = useAppSelector(
+    (state) => state.patient.id_number
   );
   const birthdatePatientOfFamiliarState = useAppSelector(
     (state) => state.patient.birthdate
@@ -87,7 +96,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
   const idTypeAbbrevPatientOfFamiliarState = useAppSelector(
     (state) => state.familiar.patient_id_type_abbrev
   );
-  const idNumberPatientOfFamiliarState = useAppSelector(
+  const idNumberPatientOfFamiliarFState = useAppSelector(
     (state) => state.familiar.patient_id_number
   );
 
@@ -106,17 +115,35 @@ const FamiliarCreateRequestForm: React.FC = () => {
   const haveRightPetitionState = useAppSelector(
     (state) => state.medicalReq.right_petition
   );
+  const rightPetitionFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_right_petition
+  );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
   );
   const userMessageFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_user_message_documents
   );
+  const copyApplicantIdentificationFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_applicant_identification_document
+  );
+  const copyPatientCitizenshipCardFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_patient_citizenship_card
+  );
+  const copyPatientCivilRegistrationFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_patient_civil_registration
+  );
+  const copyParentsCitizenshipFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_parents_citizenship_card
+  );
+  const copyMarriageCertificateFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_marriage_certificate
+  );
+  const copyCohabitationCertificateFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_cohabitation_certificate
+  );
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
-  );
-  const medicalReqFiles = useAppSelector(
-    (state) => state.medicalReq.files_user_message_documents
   );
 
   const [reqTypeNameLocalState, setReqTypeNameLocalState] = useState("");
@@ -164,7 +191,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
     isLoading: userPatientOfFamiliarLoading,
     isFetching: userPatientOfFamiliarFetching,
     error: userPatientOfFamiliarError,
-  } = useGetUserByIdNumberPatientQuery(idNumberPatientOfFamiliarState);
+  } = useGetUserByIdNumberPatientQuery(idNumberPatientOfFamiliarFState);
 
   const {
     data: idTypeData,
@@ -185,27 +212,17 @@ const FamiliarCreateRequestForm: React.FC = () => {
     fixedCacheKey: "createMedicalReqFamiliarData",
   });
 
-  const [
-    uploadFileToS3,
-    {
-      data: uploadFileToS3Data,
-      isLoading: uploadFileToS3Loading,
-      isSuccess: uploadFileToS3Success,
-      isError: uploadFileToS3Error,
-    },
-  ] = useUploadFileMutation({
-    fixedCacheKey: "uploadFileToS3Data",
-  });
-
   useEffect(() => {
     if (
       userPatientOfFamiliarData &&
       !userPatientOfFamiliarLoading &&
       !userPatientOfFamiliarFetching &&
-      !userPatientOfFamiliarError
+      !userPatientOfFamiliarError &&
+      idNumberPatientOfFamiliarFState
     ) {
       dispatch(setNameUserPatient(userPatientOfFamiliarData.name));
       dispatch(setIdTypeUserPatient(userPatientOfFamiliarData.user_id_type));
+      dispatch(setIdNumberUserPatient(userPatientOfFamiliarData.id_number));
       dispatch(setBirthdateUserPatient(userPatientOfFamiliarData.birthdate));
     }
     if (idTypeData && !idTypeLoading && !idTypeFetching && !idTypeError) {
@@ -234,61 +251,14 @@ const FamiliarCreateRequestForm: React.FC = () => {
       !thePatienHasDiedLocalState &&
       !patientClassStatusError
     ) {
-      const birthDate = new Date(birthdatePatientOfFamiliarState);
-
-      const today = new Date();
-
-      var age = today.getFullYear() - birthDate.getFullYear();
-
-      const monthDifference = today.getMonth() - birthDate.getMonth();
-
-      if (
-        monthDifference < 0 ||
-        (monthDifference === 0 && today.getDate() < birthDate.getDate())
-      ) {
-        age--;
-      }
-
-      let patientClassStatusId: number | null = null;
-      let patientClassName: string | null = null;
-
-      if (age < 18) {
-        patientClassName = PatientClassificationStatus.YOUNGER;
-      } else {
-        patientClassName = PatientClassificationStatus.ADULT;
-      }
-
-      const matchedClass = patientClassStatusData.find(
-        (patientClass: any) => patientClass.name === patientClassName
+      calculatePatientAge(
+        birthdatePatientOfFamiliarState,
+        patientClassStatusData,
+        dispatch
       );
-
-      if (matchedClass) {
-        patientClassStatusId = matchedClass.id;
-      }
-
-      if (patientClassStatusId) {
-        dispatch(setPatientClassStatusMedicalReq(patientClassStatusId || 0));
-        dispatch(setPatientClassStatusAbbrevMedicalReq(patientClassName || ""));
-      }
     }
     if (thePatienHasDiedLocalState && patientClassStatusData) {
-      let patientClassStatusId: number | null = null;
-      let patientClassName: string | null = null;
-
-      patientClassName = PatientClassificationStatus.DECEASED;
-
-      const matchedClass = patientClassStatusData.find(
-        (patientClass: any) => patientClass.name === patientClassName
-      );
-
-      if (matchedClass) {
-        patientClassStatusId = matchedClass.id;
-      }
-
-      if (patientClassStatusId) {
-        dispatch(setPatientClassStatusMedicalReq(patientClassStatusId || 0));
-        dispatch(setPatientClassStatusAbbrevMedicalReq(patientClassName || ""));
-      }
+      handleDeceasedPatient(patientClassStatusData, dispatch);
     }
   }, [
     userPatientOfFamiliarData,
@@ -304,6 +274,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
     patientClassStatusError,
     thePatienHasDiedLocalState,
     haveRightPetitionState,
+    idNumberPatientOfFamiliarFState,
   ]);
 
   const handleCreateRequest = () => {
@@ -322,102 +293,99 @@ const FamiliarCreateRequestForm: React.FC = () => {
     try {
       setIsSubmittingNewMedicalReq(true);
 
-      // const responses: Record<string, string[]> = {};
-      // let errors: string[] = [];
+      const statesToUpload = [
+        {
+          state: rightPetitionFilesMedicalReqState,
+          paramName: "copy_right_petition",
+        },
+        {
+          state: copyApplicantIdentificationFilesMedicalReqState,
+          paramName: "copy_applicant_identification_document",
+        },
+        {
+          state: copyPatientCitizenshipCardFilesMedicalReqState,
+          paramName: "copy_patient_citizenship_card",
+        },
+        {
+          state: copyPatientCivilRegistrationFilesMedicalReqState,
+          paramName: "copy_patient_civil_registration",
+        },
+        {
+          state: copyParentsCitizenshipFilesMedicalReqState,
+          paramName: "copy_parents_citizenship_card",
+        },
+        {
+          state: copyMarriageCertificateFilesMedicalReqState,
+          paramName: "copy_marriage_certificate",
+        },
+        {
+          state: copyCohabitationCertificateFilesMedicalReqState,
+          paramName: "copy_cohabitation_certificate",
+        },
+        {
+          state: userMessageFilesMedicalReqState,
+          paramName: "user_message_documents",
+        },
+      ];
 
-      // if (
-      //   userMessageFilesMedicalReqState &&
-      //   userMessageFilesMedicalReqState.length > 0
-      // ) {
-      //   const statesToUpload = [
-      //     {
-      //       files: userMessageFilesMedicalReqState,
-      //       paramName: "user_message_documents",
-      //     },
-      //   ];
+      const responses: Record<string, string[]> = {};
 
-      //   const processAndUploadFiles = async (
-      //     files: Array<Express.Multer.File>
-      //   ): Promise<{ success: string[]; error: string | null }> => {
-      //     const formData = new FormData();
+      let errors: string[] = [];
 
-      //     files.forEach((file) => {
-      //       formData.append(
-      //         "files",
-      //         new Blob([file.buffer], { type: file.mimetype }),
-      //         file.originalname
-      //       );
-      //     });
+      if (statesToUpload.some(({ state }) => state && state.length > 0)) {
+        for (const { state, paramName } of statesToUpload) {
+          if (state && state.length > 0) {
+            const { success, error } = await uploadFiles(state);
+            if (error) {
+              errors.push(error);
+            } else {
+              responses[paramName] = success;
+            }
+          }
+        }
+      }
 
-      //     try {
-      //       var s3Response: any = await uploadFileToS3(formData);
+      if (errors.length > 0) {
+        dispatch(setErrorsMedicalReq(errors[0]));
+        setShowErrorMessageMedicalReq(true);
 
-      //       if (s3Response.error) {
-      //         const errorMessage = s3Response.error?.data?.message;
+        return;
+      }
 
-      //         return {
-      //           success: [],
-      //           error: Array.isArray(errorMessage)
-      //             ? errorMessage[0]
-      //             : errorMessage,
-      //         };
-      //       }
-      //       return { success: s3Response.data || [], error: null };
-      //     } catch (error: any) {
-      //       return {
-      //         success: [],
-      //         error: error || "Error desconocido al subir archivos",
-      //       };
-      //     }
-      //   };
+      const response: any = await createMedicalReqFamiliar({
+        familiarId: idUserFamiliarState,
+        medicalReqFamiliar: {
+          requirement_type: reqTypeState,
+          patient_class_status: patientCategoryNumberState,
+          relationship_with_patient: relWithPatientNumberFamiliarState,
+          patient_id_type: idTypePatientOfFamiliarState,
+          patient_id_number:
+            typeof idNumberPatientOfFamiliarState === "string"
+              ? parseInt(idNumberPatientOfFamiliarState, 10)
+              : idNumberPatientOfFamiliarState,
+          right_petition: haveRightPetitionState,
+          user_message: userMessageMedicalReqState,
+          ...responses,
+        },
+      });
 
-      //   for (const { files, paramName } of statesToUpload) {
-      //     if (files && files.length > 0) {
-      //       const { success, error } = await processAndUploadFiles(files);
-      //       if (error) {
-      //         errors.push(error);
-      //       } else {
-      //         responses[paramName] = success;
-      //       }
-      //     }
-      //   }
+      if (response.error) {
+        const errorMessage = response.error?.data?.message;
 
-      //   if (errors.length > 0) {
-      //     dispatch(setErrorsMedicalReq(errors[0]));
-      //     setShowErrorMessageMedicalReq(true);
+        dispatch(
+          setErrorsMedicalReq(
+            Array.isArray(errorMessage) ? errorMessage[0] : errorMessage
+          )
+        );
 
-      //     return;
-      //   }
-      // }
+        setShowErrorMessageMedicalReq(true);
+      } else {
+        setModalIsOpenConfirm(false);
+        setModalIsOpenSuccess(true);
 
-      // const response: any = await createMedicalReqFamiliar({
-      //   userId: idUserEpsState,
-      //   medicalReqEps: {
-      //     patient_id_type: idTypePatientOfFamiliarState,
-      //     patient_id_number: idNumberPatientState,
-      //     requirement_type: reqTypeState,
-      //     user_message: userMessageMedicalReqState,
-      //     ...responses,
-      //   },
-      // });
-
-      // if (response.error) {
-      //   const errorMessage = response.error?.data?.message;
-
-      //   dispatch(
-      //     setErrorsMedicalReq(
-      //       Array.isArray(errorMessage) ? errorMessage[0] : errorMessage
-      //     )
-      //   );
-
-      //   setShowErrorMessageMedicalReq(true);
-      // } else {
-      //   setModalIsOpenConfirm(false);
-      //   setModalIsOpenSuccess(true);
-
-      //   dispatch(setDefaultValuesUserPatient());
-      //   dispatch(setFilesUserMessageMedicalReq([]));
-      // }
+        dispatch(setDefaultValuesUserPatient());
+        dispatch(setDefaultValuesMedicalReq());
+      }
     } catch (error) {
       console.error(error);
     } finally {

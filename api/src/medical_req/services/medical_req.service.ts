@@ -203,7 +203,7 @@ export class MedicalReqService {
       copy_right_petition,
       copy_patient_citizenship_card,
       copy_patient_civil_registration,
-      copy_applicant_citizenship_card,
+      copy_applicant_identification_document,
       copy_parents_citizenship_card,
       copy_cohabitation_certificate,
       copy_marriage_certificate,
@@ -219,16 +219,16 @@ export class MedicalReqService {
     const documentsDeceasedSon =
       copy_patient_citizenship_card &&
       copy_patient_civil_registration &&
-      copy_applicant_citizenship_card;
+      copy_applicant_identification_document;
 
     const documentsDeceasedSpouse =
       copy_patient_citizenship_card &&
-      copy_applicant_citizenship_card &&
+      copy_applicant_identification_document &&
       copy_marriage_certificate;
 
     const documentsDeceasedFamiliar =
       copy_patient_citizenship_card &&
-      copy_applicant_citizenship_card &&
+      copy_applicant_identification_document &&
       copy_cohabitation_certificate;
 
     if (right_petition && !copy_right_petition) {
@@ -379,8 +379,8 @@ export class MedicalReqService {
       medicalReqFamiliar?.patient_class_status;
     documentsFamiliarDetails.relationship_with_patient =
       medicalReqFamiliar?.relationship_with_patient;
-    documentsFamiliarDetails.copy_applicant_citizenship_card =
-      medicalReqFamiliar?.copy_applicant_citizenship_card;
+    documentsFamiliarDetails.copy_applicant_identification_document =
+      medicalReqFamiliar?.copy_applicant_identification_document;
     documentsFamiliarDetails.copy_patient_citizenship_card =
       medicalReqFamiliar?.copy_patient_citizenship_card;
     documentsFamiliarDetails.copy_patient_civil_registration =
@@ -389,6 +389,8 @@ export class MedicalReqService {
       medicalReqFamiliar?.copy_parents_citizenship_card;
     documentsFamiliarDetails.copy_marriage_certificate =
       medicalReqFamiliar?.copy_marriage_certificate;
+    documentsFamiliarDetails.copy_cohabitation_certificate =
+      medicalReqFamiliar?.copy_cohabitation_certificate;
     documentsFamiliarDetails.user_message = medicalReqFamiliar?.user_message;
     documentsFamiliarDetails.user_message_documents =
       medicalReqFamiliar?.user_message_documents;
