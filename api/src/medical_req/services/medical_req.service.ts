@@ -924,7 +924,7 @@ export class MedicalReqService {
 
     const allMedicalReqOfUserFound = await this.medicalReqRepository.find({
       where: {
-        aplicantId: familiarId,
+        familiar_id: familiarId,
         is_deleted: false,
         is_it_reviewed: false,
       },

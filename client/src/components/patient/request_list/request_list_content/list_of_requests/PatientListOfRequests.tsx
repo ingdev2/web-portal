@@ -138,7 +138,7 @@ const PatientListOfRequests: React.FC = () => {
           }}
           type="primary"
           size="middle"
-          className="go-to-create-request-page-button"
+          className="go-to-create-request-page-button-patient"
           icon={<MdPostAdd size={17} />}
           onClick={() => {
             router.push("/patient/homepage/create_request", {

@@ -14,7 +14,7 @@ import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing
 import { typesMap } from "@/helpers/medical_req_type_map/types_map";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
 
-const EpsListOfRequestsCards: React.FC<{
+const FamiliarListOfRequestsCards: React.FC<{
   dataSourceList: MedicalReq[];
   optionsButtonSectionListOfRequest: (item: MedicalReq) => ReactNode;
 }> = ({ dataSourceList, optionsButtonSectionListOfRequest }) => {
@@ -37,14 +37,14 @@ const EpsListOfRequestsCards: React.FC<{
 
   return (
     <List
-      className="list-of-medical-reqs-cards-eps"
+      className="list-of-medical-reqs-cards-familiar"
       itemLayout="vertical"
       size="large"
       dataSource={dataSourceList}
       style={{ margin: "0px", padding: "0px" }}
       renderItem={(item) => (
         <Card
-          key={"card-list-of-request-eps"}
+          key={"card-list-of-request-familiar"}
           style={{
             display: "flex",
             flexFlow: "column wrap",
@@ -110,4 +110,4 @@ const EpsListOfRequestsCards: React.FC<{
   );
 };
 
-export default EpsListOfRequestsCards;
+export default FamiliarListOfRequestsCards;

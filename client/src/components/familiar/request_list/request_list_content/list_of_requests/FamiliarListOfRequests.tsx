@@ -8,24 +8,21 @@ import { Button, Card, Col } from "antd";
 import CustomSpin from "../../../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import EpsRequestCardList from "../eps_request_card_list/EpsRequestCardList";
+import FamiliarRequestCardList from "../eps_request_card_list/FamiliarRequestCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdPostAdd } from "react-icons/md";
 
-import { setIdUserEps } from "@/redux/features/eps/epsSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
-import { useGetAllMedicalReqOfAUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetAllMedicalReqOfAFamiliarQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
-const EpsListOfRequests: React.FC = () => {
+const FamiliarListOfRequests: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const idNumberUserEpsState = useAppSelector(
-    (state) => state.epsUserLogin.id_number
-  );
-  const idUserEpsState = useAppSelector((state) => state.eps.id);
+  const idUserFamiliarState = useAppSelector((state) => state.familiarLogin.id);
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
   );
@@ -34,27 +31,37 @@ const EpsListOfRequests: React.FC = () => {
     useState(false);
 
   const {
-    data: userEpsData,
-    isLoading: userEpsLoading,
-    isFetching: userEpsFetching,
-    error: userEpsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsState);
+    data: userFamiliarData,
+    isLoading: userFamiliarLoading,
+    isFetching: userFamiliarFetching,
+    error: userFamiliarError,
+  } = useGetFamiliarByIdQuery(idUserFamiliarState);
 
   const {
     data: userMedicalReqData,
     isLoading: userMedicalReqLoading,
     isFetching: userMedicalReqFetching,
     error: userMedicalReqError,
-  } = useGetAllMedicalReqOfAUsersQuery(idUserEpsState, {
+  } = useGetAllMedicalReqOfAFamiliarQuery(idUserFamiliarState, {
     // pollingInterval: 7000,
     // skipPollingIfUnfocused: true,
   });
 
   useEffect(() => {
-    if (userEpsData && !userEpsLoading && !userEpsFetching && !idUserEpsState) {
-      dispatch(setIdUserEps(userEpsData.id));
+    if (
+      userFamiliarData &&
+      !userFamiliarLoading &&
+      !userFamiliarFetching &&
+      !idUserFamiliarState
+    ) {
+      dispatch(setIdUserFamiliar(userFamiliarData.id));
     }
-  }, [userEpsData, userEpsLoading, userEpsFetching, idUserEpsState]);
+  }, [
+    userFamiliarData,
+    userFamiliarLoading,
+    userFamiliarFetching,
+    idUserFamiliarState,
+  ]);
 
   return (
     <Col
@@ -107,7 +114,7 @@ const EpsListOfRequests: React.FC = () => {
           className="back-to-homepage-button"
           icon={<IoMdArrowRoundBack size={17} />}
           onClick={() => {
-            router.push("/eps/homepage", {
+            router.push("/familiar/homepage", {
               scroll: true,
             });
           }}
@@ -128,10 +135,10 @@ const EpsListOfRequests: React.FC = () => {
           }}
           type="primary"
           size="middle"
-          className="go-to-create-request-page-button"
+          className="go-to-create-request-page-button-familiar"
           icon={<MdPostAdd size={17} />}
           onClick={() => {
-            router.push("/eps/homepage/create_request", {
+            router.push("/familiar/homepage/create_request", {
               scroll: true,
             });
           }}
@@ -146,7 +153,7 @@ const EpsListOfRequests: React.FC = () => {
         <CustomSpin />
       ) : Array.isArray(userMedicalReqData) ? (
         <Card
-          key={"card-list-of-request-content-eps"}
+          key={"card-list-of-request-content-familiar"}
           style={{
             alignItems: "center",
             alignContent: "center",
@@ -167,11 +174,11 @@ const EpsListOfRequests: React.FC = () => {
             Total de <b>{userMedicalReqData.length} solicitud(es)</b>
           </h2>
 
-          <EpsRequestCardList requestCardListData={userMedicalReqData} />
+          <FamiliarRequestCardList requestCardListData={userMedicalReqData} />
         </Card>
       ) : (
         <Card
-          key={"card-list-of-request-content-eps"}
+          key={"card-list-of-request-content-familiar"}
           style={{
             width: "100%",
             maxWidth: "540px",
@@ -184,7 +191,7 @@ const EpsListOfRequests: React.FC = () => {
             titleCustomEmpty="Sin solicitudes"
             buttonCustomEmpty="Crear nueva solicitud"
             handleClickCustomEmpty={() => {
-              router.push("/eps/homepage/create_request", {
+              router.push("/familiar/homepage/create_request", {
                 scroll: true,
               });
             }}
@@ -195,4 +202,4 @@ const EpsListOfRequests: React.FC = () => {
   );
 };
 
-export default EpsListOfRequests;
+export default FamiliarListOfRequests;

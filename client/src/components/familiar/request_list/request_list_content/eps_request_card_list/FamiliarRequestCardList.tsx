@@ -5,11 +5,11 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import { Col, Row, SelectProps } from "antd";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
-import EpsRequestDetailsModal from "./request_details_content/EpsRequestDetailsModal";
+import FamiliarRequestDetailsModal from "./request_details_content/FamiliarRequestDetailsModal";
 import CustomCardOptionsButtons from "../../../../common/custom_content_card/CustomCardOptionsButtons";
 import CustomFilterBy from "../../../../common/custom_filter_by/CustomFilterBy";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import EpsListOfRequestsCards from "./list_of_requests_cards/EpsListOfRequestsCards";
+import FamiliarListOfRequestsCards from "./list_of_requests_cards/FamiliarListOfRequestsCards";
 import { FcHighPriority } from "react-icons/fc";
 import { FaRegEye } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
@@ -19,7 +19,7 @@ import { setErrorsMedicalReq } from "@/redux/features/medical_req/medicalReqSlic
 
 import {
   useDeletedMedicalReqMutation,
-  useLazyGetAllMedicalReqOfAUsersQuery,
+  useLazyGetAllMedicalReqOfAFamiliarQuery,
 } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
@@ -32,17 +32,18 @@ import { getTagComponentStatus } from "@/components/common/custom_tags_medical_r
 import { updateSelectedRequestReasonsForRejection } from "@/helpers/medical_req_reason_for_rejection_map/update_selected_reasons_for_rejection";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
+
 import { filterRequests } from "./filters_request_card_list/filtered_request";
 import { SortRequestsBy } from "./sortby_request_card_list/enums/select_sortby.enums";
 import SortByRequest from "./sortby_request_card_list/SortByRequest";
 import { sortRequests } from "./sortby_request_card_list/sort_request_by_options";
 
-const EpsRequestCardList: React.FC<{
+const FamiliarRequestCardList: React.FC<{
   requestCardListData: MedicalReq[];
 }> = ({ requestCardListData }) => {
   const dispatch = useAppDispatch();
 
-  const idUserEpsState = useAppSelector((state) => state.eps.id);
+  const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
   );
@@ -110,7 +111,7 @@ const EpsRequestCardList: React.FC<{
       isFetching: userMedicalLazyReqFetching,
       error: userMedicalLazyReqError,
     },
-  ] = useLazyGetAllMedicalReqOfAUsersQuery({});
+  ] = useLazyGetAllMedicalReqOfAFamiliarQuery({});
 
   const {
     data: userMedicalReqTypeData,
@@ -229,7 +230,7 @@ const EpsRequestCardList: React.FC<{
       }
 
       if (isDeletedMedicalReqSuccess) {
-        trigger(idUserEpsState);
+        trigger(idUserFamiliarState);
         setSuccessMessage(
           `Solicitud con N° Radicado ${formatFilingNumber(
             selectedRequestFilingNumberLocalState
@@ -326,7 +327,7 @@ const EpsRequestCardList: React.FC<{
       )}
 
       {modalOpenRequestDetails && (
-        <EpsRequestDetailsModal
+        <FamiliarRequestDetailsModal
           modalOpenRequestDetailsModal={modalOpenRequestDetails}
           selectedRequestFilingNumberModal={formatFilingNumber(
             selectedRequestFilingNumberLocalState
@@ -441,7 +442,7 @@ const EpsRequestCardList: React.FC<{
         </Col>
       </Row>
 
-      <EpsListOfRequestsCards
+      <FamiliarListOfRequestsCards
         dataSourceList={filteredRequests}
         optionsButtonSectionListOfRequest={renderOptionsButtons}
       />
@@ -449,4 +450,4 @@ const EpsRequestCardList: React.FC<{
   );
 };
 
-export default EpsRequestCardList;
+export default FamiliarRequestCardList;

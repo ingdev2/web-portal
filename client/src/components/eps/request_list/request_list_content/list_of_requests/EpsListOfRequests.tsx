@@ -128,7 +128,7 @@ const EpsListOfRequests: React.FC = () => {
           }}
           type="primary"
           size="middle"
-          className="go-to-create-request-page-button"
+          className="go-to-create-request-page-button-eps"
           icon={<MdPostAdd size={17} />}
           onClick={() => {
             router.push("/eps/homepage/create_request", {

@@ -9,24 +9,26 @@ import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.en
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import EpsRequestListLayout from "@/components/eps/request_list/EpsRequestListLayout";
+import FamiliarRequestListLayout from "@/components/familiar/request_list/FamiliarRequestListLayout";
 
-import { setIdNumberUserEps } from "@/redux/features/eps/epsSlice";
+import { setIdNumberUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
+import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
 
-const EpsRequestListPage = () => {
+const FamiliarRequestListPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  const allowedRoles = [UserRolType.EPS];
+  const allowedRoles = [UserRolType.AUTHORIZED_FAMILIAR];
   useRoleValidation(allowedRoles);
 
-  const idNumberUserEpsLoginState = useAppSelector(
-    (state) => state.epsUserLogin.id_number
+  const idNumberUserFamiliarLoginState = useAppSelector(
+    (state) => state.familiarLogin.id_number_familiar
   );
-  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
+  const idNumberFamiliarState = useAppSelector(
+    (state) => state.familiar.id_number
+  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
@@ -35,17 +37,17 @@ const EpsRequestListPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: userEpsData,
-    isLoading: userEpsLoading,
-    isFetching: userEpsFetching,
-    error: userEpsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsLoginState);
+    data: userFamiliarData,
+    isLoading: userFamiliarLoading,
+    isFetching: userFamiliarFetching,
+    error: userFamiliarError,
+  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarLoginState);
 
   useEffect(() => {
-    if (!idNumberEpsState) {
-      dispatch(setIdNumberUserEps(userEpsData?.id_number));
+    if (!idNumberFamiliarState) {
+      dispatch(setIdNumberUserFamiliar(userFamiliarData?.id_number));
     }
-    if (!idNumberUserEpsLoginState) {
+    if (!idNumberUserFamiliarLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
       redirect("/login");
@@ -58,7 +60,7 @@ const EpsRequestListPage = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [status, idNumberUserEpsLoginState, idNumberEpsState]);
+  }, [status, idNumberUserFamiliarLoginState, idNumberFamiliarState]);
 
   return (
     <>
@@ -69,15 +71,15 @@ const EpsRequestListPage = () => {
         />
       )}
 
-      {!idNumberUserEpsLoginState || status === "unauthenticated" ? (
+      {!idNumberUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="request-list-page-eps-content">
-          <EpsRequestListLayout />
+        <div className="request-list-page-familiar-content">
+          <FamiliarRequestListLayout />
         </div>
       )}
     </>
   );
 };
 
-export default EpsRequestListPage;
+export default FamiliarRequestListPage;

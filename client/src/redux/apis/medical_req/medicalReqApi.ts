@@ -167,6 +167,7 @@ export const {
   useGetAllMedicalReqOfAUsersQuery,
   useLazyGetAllMedicalReqOfAUsersQuery,
   useGetAllMedicalReqOfAFamiliarQuery,
+  useLazyGetAllMedicalReqOfAFamiliarQuery,
   useGetAllMedicalReqUsersToLegalAreaQuery,
   useGetAllMedicalReqPatientQuery,
   useGetAllMedicalReqFamiliarQuery,
