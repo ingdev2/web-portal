@@ -11,10 +11,10 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import FamiliarRequestListLayout from "@/components/familiar/request_list/FamiliarRequestListLayout";
 
-import { setIdNumberUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 
 const FamiliarRequestListPage = () => {
   const { data: session, status } = useSession();
@@ -23,15 +23,14 @@ const FamiliarRequestListPage = () => {
   const allowedRoles = [UserRolType.AUTHORIZED_FAMILIAR];
   useRoleValidation(allowedRoles);
 
-  const idNumberUserFamiliarLoginState = useAppSelector(
-    (state) => state.familiarLogin.id_number_familiar
-  );
-  const idNumberFamiliarState = useAppSelector(
-    (state) => state.familiar.id_number
-  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
+
+  const idUserFamiliarLoginState = useAppSelector(
+    (state) => state.familiarLogin.id
+  );
+  const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -41,13 +40,13 @@ const FamiliarRequestListPage = () => {
     isLoading: userFamiliarLoading,
     isFetching: userFamiliarFetching,
     error: userFamiliarError,
-  } = useGetFamiliarByIdNumberQuery(idNumberUserFamiliarLoginState);
+  } = useGetFamiliarByIdQuery(idUserFamiliarLoginState);
 
   useEffect(() => {
-    if (!idNumberFamiliarState) {
-      dispatch(setIdNumberUserFamiliar(userFamiliarData?.id_number));
+    if (!idUserFamiliarState) {
+      dispatch(setIdUserFamiliar(userFamiliarData?.id));
     }
-    if (!idNumberUserFamiliarLoginState) {
+    if (!idUserFamiliarState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
       redirect("/login");
@@ -60,7 +59,7 @@ const FamiliarRequestListPage = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [status, idNumberUserFamiliarLoginState, idNumberFamiliarState]);
+  }, [status, idUserFamiliarLoginState, idUserFamiliarState]);
 
   return (
     <>
@@ -71,7 +70,7 @@ const FamiliarRequestListPage = () => {
         />
       )}
 
-      {!idNumberUserFamiliarLoginState || status === "unauthenticated" ? (
+      {!idUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div className="request-list-page-familiar-content">

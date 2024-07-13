@@ -84,7 +84,7 @@ export class UsersController {
     return await this.usersService.getUsersById(id);
   }
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAllRelatives/:patientId')
   async getAllAuthorizedPatientRelatives(
     @Param('patientId') patientId: string,
@@ -104,7 +104,7 @@ export class UsersController {
 
   // PATCH METHODS //
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updatePatient/:id')
   async updateUserPerson(
     @Param('id') id: string,
@@ -113,13 +113,18 @@ export class UsersController {
     return await this.usersService.updateUserPatient(id, user);
   }
 
-  @Auth(UserRolType.EPS)
+  @Auth(UserRolType.EPS, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updateEps/:id')
   async updateUserEps(@Param('id') id: string, @Body() user: UpdateUserEpsDto) {
     return await this.usersService.updateUserEps(id, user);
   }
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS)
+  @Auth(
+    UserRolType.PATIENT,
+    UserRolType.EPS,
+    AdminRolType.SUPER_ADMIN,
+    AdminRolType.ADMIN,
+  )
   @Patch('/updatePassword/:id')
   async updateUserPassword(
     @Param('id')

@@ -2,35 +2,26 @@
 
 import React from "react";
 
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Radio,
-  Row,
-  Select,
-  Space,
-  Typography,
-} from "antd";
+import { Button, Col, Form, Input, Radio, Row, Space, Typography } from "antd";
 import { Store } from "antd/es/form/interface";
 import { titleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import {
   MdDriveFileRenameOutline,
   MdOutlineEmail,
-  MdOutlineHealthAndSafety,
+  MdOutlineFamilyRestroom,
 } from "react-icons/md";
 import { IdcardOutlined } from "@ant-design/icons";
 import { TbGenderBigender } from "react-icons/tb";
 import { FiPhone } from "react-icons/fi";
 
-const EpsUpdatePersonalDataFormData: React.FC<{
+const FamiliarUpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;
+  nameOfPatientFormData: string;
   idTypeNameUserPatientFormData: string;
   idNumberUserPatientFormData: number | string;
   genderNameUserPatientFormData: string;
-  epsCompanyUserPatientFormData: string;
+  relwithPatientUserFamiliarFormData: string;
   handleConfirmUpdatePersonalDataFormData: (
     e: React.FormEvent<HTMLFormElement>
   ) => Promise<void>;
@@ -39,10 +30,8 @@ const EpsUpdatePersonalDataFormData: React.FC<{
   onChangeEmailUserPatientFormData: (e: any) => void;
   cellphoneUserPatientFormData: number | string;
   onChangeCellphoneUserPatientFormData: (e: any) => void;
-  companyAreasLoadingDataForm: boolean;
-  companyAreaValueDataForm: number;
-  handleOnChangeCompanyAreaDataForm: (value: number) => void;
-  epsCompanyAreasListDataForm: string[];
+  whatsappUserPatientFormData: number | string;
+  onChangeWhatsappUserPatientFormData: (e: any) => void;
   authMethodUserPatientFormData: number;
   onChangeAuthMethodUserPatientFormData: (e: any) => void;
   patientAuthMethodsListFormData: string[];
@@ -51,19 +40,18 @@ const EpsUpdatePersonalDataFormData: React.FC<{
   handleButtonClickFormData: () => void;
 }> = ({
   nameUserPatientFormData,
+  nameOfPatientFormData,
   idTypeNameUserPatientFormData,
   idNumberUserPatientFormData,
   genderNameUserPatientFormData,
-  epsCompanyUserPatientFormData,
+  relwithPatientUserFamiliarFormData,
   handleConfirmUpdatePersonalDataFormData,
   initialValuesUpdatePersonalDataFormData,
   emailUserPatientFormData,
   onChangeEmailUserPatientFormData,
   cellphoneUserPatientFormData,
-  companyAreasLoadingDataForm,
-  companyAreaValueDataForm,
-  handleOnChangeCompanyAreaDataForm,
-  epsCompanyAreasListDataForm,
+  whatsappUserPatientFormData,
+  onChangeWhatsappUserPatientFormData,
   onChangeCellphoneUserPatientFormData,
   authMethodUserPatientFormData,
   onChangeAuthMethodUserPatientFormData,
@@ -81,7 +69,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
       style={{ padding: "0px", margin: "0px" }}
     >
       <h2
-        className="title-update-personal-data-patient"
+        className="title-update-personal-data-familiar"
         style={{
           ...titleStyleCss,
           marginBottom: 7,
@@ -93,11 +81,11 @@ const EpsUpdatePersonalDataFormData: React.FC<{
 
       <div style={{ textAlign: "start" }}>
         <Typography.Title style={{ marginTop: 7 }} level={5}>
-          Nombre de colaborador EPS:
+          Nombre de familiar:
         </Typography.Title>
 
         <Input
-          id="name-patient-auto-input"
+          id="name-familiar-auto-input"
           prefix={<MdDriveFileRenameOutline className="site-form-item-icon" />}
           style={{ overflow: "hidden", textOverflow: "ellipsis" }}
           value={nameUserPatientFormData}
@@ -119,7 +107,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             </Typography.Title>
 
             <Input
-              id="id-type-patient-auto-input"
+              id="id-type-familiar-auto-input"
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               value={idTypeNameUserPatientFormData}
@@ -141,7 +129,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             </Typography.Title>
 
             <Input
-              id="id-number-patient-hosvital"
+              id="id-number-familiar-auto-input"
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               value={idNumberUserPatientFormData}
@@ -161,11 +149,11 @@ const EpsUpdatePersonalDataFormData: React.FC<{
         >
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Sexo:
+              Sexo del familiar:
             </Typography.Title>
 
             <Input
-              id="gender-patient-hosvital"
+              id="gender-familiar-auto-input"
               prefix={<TbGenderBigender className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               value={genderNameUserPatientFormData}
@@ -183,20 +171,34 @@ const EpsUpdatePersonalDataFormData: React.FC<{
         >
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Empresa EPS:
+              Parentesco con paciente:
             </Typography.Title>
             <Input
-              id="affiliation-eps-patient-hosvital"
+              id="rel-with-patient-user-familiar"
               prefix={
-                <MdOutlineHealthAndSafety className="site-form-item-icon" />
+                <MdOutlineFamilyRestroom className="site-form-item-icon" />
               }
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              value={epsCompanyUserPatientFormData}
+              value={relwithPatientUserFamiliarFormData}
               disabled
             />
           </div>
         </Col>
       </Row>
+
+      <div style={{ textAlign: "start" }}>
+        <Typography.Title style={{ marginTop: 7 }} level={5}>
+          Nombre de paciente:
+        </Typography.Title>
+
+        <Input
+          id="name-patient-auto-input"
+          prefix={<MdDriveFileRenameOutline className="site-form-item-icon" />}
+          style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+          value={nameOfPatientFormData}
+          disabled
+        />
+      </div>
 
       <Form
         id="update-personal-data-form"
@@ -213,7 +215,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           </Typography.Title>
 
           <Form.Item
-            name="email-patient-hosvital"
+            name="email-familiar"
             style={{ margin: "0px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -250,82 +252,111 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           </Form.Item>
         </div>
 
-        <div style={{ textAlign: "start" }}>
-          <Typography.Title style={{ marginTop: 7 }} level={5}>
-            Celular:
-          </Typography.Title>
-
-          <Form.Item
-            name="cellphone-patient-hosvital"
-            style={{ margin: "0px" }}
-            normalize={(value) => {
-              if (!value) return "";
-
-              return value.replace(/[^0-9]/g, "");
-            }}
-            rules={[
-              {
-                required: false,
-                message: "¡Por favor ingresa el número de celular!",
-              },
-              {
-                pattern: /^[0-9]+$/,
-                message:
-                  "¡Por favor ingresa número de celular sin puntos ni comas!",
-              },
-              {
-                min: 7,
-                message: "¡Por favor ingresa mínimo 7 números!",
-              },
-              {
-                max: 11,
-                message: "¡Por favor ingresa máximo 11 números!",
-              },
-            ]}
+        <Row>
+          <Col
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            style={{ paddingInlineEnd: "7px" }}
           >
-            <Input
-              prefix={<FiPhone className="site-form-item-icon" />}
-              type="tel"
-              value={cellphoneUserPatientFormData}
-              onChange={onChangeCellphoneUserPatientFormData}
-              autoComplete="off"
-              min={0}
-            />
-          </Form.Item>
-        </div>
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Celular:
+              </Typography.Title>
 
-        <div style={{ textAlign: "start" }}>
-          <Typography.Title style={{ marginTop: 7 }} level={5}>
-            Área en la que se desempeña en la empresa:
-          </Typography.Title>
+              <Form.Item
+                name="cellphone-familiar"
+                style={{ margin: "0px" }}
+                normalize={(value) => {
+                  if (!value) return "";
 
-          <Form.Item
-            name="areas-company-eps"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: false,
-                message:
-                  "¡Por favor selecciona el área de empresa a actualizar!",
-              },
-            ]}
-          >
-            {companyAreasLoadingDataForm ? (
-              <CustomSpin />
-            ) : (
-              <Select
-                value={companyAreaValueDataForm}
-                onChange={handleOnChangeCompanyAreaDataForm}
+                  return value.replace(/[^0-9]/g, "");
+                }}
+                rules={[
+                  {
+                    required: false,
+                    message: "¡Por favor ingresa el número de celular!",
+                  },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message:
+                      "¡Por favor ingresa número de celular sin puntos ni comas!",
+                  },
+                  {
+                    min: 7,
+                    message: "¡Por favor ingresa mínimo 7 números!",
+                  },
+                  {
+                    max: 11,
+                    message: "¡Por favor ingresa máximo 11 números!",
+                  },
+                ]}
               >
-                {epsCompanyAreasListDataForm?.map((option: any) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </Form.Item>
-        </div>
+                <Input
+                  prefix={<FiPhone className="site-form-item-icon" />}
+                  type="tel"
+                  value={cellphoneUserPatientFormData}
+                  onChange={onChangeCellphoneUserPatientFormData}
+                  autoComplete="off"
+                  min={0}
+                />
+              </Form.Item>
+            </div>
+          </Col>
+
+          <Col
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            style={{ paddingInlineStart: "7px" }}
+          >
+            <div style={{ textAlign: "start" }}>
+              <Typography.Title style={{ marginTop: 7 }} level={5}>
+                Whatsapp
+              </Typography.Title>
+
+              <Form.Item
+                name="whatsapp-familiar"
+                style={{ margin: "0px" }}
+                normalize={(value) => {
+                  if (!value) return "";
+
+                  return value.replace(/[^0-9]/g, "");
+                }}
+                rules={[
+                  {
+                    required: false,
+                    message: "¡Por favor ingresa el número de celular!",
+                  },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message:
+                      "¡Por favor ingresa número de celular sin puntos ni comas!",
+                  },
+                  {
+                    min: 7,
+                    message: "¡Por favor ingresa mínimo 7 números!",
+                  },
+                  {
+                    max: 11,
+                    message: "¡Por favor ingresa máximo 11 números!",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<FiPhone className="site-form-item-icon" />}
+                  type="tel"
+                  value={whatsappUserPatientFormData}
+                  onChange={onChangeWhatsappUserPatientFormData}
+                  autoComplete="off"
+                  min={0}
+                />
+              </Form.Item>
+            </div>
+          </Col>
+        </Row>
 
         <div style={{ textAlign: "start" }}>
           <Typography.Title style={{ marginTop: 7 }} level={5}>
@@ -333,7 +364,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           </Typography.Title>
 
           <Form.Item
-            name="radio-select-auth-method-update-personal-data-patient"
+            name="radio-select-auth-method-update-personal-data-familiar"
             style={{ margin: "0px" }}
             rules={[
               {
@@ -399,4 +430,4 @@ const EpsUpdatePersonalDataFormData: React.FC<{
   );
 };
 
-export default EpsUpdatePersonalDataFormData;
+export default FamiliarUpdatePersonalDataFormData;

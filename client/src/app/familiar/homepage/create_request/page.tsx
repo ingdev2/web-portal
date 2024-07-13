@@ -23,16 +23,14 @@ const CreateRequestFamiliarPage = () => {
   const allowedRoles = [UserRolType.AUTHORIZED_FAMILIAR];
   useRoleValidation(allowedRoles);
 
-  const idUserFamiliarLoginState = useAppSelector((state) => state.familiar.id);
-  const idNumberUserFamiliarLoginState = useAppSelector(
-    (state) => state.familiarLogin.id_number_familiar
-  );
-  const idNumberFamiliarState = useAppSelector(
-    (state) => state.familiar.id_number
-  );
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
+
+  const idUserFamiliarLoginState = useAppSelector(
+    (state) => state.familiarLogin.id
+  );
+  const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,10 +45,10 @@ const CreateRequestFamiliarPage = () => {
   });
 
   useEffect(() => {
-    if (!idUserFamiliarLoginState) {
+    if (!idUserFamiliarState) {
       dispatch(setIdUserFamiliar(userFamiliarData?.id));
     }
-    if (!idUserFamiliarLoginState) {
+    if (!idUserFamiliarState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
       redirect("/login");
@@ -60,7 +58,7 @@ const CreateRequestFamiliarPage = () => {
       setErrorMessage("¡No autenticado!");
       redirect("/login");
     }
-  }, [status, idUserFamiliarLoginState]);
+  }, [status, idUserFamiliarLoginState, idUserFamiliarState]);
 
   return (
     <>

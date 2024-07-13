@@ -27,7 +27,9 @@ import {
   setRelWithPatientAbbrevFamiliar,
   setErrorsUserFamiliar,
   setDefaultValuesUserFamiliar,
+  setWhatsappUserFamiliar,
 } from "@/redux/features/familiar/familiarSlice";
+import { setNameUserPatient } from "@/redux/features/patient/patientSlice";
 
 import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
@@ -127,6 +129,7 @@ const FamiliarDataCard: React.FC = () => {
       dispatch(setGenderUserFamiliar(userFamiliarData?.user_gender));
       dispatch(setEmailUserFamiliar(userFamiliarData?.email));
       dispatch(setCellphoneUserFamiliar(userFamiliarData?.cellphone));
+      dispatch(setWhatsappUserFamiliar(userFamiliarData?.whatsapp));
       dispatch(
         setAuthMethodUserFamiliar(userFamiliarData?.authentication_method)
       );
@@ -150,6 +153,7 @@ const FamiliarDataCard: React.FC = () => {
           getFirstNameAndFirstLastName(patientUserData.name)
         )
       );
+      dispatch(setNameUserPatient(patientUserData.name));
     }
     if (
       relWithPatientFamiliarData &&

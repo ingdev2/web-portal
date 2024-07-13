@@ -26,48 +26,48 @@ import { TbGenderBigender } from "react-icons/tb";
 import { FiPhone } from "react-icons/fi";
 
 const EpsUpdatePersonalDataFormData: React.FC<{
-  nameUserPatientFormData: string;
-  idTypeNameUserPatientFormData: string;
-  idNumberUserPatientFormData: number | string;
-  genderNameUserPatientFormData: string;
-  epsCompanyUserPatientFormData: string;
+  nameUserEpsFormData: string;
+  idTypeNameUserEpsFormData: string;
+  idNumberUserEpsFormData: number | string;
+  genderNameUserEpsFormData: string;
+  epsCompanyUserEpsFormData: string;
   handleConfirmUpdatePersonalDataFormData: (
     e: React.FormEvent<HTMLFormElement>
   ) => Promise<void>;
   initialValuesUpdatePersonalDataFormData: Store | undefined;
-  emailUserPatientFormData: string;
-  onChangeEmailUserPatientFormData: (e: any) => void;
-  cellphoneUserPatientFormData: number | string;
-  onChangeCellphoneUserPatientFormData: (e: any) => void;
+  emailUserEpsFormData: string;
+  onChangeEmailUserEpsFormData: (e: any) => void;
+  cellphoneUserEpsFormData: number | string;
+  onChangeCellphoneUserEpsFormData: (e: any) => void;
   companyAreasLoadingDataForm: boolean;
   companyAreaValueDataForm: number;
   handleOnChangeCompanyAreaDataForm: (value: number) => void;
   epsCompanyAreasListDataForm: string[];
-  authMethodUserPatientFormData: number;
-  onChangeAuthMethodUserPatientFormData: (e: any) => void;
-  patientAuthMethodsListFormData: string[];
+  authMethodUserEpsFormData: number;
+  onChangeAuthMethodUserEpsFormData: (e: any) => void;
+  epsAuthMethodsListFormData: string[];
   isSubmittingUpdatePersonalDataFormData: boolean;
   hasChangesFormData: boolean;
   handleButtonClickFormData: () => void;
 }> = ({
-  nameUserPatientFormData,
-  idTypeNameUserPatientFormData,
-  idNumberUserPatientFormData,
-  genderNameUserPatientFormData,
-  epsCompanyUserPatientFormData,
+  nameUserEpsFormData,
+  idTypeNameUserEpsFormData,
+  idNumberUserEpsFormData,
+  genderNameUserEpsFormData,
+  epsCompanyUserEpsFormData,
   handleConfirmUpdatePersonalDataFormData,
   initialValuesUpdatePersonalDataFormData,
-  emailUserPatientFormData,
-  onChangeEmailUserPatientFormData,
-  cellphoneUserPatientFormData,
+  emailUserEpsFormData,
+  onChangeEmailUserEpsFormData,
+  cellphoneUserEpsFormData,
   companyAreasLoadingDataForm,
   companyAreaValueDataForm,
   handleOnChangeCompanyAreaDataForm,
   epsCompanyAreasListDataForm,
-  onChangeCellphoneUserPatientFormData,
-  authMethodUserPatientFormData,
-  onChangeAuthMethodUserPatientFormData,
-  patientAuthMethodsListFormData,
+  onChangeCellphoneUserEpsFormData,
+  authMethodUserEpsFormData,
+  onChangeAuthMethodUserEpsFormData,
+  epsAuthMethodsListFormData,
   isSubmittingUpdatePersonalDataFormData,
   hasChangesFormData,
   handleButtonClickFormData,
@@ -81,7 +81,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
       style={{ padding: "0px", margin: "0px" }}
     >
       <h2
-        className="title-update-personal-data-patient"
+        className="title-update-personal-data-eps"
         style={{
           ...titleStyleCss,
           marginBottom: 7,
@@ -97,10 +97,10 @@ const EpsUpdatePersonalDataFormData: React.FC<{
         </Typography.Title>
 
         <Input
-          id="name-patient-auto-input"
+          id="name-eps-auto-input"
           prefix={<MdDriveFileRenameOutline className="site-form-item-icon" />}
           style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-          value={nameUserPatientFormData}
+          value={nameUserEpsFormData}
           disabled
         />
       </div>
@@ -119,10 +119,10 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             </Typography.Title>
 
             <Input
-              id="id-type-patient-auto-input"
+              id="id-type-eps-auto-input"
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              value={idTypeNameUserPatientFormData}
+              value={idTypeNameUserEpsFormData}
               disabled
             />
           </div>
@@ -141,10 +141,10 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             </Typography.Title>
 
             <Input
-              id="id-number-patient-hosvital"
+              id="id-number-eps-hosvital"
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              value={idNumberUserPatientFormData}
+              value={idNumberUserEpsFormData}
               disabled
             />
           </div>
@@ -165,10 +165,10 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             </Typography.Title>
 
             <Input
-              id="gender-patient-hosvital"
+              id="gender-eps-hosvital"
               prefix={<TbGenderBigender className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              value={genderNameUserPatientFormData}
+              value={genderNameUserEpsFormData}
               disabled
             />
           </div>
@@ -186,12 +186,12 @@ const EpsUpdatePersonalDataFormData: React.FC<{
               Empresa EPS:
             </Typography.Title>
             <Input
-              id="affiliation-eps-patient-hosvital"
+              id="company-eps-user-eps-hosvital"
               prefix={
                 <MdOutlineHealthAndSafety className="site-form-item-icon" />
               }
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              value={epsCompanyUserPatientFormData}
+              value={epsCompanyUserEpsFormData}
               disabled
             />
           </div>
@@ -199,9 +199,9 @@ const EpsUpdatePersonalDataFormData: React.FC<{
       </Row>
 
       <Form
-        id="update-personal-data-form"
-        name="update-personal-data-form"
-        className="update-personal-data-form"
+        id="update-personal-data-form-eps"
+        name="update-personal-data-form-eps"
+        className="update-personal-data-form-eps"
         onFinish={handleConfirmUpdatePersonalDataFormData}
         initialValues={initialValuesUpdatePersonalDataFormData}
         autoComplete="false"
@@ -213,7 +213,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           </Typography.Title>
 
           <Form.Item
-            name="email-patient-hosvital"
+            name="email-eps-hosvital"
             style={{ margin: "0px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -242,9 +242,9 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             <Input
               prefix={<MdOutlineEmail className="site-form-item-icon" />}
               type="email"
-              value={emailUserPatientFormData}
+              value={emailUserEpsFormData}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              onChange={onChangeEmailUserPatientFormData}
+              onChange={onChangeEmailUserEpsFormData}
               autoComplete="off"
             />
           </Form.Item>
@@ -256,7 +256,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           </Typography.Title>
 
           <Form.Item
-            name="cellphone-patient-hosvital"
+            name="cellphone-eps-hosvital"
             style={{ margin: "0px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -286,8 +286,8 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             <Input
               prefix={<FiPhone className="site-form-item-icon" />}
               type="tel"
-              value={cellphoneUserPatientFormData}
-              onChange={onChangeCellphoneUserPatientFormData}
+              value={cellphoneUserEpsFormData}
+              onChange={onChangeCellphoneUserEpsFormData}
               autoComplete="off"
               min={0}
             />
@@ -333,7 +333,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           </Typography.Title>
 
           <Form.Item
-            name="radio-select-auth-method-update-personal-data-patient"
+            name="radio-select-auth-method-update-personal-data-eps"
             style={{ margin: "0px" }}
             rules={[
               {
@@ -343,12 +343,12 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             ]}
           >
             <Radio.Group
-              value={authMethodUserPatientFormData}
-              onChange={onChangeAuthMethodUserPatientFormData}
+              value={authMethodUserEpsFormData}
+              onChange={onChangeAuthMethodUserEpsFormData}
               style={{ textAlign: "start" }}
             >
               <Space size={"small"} direction="horizontal">
-                {patientAuthMethodsListFormData?.map((option: any) => (
+                {epsAuthMethodsListFormData?.map((option: any) => (
                   <Radio key={option.id} value={option.id}>
                     {option.name}
                   </Radio>
@@ -385,7 +385,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
                   borderRadius: 31,
                 }}
                 htmlType="submit"
-                className="update-personal-data-patient-form-button"
+                className="update-personal-data-eps-form-button"
                 onClick={handleButtonClickFormData}
                 disabled={!hasChangesFormData}
               >

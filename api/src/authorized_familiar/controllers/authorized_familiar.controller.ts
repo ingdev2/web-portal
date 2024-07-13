@@ -44,7 +44,11 @@ export class AuthorizedFamiliarController {
 
   // PATCH METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Auth(
+    AdminRolType.SUPER_ADMIN,
+    AdminRolType.ADMIN,
+    UserRolType.AUTHORIZED_FAMILIAR,
+  )
   @Patch('/updateFamiliar/:id')
   async updateUserFamiliar(
     @Param('id') id: string,

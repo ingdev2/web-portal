@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   IsBoolean,
@@ -28,7 +27,6 @@ export class CreateMedicalReqFamiliarDto {
   patient_id_type: number;
 
   @IsNotEmpty()
-  @IsNumber()
   patient_id_number: number;
 
   @IsOptional()
@@ -73,7 +71,6 @@ export class CreateMedicalReqFamiliarDto {
   aplicant_id_type: number;
 
   @IsOptional()
-  @IsNumber()
   aplicant_id_number: number;
 
   @IsOptional()
@@ -81,7 +78,6 @@ export class CreateMedicalReqFamiliarDto {
   aplicant_email: string;
 
   @IsOptional()
-  @IsNumber()
   aplicant_cellphone: number;
 
   @IsOptional()
@@ -128,6 +124,5 @@ export class CreateMedicalReqFamiliarDto {
   requirement_status: number;
 
   @IsOptional()
-  @IsNumber()
   currently_in_area: number;
 }

@@ -165,6 +165,8 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
       var updatePersonalDataValidationData = response.data?.message;
 
       if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
+        setHasChanges(false);
+
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 

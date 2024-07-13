@@ -32,6 +32,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
 
   const idUserEpsState = useAppSelector((state) => state.eps.id);
   const nameUserEpsState = useAppSelector((state) => state.eps.name);
+  const lastNameUserEpsState = useAppSelector((state) => state.eps.last_name);
   const idTypeNameUserEpsState = useAppSelector(
     (state) => state.eps.id_type_abbrev
   );
@@ -71,7 +72,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
+  const [showErrorMessageEps, setShowErrorMessageEps] = useState(false);
 
   const {
     data: userEpsData,
@@ -117,7 +118,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
       dispatch(
         setErrorsUserEps("¡No se pudo obtener los métodos de autenticación!")
       );
-      setShowErrorMessagePatient(true);
+      setShowErrorMessageEps(true);
       setEpsAuthMethodsListLocalState(authMethodData);
     }
     if (!companyAreaLoading && !companyAreaFetching && companyAreaData) {
@@ -125,7 +126,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     }
     if (companyAreaError) {
       dispatch(setErrorsUserEps("¡No se pudo obtener las áreas de empresas!"));
-      setShowErrorMessagePatient(true);
+      setShowErrorMessageEps(true);
       setEpsCompanyAreasListLocalState(companyAreaData);
     }
   }, [userEpsData, userEpsLoading, userEpsFetching, idUserEpsState]);
@@ -155,18 +156,20 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
       var updatePersonalDataValidationData = response.data?.message;
 
       if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
+        setHasChanges(false);
+
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
-          setShowErrorMessagePatient(true);
+          setShowErrorMessageEps(true);
         }
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserEps(validationDataMessage[0]));
 
-          setShowErrorMessagePatient(true);
+          setShowErrorMessageEps(true);
         }
         if (
           typeof errorMessage === "string" ||
@@ -174,7 +177,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         ) {
           dispatch(setErrorsUserEps(errorMessage));
           dispatch(setErrorsUserEps(validationDataMessage));
-          setShowErrorMessagePatient(true);
+          setShowErrorMessageEps(true);
         }
       }
 
@@ -225,7 +228,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     setSuccessMessage("");
     setShowSuccessMessage(false);
     dispatch(setErrorsUserEps([]));
-    setShowErrorMessagePatient(false);
+    setShowErrorMessageEps(false);
   };
 
   return (
@@ -293,7 +296,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
             marginInline: "13px",
           }}
         >
-          {showErrorMessagePatient && (
+          {showErrorMessageEps && (
             <CustomMessage
               typeMessage="error"
               message={epsErrorsState?.toString() || "¡Error en la petición!"}
@@ -308,37 +311,34 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
           )}
 
           <EpsUpdatePersonalDataFormData
-            nameUserPatientFormData={nameUserEpsState || NOT_REGISTER}
-            idTypeNameUserPatientFormData={
-              idTypeNameUserEpsState || NOT_REGISTER
+            nameUserEpsFormData={
+              `${nameUserEpsState} ${lastNameUserEpsState}` || NOT_REGISTER
             }
-            idNumberUserPatientFormData={idNumberUserEpsState || NOT_REGISTER}
-            genderNameUserPatientFormData={
-              genderNameUserEpsState || NOT_REGISTER
-            }
-            epsCompanyUserPatientFormData={
+            idTypeNameUserEpsFormData={idTypeNameUserEpsState || NOT_REGISTER}
+            idNumberUserEpsFormData={idNumberUserEpsState || NOT_REGISTER}
+            genderNameUserEpsFormData={genderNameUserEpsState || NOT_REGISTER}
+            epsCompanyUserEpsFormData={
               epsCompanyAbbrevUserEpsState || NOT_REGISTER
             }
             handleConfirmUpdatePersonalDataFormData={
               handleConfirmUpdatePersonalData
             }
             initialValuesUpdatePersonalDataFormData={{
-              "email-patient-hosvital": emailUserEpsState || NOT_REGISTER,
-              "cellphone-patient-hosvital":
-                cellphoneUserEpsState || NOT_REGISTER,
+              "email-eps-hosvital": emailUserEpsState || NOT_REGISTER,
+              "cellphone-eps-hosvital": cellphoneUserEpsState || NOT_REGISTER,
               "areas-company-eps":
                 companyAreaNumberUserEpsState || NOT_REGISTER,
-              "radio-select-auth-method-update-personal-data-patient":
+              "radio-select-auth-method-update-personal-data-eps":
                 authMethodUserEpsState,
             }}
-            emailUserPatientFormData={emailUserEpsState || NOT_REGISTER}
-            onChangeEmailUserPatientFormData={(e) => {
+            emailUserEpsFormData={emailUserEpsState || NOT_REGISTER}
+            onChangeEmailUserEpsFormData={(e) => {
               setHasChanges(true);
 
               setEmailUserEpsLocalState(e.target.value.toLowerCase());
             }}
-            cellphoneUserPatientFormData={cellphoneUserEpsState || NOT_REGISTER}
-            onChangeCellphoneUserPatientFormData={(e) => {
+            cellphoneUserEpsFormData={cellphoneUserEpsState || NOT_REGISTER}
+            onChangeCellphoneUserEpsFormData={(e) => {
               setHasChanges(true);
 
               setCellphoneUserEpsLocalState(parseInt(e.target.value, 10));
@@ -347,13 +347,13 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
             companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
             handleOnChangeCompanyAreaDataForm={handleOnChangeCompanyArea}
             epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
-            authMethodUserPatientFormData={authMethodUserEpsState}
-            onChangeAuthMethodUserPatientFormData={(e) => {
+            authMethodUserEpsFormData={authMethodUserEpsState}
+            onChangeAuthMethodUserEpsFormData={(e) => {
               setHasChanges(true);
 
               setAuthMethodEpsLocalState(e.target.value);
             }}
-            patientAuthMethodsListFormData={epsAuthMethodsListLocalState}
+            epsAuthMethodsListFormData={epsAuthMethodsListLocalState}
             isSubmittingUpdatePersonalDataFormData={
               isSubmittingUpdatePersonalData
             }

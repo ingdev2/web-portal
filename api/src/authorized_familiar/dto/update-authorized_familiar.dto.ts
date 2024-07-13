@@ -22,14 +22,11 @@ export class UpdateAuthorizedFamiliarDto {
   email: string;
 
   @IsOptional()
-  @IsNumber()
   cellphone: number;
 
   @IsOptional()
-  @IsNumber()
   whatsapp: number;
 
   @IsOptional()
-  @IsNumber()
   authentication_method: number;
 }

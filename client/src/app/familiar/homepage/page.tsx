@@ -33,13 +33,10 @@ const HomePageFamiliar = () => {
     (state) => state.modal.isPageLoading
   );
 
+  const idUserFamiliarLoginState = useAppSelector(
+    (state) => state.familiarLogin.id
+  );
   const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
-  const idNumberUserFamiliarLoginState = useAppSelector(
-    (state) => state.familiarLogin.id_number_familiar
-  );
-  const idNumberFamiliarState = useAppSelector(
-    (state) => state.familiar.id_number
-  );
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -49,8 +46,8 @@ const HomePageFamiliar = () => {
     isLoading: userEpsLoading,
     isFetching: userEpsFetching,
     error: userEpsError,
-  } = useGetFamiliarByIdQuery(idUserFamiliarState, {
-    skip: !idUserFamiliarState,
+  } = useGetFamiliarByIdQuery(idUserFamiliarLoginState, {
+    skip: !idUserFamiliarLoginState,
   });
 
   useEffect(() => {
@@ -73,7 +70,12 @@ const HomePageFamiliar = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [status, idUserFamiliarState, familiarModalState]);
+  }, [
+    status,
+    idUserFamiliarLoginState,
+    idUserFamiliarState,
+    familiarModalState,
+  ]);
 
   return (
     <div>
@@ -84,7 +86,7 @@ const HomePageFamiliar = () => {
         />
       )}
 
-      {!idUserFamiliarState || status === "unauthenticated" ? (
+      {!idUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
         <div className="homepage-familiar-content">

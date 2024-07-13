@@ -9,39 +9,39 @@ import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.en
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import EpsUpdatePersonalDataLayout from "@/components/eps/update_personal_data/EpsUpdatePersonalDataLayout";
+import FamiliarUpdatePersonalDataLayout from "@/components/familiar/update_personal_data/FamiliarUpdatePersonalDataLayout";
 
-import { setIdNumberUserEps } from "@/redux/features/eps/epsSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 
-const EpsUpdatePersonalDataPage = () => {
+const FamiliarUpdatePersonalDataPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  const allowedRoles = [UserRolType.EPS];
+  const allowedRoles = [UserRolType.AUTHORIZED_FAMILIAR];
   useRoleValidation(allowedRoles);
 
-  const idNumberUserEpsLoginState = useAppSelector(
-    (state) => state.epsUserLogin.id_number
+  const idUserFamiliarLoginState = useAppSelector(
+    (state) => state.familiarLogin.id
   );
-  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
+  const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: userEpsData,
-    isLoading: userEpsLoading,
-    isFetching: userEpsFetching,
-    error: userEpsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsLoginState);
+    data: userFamiliarData,
+    isLoading: userFamiliarLoading,
+    isFetching: userFamiliarFetching,
+    error: userFamiliarError,
+  } = useGetFamiliarByIdQuery(idUserFamiliarLoginState);
 
   useEffect(() => {
-    if (!idNumberEpsState) {
-      dispatch(setIdNumberUserEps(userEpsData?.id_number));
+    if (!idUserFamiliarState) {
+      dispatch(setIdUserFamiliar(userFamiliarData?.id_number));
     }
-    if (!idNumberUserEpsLoginState) {
+    if (!idUserFamiliarState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
       redirect("/login");
@@ -51,7 +51,7 @@ const EpsUpdatePersonalDataPage = () => {
       setErrorMessage("¡No autenticado!");
       redirect("/login");
     }
-  }, [status, idNumberUserEpsLoginState, idNumberEpsState]);
+  }, [status, idUserFamiliarLoginState, idUserFamiliarState]);
 
   return (
     <>
@@ -62,15 +62,15 @@ const EpsUpdatePersonalDataPage = () => {
         />
       )}
 
-      {!idNumberUserEpsLoginState || status === "unauthenticated" ? (
+      {!idUserFamiliarLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="update-personal-data-page-eps-content">
-          <EpsUpdatePersonalDataLayout />
+        <div className="update-personal-data-page-familiar-content">
+          <FamiliarUpdatePersonalDataLayout />
         </div>
       )}
     </>
   );
 };
 
-export default EpsUpdatePersonalDataPage;
+export default FamiliarUpdatePersonalDataPage;

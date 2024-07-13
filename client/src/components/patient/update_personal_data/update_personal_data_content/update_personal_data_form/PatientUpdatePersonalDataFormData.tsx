@@ -207,9 +207,9 @@ const PatientUpdatePersonalDataFormData: React.FC<{
       </Row>
 
       <Form
-        id="update-personal-data-form"
-        name="update-personal-data-form"
-        className="update-personal-data-form"
+        id="update-personal-data-form-patient"
+        name="update-personal-data-form-patient"
+        className="update-personal-data-form-patient"
         onFinish={handleConfirmUpdatePersonalDataFormData}
         initialValues={initialValuesUpdatePersonalDataFormData}
         autoComplete="false"

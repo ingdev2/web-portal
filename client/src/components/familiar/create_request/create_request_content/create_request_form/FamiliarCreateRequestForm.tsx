@@ -359,10 +359,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
           patient_class_status: patientCategoryNumberState,
           relationship_with_patient: relWithPatientNumberFamiliarState,
           patient_id_type: idTypePatientOfFamiliarState,
-          patient_id_number:
-            typeof idNumberPatientOfFamiliarState === "string"
-              ? parseInt(idNumberPatientOfFamiliarState, 10)
-              : idNumberPatientOfFamiliarState,
+          patient_id_number: idNumberPatientOfFamiliarState,
           right_petition: haveRightPetitionState,
           user_message: userMessageMedicalReqState,
           ...responses,
