@@ -10,33 +10,40 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { LockOutlined } from "@ant-design/icons";
 
 import {
-  setIdUserEps,
-  setNameUserEps,
-  setLastNameUserEps,
-  setIdNumberUserEps,
-  setCellphoneUserEps,
-  setErrorsUserEps,
-} from "@/redux/features/eps/epsSlice";
-import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
+  setIdUserPatient,
+  setNameUserPatient,
+  setLastNameUserPatient,
+  setIdNumberUserPatient,
+  setCellphoneUserPatient,
+  setErrorsUserPatient,
+} from "@/redux/features/patient/patientSlice";
+import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import {
   useUpdatePasswordMutation,
-  useGetUserByIdNumberEpsQuery,
+  useGetUserByIdNumberPatientQuery,
 } from "@/redux/apis/users/usersApi";
 
-const EpsChangePasswordForm: React.FC = () => {
+const PatientChangePasswordForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const idUserEpsState = useAppSelector((state) => state.eps.id);
-  const idNumberUserEpsState = useAppSelector((state) => state.eps.id_number);
-  const nameEpsState = useAppSelector((state) => state.eps.name);
-  const lastNameEpsState = useAppSelector((state) => state.eps.last_name);
-  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
-  const cellphoneEpsState = useAppSelector((state) => state.eps.cellphone);
-  const errorsEpsState = useAppSelector((state) => state.eps.errors);
+  const idUserPatientState = useAppSelector((state) => state.patient.id);
+  const idNumberUserPatientState = useAppSelector(
+    (state) => state.patient.id_number
+  );
+  const namePatientState = useAppSelector((state) => state.patient.name);
+  const idNumberPatientState = useAppSelector(
+    (state) => state.patient.id_number
+  );
+  const cellphonePatientState = useAppSelector(
+    (state) => state.patient.cellphone
+  );
+  const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
-  const [oldPasswordEpsLocalState, setOldPasswordEpsLocalState] = useState("");
-  const [newPasswordEpsLocalState, setNewPasswordEpsLocalState] = useState("");
+  const [oldPasswordPatientLocalState, setOldPasswordPatientLocalState] =
+    useState("");
+  const [newPasswordPatientLocalState, setNewPasswordPatientLocalState] =
+    useState("");
 
   const [isSubmittingChangePassword, setIsSubmittingChangePassword] =
     useState(false);
@@ -48,55 +55,55 @@ const EpsChangePasswordForm: React.FC = () => {
     useState(false);
 
   const [
-    updatePasswordEps,
+    updatePasswordPatient,
     {
-      data: updatePasswordEpsData,
-      isLoading: updatePasswordEpsLoading,
-      isSuccess: updatePasswordEpsSuccess,
-      isError: updatePasswordEpsError,
+      data: updatePasswordPatientData,
+      isLoading: updatePasswordPatientLoading,
+      isSuccess: updatePasswordPatientSuccess,
+      isError: updatePasswordPatientError,
     },
   ] = useUpdatePasswordMutation({
-    fixedCacheKey: "updatePasswordEpsData",
+    fixedCacheKey: "updatePasswordPatientData",
   });
 
   const {
-    data: userEpsData,
-    isLoading: userEpsDataLoading,
-    isFetching: userEpsDataFetching,
-    isError: userEpsDataError,
-  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsState);
+    data: userPatientData,
+    isLoading: userPatientDataLoading,
+    isFetching: userPatientDataFetching,
+    isError: userPatientDataError,
+  } = useGetUserByIdNumberPatientQuery(idNumberUserPatientState);
 
   useEffect(() => {
     if (
-      !idUserEpsState &&
-      idNumberUserEpsState &&
-      userEpsData &&
-      !userEpsDataLoading &&
-      !userEpsDataFetching
+      !idUserPatientState &&
+      idNumberUserPatientState &&
+      userPatientData &&
+      !userPatientDataLoading &&
+      !userPatientDataFetching
     ) {
-      dispatch(setIdUserEps(userEpsData?.id));
+      dispatch(setIdUserPatient(userPatientData?.id));
 
-      dispatch(setNameUserEps(userEpsData?.name));
-      dispatch(setLastNameUserEps(userEpsData?.last_name));
-      dispatch(setIdNumberUserEps(userEpsData?.id_number));
-      dispatch(setCellphoneUserEps(userEpsData?.cellphone));
+      dispatch(setNameUserPatient(userPatientData?.name));
+      dispatch(setLastNameUserPatient(userPatientData?.last_name));
+      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
+      dispatch(setCellphoneUserPatient(userPatientData?.cellphone));
     }
-  }, [idUserEpsState, idNumberUserEpsState, userEpsData]);
+  }, [idUserPatientState, idNumberUserPatientState, userPatientData]);
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingChangePassword(true);
 
       if (
-        idUserEpsState &&
-        oldPasswordEpsLocalState &&
-        newPasswordEpsLocalState
+        idUserPatientState &&
+        oldPasswordPatientLocalState &&
+        newPasswordPatientLocalState
       ) {
-        const response: any = await updatePasswordEps({
-          id: idUserEpsState,
+        const response: any = await updatePasswordPatient({
+          id: idUserPatientState,
           passwords: {
-            oldPassword: oldPasswordEpsLocalState,
-            newPassword: newPasswordEpsLocalState,
+            oldPassword: oldPasswordPatientLocalState,
+            newPassword: newPasswordPatientLocalState,
           },
         });
 
@@ -107,16 +114,16 @@ const EpsChangePasswordForm: React.FC = () => {
         if (validationPatientError !== 200 && !validationPatientData) {
           const errorMessage = response.error?.data?.message;
 
-          dispatch(setErrorsUserEps(errorMessage));
+          dispatch(setErrorsUserPatient(errorMessage));
           setShowErrorMessageChangePassword(true);
         }
         if (validationPatientData === 202 && !validationPatientError) {
           setShowSuccessMessageChangePassword(true);
-          setOldPasswordEpsLocalState("");
-          setNewPasswordEpsLocalState("");
+          setOldPasswordPatientLocalState("");
+          setNewPasswordPatientLocalState("");
 
           setTimeout(() => {
-            dispatch(setEpsModalIsOpen(false));
+            dispatch(setPatientModalIsOpen(false));
           }, 2000);
         }
       }
@@ -128,43 +135,28 @@ const EpsChangePasswordForm: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsUserEps([]));
+    dispatch(setErrorsUserPatient([]));
     setShowErrorMessageChangePassword(false);
     setShowSuccessMessageChangePassword(false);
   };
 
   const handleOnChangeValidatorNewPasswordForm = (_: any, value: string) => {
-    if (
-      !nameEpsState ||
-      !lastNameEpsState ||
-      !idNumberEpsState ||
-      !cellphoneEpsState
-    ) {
+    if (!namePatientState || !idNumberPatientState || !cellphonePatientState) {
       return Promise.resolve();
     }
 
     const passwordUpperCase = value?.toUpperCase();
 
-    const nameWords = nameEpsState?.toUpperCase().split(" ");
+    const nameWords = namePatientState?.toUpperCase().split(" ");
 
-    const lastNameWords = lastNameEpsState?.toUpperCase().split(" ");
+    const idNumber = String(idNumberPatientState);
 
-    const idNumber = String(idNumberEpsState);
-
-    const cellphoneNumber = String(cellphoneEpsState);
+    const cellphoneNumber = String(cellphonePatientState);
 
     if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
       return Promise.reject(
         new Error(
           "¡La contraseña no puede contener datos del nombre del usuario!"
-        )
-      );
-    }
-
-    if (lastNameWords?.some((word) => passwordUpperCase?.includes(word))) {
-      return Promise.reject(
-        new Error(
-          "¡La contraseña no puede contener datos del apellido del usuario!"
         )
       );
     }
@@ -215,7 +207,7 @@ const EpsChangePasswordForm: React.FC = () => {
       {showErrorMessageChangePassword && (
         <CustomMessage
           typeMessage="error"
-          message={errorsEpsState?.toString() || "¡Error en la petición!"}
+          message={errorsPatientState?.toString() || "¡Error en la petición!"}
         />
       )}
 
@@ -227,16 +219,16 @@ const EpsChangePasswordForm: React.FC = () => {
       )}
 
       <Form
-        id="change-password-form-eps"
-        name="change-password-form-eps"
-        className="change-password-form-eps"
+        id="change-password-form-patient"
+        name="change-password-form-patient"
+        className="change-password-form-patient"
         onFinish={handleChangePassword}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
         <h2
-          className="title-change-password-eps"
+          className="title-change-password-patient"
           style={{
             ...titleStyleCss,
             marginBlock: 22,
@@ -247,9 +239,9 @@ const EpsChangePasswordForm: React.FC = () => {
         </h2>
 
         <Form.Item
-          id="old-password-eps"
-          name="old-password-eps"
-          className="old-password-eps"
+          id="old-password-patient"
+          name="old-password-patient"
+          className="old-password-patient"
           label="Contraseña antigua"
           style={{ marginBottom: 13 }}
           rules={[
@@ -296,18 +288,18 @@ const EpsChangePasswordForm: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={oldPasswordEpsLocalState}
+            value={oldPasswordPatientLocalState}
             placeholder="Contraseña antigua"
             onChange={(e) => {
-              setOldPasswordEpsLocalState(e.target.value.trim());
+              setOldPasswordPatientLocalState(e.target.value.trim());
             }}
           />
         </Form.Item>
 
         <Form.Item
-          id="new-password-eps"
-          name="new-password-eps"
-          className="new-password-eps"
+          id="new-password-patient"
+          name="new-password-patient"
+          className="new-password-patient"
           label="Contraseña nueva"
           style={{ marginBottom: 13 }}
           rules={[
@@ -357,21 +349,21 @@ const EpsChangePasswordForm: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={newPasswordEpsLocalState}
+            value={newPasswordPatientLocalState}
             placeholder="Contraseña nueva"
             onChange={(e) => {
-              setNewPasswordEpsLocalState(e.target.value.trim());
+              setNewPasswordPatientLocalState(e.target.value.trim());
             }}
           />
         </Form.Item>
 
         <Form.Item
-          id="verify-new-password-eps"
-          name="verify-new-password-eps"
-          className="verify-new-password-eps"
+          id="verify-new-password-patient"
+          name="verify-new-password-patient"
+          className="verify-new-password-patient"
           label="Verificar contraseña nueva"
           style={{ marginBottom: 22 }}
-          dependencies={["new-password-eps"]}
+          dependencies={["new-password-patient"]}
           rules={[
             {
               required: true,
@@ -379,7 +371,7 @@ const EpsChangePasswordForm: React.FC = () => {
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("new-password-eps") === value) {
+                if (!value || getFieldValue("new-password-patient") === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject("Las contraseñas no coinciden.");
@@ -391,10 +383,10 @@ const EpsChangePasswordForm: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={newPasswordEpsLocalState}
+            value={newPasswordPatientLocalState}
             placeholder="Verificar contraseña nueva"
             onChange={(e) => {
-              setNewPasswordEpsLocalState(e.target.value.trim());
+              setNewPasswordPatientLocalState(e.target.value.trim());
             }}
           />
         </Form.Item>
@@ -417,7 +409,7 @@ const EpsChangePasswordForm: React.FC = () => {
                 marginBlock: 7,
               }}
               htmlType="submit"
-              className="change-password-form-button-eps"
+              className="change-password-form-button-patient"
               onClick={handleButtonClick}
             >
               Cambiar contraseña
@@ -430,4 +422,4 @@ const EpsChangePasswordForm: React.FC = () => {
   );
 };
 
-export default EpsChangePasswordForm;
+export default PatientChangePasswordForm;

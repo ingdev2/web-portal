@@ -369,7 +369,8 @@ const EpsUpdatePersonalDataFormData: React.FC<{
             alignItems: "center",
             alignContent: "center",
             justifyContent: "center",
-            paddingBlock: "13px",
+            paddingTop: "22px",
+            paddingBottom: "13px",
           }}
         >
           <Button

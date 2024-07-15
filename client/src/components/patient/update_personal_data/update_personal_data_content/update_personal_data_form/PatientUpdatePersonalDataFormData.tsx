@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { Button, Col, Form, Input, Radio, Row, Space, Typography } from "antd";
 import { Store } from "antd/es/form/interface";
@@ -39,6 +39,8 @@ const PatientUpdatePersonalDataFormData: React.FC<{
   patientAuthMethodsListFormData: string[];
   residendeAddressUserPatientFormData: string;
   onChangeResidendeAddressUserPatientFormData: (e: any) => void;
+  iconChangePasswordPatientDataForm: ReactNode;
+  onClickChangePasswordDataForm: () => void;
   isSubmittingUpdatePersonalDataFormData: boolean;
   hasChangesFormData: boolean;
   handleButtonClickFormData: () => void;
@@ -61,6 +63,8 @@ const PatientUpdatePersonalDataFormData: React.FC<{
   patientAuthMethodsListFormData,
   residendeAddressUserPatientFormData,
   onChangeResidendeAddressUserPatientFormData,
+  iconChangePasswordPatientDataForm,
+  onClickChangePasswordDataForm,
   isSubmittingUpdatePersonalDataFormData,
   hasChangesFormData,
   handleButtonClickFormData,
@@ -440,6 +444,39 @@ const PatientUpdatePersonalDataFormData: React.FC<{
               autoComplete="off"
             />
           </Form.Item>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "column wrap",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            paddingBlock: "13px",
+          }}
+        >
+          <Button
+            style={{
+              paddingInline: 13,
+              color: "#015E90",
+              borderColor: "#015E90",
+              fontWeight: "bold",
+              borderRadius: 7,
+              borderWidth: 2,
+              display: "flex",
+              flexFlow: "row wrap",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+            type="text"
+            size="middle"
+            className="change-password-patient"
+            icon={iconChangePasswordPatientDataForm}
+            onClick={onClickChangePasswordDataForm}
+          >
+            Cambiar contraseña
+          </Button>
         </div>
 
         <Form.Item

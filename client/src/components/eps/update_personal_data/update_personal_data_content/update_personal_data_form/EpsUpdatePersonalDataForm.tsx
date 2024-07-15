@@ -21,12 +21,12 @@ import {
   setCompanyAreaUserEps,
 } from "@/redux/features/eps/epsSlice";
 import { setIdUserEps } from "@/redux/features/eps/epsSlice";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useUpdateUserEpsMutation } from "@/redux/apis/users/usersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
-import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const EpsUpdatePersonalDataForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -59,8 +59,6 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
   const isOpenModalChangePassword = useAppSelector(
     (state) => state.modal.epsModalIsOpen
   );
-
-  // setIsOpenModalChangePassword;
 
   const [hasChanges, setHasChanges] = useState(false);
 
