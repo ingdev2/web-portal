@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import {
   Button,
@@ -46,6 +46,8 @@ const EpsUpdatePersonalDataFormData: React.FC<{
   authMethodUserEpsFormData: number;
   onChangeAuthMethodUserEpsFormData: (e: any) => void;
   epsAuthMethodsListFormData: string[];
+  iconChangePasswordEpsDataForm: ReactNode;
+  onClickChangePasswordDataForm: () => void;
   isSubmittingUpdatePersonalDataFormData: boolean;
   hasChangesFormData: boolean;
   handleButtonClickFormData: () => void;
@@ -68,6 +70,8 @@ const EpsUpdatePersonalDataFormData: React.FC<{
   authMethodUserEpsFormData,
   onChangeAuthMethodUserEpsFormData,
   epsAuthMethodsListFormData,
+  iconChangePasswordEpsDataForm,
+  onClickChangePasswordDataForm,
   isSubmittingUpdatePersonalDataFormData,
   hasChangesFormData,
   handleButtonClickFormData,
@@ -356,6 +360,39 @@ const EpsUpdatePersonalDataFormData: React.FC<{
               </Space>
             </Radio.Group>
           </Form.Item>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "column wrap",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            paddingBlock: "13px",
+          }}
+        >
+          <Button
+            style={{
+              paddingInline: 13,
+              color: "#015E90",
+              borderColor: "#015E90",
+              fontWeight: "bold",
+              borderRadius: 7,
+              borderWidth: 2,
+              display: "flex",
+              flexFlow: "row wrap",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+            type="text"
+            size="middle"
+            className="change-password-eps"
+            icon={iconChangePasswordEpsDataForm}
+            onClick={onClickChangePasswordDataForm}
+          >
+            Cambiar contraseña
+          </Button>
         </div>
 
         <Form.Item

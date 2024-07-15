@@ -8,7 +8,10 @@ import { Button, Card, Col } from "antd";
 import EpsUpdatePersonalDataFormData from "./EpsUpdatePersonalDataFormData";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
+import EpsChangePasswordForm from "../eps_change_password_form/EpsChangePasswordForm";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { TbPasswordUser } from "react-icons/tb";
 
 import {
   setAuthMethodUserEps,
@@ -23,6 +26,7 @@ import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useUpdateUserEpsMutation } from "@/redux/apis/users/usersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 const EpsUpdatePersonalDataForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -52,6 +56,11 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     (state) => state.eps.authentication_method
   );
   const epsErrorsState = useAppSelector((state) => state.eps.errors);
+  const isOpenModalChangePassword = useAppSelector(
+    (state) => state.modal.epsModalIsOpen
+  );
+
+  // setIsOpenModalChangePassword;
 
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -310,6 +319,20 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
             />
           )}
 
+          {isOpenModalChangePassword && (
+            <CustomModalNoContent
+              key={"custom-modal-change-password-eps"}
+              widthCustomModalNoContent={"31%"}
+              openCustomModalState={isOpenModalChangePassword}
+              closableCustomModal={true}
+              maskClosableCustomModal={true}
+              handleCancelCustomModal={() => {
+                dispatch(setEpsModalIsOpen(false));
+              }}
+              contentCustomModal={<EpsChangePasswordForm />}
+            />
+          )}
+
           <EpsUpdatePersonalDataFormData
             nameUserEpsFormData={
               `${nameUserEpsState} ${lastNameUserEpsState}` || NOT_REGISTER
@@ -354,6 +377,10 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
               setAuthMethodEpsLocalState(e.target.value);
             }}
             epsAuthMethodsListFormData={epsAuthMethodsListLocalState}
+            iconChangePasswordEpsDataForm={<TbPasswordUser size={17} />}
+            onClickChangePasswordDataForm={() => {
+              dispatch(setEpsModalIsOpen(true));
+            }}
             isSubmittingUpdatePersonalDataFormData={
               isSubmittingUpdatePersonalData
             }

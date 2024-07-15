@@ -452,7 +452,9 @@ const EpsRegistrationFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
+        id="eps-user-password-create"
         name="eps-user-password-create"
+        className="eps-user-password-create"
         label="Contraseña"
         style={{ marginBottom: 13 }}
         rules={[
@@ -510,7 +512,7 @@ const EpsRegistrationFormData: React.FC<{
         name="eps-user-password-verify-create"
         label="Verificar contraseña"
         style={{ marginBottom: 22 }}
-        dependencies={["patient-user-password-register"]}
+        dependencies={["eps-user-password-create"]}
         rules={[
           {
             required: true,

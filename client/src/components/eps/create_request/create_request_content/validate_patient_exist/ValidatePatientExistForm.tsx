@@ -339,7 +339,7 @@ const ValidatePatientExistEps: React.FC = () => {
                   marginBlock: 7,
                 }}
                 htmlType="submit"
-                className="patient-validate-form-button"
+                className="eps-validate-form-button"
                 onClick={handleButtonClick}
               >
                 Validar Paciente
