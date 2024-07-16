@@ -6,6 +6,7 @@ const initialState = {
   patientModalIsOpen: false,
   epsModalIsOpen: false,
   familiarModalIsOpen: false,
+  passwordResetToken: "",
 };
 
 export const modalSlice = createSlice({
@@ -27,6 +28,9 @@ export const modalSlice = createSlice({
     setFamiliarModalIsOpen: (state, action) => {
       state.familiarModalIsOpen = action.payload;
     },
+    setPasswordResetToken: (state, action) => {
+      state.passwordResetToken = action.payload;
+    },
   },
 });
 
@@ -36,6 +40,7 @@ export const {
   setPatientModalIsOpen,
   setEpsModalIsOpen,
   setFamiliarModalIsOpen,
+  setPasswordResetToken,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

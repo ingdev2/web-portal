@@ -65,18 +65,6 @@ export const adminsApi = createApi({
       }),
     }),
 
-    resetPassword: builder.mutation<
-      any,
-      { token: string; newPassword: string }
-    >({
-      query: ({ token, newPassword }) => ({
-        url: "resetPassword",
-        method: "PATCH",
-        params: { token },
-        body: newPassword,
-      }),
-    }),
-
     banAdmin: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({
         url: `banAdmin/${id}`,
@@ -94,6 +82,5 @@ export const {
   useUpdateAdminMutation,
   useUpdatePasswordMutation,
   useForgotPasswordMutation,
-  useResetPasswordMutation,
   useBanAdminMutation,
 } = adminsApi;

@@ -139,18 +139,6 @@ export const usersApi = createApi({
       }),
     }),
 
-    resetPassword: builder.mutation<
-      any,
-      { token: string; newPassword: string }
-    >({
-      query: ({ token, newPassword }) => ({
-        url: "resetPassword",
-        method: "PATCH",
-        params: { token },
-        body: newPassword,
-      }),
-    }),
-
     banUser: builder.mutation<any, string>({
       query: (id) => ({
         url: `ban/${id}`,
@@ -179,6 +167,5 @@ export const {
   useUpdatePasswordMutation,
   useForgotPatientPasswordMutation,
   useForgotEpsPasswordMutation,
-  useResetPasswordMutation,
   useBanUserMutation,
 } = usersApi;

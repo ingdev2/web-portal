@@ -162,9 +162,9 @@ export class UsersController {
   async resetUserPassword(
     @Query('token') token: string,
     @Body()
-    new_password: ResetPasswordUserDto,
+    { newPassword }: ResetPasswordUserDto,
   ) {
-    return await this.usersService.resetUserPassword(token, new_password);
+    return await this.usersService.resetUserPassword(token, { newPassword });
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

@@ -26,8 +26,8 @@ export class CreateSuperAdminDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(7)
-  @MaxLength(14)
+  @MinLength(8)
+  @MaxLength(31)
   password: string;
 
   @IsOptional()

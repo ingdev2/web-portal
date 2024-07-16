@@ -503,7 +503,7 @@ export class AdminsService {
       emailDetailsToSend.userNameToEmail = adminFound.name;
       emailDetailsToSend.subject = PASSWORD_RESET;
       emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
-      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_ADMIN}?token=${resetPasswordToken}`;
 
       await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -527,11 +527,12 @@ export class AdminsService {
 
   async resetAdminPassword(
     token: string,
-    { new_password }: ResetPasswordAdminDto,
+    { newPassword: new_password }: ResetPasswordAdminDto,
   ) {
     const tokenFound = await this.adminRepository.findOne({
       where: {
         reset_password_token: token,
+        is_active: true,
       },
     });
 
