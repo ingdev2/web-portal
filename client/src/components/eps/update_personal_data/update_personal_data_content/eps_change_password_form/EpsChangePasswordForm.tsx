@@ -109,6 +109,8 @@ const EpsChangePasswordForm: React.FC = () => {
 
           dispatch(setErrorsUserEps(errorMessage));
           setShowErrorMessageChangePassword(true);
+
+          setIsSubmittingChangePassword(false);
         }
         if (validationPatientData === 202 && !validationPatientError) {
           setShowSuccessMessageChangePassword(true);

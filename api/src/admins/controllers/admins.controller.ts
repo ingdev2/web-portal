@@ -42,6 +42,14 @@ export class AdminsController {
     return await this.adminsService.getAdminByIdNumber(idNumber);
   }
 
+  @Get('/getAdminByIdNumber/:idType/:idNumber')
+  async getAdminFoundByIdNumber(
+    @Param('idType') idType: number,
+    @Param('idNumber') idNumber: number,
+  ) {
+    return await this.adminsService.getAdminFoundByIdNumber(idType, idNumber);
+  }
+
   // PATCH METHODS //
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { Button, Result } from "antd";
 import { ResultStatusType } from "antd/es/result";
@@ -9,7 +9,7 @@ import CustomSpin from "../custom_spin/CustomSpin";
 const CustomResultOneButton: React.FC<{
   statusTypeResult: ResultStatusType;
   titleCustomResult: string;
-  subtitleCustomResult: string;
+  subtitleCustomResult: ReactNode;
   handleClickCustomResult: () => void;
   isSubmittingButton: boolean;
   textButtonCustomResult: string;

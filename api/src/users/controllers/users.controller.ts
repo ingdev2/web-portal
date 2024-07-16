@@ -83,6 +83,14 @@ export class UsersController {
     return await this.usersService.getUsersById(id);
   }
 
+  @Get('/getUserByIdNumber/:idType/:idNumber')
+  async getUserFoundByIdNumber(
+    @Param('idType') idType: number,
+    @Param('idNumber') idNumber: number,
+  ) {
+    return await this.usersService.getUserFoundByIdNumber(idType, idNumber);
+  }
+
   @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAllRelatives/:patientId')
   async getAllAuthorizedPatientRelatives(

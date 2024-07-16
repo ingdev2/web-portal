@@ -2,25 +2,34 @@
 
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useRouter } from "next/navigation";
 
-import { Button, Card, Col, DatePickerProps, Form, Input, Select } from "antd";
+import { Button, Card, Col, Form, Input, Select } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
-import CustomDatePicker from "@/components/common/custom_date_picker/CustomDatePicker";
+import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { IdcardOutlined } from "@ant-design/icons";
-import { IoIosBusiness } from "react-icons/io";
 
 import { setErrorsUserEps } from "@/redux/features/eps/epsSlice";
 
-import { useForgotEpsPasswordMutation } from "@/redux/apis/users/usersApi";
+import {
+  useGetUserByIdNumberQuery,
+  useForgotEpsPasswordMutation,
+} from "@/redux/apis/users/usersApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
+
+import { maskEmail } from "@/helpers/mask_email/mask_email";
 
 const EpsForgotPasswordForm: React.FC<{
   setOpenModalForgotPassword: (value: React.SetStateAction<boolean>) => void;
 }> = ({ setOpenModalForgotPassword }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const [linkToResetPasswordSent, setLinkToResetPasswordSent] = useState(false);
+  const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
 
   const errorsEpsState = useAppSelector((state) => state.eps.errors);
 
@@ -38,6 +47,9 @@ const EpsForgotPasswordForm: React.FC<{
   );
   const [epsCompanyNameUserEpsLocalState, setEpsCompanyNameUserEpsLocalState] =
     useState("");
+  const [emailEpsLocalState, setEmailEpsLocalState] = useState<
+    string | undefined
+  >("");
 
   const [isSubmittingForgotPassword, setIsSubmittingForgotPassword] =
     useState(false);
@@ -62,6 +74,20 @@ const EpsForgotPasswordForm: React.FC<{
     fixedCacheKey: "forgotPasswordEpsData",
   });
 
+  const idNumberPatientLocalStateInt = idNumberEpsLocalState
+    ? parseInt(idNumberEpsLocalState?.toString(), 10)
+    : 0;
+
+  const {
+    data: isUserData,
+    isLoading: isUserLoading,
+    isFetching: isUserFetching,
+    isError: isUserError,
+  } = useGetUserByIdNumberQuery({
+    user_id_type: idTypeEpsLocalState,
+    id_number: idNumberPatientLocalStateInt,
+  });
+
   const {
     data: idTypesEpsData,
     isLoading: idTypesEpsLoading,
@@ -77,6 +103,9 @@ const EpsForgotPasswordForm: React.FC<{
   } = useGetAllEpsCompanyQuery(null);
 
   useEffect(() => {
+    if (isUserData) {
+      setEmailEpsLocalState(isUserData?.email);
+    }
     if (!epsCompanyLoading && !epsCompanyFetching && epsCompanyData) {
       setEpsCompanyListLocalState(epsCompanyData);
     }
@@ -101,6 +130,8 @@ const EpsForgotPasswordForm: React.FC<{
     idTypeEpsLocalState,
     idNumberEpsLocalState,
     epsCompanyNumberUserEpsLocalState,
+    isUserData,
+    emailEpsLocalState,
   ]);
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -137,20 +168,37 @@ const EpsForgotPasswordForm: React.FC<{
 
           setSuccessMessageForgotPassword(successMessage);
           setShowSuccessMessageForgotPassword(true);
+          setLinkToResetPasswordSent(true);
 
           setIdTypeEpsLocalState(0);
           setIdNumberEpsLocalState("");
           setEpsCompanyNumberUserEpsLocalState(0);
-
-          setTimeout(() => {
-            setOpenModalForgotPassword(false);
-          }, 5000);
         }
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmittingForgotPassword(false);
+    }
+  };
+
+  const handleGoToLogin = async () => {
+    try {
+      setIsSubmittingGoToLogin(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 700));
+
+      await router.replace("/login", {
+        scroll: false,
+      });
+
+      setEmailEpsLocalState("");
+
+      setOpenModalForgotPassword(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmittingGoToLogin(false);
     }
   };
 
@@ -211,149 +259,166 @@ const EpsForgotPasswordForm: React.FC<{
         />
       )}
 
-      <Form
-        id="forgot-password-form-eps"
-        name="forgot-password-form-eps"
-        className="forgot-password-form-eps"
-        onFinish={handleChangePassword}
-        initialValues={{ remember: false }}
-        autoComplete="false"
-        layout="vertical"
-      >
-        <h2
-          className="title-forgot-password-eps"
-          style={{
-            ...titleStyleCss,
-            marginBlock: 22,
-            textAlign: "center",
-          }}
+      {linkToResetPasswordSent ? (
+        <CustomResultOneButton
+          key={"link-to-reset-password-sent-success-custom-result-eps"}
+          statusTypeResult={"success"}
+          titleCustomResult="¡Link Para Restablecer Contraseña Enviado!"
+          subtitleCustomResult={
+            <p>
+              Se ha enviado al correo: <b>{maskEmail(emailEpsLocalState)}</b> un
+              link para restablecer su contraseña de ingreso.
+            </p>
+          }
+          handleClickCustomResult={handleGoToLogin}
+          isSubmittingButton={isSubmittingGoToLogin}
+          textButtonCustomResult="Volver al login"
+        />
+      ) : (
+        <Form
+          id="forgot-password-form-eps"
+          name="forgot-password-form-eps"
+          className="forgot-password-form-eps"
+          onFinish={handleChangePassword}
+          initialValues={{ remember: false }}
+          autoComplete="false"
+          layout="vertical"
         >
-          Olvide mi contraseña
-        </h2>
+          <h2
+            className="title-forgot-password-eps"
+            style={{
+              ...titleStyleCss,
+              marginBlock: 22,
+              textAlign: "center",
+            }}
+          >
+            Olvide mi contraseña
+          </h2>
 
-        {idTypesEpsLoading || idTypesEpsFetching ? (
-          <CustomSpin />
-        ) : (
+          {idTypesEpsLoading || idTypesEpsFetching ? (
+            <CustomSpin />
+          ) : (
+            <Form.Item
+              name="user-id-type-forgot-password-eps"
+              label="Tipo de identificación del colaborador"
+              style={{ marginBottom: 7 }}
+              rules={[
+                {
+                  required: true,
+                  message: "¡Por favor ingresa tu tipo de identificación!",
+                },
+              ]}
+            >
+              <Select
+                value={idTypeEpsLocalState}
+                placeholder="Tipo de identificación"
+                onChange={(e) => setIdTypeEpsLocalState(e)}
+              >
+                {idTypesListPatientLocalState?.map((option: any) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
           <Form.Item
-            name="user-id-type-forgot-password-eps"
-            label="Tipo de identificación del colaborador"
+            name="user-id-number-forgot-password-eps"
+            label="Número de identificación del colaborador"
             style={{ marginBottom: 7 }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.replace(/[^0-9]/g, "");
+            }}
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingresa tu tipo de identificación!",
+                message: "¡Por favor ingresa tu número de identificación!",
+              },
+              {
+                pattern: /^[0-9]+$/,
+                message:
+                  "¡Por favor ingresa número de identificación sin puntos, ni comas!",
+              },
+              {
+                min: 7,
+                message: "¡Por favor ingresa mínimo 7 números!",
+              },
+              {
+                max: 11,
+                message: "¡Por favor ingresa máximo 11 números!",
               },
             ]}
           >
-            <Select
-              value={idTypeEpsLocalState}
-              placeholder="Tipo de identificación"
-              onChange={(e) => setIdTypeEpsLocalState(e)}
-            >
-              {idTypesListPatientLocalState?.map((option: any) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
+            <Input
+              prefix={<IdcardOutlined className="site-form-item-icon" />}
+              type="tel"
+              value={idNumberEpsLocalState}
+              placeholder="Número de identificación"
+              onChange={(e) => setIdNumberEpsLocalState(e.target.value)}
+              autoComplete="off"
+              min={0}
+            />
           </Form.Item>
-        )}
 
-        <Form.Item
-          name="user-id-number-forgot-password-eps"
-          label="Número de identificación del colaborador"
-          style={{ marginBottom: 7 }}
-          normalize={(value) => {
-            if (!value) return "";
+          <Form.Item
+            name="eps-company-eps-forgot-password-eps"
+            label="Empresa del colaborador:"
+            style={{ marginBottom: "13px" }}
+            rules={[
+              {
+                required: true,
+                message:
+                  "¡Por favor selecciona la empresa en la que labora el colaborador!",
+              },
+            ]}
+          >
+            {epsCompanyLoading ? (
+              <CustomSpin />
+            ) : (
+              <Select
+                value={epsCompanyNumberUserEpsLocalState}
+                placeholder="Seleccionar empresa"
+                onChange={handleOnChangeSelectEpsCompany}
+              >
+                {epsCompanyListLocalState?.map((option: any) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
 
-            return value.replace(/[^0-9]/g, "");
-          }}
-          rules={[
-            {
-              required: true,
-              message: "¡Por favor ingresa tu número de identificación!",
-            },
-            {
-              pattern: /^[0-9]+$/,
-              message:
-                "¡Por favor ingresa número de identificación sin puntos, ni comas!",
-            },
-            {
-              min: 7,
-              message: "¡Por favor ingresa mínimo 7 números!",
-            },
-            {
-              max: 11,
-              message: "¡Por favor ingresa máximo 11 números!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<IdcardOutlined className="site-form-item-icon" />}
-            type="tel"
-            value={idNumberEpsLocalState}
-            placeholder="Número de identificación"
-            onChange={(e) => setIdNumberEpsLocalState(e.target.value)}
-            autoComplete="off"
-            min={0}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="eps-company-eps-forgot-password-eps"
-          label="Empresa del colaborador:"
-          style={{ marginBottom: "13px" }}
-          rules={[
-            {
-              required: true,
-              message:
-                "¡Por favor selecciona la empresa en la que labora el colaborador!",
-            },
-          ]}
-        >
-          {epsCompanyLoading ? (
-            <CustomSpin />
-          ) : (
-            <Select
-              value={epsCompanyNumberUserEpsLocalState}
-              placeholder="Seleccionar empresa"
-              onChange={handleOnChangeSelectEpsCompany}
-            >
-              {epsCompanyListLocalState?.map((option: any) => (
-                <Select.Option key={option.id} value={option.id}>
-                  {option.name}
-                </Select.Option>
-              ))}
-            </Select>
-          )}
-        </Form.Item>
-
-        <Form.Item
-          style={{
-            textAlign: "center",
-          }}
-        >
-          {isSubmittingForgotPassword ? (
-            <CustomSpin />
-          ) : (
-            <Button
-              size="large"
-              style={{
-                paddingInline: 45,
-                borderRadius: 31,
-                backgroundColor: "#015E90",
-                color: "#f2f2f2",
-                marginTop: "13px",
-              }}
-              htmlType="submit"
-              className="forgot-password-form-button-patient"
-              onClick={handleButtonClick}
-            >
-              Restablecer contraseña
-            </Button>
-          )}
-        </Form.Item>
-      </Form>
+          <Form.Item
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {isSubmittingForgotPassword ? (
+              <CustomSpin />
+            ) : (
+              <Button
+                size="large"
+                style={{
+                  paddingInline: 45,
+                  borderRadius: 31,
+                  backgroundColor: "#015E90",
+                  color: "#f2f2f2",
+                  marginTop: "13px",
+                }}
+                htmlType="submit"
+                className="forgot-password-form-button-patient"
+                onClick={handleButtonClick}
+              >
+                Restablecer contraseña
+              </Button>
+            )}
+          </Form.Item>
+        </Form>
+      )}
     </Col>
     // </Card>
   );

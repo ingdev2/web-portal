@@ -737,6 +737,7 @@ export class UsersService {
     return await this.userRepository.findOneBy({
       user_id_type: idType,
       id_number: idNumber,
+      is_active: true,
     });
   }
 
@@ -1070,7 +1071,7 @@ export class UsersService {
       emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = PASSWORD_RESET;
       emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
-      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER}?token=${resetPasswordToken}`;
 
       await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -1143,7 +1144,7 @@ export class UsersService {
       );
     } else {
       throw new UnauthorizedException(
-        `¡Datos incorrectos o no esta registrado!`,
+        `¡Datos incorrectos o usuario no registrado!`,
       );
     }
   }

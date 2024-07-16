@@ -28,7 +28,7 @@ import {
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
-import { maskEmailAdmin } from 'src/admin_roles/helpers/mask_email';
+import { maskEmailAdmin } from '../helpers/mask_email';
 
 const schedule = require('node-schedule');
 
@@ -521,7 +521,9 @@ export class AdminsService {
         HttpStatus.ACCEPTED,
       );
     } else {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+      throw new UnauthorizedException(
+        `¡Datos incorrectos o usuario no registrado!`,
+      );
     }
   }
 

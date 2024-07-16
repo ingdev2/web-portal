@@ -79,6 +79,14 @@ export const usersApi = createApi({
       query: (id) => `getUser/${id}`,
     }),
 
+    getUserByIdNumber: builder.query<Partial<User>, Partial<User>>({
+      query: ({ user_id_type, id_number }) => ({
+        url: `getUserByIdNumber/${user_id_type}/${id_number}`,
+        method: "GET",
+        params: { user_id_type, id_number },
+      }),
+    }),
+
     getUserByIdNumberPatient: builder.query<Partial<User>, number>({
       query: (idNumber) => `getPatientUserById/${idNumber}`,
     }),
@@ -160,6 +168,7 @@ export const {
   useGetAllPatientsQuery,
   useGetAllEpsQuery,
   useGetUserByIdQuery,
+  useGetUserByIdNumberQuery,
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
   useUpdateUserPatientMutation,

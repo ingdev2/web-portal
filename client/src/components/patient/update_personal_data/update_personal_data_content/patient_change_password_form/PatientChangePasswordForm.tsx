@@ -116,6 +116,8 @@ const PatientChangePasswordForm: React.FC = () => {
 
           dispatch(setErrorsUserPatient(errorMessage));
           setShowErrorMessageChangePassword(true);
+
+          setIsSubmittingChangePassword(false);
         }
         if (validationPatientData === 202 && !validationPatientError) {
           setShowSuccessMessageChangePassword(true);
@@ -129,8 +131,6 @@ const PatientChangePasswordForm: React.FC = () => {
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setIsSubmittingChangePassword(false);
     }
   };
 
