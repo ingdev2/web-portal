@@ -128,7 +128,7 @@ const EpsRegistrationForm: React.FC = () => {
     if (epsCompanyError) {
       dispatch(setErrorsUserEps("¡No se pudo obtener las empresas!"));
       setShowErrorMessageUserEps(true);
-      setEpsCompanyAreasListLocalState(companyAreaData);
+      setEpsCompanyListLocalState(epsCompanyData);
     }
     if (!idTypesLoading && !idTypesFetching && idTypesData) {
       setEpsIdTypesListLocalState(idTypesData);
@@ -212,8 +212,6 @@ const EpsRegistrationForm: React.FC = () => {
         password: passwordUserEpsLocalState,
         authentication_method: epsAuthMethodLocalState,
       });
-
-      console.log(response);
 
       var createUserEpsError = response.error;
 

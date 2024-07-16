@@ -19,7 +19,7 @@ import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
-import { validateRequiredFiles } from "@/helpers/validate_required_files/validate_required_files";
+import { validateRequiredFiles } from "@/helpers/validate_required_values/validate_required_files";
 
 import { PatientClassificationStatus } from "@/../../api/src/medical_req/enums/patient_classification_status.enum";
 import { RelationshipWithPatient } from "@/../../api/src/medical_req/enums/relationship_with_patient.enum";

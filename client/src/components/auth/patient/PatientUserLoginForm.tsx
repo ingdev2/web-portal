@@ -28,6 +28,7 @@ import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSli
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import PatientForgotPasswordForm from "./patient_forgot_password_form/PatientForgotPasswordForm";
 
 const PatientUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -324,7 +325,8 @@ const PatientUserLoginForm: React.FC = () => {
           {modalForgotMyPasswordIsOpen && (
             <CustomModalNoContent
               key={"custom-modal-forgot-my-password-patient"}
-              widthCustomModalNoContent={"54%"}
+              widthCustomModalNoContent={"31%"}
+              paddingBlockCustomModalNoContent={"88px"}
               openCustomModalState={modalForgotMyPasswordIsOpen}
               closableCustomModal={true}
               maskClosableCustomModal={true}
@@ -332,16 +334,9 @@ const PatientUserLoginForm: React.FC = () => {
                 setModalForgotMyPasswordIsOpen(false)
               }
               contentCustomModal={
-                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Fecha de cumpleaños"
-                // <CustomResultOneButton
-                //   key={"medical-req-created-custom-result"}
-                //   statusTypeResult={"success"}
-                //   titleCustomResult="¡Solicitud Creada Correctamente!"
-                //   subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                //   handleClickCustomResult={handleGoToListOfMedicalReq}
-                //   isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                //   textButtonCustomResult="Ver mis solicitudes hechas"
-                // />
+                <PatientForgotPasswordForm
+                  setOpenModalForgotPassword={setModalForgotMyPasswordIsOpen}
+                />
               }
             />
           )}
@@ -355,7 +350,8 @@ const PatientUserLoginForm: React.FC = () => {
                 color: "#960202",
                 textDecorationLine: "underline",
                 fontWeight: 500,
-                marginBottom: 13,
+                marginTop: 7,
+                marginBottom: 22,
               }}
               onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
@@ -386,7 +382,7 @@ const PatientUserLoginForm: React.FC = () => {
               style={{
                 fontSize: 13,
                 fontWeight: "normal",
-                marginBlock: 7,
+                marginBlock: 13,
                 borderWidth: 1.3,
               }}
             >

@@ -11,7 +11,6 @@ import { UsersService } from '../services/users.service';
 import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
-import { ValidatePatientDto } from '../dto/validate_patient.dto';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

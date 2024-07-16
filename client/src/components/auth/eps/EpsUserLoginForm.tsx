@@ -28,6 +28,7 @@ import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
+import EpsForgotPasswordForm from "./eps_forgot_password_form/EpsForgotPasswordForm";
 
 const EpsUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -304,7 +305,7 @@ const EpsUserLoginForm: React.FC = () => {
           {modalForgotMyPasswordIsOpen && (
             <CustomModalNoContent
               key={"custom-modal-forgot-my-password-patient"}
-              widthCustomModalNoContent={"54%"}
+              widthCustomModalNoContent={"31%"}
               openCustomModalState={modalForgotMyPasswordIsOpen}
               closableCustomModal={true}
               maskClosableCustomModal={true}
@@ -312,16 +313,9 @@ const EpsUserLoginForm: React.FC = () => {
                 setModalForgotMyPasswordIsOpen(false)
               }
               contentCustomModal={
-                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Empresa(EPS)"
-                // <CustomResultOneButton
-                //   key={"medical-req-created-custom-result"}
-                //   statusTypeResult={"success"}
-                //   titleCustomResult="¡Solicitud Creada Correctamente!"
-                //   subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                //   handleClickCustomResult={handleGoToListOfMedicalReq}
-                //   isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                //   textButtonCustomResult="Ver mis solicitudes hechas"
-                // />
+                <EpsForgotPasswordForm
+                  setOpenModalForgotPassword={setModalForgotMyPasswordIsOpen}
+                />
               }
             />
           )}
@@ -335,7 +329,8 @@ const EpsUserLoginForm: React.FC = () => {
                 color: "#960202",
                 textDecorationLine: "underline",
                 fontWeight: 500,
-                marginBottom: 13,
+                marginTop: 7,
+                marginBottom: 22,
               }}
               onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
@@ -365,7 +360,7 @@ const EpsUserLoginForm: React.FC = () => {
               style={{
                 fontSize: 13,
                 fontWeight: "normal",
-                marginBlock: 7,
+                marginBlock: 13,
                 borderWidth: 1.3,
               }}
             >

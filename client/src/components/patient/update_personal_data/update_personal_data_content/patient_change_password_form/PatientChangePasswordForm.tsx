@@ -124,7 +124,7 @@ const PatientChangePasswordForm: React.FC = () => {
 
           setTimeout(() => {
             dispatch(setPatientModalIsOpen(false));
-          }, 2000);
+          }, 4000);
         }
       }
     } catch (error) {

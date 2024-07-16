@@ -117,7 +117,7 @@ const EpsChangePasswordForm: React.FC = () => {
 
           setTimeout(() => {
             dispatch(setEpsModalIsOpen(false));
-          }, 2000);
+          }, 4000);
         }
       }
     } catch (error) {
