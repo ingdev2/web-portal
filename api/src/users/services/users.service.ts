@@ -40,6 +40,7 @@ import {
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
 import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { maskEmailUser } from '../helpers/mask_email';
 
 const schedule = require('node-schedule');
 
@@ -1080,12 +1081,16 @@ export class UsersService {
         );
       });
 
+      const maskedEmail = maskEmailUser(userFound.email);
+
       return new HttpException(
-        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        `Se ha enviado al correo: ${maskedEmail} el link de restablecimiento de contraseña`,
         HttpStatus.ACCEPTED,
       );
     } else {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+      throw new UnauthorizedException(
+        `¡Datos incorrectos o no esta registrado!`,
+      );
     }
   }
 
@@ -1130,12 +1135,16 @@ export class UsersService {
         );
       });
 
+      const maskedEmail = maskEmailUser(userFound.email);
+
       return new HttpException(
-        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        `Se ha enviado al correo: ${maskedEmail} el link de restablecimiento de contraseña`,
         HttpStatus.ACCEPTED,
       );
     } else {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+      throw new UnauthorizedException(
+        `¡Datos incorrectos o no esta registrado!`,
+      );
     }
   }
 

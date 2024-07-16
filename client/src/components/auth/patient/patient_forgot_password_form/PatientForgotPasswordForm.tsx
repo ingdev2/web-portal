@@ -35,6 +35,8 @@ const PatientForgotPasswordForm: React.FC<{
 
   const [isSubmittingForgotPassword, setIsSubmittingForgotPassword] =
     useState(false);
+  const [successMessageForgotPassword, setSuccessMessageForgotPassword] =
+    useState("");
   const [
     showSuccessMessageForgotPassword,
     setShowSuccessMessageForgotPassword,
@@ -113,14 +115,18 @@ const PatientForgotPasswordForm: React.FC<{
           setShowErrorMessageForgotPassword(true);
         }
         if (validationPatientData === 202 && !validationPatientError) {
+          const successMessage = response.data?.message;
+
+          setSuccessMessageForgotPassword(successMessage);
           setShowSuccessMessageForgotPassword(true);
+
           setIdTypePatientLocalState(0);
           setIdNumberPatientLocalState("");
           setBirthdatePatientLocalState("");
 
           setTimeout(() => {
             setOpenModalForgotPassword(false);
-          }, 4000);
+          }, 5000);
         }
       }
     } catch (error) {
@@ -175,6 +181,7 @@ const PatientForgotPasswordForm: React.FC<{
         <CustomMessage
           typeMessage="success"
           message={
+            successMessageForgotPassword?.toString() ||
             "¡Link para reestablecer contraseña enviado al correo eléctronico registrado por el usuario!"
           }
         />

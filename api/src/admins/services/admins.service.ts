@@ -28,6 +28,7 @@ import {
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
+import { maskEmailAdmin } from 'src/admin_roles/helpers/mask_email';
 
 const schedule = require('node-schedule');
 
@@ -513,8 +514,10 @@ export class AdminsService {
         );
       });
 
+      const maskedEmail = maskEmailAdmin(adminFound.corporate_email);
+
       return new HttpException(
-        `Se ha enviado al correo: ${adminFound.corporate_email} el link de restablecimiento de contraseña`,
+        `Se ha enviado al correo: ${maskedEmail} el link de restablecimiento de contraseña`,
         HttpStatus.ACCEPTED,
       );
     } else {

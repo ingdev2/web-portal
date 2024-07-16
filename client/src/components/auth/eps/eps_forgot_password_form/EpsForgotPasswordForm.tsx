@@ -41,6 +41,8 @@ const EpsForgotPasswordForm: React.FC<{
 
   const [isSubmittingForgotPassword, setIsSubmittingForgotPassword] =
     useState(false);
+  const [successMessageForgotPassword, setSuccessMessageForgotPassword] =
+    useState("");
   const [
     showSuccessMessageForgotPassword,
     setShowSuccessMessageForgotPassword,
@@ -131,14 +133,18 @@ const EpsForgotPasswordForm: React.FC<{
           setShowErrorMessageForgotPassword(true);
         }
         if (validationPatientData === 202 && !validationPatientError) {
+          const successMessage = response.data?.message;
+
+          setSuccessMessageForgotPassword(successMessage);
           setShowSuccessMessageForgotPassword(true);
+
           setIdTypeEpsLocalState(0);
           setIdNumberEpsLocalState("");
           setEpsCompanyNumberUserEpsLocalState(0);
 
           setTimeout(() => {
             setOpenModalForgotPassword(false);
-          }, 4000);
+          }, 5000);
         }
       }
     } catch (error) {
@@ -199,22 +205,23 @@ const EpsForgotPasswordForm: React.FC<{
         <CustomMessage
           typeMessage="success"
           message={
+            successMessageForgotPassword?.toString() ||
             "¡Link para reestablecer contraseña enviado al correo eléctronico registrado por el usuario!"
           }
         />
       )}
 
       <Form
-        id="forgot-password-form-patient"
-        name="forgot-password-form-patient"
-        className="forgot-password-form-patient"
+        id="forgot-password-form-eps"
+        name="forgot-password-form-eps"
+        className="forgot-password-form-eps"
         onFinish={handleChangePassword}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
         <h2
-          className="title-forgot-password-patient"
+          className="title-forgot-password-eps"
           style={{
             ...titleStyleCss,
             marginBlock: 22,
@@ -228,8 +235,8 @@ const EpsForgotPasswordForm: React.FC<{
           <CustomSpin />
         ) : (
           <Form.Item
-            name="user-id-type-forgot-password-patient"
-            label="Tipo de identificación del paciente"
+            name="user-id-type-forgot-password-eps"
+            label="Tipo de identificación del colaborador"
             style={{ marginBottom: 7 }}
             rules={[
               {
@@ -253,8 +260,8 @@ const EpsForgotPasswordForm: React.FC<{
         )}
 
         <Form.Item
-          name="user-id-number-forgot-password-patient"
-          label="Número de identificación del paciente"
+          name="user-id-number-forgot-password-eps"
+          label="Número de identificación del colaborador"
           style={{ marginBottom: 7 }}
           normalize={(value) => {
             if (!value) return "";
