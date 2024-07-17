@@ -13,7 +13,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#070707",
             color: "#F4D03FB2",
-            label: "TARJETA DE IDENTIDAD",
+            label: IdType.IDENTITY_CARD,
           }}
         />
       );
@@ -23,7 +23,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#137A2BB2",
-            label: "CÉDULA DE CIUDADANÍA",
+            label: IdType.CITIZENSHIP_CARD,
           }}
         />
       );
@@ -33,7 +33,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#8C1111B2",
-            label: "REGISTRO CIVIL",
+            label: IdType.CIVIL_REGISTRATION,
           }}
         />
       );
@@ -43,7 +43,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#BA3400B2",
-            label: "MAYOR DE EDAD SIN IDENTIFICACIÓN",
+            label: IdType.ADULT_WITHOUT_IDENTIFICATION,
           }}
         />
       );
@@ -53,7 +53,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#070707",
             color: "#9960B0B2",
-            label: "MENOR DE EDAD SIN IDENTIFICACIÓN",
+            label: IdType.MINOR_WITHOUT_IDENTIFICATION,
           }}
         />
       );
@@ -63,7 +63,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#070707",
             color: "#DDDDDDB2",
-            label: "CÉDULA DE EXTRANJERÍA",
+            label: IdType.FOREIGNER_ID,
           }}
         />
       );
@@ -73,7 +73,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#34495EB2",
-            label: "PASAPORTE",
+            label: IdType.PASSPORT,
           }}
         />
       );
@@ -83,7 +83,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#8E44ADB2",
-            label: "PERMISO ESPECIAL DE PERMANENCIA",
+            label: IdType.SPECIAL_RESIDENCE_PERMIT,
           }}
         />
       );
@@ -93,7 +93,7 @@ export const getTagComponentIdTypes = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "PERMISO POR PROTECCIÓN TEMPORAL",
+            label: IdType.TEMPORARY_PROTECTION_PERMIT,
           }}
         />
       );

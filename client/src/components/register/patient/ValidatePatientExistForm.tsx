@@ -381,7 +381,7 @@ const ValidatePatientExistForm: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Activación de usuario Paciente
+            Validación de existencia usuario Paciente
           </h2>
 
           <Form.Item
@@ -463,7 +463,7 @@ const ValidatePatientExistForm: React.FC = () => {
                   borderRadius: 31,
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
-                  marginBlock: 7,
+                  marginTop: 13,
                 }}
                 htmlType="submit"
                 className="patient-validate-form-button"
@@ -479,8 +479,8 @@ const ValidatePatientExistForm: React.FC = () => {
           style={{
             fontSize: 13,
             fontWeight: "normal",
-            marginBlock: 4,
             borderWidth: 1.3,
+            marginBlock: 7,
           }}
         >
           ¿Ya tienes cuenta?
@@ -504,7 +504,7 @@ const ValidatePatientExistForm: React.FC = () => {
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,
-                marginTop: 7,
+                marginBlock: 13,
               }}
               htmlType="button"
               className="patient-validate-button"

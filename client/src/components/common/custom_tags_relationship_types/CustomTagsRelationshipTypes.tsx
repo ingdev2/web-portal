@@ -15,7 +15,7 @@ export const getTagComponentRelationshipType = (
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "PADRE/MADRE",
+            label: RelationshipWithPatient.PARENT,
           }}
         />
       );
@@ -25,7 +25,7 @@ export const getTagComponentRelationshipType = (
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "HERMANO(A)",
+            label: RelationshipWithPatient.BROTHER,
           }}
         />
       );
@@ -35,7 +35,7 @@ export const getTagComponentRelationshipType = (
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "HIJO(A)",
+            label: RelationshipWithPatient.SON,
           }}
         />
       );
@@ -45,7 +45,7 @@ export const getTagComponentRelationshipType = (
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "FAMILIAR",
+            label: RelationshipWithPatient.FAMILIAR,
           }}
         />
       );
@@ -55,7 +55,7 @@ export const getTagComponentRelationshipType = (
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "ESPOSO(A)",
+            label: RelationshipWithPatient.SPOUSE,
           }}
         />
       );

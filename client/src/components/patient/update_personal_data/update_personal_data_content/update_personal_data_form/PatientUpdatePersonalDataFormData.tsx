@@ -85,7 +85,7 @@ const PatientUpdatePersonalDataFormData: React.FC<{
           textAlign: "center",
         }}
       >
-        Actualización de datos
+        Actualización de datos personales
       </h2>
 
       <p
@@ -173,7 +173,7 @@ const PatientUpdatePersonalDataFormData: React.FC<{
         >
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Sexo:
+              Género:
             </Typography.Title>
 
             <Input

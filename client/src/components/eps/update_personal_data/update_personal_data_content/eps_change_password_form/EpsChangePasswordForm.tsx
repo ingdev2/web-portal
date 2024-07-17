@@ -249,15 +249,15 @@ const EpsChangePasswordForm: React.FC = () => {
         </h2>
 
         <Form.Item
-          id="old-password-eps"
-          name="old-password-eps"
-          className="old-password-eps"
-          label="Contraseña antigua"
+          id="current-password-eps"
+          name="current-password-eps"
+          className="current-password-eps"
+          label="Contraseña actual"
           style={{ marginBottom: 13 }}
           rules={[
             {
               required: true,
-              message: "¡Por favor ingresa tu contraseña antigua!",
+              message: "¡Por favor ingresa tu contraseña actual!",
             },
             {
               min: 8,
@@ -299,7 +299,7 @@ const EpsChangePasswordForm: React.FC = () => {
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             value={oldPasswordEpsLocalState}
-            placeholder="Contraseña antigua"
+            placeholder="Contraseña actual"
             onChange={(e) => {
               setOldPasswordEpsLocalState(e.target.value.trim());
             }}

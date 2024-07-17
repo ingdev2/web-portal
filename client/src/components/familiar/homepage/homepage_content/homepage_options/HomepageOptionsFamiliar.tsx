@@ -24,7 +24,7 @@ const HomepageOptionsFamiliar: React.FC = () => {
           display: "flex",
           flexFlow: "row wrap",
           width: "100%",
-          paddingBlock: "7px",
+          paddingBlock: "13px",
           paddingInline: "22px",
         }}
       >
@@ -34,7 +34,7 @@ const HomepageOptionsFamiliar: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -43,16 +43,24 @@ const HomepageOptionsFamiliar: React.FC = () => {
         >
           <CustomOptionButton
             iconCustomOptionButton={<MdAssignmentAdd size={"45px"} />}
-            titleCustomOptionButton="Solicitar documento médico"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            titleCustomOptionButton="Crear solicitud"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/familiar/homepage/create_request", {
                 scroll: true,
               });
             }}
+            iconPopoverCustomOptionButton={
+              <CustomPopover
+                titleCustomPopover={"¿Qué puedo solicitar?"}
+                contentCustomPopover={
+                  "Aquí puedes solicitar historias clínicas, órdenes e incapacidades médicas."
+                }
+              />
+            }
           />
         </Col>
 
@@ -62,7 +70,7 @@ const HomepageOptionsFamiliar: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -71,16 +79,24 @@ const HomepageOptionsFamiliar: React.FC = () => {
         >
           <CustomOptionButton
             iconCustomOptionButton={<MdFormatListNumbered size={"45px"} />}
-            titleCustomOptionButton="Ver documentos médicos solicitados"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            titleCustomOptionButton="Ver solicitudes realizadas"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/familiar/homepage/request_list", {
                 scroll: true,
               });
             }}
+            iconPopoverCustomOptionButton={
+              <CustomPopover
+                titleCustomPopover={"¿Qué solicitudes puedo ver aquí?"}
+                contentCustomPopover={
+                  "Aquí puedes ver y gestionar todas las solicitudes que has realizado desde este portal."
+                }
+              />
+            }
           />
         </Col>
 
@@ -90,7 +106,7 @@ const HomepageOptionsFamiliar: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -100,9 +116,9 @@ const HomepageOptionsFamiliar: React.FC = () => {
           <CustomOptionButton
             iconCustomOptionButton={<RxUpdate size={"45px"} />}
             titleCustomOptionButton="Actualizar datos personales"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/familiar/homepage/update_personal_data", {
@@ -118,7 +134,7 @@ const HomepageOptionsFamiliar: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -139,9 +155,9 @@ const HomepageOptionsFamiliar: React.FC = () => {
             <CustomOptionButton
               iconCustomOptionButton={<FaRegCommentDots size={"45px"} />}
               titleCustomOptionButton="PQRS"
-              textColorCustomOptionButton="#f2f2f2"
-              iconColorCustomOptionButton="#00B5E8"
-              backgroundColorCustomOptionButton="#015E90"
+              textColorCustomOptionButton="#070707"
+              iconColorCustomOptionButton="#3F97AF"
+              backgroundColorCustomOptionButton="#DFEBF2"
               borderColorCustomOptionButton="#3F97AF"
               handleClickCustomOptionButton={() => {}}
               iconPopoverCustomOptionButton={

@@ -149,7 +149,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
         >
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Sexo del familiar:
+              Género del familiar:
             </Typography.Title>
 
             <Input

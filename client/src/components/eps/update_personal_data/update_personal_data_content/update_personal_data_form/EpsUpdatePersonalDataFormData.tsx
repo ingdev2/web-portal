@@ -92,7 +92,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
           textAlign: "center",
         }}
       >
-        Actualización de datos
+        Actualización de datos personales
       </h2>
 
       <div style={{ textAlign: "start" }}>
@@ -165,7 +165,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
         >
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Sexo:
+              Género:
             </Typography.Title>
 
             <Input

@@ -84,7 +84,7 @@ const RegisterPatientPage: React.FC = () => {
               {
                 className: "eps-card-register",
                 key: "1",
-                label: "Eps",
+                label: "Creación de usuario EPS",
                 icon: <IoIosBusiness />,
                 children: <EpsRegistrationForm />,
               },

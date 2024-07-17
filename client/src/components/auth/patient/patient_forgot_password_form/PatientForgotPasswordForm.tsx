@@ -240,12 +240,11 @@ const PatientForgotPasswordForm: React.FC<{
         <CustomResultOneButton
           key={"link-to-reset-password-sent-success-custom-result-patient"}
           statusTypeResult={"success"}
-          titleCustomResult="¡Link Para Restablecer Contraseña Enviado!"
+          titleCustomResult="¡Link para restablecer contraseña enviado!"
           subtitleCustomResult={
             <p>
-              Se ha enviado al correo:{" "}
-              <b>{maskEmail(emailPatientLocalState)}</b> un link para
-              restablecer su contraseña de ingreso.
+              Se ha enviado al correo <b>{maskEmail(emailPatientLocalState)}</b>
+              un link para restablecer su contraseña de ingreso.
             </p>
           }
           handleClickCustomResult={handleGoToLogin}

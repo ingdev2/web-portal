@@ -30,18 +30,18 @@ const CustomCardDescription: React.FC<{
           display: "flex",
           flexFlow: "row wrap",
           margin: 0,
-          padding: 0,
+          paddingTop: 0,
+          paddingBottom: 7,
         }}
       >
         <div
           style={{
             width: "100%",
-            height: "31px",
+            height: "37px",
             display: "flex",
             flexFlow: "row wrap",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingBlock: "2px",
           }}
         >
           {descriptionCard1}
@@ -52,12 +52,11 @@ const CustomCardDescription: React.FC<{
         <div
           style={{
             width: "100%",
-            height: "31px",
+            height: "37px",
             display: "flex",
             flexFlow: "row wrap",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingBlock: "2px",
           }}
         >
           {descriptionCard2}
@@ -68,12 +67,11 @@ const CustomCardDescription: React.FC<{
         <div
           style={{
             width: "100%",
-            height: "31px",
+            height: "37px",
             display: "flex",
             flexFlow: "row wrap",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingBlock: "2px",
           }}
         >
           {descriptionCard3} <b>{itemCard1}</b>
@@ -82,12 +80,11 @@ const CustomCardDescription: React.FC<{
         <div
           style={{
             width: "100%",
-            height: "31px",
+            height: "37px",
             display: "flex",
             flexFlow: "row wrap",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingBlock: "2px",
           }}
         >
           {descriptionCard4}

@@ -152,7 +152,7 @@ const ResetPasswordFormUsers: React.FC = () => {
           <CustomResultOneButton
             key={"reset-password-success-custom-result"}
             statusTypeResult={"success"}
-            titleCustomResult="¡Contraseña Restablecida Exitosamente!"
+            titleCustomResult="¡Contraseña restablecida exitosamente!"
             subtitleCustomResult="Su contraseña ha sido restablecida correctamente, lo invitamos a ingresar a la plataforma."
             handleClickCustomResult={handleGoToLogin}
             isSubmittingButton={isSubmittingGoToLogin}

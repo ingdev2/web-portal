@@ -287,6 +287,47 @@ const PatientCreateRequestForm: React.FC = () => {
         </Button>
       </div>
 
+      {modalIsOpenConfirm && (
+        <CustomModalTwoOptions
+          key={"custom-confirm-modal-create-medical-req-patient"}
+          openCustomModalState={modalIsOpenConfirm}
+          iconCustomModal={<FcInfo size={77} />}
+          titleCustomModal="¿Deseas crear una nueva solicitud?"
+          subtitleCustomModal={
+            <p>
+              Se realizará un nuevo requerimiento de tipo&nbsp;
+              <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
+              <b>{nameUserPatientState}</b>
+            </p>
+          }
+          handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
+          handleConfirmCustomModal={handleConfirmDataModal}
+          isSubmittingConfirm={isSubmittingNewMedicalReq}
+          handleClickCustomModal={handleButtonClick}
+        ></CustomModalTwoOptions>
+      )}
+
+      {modalIsOpenSuccess && (
+        <CustomModalNoContent
+          key={"custom-success-modal-create-medical-req-patient"}
+          widthCustomModalNoContent={"54%"}
+          openCustomModalState={modalIsOpenSuccess}
+          closableCustomModal={false}
+          maskClosableCustomModal={false}
+          contentCustomModal={
+            <CustomResultOneButton
+              key={"medical-req-created-custom-result"}
+              statusTypeResult={"success"}
+              titleCustomResult="¡Solicitud creada correctamente!"
+              subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
+              handleClickCustomResult={handleGoToListOfMedicalReq}
+              isSubmittingButton={isSubmittingGoToListOfMedicalReq}
+              textButtonCustomResult="Ver mis solicitudes"
+            />
+          }
+        ></CustomModalNoContent>
+      )}
+
       <Card
         key={"card-create-medical-req-form-patient"}
         style={{
@@ -299,47 +340,6 @@ const PatientCreateRequestForm: React.FC = () => {
           marginInline: "13px",
         }}
       >
-        {modalIsOpenConfirm && (
-          <CustomModalTwoOptions
-            key={"custom-confirm-modal-create-medical-req-patient"}
-            openCustomModalState={modalIsOpenConfirm}
-            iconCustomModal={<FcInfo size={77} />}
-            titleCustomModal="¿Deseas crear una nueva solicitud?"
-            subtitleCustomModal={
-              <p>
-                Se realizará un nuevo requerimiento de tipo&nbsp;
-                <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
-                <b>{nameUserPatientState}</b>
-              </p>
-            }
-            handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
-            handleConfirmCustomModal={handleConfirmDataModal}
-            isSubmittingConfirm={isSubmittingNewMedicalReq}
-            handleClickCustomModal={handleButtonClick}
-          ></CustomModalTwoOptions>
-        )}
-
-        {modalIsOpenSuccess && (
-          <CustomModalNoContent
-            key={"custom-success-modal-create-medical-req-patient"}
-            widthCustomModalNoContent={"54%"}
-            openCustomModalState={modalIsOpenSuccess}
-            closableCustomModal={false}
-            maskClosableCustomModal={false}
-            contentCustomModal={
-              <CustomResultOneButton
-                key={"medical-req-created-custom-result"}
-                statusTypeResult={"success"}
-                titleCustomResult="¡Solicitud Creada Correctamente!"
-                subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                handleClickCustomResult={handleGoToListOfMedicalReq}
-                isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                textButtonCustomResult="Ver mis solicitudes hechas"
-              />
-            }
-          ></CustomModalNoContent>
-        )}
-
         {showErrorMessageMedicalReq && (
           <CustomMessage
             typeMessage="error"
@@ -358,6 +358,7 @@ const PatientCreateRequestForm: React.FC = () => {
           handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
           familiarReqTypeListDataForm={typesMedicalReqState}
           userMessageMedicalReqDataForm={userMessageMedicalReqState}
+          tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así agilizar el proceso de entrega."
           fileStatusSetterDataform={setFileUserMessageMedicalReq}
           fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
@@ -367,6 +368,7 @@ const PatientCreateRequestForm: React.FC = () => {
             isSubmittingConfirmModal && !modalIsOpenConfirm
           }
           handleButtonSubmitFormDataForm={handleButtonClick}
+          tooltipObservationsDataform="Especifique detalles específicos a tener en cuenta en su solicitud para así darte una respuesta asertiva, por ejemplo, fecha aprox. de procedimiento, tipo de procedimiento, entre otros."
         />
       </Card>
     </Col>

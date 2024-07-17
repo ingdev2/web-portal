@@ -159,7 +159,7 @@ export class MedicalReqService {
 
     const reqStatusEstablished = await this.requerimentStatusRepository.findOne(
       {
-        where: { name: RequirementStatusEnum.ESTABLISHED },
+        where: { name: RequirementStatusEnum.CREATED },
       },
     );
 
@@ -531,7 +531,7 @@ export class MedicalReqService {
     }
 
     const reqStatusStablished = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.ESTABLISHED },
+      where: { name: RequirementStatusEnum.CREATED },
     });
 
     if (!reqStatusStablished) {
@@ -741,7 +741,7 @@ export class MedicalReqService {
 
     const reqStatusEstablished = await this.requerimentStatusRepository.findOne(
       {
-        where: { name: RequirementStatusEnum.ESTABLISHED },
+        where: { name: RequirementStatusEnum.CREATED },
       },
     );
 
@@ -1180,7 +1180,7 @@ export class MedicalReqService {
         RequirementStatus,
         {
           where: {
-            name: RequirementStatusEnum.ESTABLISHED,
+            name: RequirementStatusEnum.CREATED,
           },
         },
       );

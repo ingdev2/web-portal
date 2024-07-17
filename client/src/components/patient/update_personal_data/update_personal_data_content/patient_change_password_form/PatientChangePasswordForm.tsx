@@ -239,15 +239,15 @@ const PatientChangePasswordForm: React.FC = () => {
         </h2>
 
         <Form.Item
-          id="old-password-patient"
-          name="old-password-patient"
-          className="old-password-patient"
-          label="Contraseña antigua"
+          id="current-password-patient"
+          name="current-password-patient"
+          className="current-password-patient"
+          label="Contraseña actual"
           style={{ marginBottom: 13 }}
           rules={[
             {
               required: true,
-              message: "¡Por favor ingresa tu contraseña antigua!",
+              message: "¡Por favor ingresa tu contraseña actual!",
             },
             {
               min: 8,
@@ -289,7 +289,7 @@ const PatientChangePasswordForm: React.FC = () => {
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             value={oldPasswordPatientLocalState}
-            placeholder="Contraseña antigua"
+            placeholder="Contraseña actual"
             onChange={(e) => {
               setOldPasswordPatientLocalState(e.target.value.trim());
             }}

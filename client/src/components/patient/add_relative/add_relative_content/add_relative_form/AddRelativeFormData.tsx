@@ -279,12 +279,12 @@ const AddRelativeFormData: React.FC<{
 
       <Form.Item
         name="new-familiar-gender"
-        label="Sexo del familiar"
+        label="Género del familiar"
         style={{ marginBottom: "13px" }}
         rules={[
           {
             required: true,
-            message: "¡Por favor selecciona el tipo de sexo del familiar!",
+            message: "¡Por favor selecciona el tipo de género del familiar!",
           },
         ]}
       >
@@ -293,7 +293,7 @@ const AddRelativeFormData: React.FC<{
         ) : (
           <Select
             value={familiarGenderValueDataForm}
-            placeholder="Selecciona sexo"
+            placeholder="Seleccionar género"
             onChange={handleOnChangeSelectGenderDataForm}
           >
             {familiarGenderListDataForm?.map((option: any) => (
@@ -386,6 +386,7 @@ const AddRelativeFormData: React.FC<{
       <Form.Item
         name="radio-select-auth-method"
         label="Método de autenticación del familiar"
+        tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
         style={{ marginBottom: "22px" }}
         rules={[
           {
@@ -412,6 +413,7 @@ const AddRelativeFormData: React.FC<{
       <Form.Item
         name="familiar-whatsapp-register"
         label="WhatsApp del familiar (opcional)"
+        tooltip="El número de WhatsApp no es un medio autorizado para enviar código de acceso a la plataforma, este es para comunicación vía chat de texto en caso de que el número de celular indicado no esté habilitado."
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
           if (!value) return "";

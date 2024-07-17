@@ -257,7 +257,7 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
       lg={24}
       style={{
         width: "100vw",
-        maxWidth: "450px",
+        maxWidth: "540px",
         minWidth: "231px",
         alignItems: "center",
         alignContent: "center",

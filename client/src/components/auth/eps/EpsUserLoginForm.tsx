@@ -325,6 +325,7 @@ const EpsUserLoginForm: React.FC = () => {
               className="eps-login-form-forgot-user"
               // href=""
               style={{
+                ...titleStyleCss,
                 display: "flow",
                 color: "#960202",
                 textDecorationLine: "underline",
@@ -334,7 +335,7 @@ const EpsUserLoginForm: React.FC = () => {
               }}
               onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
-              Olvide mi contraseña
+              Olvidé mi contraseña
             </a>
 
             {isSubmittingEps && isLoginEpsLoading ? (
@@ -347,6 +348,7 @@ const EpsUserLoginForm: React.FC = () => {
                   borderRadius: 31,
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
+                  marginBottom: 7,
                 }}
                 htmlType="submit"
                 className="eps-login-form-button"

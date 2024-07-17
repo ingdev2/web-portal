@@ -425,11 +425,11 @@ const AddRelativeForm: React.FC = () => {
               <CustomResultOneButton
                 key={"auth-familiar-created-custom-result"}
                 statusTypeResult={"success"}
-                titleCustomResult="¡Familiar Autorizado Agregado Correctamente!"
-                subtitleCustomResult="El familiar ha sido agregado a su lista de parientes autorizados para ver y solicitar documentos médicos de usted."
+                titleCustomResult="¡Familiar autorizado agregado correctamente!"
+                subtitleCustomResult="El familiar ha sido agregado a su lista de parientes autorizados para ver y solicitar documentos médicos de usted por medio de esta plataforma."
                 handleClickCustomResult={handleGoToListOfRelatives}
                 isSubmittingButton={isSubmittingGoToListOfRelatives}
-                textButtonCustomResult="Ver lista de familiares"
+                textButtonCustomResult="Ver mi núcleo familiar autorizado"
               />
             }
           ></CustomModalNoContent>

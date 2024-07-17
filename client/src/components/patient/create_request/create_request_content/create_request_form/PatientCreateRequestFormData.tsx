@@ -18,8 +18,10 @@ const PatientCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
+  tooltipUploadReferenceDocumentsDataform: string;
   fileStatusSetterDataform: React.SetStateAction<any>;
   fileStatusRemoverDataform: React.SetStateAction<any>;
+  tooltipObservationsDataform: string;
 }> = ({
   handleCreateRequestDataForm,
   reqTypeSelectorLoadingDataForm,
@@ -30,8 +32,10 @@ const PatientCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
+  tooltipUploadReferenceDocumentsDataform,
   fileStatusSetterDataform,
   fileStatusRemoverDataform,
+  tooltipObservationsDataform,
 }) => {
   return (
     <Form
@@ -86,6 +90,7 @@ const PatientCreateRequestFormData: React.FC<{
       <Form.Item
         name="upload-files-reference-documents-patient"
         label="Documento(s) de referencia (opcional)"
+        tooltip={tooltipUploadReferenceDocumentsDataform}
         style={{ marginBottom: "13px" }}
         rules={[
           {
@@ -104,6 +109,7 @@ const PatientCreateRequestFormData: React.FC<{
       <Form.Item
         name="especifications-patient"
         label="Observaciones y/o detalles"
+        tooltip={tooltipObservationsDataform}
         style={{ marginBottom: "31px" }}
         rules={[
           {
@@ -117,7 +123,7 @@ const PatientCreateRequestFormData: React.FC<{
           autoSize={{ minRows: 2, maxRows: 10 }}
           maxLength={301}
           value={userMessageMedicalReqDataForm}
-          placeholder="Especifique detalles a tener en cuenta de su solicitud. Ej. Fecha aprox. de procedimiento"
+          placeholder="Especifique detalles a tener en cuenta en su solicitud. Ej. Fecha aprox. de procedimiento"
           onChange={handleOnChangeUserMessageMedicalReqDataForm}
         />
       </Form.Item>

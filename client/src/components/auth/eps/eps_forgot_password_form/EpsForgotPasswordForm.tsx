@@ -263,10 +263,10 @@ const EpsForgotPasswordForm: React.FC<{
         <CustomResultOneButton
           key={"link-to-reset-password-sent-success-custom-result-eps"}
           statusTypeResult={"success"}
-          titleCustomResult="¡Link Para Restablecer Contraseña Enviado!"
+          titleCustomResult="¡Link para restablecer contraseña enviado!"
           subtitleCustomResult={
             <p>
-              Se ha enviado al correo: <b>{maskEmail(emailEpsLocalState)}</b> un
+              Se ha enviado al correo <b>{maskEmail(emailEpsLocalState)}</b> un
               link para restablecer su contraseña de ingreso.
             </p>
           }

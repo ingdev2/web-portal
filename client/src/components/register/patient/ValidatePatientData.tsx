@@ -326,9 +326,9 @@ const ValidatePatientData: React.FC = () => {
               }}
             >
               Por favor, verifique si todos sus datos están correctos, de lo
-              contrario debe comunicarse a nuestra línea PBX:{" "}
-              <b>{CONTACT_PBX}</b>
-              para realizar la actualización de sus datos personales.
+              contrario debe comunicarse a nuestra línea PBX:
+              <b>{CONTACT_PBX}</b> para realizar la actualización de sus datos
+              personales.
             </p>
 
             <div style={{ textAlign: "start" }}>
@@ -412,7 +412,7 @@ const ValidatePatientData: React.FC = () => {
 
             <div style={{ textAlign: "start" }}>
               <Typography.Title style={{ marginTop: 7 }} level={5}>
-                Sexo:
+                Género:
               </Typography.Title>
               <Input
                 id="patient-gender-hosvital"
@@ -488,6 +488,7 @@ const ValidatePatientData: React.FC = () => {
                 id="radio-select-auth-method"
                 name="radio-select-auth-method"
                 label="Método de autenticación"
+                tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
                 style={{ marginBottom: 22 }}
                 rules={[
                   {
@@ -518,7 +519,8 @@ const ValidatePatientData: React.FC = () => {
                 id="patient-user-whatsapp-register"
                 name="patient-user-whatsapp-register"
                 className="patient-user-whatsapp-register"
-                label="WhatsApp (opcional)"
+                tooltip="El número de WhatsApp no es un medio autorizado para enviar código de acceso a la plataforma, este es para comunicación vía chat de texto en caso de que el número de celular indicado no esté habilitado."
+                label="Número de WhatsApp (opcional)"
                 style={{ marginBottom: 13 }}
                 normalize={(value) => {
                   if (!value) return "";

@@ -39,7 +39,7 @@ const CustomPopover: React.FC<{
       trigger={"hover"}
     >
       <div style={{ margin: "0px", padding: "0px" }}>
-        {<FaInfoCircle color="#F4D03F" size={"17px"} />}
+        {<FaInfoCircle color="#A7BAB7" size={"17px"} />}
       </div>
     </Popover>
   );

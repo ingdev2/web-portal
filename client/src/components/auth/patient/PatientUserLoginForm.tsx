@@ -346,6 +346,7 @@ const PatientUserLoginForm: React.FC = () => {
               className="patient-login-form-forgot-user"
               // href=""
               style={{
+                ...titleStyleCss,
                 display: "flow",
                 color: "#960202",
                 textDecorationLine: "underline",
@@ -355,7 +356,7 @@ const PatientUserLoginForm: React.FC = () => {
               }}
               onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
-              Olvide mi contraseña
+              Olvidé mi contraseña
             </a>
 
             {isSubmittingPatient && isLoginPatientLoading ? (
@@ -418,7 +419,7 @@ const PatientUserLoginForm: React.FC = () => {
                   }
                 }}
               >
-                Activar cuenta
+                Crear cuenta
               </Button>
             )}
           </Form.Item>

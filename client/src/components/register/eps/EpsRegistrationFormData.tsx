@@ -290,7 +290,7 @@ const EpsRegistrationFormData: React.FC<{
 
       <Form.Item
         name="new-eps-gender"
-        label="Sexo del colaborador"
+        label="Género del colaborador"
         style={{ marginBottom: "13px" }}
         rules={[
           {
@@ -304,7 +304,7 @@ const EpsRegistrationFormData: React.FC<{
         ) : (
           <Select
             value={epsGenderValueDataForm}
-            placeholder="Selecciona sexo"
+            placeholder="Seleccionar género"
             onChange={handleOnChangeSelectGenderDataForm}
           >
             {epsGenderListDataForm?.map((option: any) => (
@@ -318,7 +318,8 @@ const EpsRegistrationFormData: React.FC<{
 
       <Form.Item
         name="areas-company-eps-create-eps"
-        label="Área en la que se desempeña en la empresa:"
+        label="Área en la que se desempeña:"
+        tooltip="Aquí debes seleccionar el área de la empresa en la que desempeña el colaborador."
         style={{ marginBottom: "13px" }}
         rules={[
           {
@@ -428,6 +429,7 @@ const EpsRegistrationFormData: React.FC<{
       <Form.Item
         name="radio-select-auth-method"
         label="Método de autenticación del colaborador"
+        tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
         style={{ marginBottom: "7px" }}
         rules={[
           {

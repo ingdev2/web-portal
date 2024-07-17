@@ -13,7 +13,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "HISTORIA CLÍNICA",
+            label: RequirementTypeEnum.CLINIC_HISTORY,
           }}
         />
       );
@@ -23,7 +23,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "RESULTADOS MÉDICOS",
+            label: RequirementTypeEnum.MEDICAL_RESULTS,
           }}
         />
       );
@@ -33,7 +33,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "ORDEN MÉDICA",
+            label: RequirementTypeEnum.MEDICAL_ORDER,
           }}
         />
       );
@@ -43,7 +43,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#017DC0B2",
-            label: "INCAPACIDAD MÉDICA",
+            label: RequirementTypeEnum.MEDICAL_DISABILITY,
           }}
         />
       );
