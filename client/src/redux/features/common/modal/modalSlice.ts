@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isPageLoading: false,
   componentChange: false,
+  adminModalIsOpen: false,
   patientModalIsOpen: false,
   epsModalIsOpen: false,
   familiarModalIsOpen: false,
@@ -18,6 +19,9 @@ export const modalSlice = createSlice({
     },
     setComponentChange: (state, action) => {
       state.componentChange = action.payload;
+    },
+    setAdminModalIsOpen: (state, action) => {
+      state.adminModalIsOpen = action.payload;
     },
     setPatientModalIsOpen: (state, action) => {
       state.patientModalIsOpen = action.payload;
@@ -37,6 +41,7 @@ export const modalSlice = createSlice({
 export const {
   setIsPageLoading,
   setComponentChange,
+  setAdminModalIsOpen,
   setPatientModalIsOpen,
   setEpsModalIsOpen,
   setFamiliarModalIsOpen,

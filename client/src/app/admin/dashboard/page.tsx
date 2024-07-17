@@ -2,50 +2,73 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useAppSelector } from "@/redux/hooks";
+import { redirect } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
-import { useGetAllRelativesQuery } from "@/redux/apis/relatives/relativesApi";
+import { setIdNumberAdmin } from "@/redux/features/admin/adminSlice";
+import {
+  setIsPageLoading,
+  setAdminModalIsOpen,
+} from "@/redux/features/common/modal/modalSlice";
+
+import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
 
-  const allowedRoles = [AdminRolType.ADMIN];
+  const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   useRoleValidation(allowedRoles);
 
-  const idNumberAdminState = useAppSelector(
+  const adminModalState = useAppSelector(
+    (state) => state.modal.adminModalIsOpen
+  );
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
+  );
+
+  const idNumberAdminLoginState = useAppSelector(
     (state) => state.adminLogin.id_number
   );
+
+  const idNumberAdminState = useAppSelector((state) => state.admin.id_number);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    data: isRelativesData,
-    isLoading: isRelativesLoading,
-    isFetching: isRelativesFetching,
-    isSuccess: isRelativesSuccess,
-    isError: isRelativesError,
-  } = useGetAllRelativesQuery(null);
+    data: adminData,
+    isLoading: adminDataLoading,
+    isFetching: adminDataFetching,
+    error: adminDataError,
+  } = useGetAdminByIdNumberQuery(idNumberAdminLoginState);
 
   useEffect(() => {
     if (!idNumberAdminState) {
+      dispatch(setIdNumberAdmin(adminData?.id_number));
+    }
+    if (!idNumberAdminLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
+      redirect("/login");
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
+      redirect("/login");
     }
-    if (!isRelativesData && isRelativesError) {
-      setShowErrorMessage(true);
-      setErrorMessage("Familiares no encontrados!");
+    if (adminModalState) {
+      dispatch(setAdminModalIsOpen(false));
     }
-  }, [idNumberAdminState, isRelativesData, isRelativesError]);
+    if (isPageLoadingState) {
+      dispatch(setIsPageLoading(false));
+    }
+  }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
 
   return (
     <div>
@@ -58,31 +81,10 @@ const DashboardAdminPage = () => {
 
       <h1>Dashboard Admin</h1>
 
-      {!idNumberAdminState ||
-      !isRelativesData ||
-      status === "unauthenticated" ? (
+      {!idNumberAdminLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div>
-          <pre>
-            <code>{JSON.stringify(session, null, 2)}</code>
-          </pre>
-          <h2>Lista de Familiares del paciente</h2>
-
-          {isRelativesFetching && isRelativesLoading && <CustomSpin />}
-
-          {isRelativesData && isRelativesSuccess && (
-            <ol>
-              {isRelativesData.map((relative) => (
-                <li key={relative.id}>
-                  {relative.name}
-                  {relative.email}
-                  {relative.cellphone}
-                </li>
-              ))}
-            </ol>
-          )}
-        </div>
+        <div className="dashboard-admin-content">"Dashboard aquí"</div>
       )}
     </div>
   );
