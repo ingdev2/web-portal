@@ -425,11 +425,14 @@ const FamiliarCreateRequestForm: React.FC = () => {
       md={24}
       lg={24}
       style={{
-        width: "100%",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "450px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "31px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       <div
@@ -497,11 +500,11 @@ const FamiliarCreateRequestForm: React.FC = () => {
             <CustomResultOneButton
               key={"medical-req-created-custom-result-familiar"}
               statusTypeResult={"success"}
-              titleCustomResult="¡Solicitud Creada Correctamente!"
+              titleCustomResult="¡Solicitud creada correctamente!"
               subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
               handleClickCustomResult={handleGoToListOfMedicalReq}
               isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-              textButtonCustomResult="Ver mis solicitudes hechas"
+              textButtonCustomResult="Ver mis solicitudes"
             />
           }
         ></CustomModalNoContent>
@@ -510,14 +513,13 @@ const FamiliarCreateRequestForm: React.FC = () => {
       <Card
         key={"card-create-medical-req-form-familiar"}
         style={{
-          width: "100%",
-          maxWidth: "450px",
-          display: "flex",
-          flexFlow: "column wrap",
           alignItems: "center",
+          alignContent: "center",
           justifyContent: "center",
           backgroundColor: "#fcfcfc",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          padding: "0px",
+          marginInline: "13px",
         }}
       >
         {showErrorMessageMedicalReq && (
@@ -604,6 +606,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
             copyParentCitizenshipCardRemoverDataform={
               removeFileCopyParentsCitizenshipCardMedicalReq
             }
+            tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así ser mas precisos al darte respuesta."
             copyReferenceDocumentsRequestSetterDataform={
               setFileUserMessageMedicalReq
             }
@@ -617,6 +620,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
               isSubmittingConfirmModal && !modalIsOpenConfirm
             }
             handleButtonSubmitFormDataForm={handleButtonClick}
+            tooltipObservationsDataform="Especifique detalles específicos a tener en cuenta en su solicitud para así darte una respuesta asertiva, por ejemplo, fecha aprox. de procedimiento, tipo de procedimiento, entre otros."
           />
         )}
       </Card>

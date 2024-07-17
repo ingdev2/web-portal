@@ -71,7 +71,7 @@ const FamiliarListOfRequests: React.FC = () => {
       lg={24}
       style={{
         width: "100vw",
-        maxWidth: "450px",
+        maxWidth: "690px",
         minWidth: "231px",
         alignItems: "center",
         alignContent: "center",
@@ -180,11 +180,14 @@ const FamiliarListOfRequests: React.FC = () => {
         <Card
           key={"card-list-of-request-content-familiar"}
           style={{
-            width: "100%",
-            maxWidth: "540px",
+            alignItems: "center",
             alignContent: "center",
+            justifyContent: "center",
             backgroundColor: "#fcfcfc",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+            padding: "0px",
+            marginInline: "13px",
+            marginBlock: "7px",
           }}
         >
           <CustomEmptyButton

@@ -157,7 +157,7 @@ const HomepageOptionsFamiliar: React.FC = () => {
               titleCustomOptionButton="PQRS"
               textColorCustomOptionButton="#070707"
               iconColorCustomOptionButton="#3F97AF"
-              backgroundColorCustomOptionButton="#DFEBF2"
+              backgroundColorCustomOptionButton="#EFF7F8"
               borderColorCustomOptionButton="#3F97AF"
               handleClickCustomOptionButton={() => {}}
               iconPopoverCustomOptionButton={

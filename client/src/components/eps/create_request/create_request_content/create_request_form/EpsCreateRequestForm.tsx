@@ -400,7 +400,7 @@ const EpsCreateRequestForm: React.FC = () => {
             handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
             familiarReqTypeListDataForm={typesMedicalReqState}
             userMessageMedicalReqDataForm={userMessageMedicalReqState}
-            tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así agilizar el proceso de entrega."
+            tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así ser mas precisos al darte respuesta."
             fileStatusSetterDataform={setFileUserMessageMedicalReq}
             fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
             handleOnChangeUserMessageMedicalReqDataForm={(e) =>

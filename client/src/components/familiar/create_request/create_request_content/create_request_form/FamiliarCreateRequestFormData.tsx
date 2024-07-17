@@ -57,8 +57,10 @@ const FamiliarCreateRequestFormData: React.FC<{
   copyCohabitationCertificateRemoverDataform: React.SetStateAction<any>;
   copyParentCitizenshipCardSetterDataform: React.SetStateAction<any>;
   copyParentCitizenshipCardRemoverDataform: React.SetStateAction<any>;
+  tooltipUploadReferenceDocumentsDataform: string;
   copyReferenceDocumentsRequestSetterDataform: React.SetStateAction<any>;
   copyReferenceDocumentsRequestRemoverDataform: React.SetStateAction<any>;
+  tooltipObservationsDataform: string;
 }> = ({
   relWithPatientAbbrevFamiliarDataForm,
   patientNameDataForm,
@@ -92,8 +94,10 @@ const FamiliarCreateRequestFormData: React.FC<{
   copyCohabitationCertificateRemoverDataform,
   copyParentCitizenshipCardSetterDataform,
   copyParentCitizenshipCardRemoverDataform,
+  tooltipUploadReferenceDocumentsDataform,
   copyReferenceDocumentsRequestSetterDataform,
   copyReferenceDocumentsRequestRemoverDataform,
+  tooltipObservationsDataform,
 }) => {
   const patientCategoryNameState = useAppSelector(
     (state) => state.medicalReq.patient_class_status_abbrev
@@ -717,6 +721,7 @@ const FamiliarCreateRequestFormData: React.FC<{
           id="upload-files-reference-documents-familiar"
           name="upload-files-reference-documents-familiar"
           className="upload-files-reference-documents-familiar"
+          tooltip={tooltipUploadReferenceDocumentsDataform}
           label="Documento(s) de referencia (opcional)"
           style={{ marginBottom: "13px" }}
           rules={[
@@ -745,6 +750,7 @@ const FamiliarCreateRequestFormData: React.FC<{
           name="especifications-familiar"
           className="especifications-familiar"
           label="Observaciones y/o detalles"
+          tooltip={tooltipObservationsDataform}
           style={{ marginBottom: "31px" }}
           rules={[
             {

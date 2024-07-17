@@ -72,11 +72,11 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
         className="title-update-personal-data-familiar"
         style={{
           ...titleStyleCss,
-          marginBottom: 7,
+          marginBottom: 13,
           textAlign: "center",
         }}
       >
-        Actualización de datos
+        Actualización de datos personales
       </h2>
 
       <div style={{ textAlign: "start" }}>
@@ -393,7 +393,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
           style={{
             textAlign: "center",
             marginBlock: "0px",
-            paddingBlock: "13px",
+            paddingBlock: "22px",
           }}
         >
           {isSubmittingUpdatePersonalDataFormData ? (
