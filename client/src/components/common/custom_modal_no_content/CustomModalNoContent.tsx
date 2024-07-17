@@ -6,6 +6,7 @@ import { Modal } from "antd";
 
 const CustomModalNoContent: React.FC<{
   widthCustomModalNoContent: string;
+  paddingBlockCustomModalNoContent?: number | string;
   openCustomModalState: boolean;
   maskClosableCustomModal: boolean;
   closableCustomModal: boolean;
@@ -13,6 +14,7 @@ const CustomModalNoContent: React.FC<{
   handleCancelCustomModal?: () => void;
 }> = ({
   widthCustomModalNoContent,
+  paddingBlockCustomModalNoContent,
   openCustomModalState,
   maskClosableCustomModal,
   closableCustomModal,
@@ -28,7 +30,7 @@ const CustomModalNoContent: React.FC<{
         alignItems: "center",
         alignContent: "center",
         justifyContent: "center",
-        paddingBlock: "31px",
+        paddingBlock: paddingBlockCustomModalNoContent || "31px",
         margin: "0px",
       }}
       open={openCustomModalState}

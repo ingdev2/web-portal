@@ -7,13 +7,13 @@ import { RequirementStatusEnum } from "../../../../../api/src/medical_req/enums/
 
 export const getTagComponentStatus = (statusName: string | undefined) => {
   switch (statusName) {
-    case RequirementStatusEnum.ESTABLISHED:
+    case RequirementStatusEnum.CREATED:
       return (
         <CustomTags
           tag={{
             textColor: "#070707",
             color: "#DDDDDDB2",
-            label: "INSTAURADA",
+            label: RequirementStatusEnum.CREATED,
           }}
         />
       );
@@ -23,7 +23,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#070707",
             color: "#9960B0B2",
-            label: "VISUALIZADA",
+            label: RequirementStatusEnum.VISUALIZED,
           }}
         />
       );
@@ -33,7 +33,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#070707",
             color: "#F4D03FB2",
-            label: "EN REVISIÓN",
+            label: RequirementStatusEnum.UNDER_REVIEW,
           }}
         />
       );
@@ -43,7 +43,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#137A2BB2",
-            label: "DOCS. ENTREGADOS",
+            label: RequirementStatusEnum.DELIVERED,
           }}
         />
       );
@@ -53,7 +53,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#8C1111B2",
-            label: "RECHAZADA",
+            label: RequirementStatusEnum.REJECTED,
           }}
         />
       );
@@ -63,7 +63,7 @@ export const getTagComponentStatus = (statusName: string | undefined) => {
           tag={{
             textColor: "#F7F7F7",
             color: "#BA3400B2",
-            label: "DOCS. EXPIRADOS",
+            label: RequirementStatusEnum.EXPIRED,
           }}
         />
       );

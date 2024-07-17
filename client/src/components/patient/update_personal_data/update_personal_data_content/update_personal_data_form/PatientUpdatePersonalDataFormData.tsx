@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { Button, Col, Form, Input, Radio, Row, Space, Typography } from "antd";
 import { Store } from "antd/es/form/interface";
@@ -39,6 +39,8 @@ const PatientUpdatePersonalDataFormData: React.FC<{
   patientAuthMethodsListFormData: string[];
   residendeAddressUserPatientFormData: string;
   onChangeResidendeAddressUserPatientFormData: (e: any) => void;
+  iconChangePasswordPatientDataForm: ReactNode;
+  onClickChangePasswordDataForm: () => void;
   isSubmittingUpdatePersonalDataFormData: boolean;
   hasChangesFormData: boolean;
   handleButtonClickFormData: () => void;
@@ -61,12 +63,20 @@ const PatientUpdatePersonalDataFormData: React.FC<{
   patientAuthMethodsListFormData,
   residendeAddressUserPatientFormData,
   onChangeResidendeAddressUserPatientFormData,
+  iconChangePasswordPatientDataForm,
+  onClickChangePasswordDataForm,
   isSubmittingUpdatePersonalDataFormData,
   hasChangesFormData,
   handleButtonClickFormData,
 }) => {
   return (
-    <Col xs={24} sm={24} md={24} lg={24} style={{ padding: "0px" }}>
+    <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
+      style={{ padding: "0px", margin: "0px" }}
+    >
       <h2
         className="title-update-personal-data-patient"
         style={{
@@ -75,7 +85,7 @@ const PatientUpdatePersonalDataFormData: React.FC<{
           textAlign: "center",
         }}
       >
-        Actualización de datos
+        Actualización de datos personales
       </h2>
 
       <p
@@ -163,7 +173,7 @@ const PatientUpdatePersonalDataFormData: React.FC<{
         >
           <div style={{ textAlign: "start" }}>
             <Typography.Title style={{ marginTop: 7 }} level={5}>
-              Sexo:
+              Género:
             </Typography.Title>
 
             <Input
@@ -201,9 +211,9 @@ const PatientUpdatePersonalDataFormData: React.FC<{
       </Row>
 
       <Form
-        id="update-personal-data-form"
-        name="update-personal-data-form"
-        className="update-personal-data-form"
+        id="update-personal-data-form-patient"
+        name="update-personal-data-form-patient"
+        className="update-personal-data-form-patient"
         onFinish={handleConfirmUpdatePersonalDataFormData}
         initialValues={initialValuesUpdatePersonalDataFormData}
         autoComplete="false"
@@ -436,6 +446,39 @@ const PatientUpdatePersonalDataFormData: React.FC<{
           </Form.Item>
         </div>
 
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "column wrap",
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            paddingBlock: "13px",
+          }}
+        >
+          <Button
+            style={{
+              paddingInline: 13,
+              color: "#015E90",
+              borderColor: "#015E90",
+              fontWeight: "bold",
+              borderRadius: 7,
+              borderWidth: 2,
+              display: "flex",
+              flexFlow: "row wrap",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+            type="text"
+            size="middle"
+            className="change-password-patient"
+            icon={iconChangePasswordPatientDataForm}
+            onClick={onClickChangePasswordDataForm}
+          >
+            Cambiar contraseña
+          </Button>
+        </div>
+
         <Form.Item
           style={{
             textAlign: "center",
@@ -446,22 +489,30 @@ const PatientUpdatePersonalDataFormData: React.FC<{
           {isSubmittingUpdatePersonalDataFormData ? (
             <CustomSpin />
           ) : (
-            <Button
-              size="large"
+            <div
               style={{
-                backgroundColor: !hasChangesFormData ? "#D8D8D8" : "#015E90",
-                color: !hasChangesFormData ? "#A0A0A0" : "#f2f2f2",
-                fontWeight: "bold",
-                paddingInline: 54,
-                borderRadius: 31,
+                display: "flex",
+                flexFlow: "row",
+                justifyContent: "center",
               }}
-              htmlType="submit"
-              className="update-personal-data-patient-form-button"
-              onClick={handleButtonClickFormData}
-              disabled={!hasChangesFormData}
             >
-              Actualizar datos personales
-            </Button>
+              <Button
+                size="large"
+                style={{
+                  backgroundColor: !hasChangesFormData ? "#D8D8D8" : "#015E90",
+                  color: !hasChangesFormData ? "#A0A0A0" : "#f2f2f2",
+                  fontWeight: "bold",
+                  paddingInline: 54,
+                  borderRadius: 31,
+                }}
+                htmlType="submit"
+                className="update-personal-data-patient-form-button"
+                onClick={handleButtonClickFormData}
+                disabled={!hasChangesFormData}
+              >
+                Actualizar datos personales
+              </Button>
+            </div>
           )}
         </Form.Item>
       </Form>

@@ -123,8 +123,8 @@ const RegistrationSuccessPage: React.FC = () => {
               <CustomResultOneButton
                 key={"registration-success-custom-result"}
                 statusTypeResult={"success"}
-                titleCustomResult="¡Registro Existoso!"
-                subtitleCustomResult="Su cuenta ha sido activada correctamente, lo invitamos a ingresar a la plataforma."
+                titleCustomResult="¡Registro exitoso!"
+                subtitleCustomResult="Su cuenta ha sido creada correctamente, lo invitamos a ingresar a la plataforma."
                 handleClickCustomResult={handleGoToLogin}
                 isSubmittingButton={isSubmittingGoToLogin}
                 textButtonCustomResult="Ingresar al portal"

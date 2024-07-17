@@ -86,7 +86,7 @@ const CustomModalTwoOptions: React.FC<{
 
             <Space
               direction="horizontal"
-              size="middle"
+              size="large"
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -109,7 +109,7 @@ const CustomModalTwoOptions: React.FC<{
                   className="confirm-button-custom-modal"
                   size="large"
                   style={{
-                    paddingInline: 31,
+                    paddingInline: 54,
                     borderRadius: 31,
                     backgroundColor: "#015E90",
                     color: "#f2f2f2",
@@ -118,7 +118,7 @@ const CustomModalTwoOptions: React.FC<{
                   onClick={handleConfirmCustomModal}
                   onMouseDown={handleClickCustomModal}
                 >
-                  Confirmar
+                  SÍ
                 </Button>
               )}
 
@@ -127,7 +127,7 @@ const CustomModalTwoOptions: React.FC<{
                 className="cancel-button-custom-modal"
                 size="large"
                 style={{
-                  paddingInline: 31,
+                  paddingInline: 54,
                   borderRadius: 31,
                   backgroundColor: "#8C1111",
                   color: "#f2f2f2",
@@ -135,7 +135,7 @@ const CustomModalTwoOptions: React.FC<{
                 onClick={handleCancelCustomModal}
                 onMouseDown={handleClickCustomModal}
               >
-                Cancelar
+                NO
               </Button>
             </Space>
           </Space>

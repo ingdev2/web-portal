@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
-import { UserRolType } from "../../../../api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
-import CustomModalNoContent from "../common/custom_modal_no_content/CustomModalNoContent";
-import CustomSpin from "../common/custom_spin/CustomSpin";
-import CustomMessage from "../common/custom_messages/CustomMessage";
+import CustomModalNoContent from "../../common/custom_modal_no_content/CustomModalNoContent";
+import CustomSpin from "../../common/custom_spin/CustomSpin";
+import CustomMessage from "../../common/custom_messages/CustomMessage";
 
 import {
   setIdTypeOptionsLoginPatient,
@@ -28,6 +28,7 @@ import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSli
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
+import PatientForgotPasswordForm from "./patient_forgot_password_form/PatientForgotPasswordForm";
 
 const PatientUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -109,7 +110,8 @@ const PatientUserLoginForm: React.FC = () => {
     if (
       (status === "authenticated" &&
         session?.user.role === UserRolType.PATIENT) ||
-      session?.user.role === UserRolType.EPS
+      session?.user.role === UserRolType.EPS ||
+      session?.user.role === UserRolType.AUTHORIZED_FAMILIAR
     ) {
       signOut();
     }
@@ -174,19 +176,14 @@ const PatientUserLoginForm: React.FC = () => {
   };
 
   return (
-    <Card
-      key={"card-patient-user-login-form"}
+    <Col
+      xs={24}
+      lg={24}
       style={{
-        width: "max-content",
-        height: "max-content",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fcfcfc",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: "31px",
-        marginInline: "31px",
+        width: "100vw",
+        padding: "0 2px",
+        maxWidth: "450px",
+        minWidth: "231px",
       }}
     >
       {modalIsOpenPatient && <PatientModalVerificationCode />}
@@ -198,14 +195,15 @@ const PatientUserLoginForm: React.FC = () => {
         />
       )}
 
-      <Col
-        xs={24}
-        lg={24}
+      <Card
+        key={"card-patient-user-login-form"}
         style={{
-          padding: "0 2px",
-          width: "100vw",
-          maxWidth: "321px",
-          minWidth: "270px",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fcfcfc",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          marginBottom: "31px",
+          marginInline: "22px",
         }}
       >
         <Form
@@ -305,12 +303,12 @@ const PatientUserLoginForm: React.FC = () => {
                 message: "¡Por favor ingresa tu contraseña!",
               },
               {
-                min: 7,
-                message: "¡La contraseña debe tener mínimo 7 caracteres!",
+                min: 8,
+                message: "¡La contraseña debe tener mínimo 8 caracteres!",
               },
               {
-                max: 14,
-                message: "¡La contraseña debe tener máximo 14 caracteres!",
+                max: 31,
+                message: "¡La contraseña debe tener máximo 31 caracteres!",
               },
             ]}
             hasFeedback
@@ -327,7 +325,8 @@ const PatientUserLoginForm: React.FC = () => {
           {modalForgotMyPasswordIsOpen && (
             <CustomModalNoContent
               key={"custom-modal-forgot-my-password-patient"}
-              widthCustomModalNoContent={"54%"}
+              widthCustomModalNoContent={"31%"}
+              paddingBlockCustomModalNoContent={"88px"}
               openCustomModalState={modalForgotMyPasswordIsOpen}
               closableCustomModal={true}
               maskClosableCustomModal={true}
@@ -335,16 +334,9 @@ const PatientUserLoginForm: React.FC = () => {
                 setModalForgotMyPasswordIsOpen(false)
               }
               contentCustomModal={
-                "Ingresar 1.Tipo de documento 2.Número de identificación 3.Fecha de cumpleaños"
-                // <CustomResultOneButton
-                //   key={"medical-req-created-custom-result"}
-                //   statusTypeResult={"success"}
-                //   titleCustomResult="¡Solicitud Creada Correctamente!"
-                //   subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                //   handleClickCustomResult={handleGoToListOfMedicalReq}
-                //   isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                //   textButtonCustomResult="Ver mis solicitudes hechas"
-                // />
+                <PatientForgotPasswordForm
+                  setOpenModalForgotPassword={setModalForgotMyPasswordIsOpen}
+                />
               }
             />
           )}
@@ -354,15 +346,17 @@ const PatientUserLoginForm: React.FC = () => {
               className="patient-login-form-forgot-user"
               // href=""
               style={{
+                ...titleStyleCss,
                 display: "flow",
                 color: "#960202",
                 textDecorationLine: "underline",
                 fontWeight: 500,
-                marginBottom: 13,
+                marginTop: 7,
+                marginBottom: 22,
               }}
               onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
-              Olvide mi contraseña
+              Olvidé mi contraseña
             </a>
 
             {isSubmittingPatient && isLoginPatientLoading ? (
@@ -389,7 +383,7 @@ const PatientUserLoginForm: React.FC = () => {
               style={{
                 fontSize: 13,
                 fontWeight: "normal",
-                marginBlock: 7,
+                marginBlock: 13,
                 borderWidth: 1.3,
               }}
             >
@@ -425,7 +419,7 @@ const PatientUserLoginForm: React.FC = () => {
                   }
                 }}
               >
-                Activar cuenta
+                Crear cuenta
               </Button>
             )}
           </Form.Item>
@@ -445,8 +439,8 @@ const PatientUserLoginForm: React.FC = () => {
           ))}
         /> */}
         </Form>
-      </Col>
-    </Card>
+      </Card>
+    </Col>
   );
 };
 

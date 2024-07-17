@@ -328,47 +328,42 @@ const ValidatePatientExistForm: React.FC = () => {
   };
 
   return (
-    <Card
+    <Col
+      xs={24}
+      lg={24}
       style={{
-        width: "max-content",
-        height: "max-content",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#fcfcfc",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: 31,
-        marginInline: 31,
+        width: "100vw",
+        padding: "0 2px",
+        maxWidth: "450px",
+        minWidth: "231px",
       }}
     >
-      <CustomLoadingOverlay isLoading={isPageLoadingState} />
-
-      {showErrorMessagePatient && (
-        <CustomMessage
-          typeMessage="error"
-          message={errorsPatientState?.toString() || "¡Error en la petición!"}
-        />
-      )}
-
-      {showSuccessMessage && (
-        <CustomMessage
-          typeMessage="success"
-          message={"¡Paciente encontrado! Espere..."}
-        />
-      )}
-
-      <Col
-        xs={24}
-        md={24}
-        lg={24}
+      <Card
         style={{
-          padding: "0 7px",
-          width: "100vw",
-          maxWidth: "321px",
-          minWidth: "270px",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#fcfcfc",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          marginBottom: "31px",
+          marginInline: "22px",
         }}
       >
+        <CustomLoadingOverlay isLoading={isPageLoadingState} />
+
+        {showErrorMessagePatient && (
+          <CustomMessage
+            typeMessage="error"
+            message={errorsPatientState?.toString() || "¡Error en la petición!"}
+          />
+        )}
+
+        {showSuccessMessage && (
+          <CustomMessage
+            typeMessage="success"
+            message={"¡Paciente encontrado! Espere..."}
+          />
+        )}
+
         <Form
           id="patient-user-validate-form-patient"
           name="patient-user-validate-form-patient"
@@ -386,7 +381,7 @@ const ValidatePatientExistForm: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Activación de usuario Paciente
+            Validación de existencia usuario Paciente
           </h2>
 
           <Form.Item
@@ -468,7 +463,7 @@ const ValidatePatientExistForm: React.FC = () => {
                   borderRadius: 31,
                   backgroundColor: "#015E90",
                   color: "#f2f2f2",
-                  marginBlock: 7,
+                  marginTop: 13,
                 }}
                 htmlType="submit"
                 className="patient-validate-form-button"
@@ -484,8 +479,8 @@ const ValidatePatientExistForm: React.FC = () => {
           style={{
             fontSize: 13,
             fontWeight: "normal",
-            marginBlock: 4,
             borderWidth: 1.3,
+            marginBlock: 7,
           }}
         >
           ¿Ya tienes cuenta?
@@ -509,7 +504,7 @@ const ValidatePatientExistForm: React.FC = () => {
                 fontWeight: "bold",
                 borderRadius: 7,
                 borderWidth: 1.3,
-                marginTop: 7,
+                marginBlock: 13,
               }}
               htmlType="button"
               className="patient-validate-button"
@@ -520,8 +515,8 @@ const ValidatePatientExistForm: React.FC = () => {
             </Button>
           </div>
         )}
-      </Col>
-    </Card>
+      </Card>
+    </Col>
   );
 };
 

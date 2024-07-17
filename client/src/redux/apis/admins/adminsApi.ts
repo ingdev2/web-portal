@@ -12,6 +12,7 @@ const addTokenToRequest = async (headers: any, { getState }: any) => {
 
 export const adminsApi = createApi({
   reducerPath: "adminsApi",
+
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/admins`,
     prepareHeaders(headers, { getState }) {
@@ -23,12 +24,15 @@ export const adminsApi = createApi({
     getAllAdmins: builder.query<Admin[], null>({
       query: () => "getAllAdmins",
     }),
+
     getAdminById: builder.query<Admin, string>({
       query: (id) => `getAdmin/${id}`,
     }),
+
     getAdminByIdNumber: builder.query<Admin, number>({
       query: (idNumber) => `getAdminById/${idNumber}`,
     }),
+
     updateAdmin: builder.mutation<
       any,
       { id: string; updateAdmin: Partial<Admin> }
@@ -40,6 +44,27 @@ export const adminsApi = createApi({
         body: updateAdmin,
       }),
     }),
+
+    updatePassword: builder.mutation<
+      any,
+      { id: string; passwords: UpdatePassword }
+    >({
+      query: ({ id, passwords }) => ({
+        url: `updatePassword/${id}`,
+        method: "PATCH",
+        params: { id },
+        body: passwords,
+      }),
+    }),
+
+    forgotPassword: builder.mutation<any, ForgotAdminsPassword>({
+      query: (ForgotAdminsPassword) => ({
+        url: "forgotPassword",
+        method: "PATCH",
+        body: ForgotAdminsPassword,
+      }),
+    }),
+
     banAdmin: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({
         url: `banAdmin/${id}`,
@@ -55,5 +80,7 @@ export const {
   useGetAdminByIdQuery,
   useGetAdminByIdNumberQuery,
   useUpdateAdminMutation,
+  useUpdatePasswordMutation,
+  useForgotPasswordMutation,
   useBanAdminMutation,
 } = adminsApi;

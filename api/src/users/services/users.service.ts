@@ -40,6 +40,7 @@ import {
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
 import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { maskEmailUser } from '../helpers/mask_email';
 
 const schedule = require('node-schedule');
 
@@ -736,6 +737,7 @@ export class UsersService {
     return await this.userRepository.findOneBy({
       user_id_type: idType,
       id_number: idNumber,
+      is_active: true,
     });
   }
 
@@ -1069,7 +1071,7 @@ export class UsersService {
       emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = PASSWORD_RESET;
       emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
-      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER}?token=${resetPasswordToken}`;
 
       await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -1080,12 +1082,16 @@ export class UsersService {
         );
       });
 
+      const maskedEmail = maskEmailUser(userFound.email);
+
       return new HttpException(
-        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        `Se ha enviado al correo: ${maskedEmail} el link de restablecimiento de contraseña`,
         HttpStatus.ACCEPTED,
       );
     } else {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+      throw new UnauthorizedException(
+        `¡Datos incorrectos o no esta registrado!`,
+      );
     }
   }
 
@@ -1119,7 +1125,7 @@ export class UsersService {
       emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = PASSWORD_RESET;
       emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
-      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetPasswordToken}`;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER}?token=${resetPasswordToken}`;
 
       await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -1130,22 +1136,27 @@ export class UsersService {
         );
       });
 
+      const maskedEmail = maskEmailUser(userFound.email);
+
       return new HttpException(
-        `Se ha enviado al correo: ${userFound.email} el link de restablecimiento de contraseña`,
+        `Se ha enviado al correo: ${maskedEmail} el link de restablecimiento de contraseña`,
         HttpStatus.ACCEPTED,
       );
     } else {
-      throw new UnauthorizedException(`¡Datos ingresados incorrectos!`);
+      throw new UnauthorizedException(
+        `¡Datos incorrectos o usuario no registrado!`,
+      );
     }
   }
 
   async resetUserPassword(
     token: string,
-    { new_password }: ResetPasswordUserDto,
+    { newPassword: new_password }: ResetPasswordUserDto,
   ) {
     const tokenFound = await this.userRepository.findOne({
       where: {
         reset_password_token: token,
+        is_active: true,
       },
     });
 

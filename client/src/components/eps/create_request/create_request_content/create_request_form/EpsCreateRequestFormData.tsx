@@ -23,8 +23,10 @@ const EpsCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
+  tooltipUploadReferenceDocumentsDataform: string;
   fileStatusSetterDataform: React.SetStateAction<any>;
   fileStatusRemoverDataform: React.SetStateAction<any>;
+  tooltipObservationsDataform: string;
 }> = ({
   patientNameDataForm,
   patientIdTypeDataForm,
@@ -40,8 +42,10 @@ const EpsCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
+  tooltipUploadReferenceDocumentsDataform,
   fileStatusSetterDataform,
   fileStatusRemoverDataform,
+  tooltipObservationsDataform,
 }) => {
   return (
     <Form
@@ -162,6 +166,7 @@ const EpsCreateRequestFormData: React.FC<{
       <Form.Item
         name="upload-files-reference-documents-eps"
         label="Documento(s) de referencia (opcional)"
+        tooltip={tooltipUploadReferenceDocumentsDataform}
         style={{ marginBottom: "13px" }}
         rules={[
           {
@@ -180,6 +185,7 @@ const EpsCreateRequestFormData: React.FC<{
       <Form.Item
         name="especifications-eps"
         label="Observaciones y/o detalles"
+        tooltip={tooltipObservationsDataform}
         style={{ marginBottom: "31px" }}
         rules={[
           {

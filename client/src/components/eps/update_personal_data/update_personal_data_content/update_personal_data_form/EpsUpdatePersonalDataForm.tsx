@@ -6,8 +6,12 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
 import EpsUpdatePersonalDataFormData from "./EpsUpdatePersonalDataFormData";
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
+import EpsChangePasswordForm from "../eps_change_password_form/EpsChangePasswordForm";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { TbPasswordUser } from "react-icons/tb";
 
 import {
   setAuthMethodUserEps,
@@ -17,6 +21,7 @@ import {
   setCompanyAreaUserEps,
 } from "@/redux/features/eps/epsSlice";
 import { setIdUserEps } from "@/redux/features/eps/epsSlice";
+import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useUpdateUserEpsMutation } from "@/redux/apis/users/usersApi";
@@ -31,6 +36,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
 
   const idUserEpsState = useAppSelector((state) => state.eps.id);
   const nameUserEpsState = useAppSelector((state) => state.eps.name);
+  const lastNameUserEpsState = useAppSelector((state) => state.eps.last_name);
   const idTypeNameUserEpsState = useAppSelector(
     (state) => state.eps.id_type_abbrev
   );
@@ -50,6 +56,9 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     (state) => state.eps.authentication_method
   );
   const epsErrorsState = useAppSelector((state) => state.eps.errors);
+  const isOpenModalChangePassword = useAppSelector(
+    (state) => state.modal.epsModalIsOpen
+  );
 
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -70,7 +79,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
+  const [showErrorMessageEps, setShowErrorMessageEps] = useState(false);
 
   const {
     data: userEpsData,
@@ -116,7 +125,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
       dispatch(
         setErrorsUserEps("¡No se pudo obtener los métodos de autenticación!")
       );
-      setShowErrorMessagePatient(true);
+      setShowErrorMessageEps(true);
       setEpsAuthMethodsListLocalState(authMethodData);
     }
     if (!companyAreaLoading && !companyAreaFetching && companyAreaData) {
@@ -124,7 +133,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     }
     if (companyAreaError) {
       dispatch(setErrorsUserEps("¡No se pudo obtener las áreas de empresas!"));
-      setShowErrorMessagePatient(true);
+      setShowErrorMessageEps(true);
       setEpsCompanyAreasListLocalState(companyAreaData);
     }
   }, [userEpsData, userEpsLoading, userEpsFetching, idUserEpsState]);
@@ -154,18 +163,20 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
       var updatePersonalDataValidationData = response.data?.message;
 
       if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
+        setHasChanges(false);
+
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
-          setShowErrorMessagePatient(true);
+          setShowErrorMessageEps(true);
         }
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserEps(validationDataMessage[0]));
 
-          setShowErrorMessagePatient(true);
+          setShowErrorMessageEps(true);
         }
         if (
           typeof errorMessage === "string" ||
@@ -173,7 +184,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         ) {
           dispatch(setErrorsUserEps(errorMessage));
           dispatch(setErrorsUserEps(validationDataMessage));
-          setShowErrorMessagePatient(true);
+          setShowErrorMessageEps(true);
         }
       }
 
@@ -224,7 +235,7 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
     setSuccessMessage("");
     setShowSuccessMessage(false);
     dispatch(setErrorsUserEps([]));
-    setShowErrorMessagePatient(false);
+    setShowErrorMessageEps(false);
   };
 
   return (
@@ -234,11 +245,14 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
       md={24}
       lg={24}
       style={{
-        width: "100%",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "540px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "31px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       <div
@@ -274,83 +288,105 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         </Button>
       </div>
 
-      <Card
-        key={"card-update-personal-data-eps-form"}
-        style={{
-          width: "100%",
-          maxWidth: "450px",
-          display: "flex",
-          flexFlow: "column wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#fcfcfc",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-          margin: "0px",
-          padding: "0px",
-        }}
-      >
-        {showErrorMessagePatient && (
-          <CustomMessage
-            typeMessage="error"
-            message={epsErrorsState?.toString() || "¡Error en la petición!"}
+      {userEpsLoading && userEpsFetching ? (
+        <CustomSpin />
+      ) : (
+        <Card
+          key={"card-update-personal-data-eps-form"}
+          style={{
+            alignItems: "center",
+            alignContent: "center",
+            justifyContent: "center",
+            backgroundColor: "#fcfcfc",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
+            padding: "0px",
+            marginInline: "13px",
+          }}
+        >
+          {showErrorMessageEps && (
+            <CustomMessage
+              typeMessage="error"
+              message={epsErrorsState?.toString() || "¡Error en la petición!"}
+            />
+          )}
+
+          {showSuccessMessage && (
+            <CustomMessage
+              typeMessage="success"
+              message={successMessage || "¡Proceso finalizado con éxito!"}
+            />
+          )}
+
+          {isOpenModalChangePassword && (
+            <CustomModalNoContent
+              key={"custom-modal-change-password-eps"}
+              widthCustomModalNoContent={"31%"}
+              openCustomModalState={isOpenModalChangePassword}
+              closableCustomModal={true}
+              maskClosableCustomModal={true}
+              handleCancelCustomModal={() => {
+                dispatch(setEpsModalIsOpen(false));
+              }}
+              contentCustomModal={<EpsChangePasswordForm />}
+            />
+          )}
+
+          <EpsUpdatePersonalDataFormData
+            nameUserEpsFormData={
+              `${nameUserEpsState} ${lastNameUserEpsState}` || NOT_REGISTER
+            }
+            idTypeNameUserEpsFormData={idTypeNameUserEpsState || NOT_REGISTER}
+            idNumberUserEpsFormData={idNumberUserEpsState || NOT_REGISTER}
+            genderNameUserEpsFormData={genderNameUserEpsState || NOT_REGISTER}
+            epsCompanyUserEpsFormData={
+              epsCompanyAbbrevUserEpsState || NOT_REGISTER
+            }
+            handleConfirmUpdatePersonalDataFormData={
+              handleConfirmUpdatePersonalData
+            }
+            initialValuesUpdatePersonalDataFormData={{
+              "email-eps-hosvital": emailUserEpsState || NOT_REGISTER,
+              "cellphone-eps-hosvital": cellphoneUserEpsState || NOT_REGISTER,
+              "areas-company-eps":
+                companyAreaNumberUserEpsState || NOT_REGISTER,
+              "radio-select-auth-method-update-personal-data-eps":
+                authMethodUserEpsState,
+            }}
+            emailUserEpsFormData={emailUserEpsState || NOT_REGISTER}
+            onChangeEmailUserEpsFormData={(e) => {
+              setHasChanges(true);
+
+              setEmailUserEpsLocalState(e.target.value.toLowerCase());
+            }}
+            cellphoneUserEpsFormData={cellphoneUserEpsState || NOT_REGISTER}
+            onChangeCellphoneUserEpsFormData={(e) => {
+              setHasChanges(true);
+
+              setCellphoneUserEpsLocalState(parseInt(e.target.value, 10));
+            }}
+            companyAreasLoadingDataForm={companyAreaLoading}
+            companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
+            handleOnChangeCompanyAreaDataForm={handleOnChangeCompanyArea}
+            epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
+            authMethodUserEpsFormData={authMethodUserEpsState}
+            onChangeAuthMethodUserEpsFormData={(e) => {
+              setHasChanges(true);
+
+              setAuthMethodEpsLocalState(e.target.value);
+            }}
+            epsAuthMethodsListFormData={epsAuthMethodsListLocalState}
+            iconChangePasswordEpsDataForm={<TbPasswordUser size={17} />}
+            onClickChangePasswordDataForm={() => {
+              dispatch(setEpsModalIsOpen(true));
+            }}
+            isSubmittingUpdatePersonalDataFormData={
+              isSubmittingUpdatePersonalData
+            }
+            hasChangesFormData={hasChanges}
+            handleButtonClickFormData={handleButtonClick}
           />
-        )}
-
-        {showSuccessMessage && (
-          <CustomMessage
-            typeMessage="success"
-            message={successMessage || "¡Proceso finalizado con éxito!"}
-          />
-        )}
-
-        <EpsUpdatePersonalDataFormData
-          nameUserPatientFormData={nameUserEpsState || NOT_REGISTER}
-          idTypeNameUserPatientFormData={idTypeNameUserEpsState || NOT_REGISTER}
-          idNumberUserPatientFormData={idNumberUserEpsState || NOT_REGISTER}
-          genderNameUserPatientFormData={genderNameUserEpsState || NOT_REGISTER}
-          epsCompanyUserPatientFormData={
-            epsCompanyAbbrevUserEpsState || NOT_REGISTER
-          }
-          handleConfirmUpdatePersonalDataFormData={
-            handleConfirmUpdatePersonalData
-          }
-          initialValuesUpdatePersonalDataFormData={{
-            "email-patient-hosvital": emailUserEpsState || NOT_REGISTER,
-            "cellphone-patient-hosvital": cellphoneUserEpsState || NOT_REGISTER,
-            "areas-company-eps": companyAreaNumberUserEpsState || NOT_REGISTER,
-            "radio-select-auth-method-update-personal-data-patient":
-              authMethodUserEpsState,
-          }}
-          emailUserPatientFormData={emailUserEpsState || NOT_REGISTER}
-          onChangeEmailUserPatientFormData={(e) => {
-            setHasChanges(true);
-
-            setEmailUserEpsLocalState(e.target.value.toLowerCase());
-          }}
-          cellphoneUserPatientFormData={cellphoneUserEpsState || NOT_REGISTER}
-          onChangeCellphoneUserPatientFormData={(e) => {
-            setHasChanges(true);
-
-            setCellphoneUserEpsLocalState(parseInt(e.target.value, 10));
-          }}
-          companyAreasLoadingDataForm={companyAreaLoading}
-          companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
-          handleOnChangeCompanyAreaDataForm={handleOnChangeCompanyArea}
-          epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
-          authMethodUserPatientFormData={authMethodUserEpsState}
-          onChangeAuthMethodUserPatientFormData={(e) => {
-            setHasChanges(true);
-
-            setAuthMethodEpsLocalState(e.target.value);
-          }}
-          patientAuthMethodsListFormData={epsAuthMethodsListLocalState}
-          isSubmittingUpdatePersonalDataFormData={
-            isSubmittingUpdatePersonalData
-          }
-          hasChangesFormData={hasChanges}
-          handleButtonClickFormData={handleButtonClick}
-        />
-      </Card>
+        </Card>
+      )}
     </Col>
   );
 };

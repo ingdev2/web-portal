@@ -159,7 +159,7 @@ export class MedicalReqService {
 
     const reqStatusEstablished = await this.requerimentStatusRepository.findOne(
       {
-        where: { name: RequirementStatusEnum.ESTABLISHED },
+        where: { name: RequirementStatusEnum.CREATED },
       },
     );
 
@@ -203,7 +203,7 @@ export class MedicalReqService {
       copy_right_petition,
       copy_patient_citizenship_card,
       copy_patient_civil_registration,
-      copy_applicant_citizenship_card,
+      copy_applicant_identification_document,
       copy_parents_citizenship_card,
       copy_cohabitation_certificate,
       copy_marriage_certificate,
@@ -219,16 +219,16 @@ export class MedicalReqService {
     const documentsDeceasedSon =
       copy_patient_citizenship_card &&
       copy_patient_civil_registration &&
-      copy_applicant_citizenship_card;
+      copy_applicant_identification_document;
 
     const documentsDeceasedSpouse =
       copy_patient_citizenship_card &&
-      copy_applicant_citizenship_card &&
+      copy_applicant_identification_document &&
       copy_marriage_certificate;
 
     const documentsDeceasedFamiliar =
       copy_patient_citizenship_card &&
-      copy_applicant_citizenship_card &&
+      copy_applicant_identification_document &&
       copy_cohabitation_certificate;
 
     if (right_petition && !copy_right_petition) {
@@ -379,8 +379,8 @@ export class MedicalReqService {
       medicalReqFamiliar?.patient_class_status;
     documentsFamiliarDetails.relationship_with_patient =
       medicalReqFamiliar?.relationship_with_patient;
-    documentsFamiliarDetails.copy_applicant_citizenship_card =
-      medicalReqFamiliar?.copy_applicant_citizenship_card;
+    documentsFamiliarDetails.copy_applicant_identification_document =
+      medicalReqFamiliar?.copy_applicant_identification_document;
     documentsFamiliarDetails.copy_patient_citizenship_card =
       medicalReqFamiliar?.copy_patient_citizenship_card;
     documentsFamiliarDetails.copy_patient_civil_registration =
@@ -389,6 +389,8 @@ export class MedicalReqService {
       medicalReqFamiliar?.copy_parents_citizenship_card;
     documentsFamiliarDetails.copy_marriage_certificate =
       medicalReqFamiliar?.copy_marriage_certificate;
+    documentsFamiliarDetails.copy_cohabitation_certificate =
+      medicalReqFamiliar?.copy_cohabitation_certificate;
     documentsFamiliarDetails.user_message = medicalReqFamiliar?.user_message;
     documentsFamiliarDetails.user_message_documents =
       medicalReqFamiliar?.user_message_documents;
@@ -405,18 +407,18 @@ export class MedicalReqService {
       },
     });
 
-    if (medicalReqCompleted.copy_applicant_citizenship_card) {
-      const citizenshipCard =
-        medicalReqCompleted.copy_applicant_citizenship_card;
+    if (medicalReqCompleted.copy_applicant_identification_document) {
+      const identificationDocument =
+        medicalReqCompleted.copy_applicant_identification_document;
 
       await this.familiarRepository.update(
         { id: verifiedFamiliar.id },
-        { copy_familiar_citizenship_card: null },
+        { copy_familiar_identification_document: null },
       );
 
       await this.familiarRepository.update(
         { id: verifiedFamiliar.id },
-        { copy_familiar_citizenship_card: citizenshipCard },
+        { copy_familiar_identification_document: identificationDocument },
       );
     }
 
@@ -529,7 +531,7 @@ export class MedicalReqService {
     }
 
     const reqStatusStablished = await this.requerimentStatusRepository.findOne({
-      where: { name: RequirementStatusEnum.ESTABLISHED },
+      where: { name: RequirementStatusEnum.CREATED },
     });
 
     if (!reqStatusStablished) {
@@ -739,7 +741,7 @@ export class MedicalReqService {
 
     const reqStatusEstablished = await this.requerimentStatusRepository.findOne(
       {
-        where: { name: RequirementStatusEnum.ESTABLISHED },
+        where: { name: RequirementStatusEnum.CREATED },
       },
     );
 
@@ -922,7 +924,7 @@ export class MedicalReqService {
 
     const allMedicalReqOfUserFound = await this.medicalReqRepository.find({
       where: {
-        aplicantId: familiarId,
+        familiar_id: familiarId,
         is_deleted: false,
         is_it_reviewed: false,
       },
@@ -1178,7 +1180,7 @@ export class MedicalReqService {
         RequirementStatus,
         {
           where: {
-            name: RequirementStatusEnum.ESTABLISHED,
+            name: RequirementStatusEnum.CREATED,
           },
         },
       );

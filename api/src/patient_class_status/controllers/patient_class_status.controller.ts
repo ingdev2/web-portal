@@ -16,7 +16,6 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('patient-class-status')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN)
 @Controller('patient-class-status')
 export class PatientClassStatusController {
   constructor(
@@ -25,6 +24,7 @@ export class PatientClassStatusController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createRequirementType(
     @Body() createPatientClassStatus: CreatePatientClassStatusDto,
@@ -41,13 +41,14 @@ export class PatientClassStatusController {
     return this.patientClassStatusService.getAllPatientClassStatus();
   }
 
-  @Get('/getReqType/:id')
+  @Get('/getPatientClassStatus/:id')
   getPatientClassStatusById(id: number) {
     return this.patientClassStatusService.getPatientClassStatusById(id);
   }
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Patch('/update/:id')
   updatePatientClassStatus(
     @Param('id') id: number,

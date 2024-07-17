@@ -11,6 +11,7 @@ import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import {
   setIdUserEps,
   setNameUserEps,
+  setLastNameUserEps,
   setIdTypeUserEps,
   setIdNumberUserEps,
   setEmailUserEps,
@@ -34,7 +35,10 @@ import { useGetGenderByIdQuery } from "@/redux/apis/genders/gendersApi";
 const EpsDataCard: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const NOT_REGISTER: string = "NO REGISTRA";
+
   const nameEpsState = useAppSelector((state) => state.eps.name);
+  const lastNameEpsState = useAppSelector((state) => state.eps.last_name);
   const idTypeNumberEpsState = useAppSelector(
     (state) => state.eps.user_id_type
   );
@@ -87,6 +91,7 @@ const EpsDataCard: React.FC = () => {
   useEffect(() => {
     if (idNumberEpsState && userEpsData) {
       dispatch(setNameUserEps(userEpsData?.name));
+      dispatch(setLastNameUserEps(userEpsData?.last_name));
       dispatch(setIdTypeUserEps(userEpsData?.user_id_type));
       dispatch(setGenderUserEps(userEpsData?.user_gender));
       dispatch(setEmailUserEps(userEpsData?.email));
@@ -123,13 +128,13 @@ const EpsDataCard: React.FC = () => {
           md={24}
           lg={24}
           style={{
-            width: "98vw",
-            display: "flex",
-            flexFlow: "column wrap",
+            width: "100vw",
+            maxWidth: "720px",
+            minWidth: "345px",
             alignItems: "center",
             alignContent: "center",
             justifyContent: "center",
-            padding: "0px 22px",
+            padding: "0px",
             margin: "0px",
           }}
         >
@@ -145,15 +150,13 @@ const EpsDataCard: React.FC = () => {
           <Card
             key={"card-eps-data-homepage"}
             style={{
-              width: "100%",
-              maxWidth: "702px",
-              minWidth: "405px",
               alignItems: "center",
+              alignContent: "center",
               justifyContent: "center",
-              backgroundColor: "#f7f7f7",
+              backgroundColor: "#fcfcfc",
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
-              margin: "0px",
               padding: "0px",
+              marginInline: "13px",
             }}
           >
             <Row
@@ -193,7 +196,7 @@ const EpsDataCard: React.FC = () => {
                     marginBottom: "8px",
                   }}
                 >
-                  {nameEpsState}
+                  {`${nameEpsState} ${lastNameEpsState}`}
                 </h3>
               </Col>
 
@@ -301,7 +304,7 @@ const EpsDataCard: React.FC = () => {
                     textAlign: "end",
                   }}
                 >
-                  {cellphoneEpsState}
+                  {cellphoneEpsState || NOT_REGISTER}
                 </h3>
 
                 <Divider style={{ marginBlock: "7px", borderWidth: "1.3px" }} />

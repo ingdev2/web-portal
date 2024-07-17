@@ -17,7 +17,7 @@ import {
   setTypesMedicalReq,
   setReqTypeMedicalReq,
   setUserMessageMedicalReq,
-  setFilesUserMessageMedicalReq,
+  setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
@@ -27,11 +27,13 @@ import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useCreateMedicalReqPatientMutation } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
+
+import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 
 const PatientCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { uploadFiles } = processAndUploadFiles();
 
   const nameUserPatientState = useAppSelector((state) => state.patient.name);
   const idNumberUserPatientState = useAppSelector(
@@ -95,18 +97,6 @@ const PatientCreateRequestForm: React.FC = () => {
     fixedCacheKey: "createMedicalReqPatientData",
   });
 
-  const [
-    uploadFileToS3,
-    {
-      data: uploadFileToS3Data,
-      isLoading: uploadFileToS3Loading,
-      isSuccess: uploadFileToS3Success,
-      isError: uploadFileToS3Error,
-    },
-  ] = useUploadFileMutation({
-    fixedCacheKey: "uploadFileToS3Data",
-  });
-
   useEffect(() => {
     if (!reqTypesLoading && !reqTypesFetching && reqTypesData) {
       dispatch(setTypesMedicalReq(reqTypesData));
@@ -156,58 +146,21 @@ const PatientCreateRequestForm: React.FC = () => {
     try {
       setIsSubmittingNewMedicalReq(true);
 
+      const statesToUpload = [
+        {
+          state: userMessageFilesMedicalReqState,
+          paramName: "user_message_documents",
+        },
+      ];
+
       const responses: Record<string, string[]> = {};
+
       let errors: string[] = [];
 
-      if (
-        userMessageFilesMedicalReqState &&
-        userMessageFilesMedicalReqState.length > 0
-      ) {
-        const statesToUpload = [
-          {
-            files: userMessageFilesMedicalReqState,
-            paramName: "user_message_documents",
-          },
-        ];
-
-        const processAndUploadFiles = async (
-          files: Array<Express.Multer.File>
-        ): Promise<{ success: string[]; error: string | null }> => {
-          const formData = new FormData();
-
-          files.forEach((file) => {
-            formData.append(
-              "files",
-              new Blob([file.buffer], { type: file.mimetype }),
-              file.originalname
-            );
-          });
-
-          try {
-            var s3Response: any = await uploadFileToS3(formData);
-
-            if (s3Response.error) {
-              const errorMessage = s3Response.error?.data?.message;
-
-              return {
-                success: [],
-                error: Array.isArray(errorMessage)
-                  ? errorMessage[0]
-                  : errorMessage,
-              };
-            }
-            return { success: s3Response.data || [], error: null };
-          } catch (error: any) {
-            return {
-              success: [],
-              error: error || "Error desconocido al subir archivos",
-            };
-          }
-        };
-
-        for (const { files, paramName } of statesToUpload) {
-          if (files && files.length > 0) {
-            const { success, error } = await processAndUploadFiles(files);
+      if (statesToUpload.some(({ state }) => state && state.length > 0)) {
+        for (const { state, paramName } of statesToUpload) {
+          if (state && state.length > 0) {
+            const { success, error } = await uploadFiles(state);
             if (error) {
               errors.push(error);
             } else {
@@ -215,13 +168,13 @@ const PatientCreateRequestForm: React.FC = () => {
             }
           }
         }
+      }
 
-        if (errors.length > 0) {
-          dispatch(setErrorsMedicalReq(errors[0]));
-          setShowErrorMessageMedicalReq(true);
+      if (errors.length > 0) {
+        dispatch(setErrorsMedicalReq(errors[0]));
+        setShowErrorMessageMedicalReq(true);
 
-          return;
-        }
+        return;
       }
 
       const response: any = await createMedicalReqPatient({
@@ -247,7 +200,7 @@ const PatientCreateRequestForm: React.FC = () => {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
 
-        dispatch(setFilesUserMessageMedicalReq([]));
+        dispatch(setFileUserMessageMedicalReq([]));
       }
     } catch (error) {
       console.error(error);
@@ -291,11 +244,14 @@ const PatientCreateRequestForm: React.FC = () => {
       md={24}
       lg={24}
       style={{
-        width: "100%",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "450px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "31px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       <div
@@ -304,7 +260,7 @@ const PatientCreateRequestForm: React.FC = () => {
           flexFlow: "row wrap",
           justifyContent: "flex-start",
           paddingBlock: "7px",
-          paddingInline: "7px",
+          paddingInline: "13px",
         }}
       >
         <Button
@@ -331,60 +287,59 @@ const PatientCreateRequestForm: React.FC = () => {
         </Button>
       </div>
 
+      {modalIsOpenConfirm && (
+        <CustomModalTwoOptions
+          key={"custom-confirm-modal-create-medical-req-patient"}
+          openCustomModalState={modalIsOpenConfirm}
+          iconCustomModal={<FcInfo size={77} />}
+          titleCustomModal="¿Deseas crear una nueva solicitud?"
+          subtitleCustomModal={
+            <p>
+              Se realizará un nuevo requerimiento de tipo&nbsp;
+              <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
+              <b>{nameUserPatientState}</b>
+            </p>
+          }
+          handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
+          handleConfirmCustomModal={handleConfirmDataModal}
+          isSubmittingConfirm={isSubmittingNewMedicalReq}
+          handleClickCustomModal={handleButtonClick}
+        ></CustomModalTwoOptions>
+      )}
+
+      {modalIsOpenSuccess && (
+        <CustomModalNoContent
+          key={"custom-success-modal-create-medical-req-patient"}
+          widthCustomModalNoContent={"54%"}
+          openCustomModalState={modalIsOpenSuccess}
+          closableCustomModal={false}
+          maskClosableCustomModal={false}
+          contentCustomModal={
+            <CustomResultOneButton
+              key={"medical-req-created-custom-result"}
+              statusTypeResult={"success"}
+              titleCustomResult="¡Solicitud creada correctamente!"
+              subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
+              handleClickCustomResult={handleGoToListOfMedicalReq}
+              isSubmittingButton={isSubmittingGoToListOfMedicalReq}
+              textButtonCustomResult="Ver mis solicitudes"
+            />
+          }
+        ></CustomModalNoContent>
+      )}
+
       <Card
         key={"card-create-medical-req-form-patient"}
         style={{
-          width: "100%",
-          maxWidth: "450px",
-          display: "flex",
-          flexFlow: "column wrap",
           alignItems: "center",
+          alignContent: "center",
           justifyContent: "center",
           backgroundColor: "#fcfcfc",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          padding: "0px",
+          marginInline: "13px",
         }}
       >
-        {modalIsOpenConfirm && (
-          <CustomModalTwoOptions
-            key={"custom-confirm-modal-create-medical-req-patient"}
-            openCustomModalState={modalIsOpenConfirm}
-            iconCustomModal={<FcInfo size={77} />}
-            titleCustomModal="¿Deseas crear una nueva solicitud?"
-            subtitleCustomModal={
-              <p>
-                Se realizará un nuevo requerimiento de tipo&nbsp;
-                <b>{reqTypeNameLocalState},</b> del paciente&nbsp;
-                <b>{nameUserPatientState}</b>
-              </p>
-            }
-            handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
-            handleConfirmCustomModal={handleConfirmDataModal}
-            isSubmittingConfirm={isSubmittingNewMedicalReq}
-            handleClickCustomModal={handleButtonClick}
-          ></CustomModalTwoOptions>
-        )}
-
-        {modalIsOpenSuccess && (
-          <CustomModalNoContent
-            key={"custom-success-modal-create-medical-req-patient"}
-            widthCustomModalNoContent={"54%"}
-            openCustomModalState={modalIsOpenSuccess}
-            closableCustomModal={false}
-            maskClosableCustomModal={false}
-            contentCustomModal={
-              <CustomResultOneButton
-                key={"medical-req-created-custom-result"}
-                statusTypeResult={"success"}
-                titleCustomResult="¡Solicitud Creada Correctamente!"
-                subtitleCustomResult="Su requerimiento médico ha sido recibido en nuestro sistema, intentaremos darle respuesta a su solicitud lo más pronto posible."
-                handleClickCustomResult={handleGoToListOfMedicalReq}
-                isSubmittingButton={isSubmittingGoToListOfMedicalReq}
-                textButtonCustomResult="Ver mis solicitudes hechas"
-              />
-            }
-          ></CustomModalNoContent>
-        )}
-
         {showErrorMessageMedicalReq && (
           <CustomMessage
             typeMessage="error"
@@ -403,7 +358,8 @@ const PatientCreateRequestForm: React.FC = () => {
           handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
           familiarReqTypeListDataForm={typesMedicalReqState}
           userMessageMedicalReqDataForm={userMessageMedicalReqState}
-          fileStatusSetterDataform={setFilesUserMessageMedicalReq}
+          tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así ser mas precisos al darte respuesta."
+          fileStatusSetterDataform={setFileUserMessageMedicalReq}
           fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
             dispatch(setUserMessageMedicalReq(e.target.value))
@@ -412,6 +368,7 @@ const PatientCreateRequestForm: React.FC = () => {
             isSubmittingConfirmModal && !modalIsOpenConfirm
           }
           handleButtonSubmitFormDataForm={handleButtonClick}
+          tooltipObservationsDataform="Especifique detalles específicos a tener en cuenta en su solicitud para así darte una respuesta asertiva, por ejemplo, fecha aprox. de procedimiento, tipo de procedimiento, entre otros."
         />
       </Card>
     </Col>

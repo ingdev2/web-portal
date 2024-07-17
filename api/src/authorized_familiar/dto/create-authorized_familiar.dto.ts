@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsNumber,
   IsString,
   MinLength,
   IsOptional,
@@ -19,7 +18,6 @@ export class CreateAuthorizedFamiliarDto {
   last_name: string;
 
   @IsNotEmpty({ message: '¡Por favor ingresa un número de identificación!' })
-  @IsNumber()
   id_number: number;
 
   @IsNotEmpty({ message: '¡Por favor ingresa un correo electrónico!' })
@@ -27,11 +25,9 @@ export class CreateAuthorizedFamiliarDto {
   email: string;
 
   @IsOptional({ message: '¡Por favor ingresa un número de celular!' })
-  @IsNumber()
   cellphone: number;
 
   @IsOptional()
-  @IsNumber()
   whatsapp: number;
 
   @IsNotEmpty({
@@ -55,10 +51,8 @@ export class CreateAuthorizedFamiliarDto {
   @IsNotEmpty({
     message: '¡Por favor selecciona el método de autenticación!',
   })
-  @IsNumber()
   authentication_method: number;
 
   @IsOptional()
-  @IsNumber()
   verification_code: number;
 }

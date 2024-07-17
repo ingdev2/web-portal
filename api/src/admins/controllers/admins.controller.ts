@@ -42,6 +42,14 @@ export class AdminsController {
     return await this.adminsService.getAdminByIdNumber(idNumber);
   }
 
+  @Get('/getAdminByIdNumber/:idType/:idNumber')
+  async getAdminFoundByIdNumber(
+    @Param('idType') idType: number,
+    @Param('idNumber') idNumber: number,
+  ) {
+    return await this.adminsService.getAdminFoundByIdNumber(idType, idNumber);
+  }
+
   // PATCH METHODS //
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
@@ -77,9 +85,9 @@ export class AdminsController {
   async resetAdminPassword(
     @Query('token') token: string,
     @Body()
-    new_password: ResetPasswordAdminDto,
+    { newPassword }: ResetPasswordAdminDto,
   ) {
-    return await this.adminsService.resetAdminPassword(token, new_password);
+    return await this.adminsService.resetAdminPassword(token, { newPassword });
   }
 
   @Auth(AdminRolType.SUPER_ADMIN)

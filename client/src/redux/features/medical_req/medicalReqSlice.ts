@@ -6,10 +6,12 @@ const initialState: MedicalReq = {
   requirement_type: 0,
   right_petition: false,
   copy_right_petition: [],
+  files_copy_right_petition: [],
   medicalReqUserType: 0,
   familiar_id: "",
   aplicantId: "",
   patient_class_status: 0,
+  patient_class_status_abbrev: "",
   relationship_with_patient: 0,
   patient_name: "",
   patient_id_type: 0,
@@ -23,12 +25,18 @@ const initialState: MedicalReq = {
   aplicant_cellphone: 0,
   aplicant_eps_company: 0,
   aplicant_company_area: 0,
-  copy_applicant_citizenship_card: [],
+  copy_applicant_identification_document: [],
+  files_copy_applicant_identification_document: [],
   copy_patient_citizenship_card: [],
+  files_copy_patient_citizenship_card: [],
   copy_patient_civil_registration: [],
+  files_copy_patient_civil_registration: [],
   copy_parents_citizenship_card: [],
+  files_copy_parents_citizenship_card: [],
   copy_marriage_certificate: [],
+  files_copy_marriage_certificate: [],
   copy_cohabitation_certificate: [],
+  files_copy_cohabitation_certificate: [],
   date_of_admission: "",
   answer_date: "",
   download_expiration_date: "",
@@ -41,6 +49,7 @@ const initialState: MedicalReq = {
   response_comments: "",
   motive_for_rejection: [],
   documents_delivered: [],
+  files_documents_delivered: [],
   delegate_id: "",
   typesMedicalReq: [],
   createdAt: "",
@@ -68,6 +77,20 @@ export const medicalReqSlice = createSlice({
     setCopyRightPetitionMedicalReq: (state, action) => {
       state.copy_right_petition = action.payload;
     },
+    setFileCopyRightPetitionMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_right_petition = action.payload;
+    },
+    removeFileCopyRightPetitionMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_right_petition = state.files_copy_right_petition.filter(
+        (file) => file.originalname !== action.payload
+      );
+    },
     setMedicalReqUserTypeMedicalReq: (state, action) => {
       state.medicalReqUserType = action.payload;
     },
@@ -79,6 +102,9 @@ export const medicalReqSlice = createSlice({
     },
     setPatientClassStatusMedicalReq: (state, action) => {
       state.patient_class_status = action.payload;
+    },
+    setPatientClassStatusAbbrevMedicalReq: (state, action) => {
+      state.patient_class_status_abbrev = action.payload;
     },
     setRelationShipWithPatientMedicalReq: (state, action) => {
       state.relationship_with_patient = action.payload;
@@ -119,23 +145,113 @@ export const medicalReqSlice = createSlice({
     setAplicantCompanyAreaMedicalReq: (state, action) => {
       state.aplicant_company_area = action.payload;
     },
-    setCopyApplicantCitizenshipCardMedicalReq: (state, action) => {
-      state.copy_applicant_citizenship_card = action.payload;
+    setCopyApplicantIdentificationDocumentMedicalReq: (state, action) => {
+      state.copy_applicant_identification_document = action.payload;
+    },
+    setFileCopyApplicantIdentificationDocumentMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_applicant_identification_document = action.payload;
+    },
+    removeFileCopyApplicantIdentificationDocumentMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_applicant_identification_document =
+        state.files_copy_applicant_identification_document.filter(
+          (file) => file.originalname !== action.payload
+        );
     },
     setCopyPatientCitizenshipCardMedicalReq: (state, action) => {
       state.copy_patient_citizenship_card = action.payload;
     },
+    setFileCopyPatientCitizenshipCardMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_patient_citizenship_card = action.payload;
+    },
+    removeFileCopyPatientCitizenshipCardMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_patient_citizenship_card =
+        state.files_copy_patient_citizenship_card.filter(
+          (file) => file.originalname !== action.payload
+        );
+    },
     setCopyPatientCivilRegistrationMedicalReq: (state, action) => {
       state.copy_patient_civil_registration = action.payload;
+    },
+    setFileCopyPatientCivilRegistrationMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_patient_civil_registration = action.payload;
+    },
+    removeFileCopyPatientCivilRegistrationMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_patient_civil_registration =
+        state.files_copy_patient_civil_registration.filter(
+          (file) => file.originalname !== action.payload
+        );
     },
     setCopyParentsCitizenshipCardMedicalReq: (state, action) => {
       state.copy_parents_citizenship_card = action.payload;
     },
+    setFileCopyParentsCitizenshipCardMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_parents_citizenship_card = action.payload;
+    },
+    removeFileCopyParentsCitizenshipCardMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_parents_citizenship_card =
+        state.files_copy_parents_citizenship_card.filter(
+          (file) => file.originalname !== action.payload
+        );
+    },
     setCopyMarriageCertificateMedicalReq: (state, action) => {
       state.copy_marriage_certificate = action.payload;
     },
+    setFileCopyMarriageCertificateMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_marriage_certificate = action.payload;
+    },
+    removeFileCopyMarriageCertificateMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_marriage_certificate =
+        state.files_copy_marriage_certificate.filter(
+          (file) => file.originalname !== action.payload
+        );
+    },
     setCopyCohabitationCertificateMedicalReq: (state, action) => {
       state.copy_cohabitation_certificate = action.payload;
+    },
+    setFileCopyCohabitationCertificateMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_cohabitation_certificate = action.payload;
+    },
+    removeFileCopyCohabitationCertificateMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_cohabitation_certificate =
+        state.files_copy_cohabitation_certificate.filter(
+          (file) => file.originalname !== action.payload
+        );
     },
     setDateOfAdmissionMedicalReq: (state, action) => {
       state.date_of_admission = action.payload;
@@ -161,7 +277,7 @@ export const medicalReqSlice = createSlice({
     setDocsUserMessageMedicalReq: (state, action) => {
       state.user_message_documents = action.payload;
     },
-    setFilesUserMessageMedicalReq: (
+    setFileUserMessageMedicalReq: (
       state,
       action: PayloadAction<Array<Express.Multer.File>>
     ) => {
@@ -176,6 +292,7 @@ export const medicalReqSlice = createSlice({
           (file) => file.originalname !== action.payload
         );
     },
+
     setResponseCommentsMedicalReq: (state, action) => {
       state.response_comments = action.payload;
     },
@@ -184,6 +301,20 @@ export const medicalReqSlice = createSlice({
     },
     setDocumentsDeliveredMedicalReq: (state, action) => {
       state.documents_delivered = action.payload;
+    },
+    setFileDocumentsDeliveredMedicalReq: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_documents_delivered = action.payload;
+    },
+    removeFileDocumentsDeliveredMedicalReq: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_documents_delivered = state.files_documents_delivered.filter(
+        (file) => file.originalname !== action.payload
+      );
     },
     setDelegateIdMedicalReq: (state, action) => {
       state.delegate_id = action.payload;
@@ -209,10 +340,12 @@ export const medicalReqSlice = createSlice({
       state.requirement_type = 0;
       state.right_petition = false;
       state.copy_right_petition = [];
+      state.files_copy_right_petition = [];
       state.medicalReqUserType = 0;
       state.familiar_id = "";
       state.aplicantId = "";
       state.patient_class_status = 0;
+      state.patient_class_status_abbrev = "";
       state.relationship_with_patient = 0;
       state.patient_name = "";
       state.patient_id_type = 0;
@@ -226,12 +359,18 @@ export const medicalReqSlice = createSlice({
       state.aplicant_cellphone = 0;
       state.aplicant_eps_company = 0;
       state.aplicant_company_area = 0;
-      state.copy_applicant_citizenship_card = [];
+      state.copy_applicant_identification_document = [];
+      state.files_copy_applicant_identification_document = [];
       state.copy_patient_citizenship_card = [];
+      state.files_copy_patient_citizenship_card = [];
       state.copy_patient_civil_registration = [];
+      state.files_copy_patient_civil_registration = [];
       state.copy_parents_citizenship_card = [];
+      state.files_copy_parents_citizenship_card = [];
       state.copy_marriage_certificate = [];
+      state.files_copy_marriage_certificate = [];
       state.copy_cohabitation_certificate = [];
+      state.files_copy_cohabitation_certificate = [];
       state.date_of_admission = "";
       state.answer_date = "";
       state.download_expiration_date = "";
@@ -244,6 +383,7 @@ export const medicalReqSlice = createSlice({
       state.response_comments = "";
       state.motive_for_rejection = [];
       state.documents_delivered = [];
+      state.files_documents_delivered = [];
       state.delegate_id = "";
       state.errors = [];
     },
@@ -256,10 +396,13 @@ export const {
   setReqTypeMedicalReq,
   setRightPetitionMedicalReq,
   setCopyRightPetitionMedicalReq,
+  setFileCopyRightPetitionMedicalReq,
+  removeFileCopyRightPetitionMedicalReq,
   setMedicalReqUserTypeMedicalReq,
   setFamiliarIdMedicalReq,
   setAplicantIdMedicalReq,
   setPatientClassStatusMedicalReq,
+  setPatientClassStatusAbbrevMedicalReq,
   setRelationShipWithPatientMedicalReq,
   setPatientNameMedicalReq,
   setPatientIdTypeMedicalReq,
@@ -273,12 +416,24 @@ export const {
   setAplicantCellphoneMedicalReq,
   setAplicantEpsCompanyMedicalReq,
   setAplicantCompanyAreaMedicalReq,
-  setCopyApplicantCitizenshipCardMedicalReq,
+  setCopyApplicantIdentificationDocumentMedicalReq,
+  setFileCopyApplicantIdentificationDocumentMedicalReq,
+  removeFileCopyApplicantIdentificationDocumentMedicalReq,
   setCopyPatientCitizenshipCardMedicalReq,
+  setFileCopyPatientCitizenshipCardMedicalReq,
+  removeFileCopyPatientCitizenshipCardMedicalReq,
   setCopyPatientCivilRegistrationMedicalReq,
+  setFileCopyPatientCivilRegistrationMedicalReq,
+  removeFileCopyPatientCivilRegistrationMedicalReq,
   setCopyParentsCitizenshipCardMedicalReq,
+  setFileCopyParentsCitizenshipCardMedicalReq,
+  removeFileCopyParentsCitizenshipCardMedicalReq,
   setCopyMarriageCertificateMedicalReq,
+  setFileCopyMarriageCertificateMedicalReq,
+  removeFileCopyMarriageCertificateMedicalReq,
   setCopyCohabitationCertificateMedicalReq,
+  setFileCopyCohabitationCertificateMedicalReq,
+  removeFileCopyCohabitationCertificateMedicalReq,
   setDateOfAdmissionMedicalReq,
   setAnswerDateMedicalReq,
   setDownloadExpirationDateMedicalReq,
@@ -287,11 +442,13 @@ export const {
   setRequirementStatusMedicalReq,
   setUserMessageMedicalReq,
   setDocsUserMessageMedicalReq,
-  setFilesUserMessageMedicalReq,
+  setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
   setResponseCommentsMedicalReq,
   setMotiveForRejectionMedicalReq,
   setDocumentsDeliveredMedicalReq,
+  setFileDocumentsDeliveredMedicalReq,
+  removeFileDocumentsDeliveredMedicalReq,
   setDelegateIdMedicalReq,
   setTypesMedicalReq,
   setCreatedAtMedicalReq,

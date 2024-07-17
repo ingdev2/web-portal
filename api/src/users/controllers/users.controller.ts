@@ -11,7 +11,6 @@ import { UsersService } from '../services/users.service';
 import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
 import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
-import { ValidatePatientDto } from '../dto/validate_patient.dto';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -84,7 +83,15 @@ export class UsersController {
     return await this.usersService.getUsersById(id);
   }
 
-  @Auth(UserRolType.PATIENT)
+  @Get('/getUserByIdNumber/:idType/:idNumber')
+  async getUserFoundByIdNumber(
+    @Param('idType') idType: number,
+    @Param('idNumber') idNumber: number,
+  ) {
+    return await this.usersService.getUserFoundByIdNumber(idType, idNumber);
+  }
+
+  @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAllRelatives/:patientId')
   async getAllAuthorizedPatientRelatives(
     @Param('patientId') patientId: string,
@@ -104,7 +111,7 @@ export class UsersController {
 
   // PATCH METHODS //
 
-  @Auth(UserRolType.PATIENT)
+  @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updatePatient/:id')
   async updateUserPerson(
     @Param('id') id: string,
@@ -113,13 +120,18 @@ export class UsersController {
     return await this.usersService.updateUserPatient(id, user);
   }
 
-  @Auth(UserRolType.EPS)
+  @Auth(UserRolType.EPS, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updateEps/:id')
   async updateUserEps(@Param('id') id: string, @Body() user: UpdateUserEpsDto) {
     return await this.usersService.updateUserEps(id, user);
   }
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS)
+  @Auth(
+    UserRolType.PATIENT,
+    UserRolType.EPS,
+    AdminRolType.SUPER_ADMIN,
+    AdminRolType.ADMIN,
+  )
   @Patch('/updatePassword/:id')
   async updateUserPassword(
     @Param('id')
@@ -158,9 +170,9 @@ export class UsersController {
   async resetUserPassword(
     @Query('token') token: string,
     @Body()
-    new_password: ResetPasswordUserDto,
+    { newPassword }: ResetPasswordUserDto,
   ) {
-    return await this.usersService.resetUserPassword(token, new_password);
+    return await this.usersService.resetUserPassword(token, { newPassword });
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

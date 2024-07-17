@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: UserLogin = {
+  id: "",
   id_type: 0,
   id_type_abbrev: "",
   id_number: 0,
@@ -14,6 +15,9 @@ export const patientUserLoginSlice = createSlice({
   name: "patientUserLogin",
   initialState,
   reducers: {
+    setIdLoginPatient: (state, action) => {
+      state.id = action.payload;
+    },
     setIdTypeOptionsLoginPatient: (state, action) => {
       state.idTypeOptions = action.payload;
     },
@@ -46,6 +50,7 @@ export const patientUserLoginSlice = createSlice({
 });
 
 export const {
+  setIdLoginPatient,
   setIdTypeOptionsLoginPatient,
   setIdTypeLoginPatient,
   setIdTypeAbbrevLoginPatient,

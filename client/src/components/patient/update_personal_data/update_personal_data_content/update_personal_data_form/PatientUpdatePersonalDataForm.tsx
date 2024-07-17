@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 import { Button, Card, Col } from "antd";
 import PatientUpdatePersonalDataFormData from "./PatientUpdatePersonalDataFormData";
 import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
+import PatientChangePasswordForm from "../patient_change_password_form/PatientChangePasswordForm";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { TbPasswordUser } from "react-icons/tb";
 
 import {
   setAuthMethodUserPatient,
@@ -18,6 +21,7 @@ import {
   setWhatsappUserPatient,
 } from "@/redux/features/patient/patientSlice";
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
+import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useUpdateUserPatientMutation } from "@/redux/apis/users/usersApi";
@@ -57,6 +61,9 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
     (state) => state.patient.authentication_method
   );
   const patientErrorsState = useAppSelector((state) => state.patient.errors);
+  const isOpenModalChangePassword = useAppSelector(
+    (state) => state.modal.patientModalIsOpen
+  );
 
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -165,6 +172,8 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
       var updatePersonalDataValidationData = response.data?.message;
 
       if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
+        setHasChanges(false);
+
         const errorMessage = updatePersonalDataError?.data.message;
         const validationDataMessage = updatePersonalDataValidationData;
 
@@ -247,11 +256,14 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
       md={24}
       lg={24}
       style={{
-        width: "100%",
-        display: "flex",
-        flexFlow: "column wrap",
+        width: "100vw",
+        maxWidth: "540px",
+        minWidth: "231px",
+        alignItems: "center",
         alignContent: "center",
-        paddingInline: "31px",
+        justifyContent: "center",
+        padding: "0px",
+        margin: "0px",
       }}
     >
       <div
@@ -290,16 +302,13 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
       <Card
         key={"card-update-personal-data-patient-form"}
         style={{
-          width: "100%",
-          maxWidth: "450px",
-          display: "flex",
-          flexFlow: "column wrap",
           alignItems: "center",
+          alignContent: "center",
           justifyContent: "center",
           backgroundColor: "#fcfcfc",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-          margin: "0px",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
           padding: "0px",
+          marginInline: "13px",
         }}
       >
         {showErrorMessagePatient && (
@@ -313,6 +322,20 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
           <CustomMessage
             typeMessage="success"
             message={successMessage || "¡Proceso finalizado con éxito!"}
+          />
+        )}
+
+        {isOpenModalChangePassword && (
+          <CustomModalNoContent
+            key={"custom-modal-change-password-eps"}
+            widthCustomModalNoContent={"31%"}
+            openCustomModalState={isOpenModalChangePassword}
+            closableCustomModal={true}
+            maskClosableCustomModal={true}
+            handleCancelCustomModal={() => {
+              dispatch(setPatientModalIsOpen(false));
+            }}
+            contentCustomModal={<PatientChangePasswordForm />}
           />
         )}
 
@@ -378,6 +401,10 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
             setResidendeAddressUserPatientLocalState(
               e.target.value.toUpperCase()
             );
+          }}
+          iconChangePasswordPatientDataForm={<TbPasswordUser size={17} />}
+          onClickChangePasswordDataForm={() => {
+            dispatch(setPatientModalIsOpen(true));
           }}
           isSubmittingUpdatePersonalDataFormData={
             isSubmittingUpdatePersonalData

@@ -200,43 +200,49 @@ const ValidatePatientExistEps: React.FC = () => {
   };
 
   return (
-    <Card
+    <Col
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
       style={{
-        width: "100%",
-        maxWidth: "405px",
+        width: "100vw",
+        maxWidth: "450px",
+        minWidth: "231px",
         alignItems: "center",
+        alignContent: "center",
         justifyContent: "center",
-        backgroundColor: "#fcfcfc",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-        marginBottom: "31px",
+        padding: "0px",
+        margin: "0px",
       }}
     >
-      <CustomLoadingOverlay isLoading={isPageLoadingState} />
-
-      {showErrorMessagePatient && (
-        <CustomMessage
-          typeMessage="error"
-          message={errorsPatientState?.toString() || "¡Error en la petición!"}
-        />
-      )}
-
-      {showSuccessMessage && (
-        <CustomMessage
-          typeMessage="success"
-          message={"¡Paciente encontrado! Espere..."}
-        />
-      )}
-
-      <Col
-        xs={24}
-        sm={24}
-        md={24}
-        lg={24}
+      <Card
         style={{
-          padding: "0 7px",
-          margin: "0px",
+          alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
+          backgroundColor: "#fcfcfc",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          padding: "0px",
+          marginInline: "13px",
         }}
       >
+        <CustomLoadingOverlay isLoading={isPageLoadingState} />
+
+        {showErrorMessagePatient && (
+          <CustomMessage
+            typeMessage="error"
+            message={errorsPatientState?.toString() || "¡Error en la petición!"}
+          />
+        )}
+
+        {showSuccessMessage && (
+          <CustomMessage
+            typeMessage="success"
+            message={"¡Paciente encontrado! Espere..."}
+          />
+        )}
+
         <Form
           id="patient-user-validate-form-eps"
           name="patient-user-validate-form-eps"
@@ -339,7 +345,7 @@ const ValidatePatientExistEps: React.FC = () => {
                   marginBlock: 7,
                 }}
                 htmlType="submit"
-                className="patient-validate-form-button"
+                className="eps-validate-form-button"
                 onClick={handleButtonClick}
               >
                 Validar Paciente
@@ -347,8 +353,8 @@ const ValidatePatientExistEps: React.FC = () => {
             )}
           </Form.Item>
         </Form>
-      </Col>
-    </Card>
+      </Card>
+    </Col>
   );
 };
 

@@ -317,8 +317,9 @@ const PatientRelativesCardList: React.FC<{
             width: "100%",
             display: "flex",
             flexFlow: "row wrap",
-            justifyContent: "center",
+            alignItems: "center",
             alignContent: "center",
+            justifyContent: "center",
           }}
         >
           <SortByRelatives

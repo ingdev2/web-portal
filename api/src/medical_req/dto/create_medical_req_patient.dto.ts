@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   IsBoolean,
@@ -16,7 +15,6 @@ export class CreateMedicalReqPatientDto {
   filing_number: string;
 
   @IsNotEmpty()
-  @IsNumber()
   requirement_type: number;
 
   @IsOptional()
@@ -32,15 +30,12 @@ export class CreateMedicalReqPatientDto {
   aplicant_last_name: string;
 
   @IsOptional()
-  @IsNumber()
   aplicant_gender: number;
 
   @IsOptional()
-  @IsNumber()
   aplicant_id_type: number;
 
   @IsOptional()
-  @IsNumber()
   aplicant_id_number: number;
 
   @IsOptional()
@@ -48,7 +43,6 @@ export class CreateMedicalReqPatientDto {
   aplicant_email: string;
 
   @IsOptional()
-  @IsNumber()
   aplicant_cellphone: number;
 
   @IsOptional()
@@ -56,11 +50,9 @@ export class CreateMedicalReqPatientDto {
   patient_name: string;
 
   @IsOptional()
-  @IsNumber()
   patient_id_type: number;
 
   @IsOptional()
-  @IsNumber()
   patient_id_number: number;
 
   @IsOptional()
@@ -80,15 +72,12 @@ export class CreateMedicalReqPatientDto {
   download_expiration_date: Date;
 
   @IsOptional()
-  @IsNumber()
   requirement_status: number;
 
   @IsOptional()
-  @IsNumber()
   currently_in_area: number;
 
   @IsOptional()
-  @IsNumber()
   medicalReqUserType: number;
 
   @IsNotEmpty()

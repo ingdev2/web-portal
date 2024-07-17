@@ -26,7 +26,7 @@ const HomepageOptionsPatient: React.FC = () => {
           display: "flex",
           flexFlow: "row wrap",
           width: "100%",
-          paddingBlock: "7px",
+          paddingBlock: "13px",
           paddingInline: "22px",
         }}
       >
@@ -36,7 +36,7 @@ const HomepageOptionsPatient: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -45,16 +45,24 @@ const HomepageOptionsPatient: React.FC = () => {
         >
           <CustomOptionButton
             iconCustomOptionButton={<MdAssignmentAdd size={"45px"} />}
-            titleCustomOptionButton="Solicitar documento médico"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            titleCustomOptionButton="Crear solicitud"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/patient/homepage/create_request", {
                 scroll: true,
               });
             }}
+            iconPopoverCustomOptionButton={
+              <CustomPopover
+                titleCustomPopover={"¿Qué puedo solicitar?"}
+                contentCustomPopover={
+                  "Aquí puedes solicitar historias clínicas, órdenes e incapacidades médicas."
+                }
+              />
+            }
           />
         </Col>
 
@@ -64,7 +72,7 @@ const HomepageOptionsPatient: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -73,16 +81,24 @@ const HomepageOptionsPatient: React.FC = () => {
         >
           <CustomOptionButton
             iconCustomOptionButton={<MdFormatListNumbered size={"45px"} />}
-            titleCustomOptionButton="Ver documentos médicos solicitados"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            titleCustomOptionButton="Ver solicitudes realizadas"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/patient/homepage/request_list", {
                 scroll: true,
               });
             }}
+            iconPopoverCustomOptionButton={
+              <CustomPopover
+                titleCustomPopover={"¿Qué solicitudes puedo ver aquí?"}
+                contentCustomPopover={
+                  "Aquí puedes ver y gestionar todas las solicitudes que has realizado desde este portal."
+                }
+              />
+            }
           />
         </Col>
 
@@ -92,7 +108,7 @@ const HomepageOptionsPatient: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -113,11 +129,21 @@ const HomepageOptionsPatient: React.FC = () => {
             <CustomOptionButton
               iconCustomOptionButton={<GiChemicalDrop size={"45px"} />}
               titleCustomOptionButton="Ver resultados de laboratorio"
-              textColorCustomOptionButton="#f2f2f2"
-              iconColorCustomOptionButton="#00B5E8"
-              backgroundColorCustomOptionButton="#015E90"
+              textColorCustomOptionButton="#070707"
+              iconColorCustomOptionButton="#3F97AF"
+              backgroundColorCustomOptionButton="#EFF7F8"
               borderColorCustomOptionButton="#3F97AF"
               handleClickCustomOptionButton={() => {}}
+              iconPopoverCustomOptionButton={
+                <CustomPopover
+                  titleCustomPopover={
+                    "¿Donde puedo ver mis resultados de laboratorio?"
+                  }
+                  contentCustomPopover={
+                    "Tus resultados de laboratorio los podrás ver o descargar desde nuestra plataforma Annarlab."
+                  }
+                />
+              }
             />
           </a>
         </Col>
@@ -128,7 +154,7 @@ const HomepageOptionsPatient: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -138,9 +164,9 @@ const HomepageOptionsPatient: React.FC = () => {
           <CustomOptionButton
             iconCustomOptionButton={<FaUsers size={"45px"} />}
             titleCustomOptionButton="Ver núcleo familiar autorizado"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/patient/homepage/family_nucleus", {
@@ -176,7 +202,7 @@ const HomepageOptionsPatient: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -186,9 +212,9 @@ const HomepageOptionsPatient: React.FC = () => {
           <CustomOptionButton
             iconCustomOptionButton={<RxUpdate size={"45px"} />}
             titleCustomOptionButton="Actualizar datos personales"
-            textColorCustomOptionButton="#f2f2f2"
-            iconColorCustomOptionButton="#00B5E8"
-            backgroundColorCustomOptionButton="#015E90"
+            textColorCustomOptionButton="#070707"
+            iconColorCustomOptionButton="#3F97AF"
+            backgroundColorCustomOptionButton="#EFF7F8"
             borderColorCustomOptionButton="#3F97AF"
             handleClickCustomOptionButton={async () => {
               await router.push("/patient/homepage/update_personal_data", {
@@ -204,7 +230,7 @@ const HomepageOptionsPatient: React.FC = () => {
           md={6}
           lg={4}
           style={{
-            padding: "13px 31px",
+            padding: "13px 22px",
             display: "flex",
             flexFlow: "column wrap",
             alignItems: "center",
@@ -225,9 +251,9 @@ const HomepageOptionsPatient: React.FC = () => {
             <CustomOptionButton
               iconCustomOptionButton={<FaRegCommentDots size={"45px"} />}
               titleCustomOptionButton="PQRS"
-              textColorCustomOptionButton="#f2f2f2"
-              iconColorCustomOptionButton="#00B5E8"
-              backgroundColorCustomOptionButton="#015E90"
+              textColorCustomOptionButton="#070707"
+              iconColorCustomOptionButton="#3F97AF"
+              backgroundColorCustomOptionButton="#EFF7F8"
               borderColorCustomOptionButton="#3F97AF"
               handleClickCustomOptionButton={() => {}}
               iconPopoverCustomOptionButton={

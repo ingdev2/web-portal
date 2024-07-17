@@ -13,6 +13,7 @@ import {
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
 } from "@/redux/apis/users/usersApi";
+import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 
 const ButtonAuth = () => {
   const { data: session, status } = useSession();
@@ -20,10 +21,10 @@ const ButtonAuth = () => {
   const idNumberPatientState = useAppSelector(
     (state) => state.patientUserLogin.id_number
   );
-
   const idNumberEpsState = useAppSelector(
     (state) => state.epsUserLogin.id_number
   );
+  const idFamiliarState = useAppSelector((state) => state.familiarLogin.id);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -41,6 +42,15 @@ const ButtonAuth = () => {
     isFetching: isUserEpsFetching,
     isError: isUserEpsError,
   } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
+
+  const {
+    data: isUserFamiliarData,
+    isLoading: isUserFamiliarLoading,
+    isFetching: isUserFamiliarFetching,
+    isError: isUserFamiliarError,
+  } = useGetFamiliarByIdQuery(idFamiliarState, {
+    skip: !idFamiliarState,
+  });
 
   if (status === "loading") {
     return <CustomSpin />;
@@ -70,7 +80,7 @@ const ButtonAuth = () => {
         >
           Ingresaste con el correo electrónico:
         </h4>
-        {isUserPatientData || isUserEpsData ? (
+        {isUserPatientData || isUserEpsData || isUserFamiliarData ? (
           <h5
             style={{
               fontWeight: "bold",
@@ -87,6 +97,10 @@ const ButtonAuth = () => {
 
             {session?.user?.id_number === isUserEpsData?.id_number
               ? isUserEpsData?.email
+              : null}
+
+            {session?.user?.id_number === isUserFamiliarData?.id_number
+              ? isUserFamiliarData?.email
               : null}
           </h5>
         ) : (

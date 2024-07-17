@@ -35,8 +35,8 @@ export class CreateUserEpsDto {
   @Transform(({ value }) => value.trim())
   @IsNotEmpty({ message: '¡Por favor ingresa una contraseña!' })
   @IsString()
-  @MinLength(7)
-  @MaxLength(14)
+  @MinLength(8)
+  @MaxLength(31)
   password: string;
 
   @IsOptional()

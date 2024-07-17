@@ -105,7 +105,7 @@ export class MedicalReq {
   accept_terms: boolean;
 
   @Column({ type: 'text', array: true, nullable: true })
-  copy_applicant_citizenship_card: string[];
+  copy_applicant_identification_document: string[];
 
   @Column({ type: 'text', array: true, nullable: true })
   copy_patient_citizenship_card: string[];

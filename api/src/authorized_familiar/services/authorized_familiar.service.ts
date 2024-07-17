@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { AuthorizedFamiliar } from '../entities/authorized_familiar.entity';
 import { User } from '../../users/entities/user.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
@@ -430,6 +430,86 @@ export class AuthorizedFamiliarService {
       return new HttpException(
         `No tienes permiso para actualizar este usuario.`,
         HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const emailUserFamiliarValidate = await this.familiarRepository.findOne({
+      where: {
+        id: Not(familiarFound.id),
+        email: userFamiliar.email,
+      },
+    });
+
+    if (emailUserFamiliarValidate) {
+      return new HttpException(
+        `El correo electrónico ${userFamiliar.email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const cellphoneUserFamiliarValidate = await this.familiarRepository.findOne(
+      {
+        where: {
+          id: Not(familiarFound.id),
+          cellphone: userFamiliar.cellphone,
+        },
+      },
+    );
+
+    if (cellphoneUserFamiliarValidate) {
+      return new HttpException(
+        `El número de celular ${userFamiliar.cellphone} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const authenticationMethodEmailFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.EMAIL,
+        },
+      });
+
+    const authenticationMethodCellphoneFound =
+      await this.authenticationMethodRepository.findOne({
+        where: {
+          name: AuthenticationMethodEnum.CELLPHONE,
+        },
+      });
+
+    if (!authenticationMethodEmailFound) {
+      return new HttpException(
+        `El método de autenticación "Email" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new HttpException(
+        `El método de autenticación "Célular" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (
+      userFamiliar.authentication_method ===
+        authenticationMethodCellphoneFound.id &&
+      !userFamiliar.cellphone
+    ) {
+      return new HttpException(
+        `Debe ingresar un número de celular para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (
+      userFamiliar.authentication_method ===
+        authenticationMethodEmailFound.id &&
+      !userFamiliar.email
+    ) {
+      return new HttpException(
+        `Debe ingresar un correo electrónico para activar el método de autenticación seleccionado`,
+        HttpStatus.CONFLICT,
       );
     }
 

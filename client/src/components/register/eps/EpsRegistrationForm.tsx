@@ -128,7 +128,7 @@ const EpsRegistrationForm: React.FC = () => {
     if (epsCompanyError) {
       dispatch(setErrorsUserEps("¡No se pudo obtener las empresas!"));
       setShowErrorMessageUserEps(true);
-      setEpsCompanyAreasListLocalState(companyAreaData);
+      setEpsCompanyListLocalState(epsCompanyData);
     }
     if (!idTypesLoading && !idTypesFetching && idTypesData) {
       setEpsIdTypesListLocalState(idTypesData);
@@ -177,6 +177,10 @@ const EpsRegistrationForm: React.FC = () => {
     companyAreaError,
     authMethodData,
     authMethodError,
+    epsNameLocalState,
+    epsLastNameLocalState,
+    epsCellphoneLocalState,
+    epsIdNumberLocalState,
   ]);
 
   const handleCreateUserEps = () => {
@@ -208,8 +212,6 @@ const EpsRegistrationForm: React.FC = () => {
         password: passwordUserEpsLocalState,
         authentication_method: epsAuthMethodLocalState,
       });
-
-      console.log(response);
 
       var createUserEpsError = response.error;
 
@@ -450,6 +452,64 @@ const EpsRegistrationForm: React.FC = () => {
             isSubmittingConfirmModal && !modalIsOpenConfirm
           }
           handleButtonSubmitFormDataForm={handleButtonClick}
+          handleOnChangeValidatorPasswordDataForm={(_, value) => {
+            if (
+              !epsNameLocalState ||
+              !epsLastNameLocalState ||
+              !epsIdNumberLocalState ||
+              !epsCellphoneLocalState
+            ) {
+              return Promise.resolve();
+            }
+
+            const passwordUpperCase = value?.toUpperCase();
+
+            const nameWords = epsNameLocalState?.toUpperCase().split(" ");
+
+            const lastNameWords = epsLastNameLocalState
+              ?.toUpperCase()
+              .split(" ");
+
+            const idNumber = String(epsIdNumberLocalState);
+
+            const cellphoneNumber = String(epsCellphoneLocalState);
+
+            if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
+              return Promise.reject(
+                new Error(
+                  "¡La contraseña no puede contener datos del nombre del usuario!"
+                )
+              );
+            }
+
+            if (
+              lastNameWords?.some((word) => passwordUpperCase?.includes(word))
+            ) {
+              return Promise.reject(
+                new Error(
+                  "¡La contraseña no puede contener datos del apellido del usuario!"
+                )
+              );
+            }
+
+            if (passwordUpperCase?.includes(idNumber)) {
+              return Promise.reject(
+                new Error(
+                  "¡La contraseña no puede contener datos del número de cédula del usuario!"
+                )
+              );
+            }
+
+            if (passwordUpperCase?.includes(cellphoneNumber)) {
+              return Promise.reject(
+                new Error(
+                  "¡La contraseña no puede contener datos del número de celular del usuario!"
+                )
+              );
+            }
+
+            return Promise.resolve();
+          }}
         />
 
         <Divider

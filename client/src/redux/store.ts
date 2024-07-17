@@ -16,6 +16,7 @@ import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
 import { usersApi } from "./apis/users/usersApi";
+import { patientClassStatusApi } from "./apis/patient_class_status/patientClassStatusApi";
 import { relativesApi } from "./apis/relatives/relativesApi";
 import { relationshipTypesApi } from "./apis/relatives/relationship_types/relationshipTypesApi";
 import { registerAdminApi } from "./apis/register/registerAdminApi";
@@ -34,6 +35,8 @@ import { reasonForRejectionMedicalReqApi } from "./apis/medical_req/reasons_for_
 import { idTypesApi } from "./apis/id_types/idTypesApi";
 import { gendersApi } from "./apis/genders/gendersApi";
 import { authMethodApi } from "./apis/auth_method/authMethodApi";
+import { resetPasswordAdminsApi } from "./apis/reset_password/resetPasswordAdminsApi";
+import { resetPasswordUsersApi } from "./apis/reset_password/resetPasswordUsersApi";
 
 const persistConfig = {
   key: "root",
@@ -42,6 +45,7 @@ const persistConfig = {
   whitelist: [
     "patient",
     "eps",
+    "familiar",
     "adminLogin",
     "patientUserLogin",
     "epsUserLogin",
@@ -63,6 +67,7 @@ const rootReducer = combineReducers({
   modal: modalReducer,
   [adminsApi.reducerPath]: adminsApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [patientClassStatusApi.reducerPath]: patientClassStatusApi.reducer,
   [relativesApi.reducerPath]: relativesApi.reducer,
   [relationshipTypesApi.reducerPath]: relationshipTypesApi.reducer,
   [registerAdminApi.reducerPath]: registerAdminApi.reducer,
@@ -82,6 +87,8 @@ const rootReducer = combineReducers({
   [idTypesApi.reducerPath]: idTypesApi.reducer,
   [gendersApi.reducerPath]: gendersApi.reducer,
   [authMethodApi.reducerPath]: authMethodApi.reducer,
+  [resetPasswordAdminsApi.reducerPath]: resetPasswordAdminsApi.reducer,
+  [resetPasswordUsersApi.reducerPath]: resetPasswordUsersApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -95,6 +102,7 @@ export const store = configureStore({
     }).concat([
       adminsApi.middleware,
       usersApi.middleware,
+      patientClassStatusApi.middleware,
       relativesApi.middleware,
       relationshipTypesApi.middleware,
       registerAdminApi.middleware,
@@ -113,6 +121,8 @@ export const store = configureStore({
       idTypesApi.middleware,
       gendersApi.middleware,
       authMethodApi.middleware,
+      resetPasswordAdminsApi.middleware,
+      resetPasswordUsersApi.middleware,
     ]),
 });
 

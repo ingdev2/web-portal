@@ -39,7 +39,7 @@ const CustomOptionButton: React.FC<{
         backgroundColor: backgroundColorCustomOptionButton,
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
         borderColor: borderColorCustomOptionButton,
-        borderWidth: "3.1px",
+        borderWidth: "1.3px",
         color: textColorCustomOptionButton,
       }}
       size="middle"

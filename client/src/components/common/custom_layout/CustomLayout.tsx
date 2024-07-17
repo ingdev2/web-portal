@@ -21,12 +21,11 @@ const CustomLayout: React.FC<{
     <Layout
       className="custom-layout"
       style={{
+        width: "100%",
+        height: "100%",
+        minWidth: "371px",
         display: "flex",
         flexFlow: "column wrap",
-        width: "100%",
-        minWidth: "405px",
-        minHeight: "100vh",
-        height: "100%",
         backgroundColor: "transparent",
         margin: "0px",
         padding: "0px",
@@ -49,6 +48,7 @@ const CustomLayout: React.FC<{
       <Header
         className="custom-layout-header"
         style={{
+          minWidth: "371px",
           position: "sticky",
           display: "flex",
           flexFlow: "column wrap",
@@ -64,6 +64,7 @@ const CustomLayout: React.FC<{
       </Header>
       <Content
         style={{
+          minWidth: "371px",
           display: "flex",
           flexFlow: "column wrap",
           alignItems: "center",
@@ -74,6 +75,7 @@ const CustomLayout: React.FC<{
       </Content>
       <Footer
         style={{
+          minWidth: "371px",
           display: "flex",
           flexFlow: "column wrap",
           justifyContent: "center",

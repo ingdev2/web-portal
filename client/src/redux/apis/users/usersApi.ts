@@ -79,6 +79,14 @@ export const usersApi = createApi({
       query: (id) => `getUser/${id}`,
     }),
 
+    getUserByIdNumber: builder.query<Partial<User>, Partial<User>>({
+      query: ({ user_id_type, id_number }) => ({
+        url: `getUserByIdNumber/${user_id_type}/${id_number}`,
+        method: "GET",
+        params: { user_id_type, id_number },
+      }),
+    }),
+
     getUserByIdNumberPatient: builder.query<Partial<User>, number>({
       query: (idNumber) => `getPatientUserById/${idNumber}`,
     }),
@@ -119,27 +127,23 @@ export const usersApi = createApi({
         url: `updatePassword/${id}`,
         method: "PATCH",
         params: { id },
-        body: { passwords },
+        body: passwords,
       }),
     }),
 
-    forgotPassword: builder.mutation<any, { email: string }>({
-      query: ({ email }) => ({
-        url: "forgotPassword",
+    forgotPatientPassword: builder.mutation<any, ForgotUserPatientPassword>({
+      query: (forgotUserPatientPassword) => ({
+        url: "forgotPatientPassword",
         method: "PATCH",
-        body: { email },
+        body: forgotUserPatientPassword,
       }),
     }),
 
-    resetPassword: builder.mutation<
-      any,
-      { token: string; new_password: string }
-    >({
-      query: ({ token, new_password }) => ({
-        url: "resetPassword",
+    forgotEpsPassword: builder.mutation<any, ForgotUserEpsPassword>({
+      query: (forgotUserEpsPassword) => ({
+        url: "forgotEpsPassword",
         method: "PATCH",
-        body: { new_password },
-        params: { token },
+        body: forgotUserEpsPassword,
       }),
     }),
 
@@ -164,12 +168,13 @@ export const {
   useGetAllPatientsQuery,
   useGetAllEpsQuery,
   useGetUserByIdQuery,
+  useGetUserByIdNumberQuery,
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
   useUpdateUserPatientMutation,
   useUpdateUserEpsMutation,
   useUpdatePasswordMutation,
-  useForgotPasswordMutation,
-  useResetPasswordMutation,
+  useForgotPatientPasswordMutation,
+  useForgotEpsPasswordMutation,
   useBanUserMutation,
 } = usersApi;
