@@ -10,6 +10,12 @@ import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.d
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
 import { AuthenticationMethodEnum } from '../../utils/enums/authentication_method.enum';
 import { FamiliarLoginDto } from 'src/auth/dto/familiar_login.dto';
+import { NodemailerService } from 'src/nodemailer/services/nodemailer.service';
+import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+import {
+  ADDED_AS_AUTHORIZED_RELATIVE,
+  ADDED_FAMILY,
+} from 'src/nodemailer/constants/email_config.constant';
 
 @Injectable()
 export class AuthorizedFamiliarService {
@@ -24,6 +30,8 @@ export class AuthorizedFamiliarService {
 
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
+
+    private readonly nodemailerService: NodemailerService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -255,7 +263,28 @@ export class AuthorizedFamiliarService {
       newFamiliarOfPatient,
     );
 
-    return newFamiliarOfPatient;
+    const newUserFamiliarOfPatient = await this.familiarRepository.findOne({
+      where: { id: familiarWithRole.id },
+    });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [
+      newUserFamiliarOfPatient.email,
+      patientFamiliar.email,
+    ];
+    emailDetailsToSend.userNameToEmail = newUserFamiliarOfPatient.name;
+    emailDetailsToSend.patientNameToEmail = patientFamiliar.name;
+    emailDetailsToSend.relationshipWithPatient =
+      newUserFamiliarOfPatient.relationship_with_patient.name;
+    emailDetailsToSend.emailOfFamiliar = newUserFamiliarOfPatient.email;
+    emailDetailsToSend.subject = ADDED_AS_AUTHORIZED_RELATIVE;
+    emailDetailsToSend.emailTemplate = ADDED_FAMILY;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    return newUserFamiliarOfPatient;
   }
 
   // GET FUNTIONS //
