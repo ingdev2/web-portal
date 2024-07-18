@@ -544,7 +544,7 @@ const EpsRegistrationForm: React.FC = () => {
                 marginTop: 7,
               }}
               htmlType="button"
-              className="patient-validate-button"
+              className="go-to-login-button"
               onClick={handleGoToLogin}
               onMouseDown={handleButtonClick}
             >

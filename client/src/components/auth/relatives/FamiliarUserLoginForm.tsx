@@ -349,7 +349,7 @@ const FamiliarUserLoginForm: React.FC = () => {
               {
                 required: true,
                 message:
-                  "¡Por favor ingresa el correo electrónico corporativo del colaborador!",
+                  "¡Por favor ingresa el correo electrónico del familiar!",
               },
               {
                 type: "email",

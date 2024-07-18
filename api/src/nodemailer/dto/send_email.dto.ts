@@ -22,13 +22,21 @@ export class SendEmailDto {
   @IsString()
   userNameToEmail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   patientNameToEmail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   patientIdNumberToEmail: number;
+
+  @IsOptional()
+  @IsString()
+  emailOfFamiliar: string;
+
+  @IsOptional()
+  @IsString()
+  relationshipWithPatient: string;
 
   @IsOptional()
   @IsString()

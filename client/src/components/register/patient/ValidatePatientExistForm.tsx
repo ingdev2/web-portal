@@ -507,7 +507,7 @@ const ValidatePatientExistForm: React.FC = () => {
                 marginBlock: 13,
               }}
               htmlType="button"
-              className="patient-validate-button"
+              className="go-to-login-button"
               onClick={handleGoToUserLogin}
               onMouseDown={handleButtonClick}
             >

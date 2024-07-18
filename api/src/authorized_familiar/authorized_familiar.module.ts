@@ -7,6 +7,7 @@ import { AuthorizedFamiliarService } from './services/authorized_familiar.servic
 import { AuthorizedFamiliarController } from './controllers/authorized_familiar.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationMethod } from '../authentication_method/entities/authentication_method.entity';
+import { NodemailerModule } from 'src/nodemailer/nodemailer.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthenticationMethod } from '../authentication_method/entities/authenti
       IdTypeEntity,
       AuthenticationMethod,
     ]),
+    NodemailerModule,
   ],
   controllers: [AuthorizedFamiliarController],
   providers: [AuthorizedFamiliarService],
