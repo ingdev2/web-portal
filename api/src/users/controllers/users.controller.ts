@@ -99,12 +99,12 @@ export class UsersController {
     return await this.usersService.getAllAuthorizedPatientRelatives(patientId);
   }
 
-  @Get('/getPatientUserById/:idNumber')
+  @Get('/getPatientUserByIdNumber/:idNumber')
   async getPatientUserByIdNumber(@Param('idNumber') idNumber: number) {
     return await this.usersService.getPatientUserByIdNumber(idNumber);
   }
 
-  @Get('/getEpsUserById/:idNumber')
+  @Get('/getEpsUserByIdNumber/:idNumber')
   async getEpsUserByIdNumber(@Param('idNumber') idNumber: number) {
     return await this.usersService.getEpsUserByIdNumber(idNumber);
   }

@@ -38,8 +38,51 @@ async function refreshAccessToken(token: any) {
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      id: "users-auth",
-      name: "users-auth",
+      id: process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_ADMINS,
+      name: process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_ADMINS,
+      credentials: {
+        id_number: {
+          label: "Número de identificación",
+          type: "number",
+          inputMode: "numeric",
+          pattern: "[0-9]*",
+        },
+        verification_code: {
+          label: "Código de verificación",
+          type: "number",
+          inputMode: "numeric",
+          pattern: "[0-9]*",
+        },
+      },
+
+      async authorize(credentials, req) {
+        if (!credentials) {
+          throw new Error("Credenciales no definidas.");
+        }
+        const { id_number } = credentials;
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verifiedLoginAdmins/${id_number}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              id_number: credentials?.id_number,
+              verification_code: credentials?.verification_code,
+            }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const admin = await res.json();
+
+        if (admin.error) throw admin;
+
+        return admin;
+      },
+    }),
+    CredentialsProvider({
+      id: process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_USERS,
+      name: process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_USERS,
       credentials: {
         id_number: {
           label: "Número de identificación",
@@ -81,8 +124,8 @@ const handler = NextAuth({
       },
     }),
     CredentialsProvider({
-      id: "relatives-auth",
-      name: "relatives-auth",
+      id: process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_RELATIVES,
+      name: process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_RELATIVES,
       credentials: {
         id_number: {
           label: "Número de identificación",

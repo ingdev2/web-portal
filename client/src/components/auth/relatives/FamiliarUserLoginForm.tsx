@@ -194,7 +194,7 @@ const FamiliarUserLoginForm: React.FC = () => {
         }
       }
 
-      if (isLoginUserFamiliarSuccess) {
+      if (isLoginUserFamiliarSuccess && !isLoginUserFamiliarError) {
         if (userFamiliarData && !userFamiliarError) {
           dispatch(setIdLoginFamiliar(userFamiliarData.id));
         }

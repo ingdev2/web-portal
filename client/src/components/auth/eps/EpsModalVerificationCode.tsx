@@ -91,11 +91,14 @@ const EpsModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberEpsState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("users-auth", {
-        verification_code: verificationCode,
-        id_number: idNumber,
-        redirect: false,
-      });
+      const responseNextAuth = await signIn(
+        process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_USERS,
+        {
+          verification_code: verificationCode,
+          id_number: idNumber,
+          redirect: false,
+        }
+      );
 
       if (responseNextAuth?.error) {
         dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));

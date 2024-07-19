@@ -253,9 +253,9 @@ const ValidatePatientData: React.FC = () => {
       lg={24}
       style={{
         width: "100vw",
-        padding: "0 2px",
         maxWidth: "720px",
         minWidth: "231px",
+        padding: "0 2px",
       }}
     >
       <Card

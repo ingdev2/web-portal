@@ -9,6 +9,7 @@ import { subtitleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "../common/custom_spin/CustomSpin";
 import CustomMessage from "../common/custom_messages/CustomMessage";
 
+import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import {
   useGetUserByIdNumberPatientQuery,
   useGetUserByIdNumberEpsQuery,
@@ -18,6 +19,9 @@ import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 const ButtonAuth = () => {
   const { data: session, status } = useSession();
 
+  const idNumberAdminState = useAppSelector(
+    (state) => state.adminLogin.id_number
+  );
   const idNumberPatientState = useAppSelector(
     (state) => state.patientUserLogin.id_number
   );
@@ -28,6 +32,14 @@ const ButtonAuth = () => {
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const {
+    data: isAdminData,
+    isLoading: isAdminLoading,
+    isFetching: isAdminFetching,
+    isSuccess: isAdminSuccess,
+    isError: isAdminError,
+  } = useGetAdminByIdNumberQuery(idNumberAdminState);
 
   const {
     data: isUserPatientData,
@@ -80,7 +92,10 @@ const ButtonAuth = () => {
         >
           Ingresaste con el correo electrónico:
         </h4>
-        {isUserPatientData || isUserEpsData || isUserFamiliarData ? (
+        {isAdminData ||
+        isUserPatientData ||
+        isUserEpsData ||
+        isUserFamiliarData ? (
           <h5
             style={{
               fontWeight: "bold",
@@ -91,6 +106,10 @@ const ButtonAuth = () => {
               marginBlock: 13,
             }}
           >
+            {session?.user?.id_number === isAdminData?.id_number
+              ? isAdminData?.corporate_email
+              : null}
+
             {session?.user?.id_number === isUserPatientData?.id_number
               ? isUserPatientData?.email
               : null}

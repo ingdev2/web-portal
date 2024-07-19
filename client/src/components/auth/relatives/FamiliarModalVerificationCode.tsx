@@ -108,11 +108,14 @@ const FamiliarModalVerificationCode: React.FC = () => {
         ? parseInt(verificationCodeFamiliarState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("relatives-auth", {
-        id_number: idNumber,
-        verification_code: verificationCode,
-        redirect: false,
-      });
+      const responseNextAuth = await signIn(
+        process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_RELATIVES,
+        {
+          id_number: idNumber,
+          verification_code: verificationCode,
+          redirect: false,
+        }
+      );
 
       if (responseNextAuth?.error) {
         dispatch(setErrorsLoginFamiliar(responseNextAuth.error.split(",")));

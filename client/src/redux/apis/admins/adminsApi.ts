@@ -30,7 +30,7 @@ export const adminsApi = createApi({
     }),
 
     getAdminByIdNumber: builder.query<Admin, number>({
-      query: (idNumber) => `getAdminById/${idNumber}`,
+      query: (idNumber) => `getAdminByIdNumber/${idNumber}`,
     }),
 
     updateAdmin: builder.mutation<

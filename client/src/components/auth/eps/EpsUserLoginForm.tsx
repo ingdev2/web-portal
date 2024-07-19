@@ -134,7 +134,7 @@ const EpsUserLoginForm: React.FC = () => {
         }
       }
 
-      if (isLoginUserSuccess) {
+      if (isLoginUserSuccess && !isLoginUserError) {
         dispatch(setIdTypeLoginEps(idTypeEpsLocalState));
         dispatch(setIdNumberLoginEps(idNumberEpsLocalStateInt));
         dispatch(setPasswordLoginEps(passwordEpsLocalState));

@@ -155,7 +155,7 @@ const PatientUserLoginForm: React.FC = () => {
         }
       }
 
-      if (isLoginUserSuccess) {
+      if (isLoginUserSuccess && !isLoginUserError) {
         dispatch(setIdTypeLoginPatient(idTypePatientLocalState));
         dispatch(setIdNumberLoginPatient(idNumberPatientLocalStateInt));
         dispatch(setPasswordLoginPatient(passwordPatientLocalState));

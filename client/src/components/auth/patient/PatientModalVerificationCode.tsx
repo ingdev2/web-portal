@@ -95,11 +95,14 @@ const PatientModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberPatientState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("users-auth", {
-        verification_code: verificationCode,
-        id_number: idNumber,
-        redirect: false,
-      });
+      const responseNextAuth = await signIn(
+        process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_USERS,
+        {
+          verification_code: verificationCode,
+          id_number: idNumber,
+          redirect: false,
+        }
+      );
 
       if (responseNextAuth?.error) {
         dispatch(setErrorsLoginPatient(responseNextAuth.error.split(",")));

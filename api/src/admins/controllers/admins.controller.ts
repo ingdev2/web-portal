@@ -36,8 +36,7 @@ export class AdminsController {
     return await this.adminsService.getAdminById(id);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
-  @Get('/getAdminById/:id')
+  @Get('/getAdminByIdNumber/:id')
   async getAdminByIdNumber(@Param('id') idNumber: number) {
     return await this.adminsService.getAdminByIdNumber(idNumber);
   }

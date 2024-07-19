@@ -88,11 +88,11 @@ export const usersApi = createApi({
     }),
 
     getUserByIdNumberPatient: builder.query<Partial<User>, number>({
-      query: (idNumber) => `getPatientUserById/${idNumber}`,
+      query: (idNumber) => `getPatientUserByIdNumber/${idNumber}`,
     }),
 
     getUserByIdNumberEps: builder.query<Partial<User>, number>({
-      query: (idNumber) => `getEpsUserById/${idNumber}`,
+      query: (idNumber) => `getEpsUserByIdNumber/${idNumber}`,
     }),
 
     updateUserPatient: builder.mutation<
