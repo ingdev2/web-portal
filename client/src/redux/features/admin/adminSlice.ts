@@ -4,10 +4,10 @@ const initialState: Admin = {
   id: "",
   name: "",
   last_name: "",
-  user_gender: 0,
-  user_gender_abbrev: "",
-  user_id_type: 0,
-  id_type_abbrev: "",
+  admin_gender: 0,
+  admin_gender_abbrev: "",
+  admin_id_type: 0,
+  admin_id_type_abbrev: "",
   id_number: 0,
   corporate_email: "",
   password: "",
@@ -15,6 +15,7 @@ const initialState: Admin = {
   company_area_abbrev: "",
   position_level: 0,
   position_level_abbrev: "",
+  authentication_method: 0,
   admin_role: 0,
   is_active: true,
   createdAt: "",
@@ -37,16 +38,16 @@ export const adminSlice = createSlice({
       state.last_name = action.payload;
     },
     setGenderAdmin: (state, action) => {
-      state.user_gender = action.payload;
+      state.admin_gender = action.payload;
     },
     setGenderAbbrevAdmin: (state, action) => {
-      state.user_gender_abbrev = action.payload;
+      state.admin_gender_abbrev = action.payload;
     },
     setIdTypeAdmin: (state, action) => {
-      state.user_id_type = action.payload;
+      state.admin_id_type = action.payload;
     },
     setIdTypeAbbrevAdmin: (state, action) => {
-      state.id_type_abbrev = action.payload;
+      state.admin_id_type_abbrev = action.payload;
     },
     setIdNumberAdmin: (state, action) => {
       state.id_number = action.payload;
@@ -69,6 +70,9 @@ export const adminSlice = createSlice({
     setPositionLevelAbbrevAdmin: (state, action) => {
       state.position_level_abbrev = action.payload;
     },
+    setAuthMethodAdmin: (state, action) => {
+      state.authentication_method = action.payload;
+    },
     setRoleAdmin: (state, action) => {
       state.admin_role = action.payload;
     },
@@ -82,10 +86,10 @@ export const adminSlice = createSlice({
       state.id = "";
       state.name = "";
       state.last_name = "";
-      state.user_gender = 0;
-      state.user_gender_abbrev = "";
-      state.user_id_type = 0;
-      state.id_type_abbrev = "";
+      state.admin_gender = 0;
+      state.admin_gender_abbrev = "";
+      state.admin_id_type = 0;
+      state.admin_id_type_abbrev = "";
       state.id_number = 0;
       state.corporate_email = "";
       state.password = "";
@@ -113,6 +117,7 @@ export const {
   setCompanyAreaAbbrevAdmin,
   setPositionLevelAdmin,
   setPositionLevelAbbrevAdmin,
+  setAuthMethodAdmin,
   setRoleAdmin,
   setIsActiveAdmin,
   setErrorsAdmin,

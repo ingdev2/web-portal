@@ -11,5 +11,7 @@ interface ForgotUserEpsPassword {
 }
 
 interface ForgotAdminsPassword {
+  admin_id_type: number;
+  id_number: number;
   corporate_email: string;
 }

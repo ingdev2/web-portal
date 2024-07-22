@@ -346,11 +346,11 @@ const EpsRegistrationForm: React.FC = () => {
             key={"custom-confirm-modal-create-user-eps"}
             openCustomModalState={modalIsOpenConfirm}
             iconCustomModal={<FcInfo size={77} />}
-            titleCustomModal="¿Deseas agregar un colaborador de EPS?"
+            titleCustomModal="¿Deseas crear un nuevo colaborador de EPS?"
             subtitleCustomModal={
               <p>
-                Se agregará el colaborador <b>{epsNameLocalState},</b> con tipo
-                de identificación&nbsp;
+                Se creará el colaborador con nombre <b>{epsNameLocalState},</b>
+                &nbsp; con tipo de identificación&nbsp;
                 <b>{epsIdTypeNameLocalState},</b>&nbsp;número de
                 identificación&nbsp;
                 <b>{epsIdNumberLocalState},</b>&nbsp;para la empresa:&nbsp;
@@ -376,7 +376,7 @@ const EpsRegistrationForm: React.FC = () => {
                 key={"user-eps-created-custom-result"}
                 statusTypeResult={"success"}
                 titleCustomResult="¡Colaborador de EPS creado correctamente!"
-                subtitleCustomResult="El colaborar ha sigo agregado a la lista de usuarios de EPS."
+                subtitleCustomResult="El colaborar ha sido agregado a la lista de usuarios de EPS."
                 handleClickCustomResult={handleGoToLogin}
                 isSubmittingButton={isSubmittingGoToLogin}
                 textButtonCustomResult="Ingresar al portal"

@@ -36,7 +36,7 @@ const CustomResultOneButton: React.FC<{
         alignItems: "center",
         justifyContent: "center",
         paddingBlock: 13,
-        paddingInline: 0,
+        paddingInline: 7,
         margin: 0,
       }}
       extra={[

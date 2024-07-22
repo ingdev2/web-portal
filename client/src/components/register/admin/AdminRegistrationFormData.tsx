@@ -7,42 +7,36 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { titleStyleCss } from "@/theme/text_styles";
 import { IdcardOutlined } from "@ant-design/icons";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
-import { FiPhone } from "react-icons/fi";
 import { LockOutlined } from "@ant-design/icons";
 
-const EpsRegistrationFormData: React.FC<{
-  epsCompanyLoadingDataForm: boolean;
-  epsCompanyValueDataForm: number;
-  handleOnChangeEpsCompanyDataForm: (e: any) => void;
-  epsCompanyListDataForm: string[];
-  handleCreateUserEpsDataForm: () => void;
-  epsNameDataForm: string;
-  handleOnChangeEpsNameDataForm: (e: any) => void;
-  epsLastNameDataForm: string;
-  handleOnChangeEpsLastNameDataForm: (e: any) => void;
+const AdminRegistrationFormData: React.FC<{
+  positionLevelLoadingDataForm: boolean;
+  positionLevelValueDataForm: number;
+  handleOnChangePositionLevelDataForm: (e: any) => void;
+  positionLevelListDataForm: string[];
+  handleCreateAdminDataForm: () => void;
+  adminNameDataForm: string;
+  handleOnChangeAdminNameDataForm: (e: any) => void;
+  adminLastNameDataForm: string;
+  handleOnChangeAdminLastNameDataForm: (e: any) => void;
   idTypeSelectorLoadingDataForm: boolean;
-  epsIdTypeValueDataForm: number;
+  adminIdTypeValueDataForm: number;
   handleOnChangeSelectIdTypeDataForm: (value: number) => void;
-  epsIdTypeListDataForm: string[];
-  epsIdNumberDataForm: number;
-  handleOnChangeEpsIdNumberDataForm: (e: any) => void;
+  adminIdTypeListDataForm: string[];
+  adminIdNumberDataForm: number;
+  handleOnChangeAdminIdNumberDataForm: (e: any) => void;
   genderSelectorLoadingDataForm: boolean;
-  epsGenderValueDataForm: number;
+  adminGenderValueDataForm: number;
   handleOnChangeSelectGenderDataForm: (value: number) => void;
-  epsGenderListDataForm: string[];
+  adminGenderListDataForm: string[];
   companyAreasLoadingDataForm: boolean;
   companyAreaValueDataForm: number;
   handleOnChangeCompanyAreaDataForm: (e: any) => void;
-  epsCompanyAreasListDataForm: string[];
-  epsEmailDataForm: string;
-  handleOnChangeEpsEmailDataForm: (e: any) => void;
-  epsCellphoneDataForm: number;
-  handleOnChangeEpsCellphoneDataForm: (e: any) => void;
-  epsAuthMethodValueDataForm: number;
-  handleOnChangeSelectAuthMethodDataForm: (e: any) => void;
-  epsAuthMethodListDataForm: string[];
-  passwordUserEpsValueDataForm: string;
-  handleOnChangePasswordUserEpsValueDataForm: (e: any) => void;
+  adminCompanyAreasListDataForm: string[];
+  adminEmailDataForm: string;
+  handleOnChangeAdminEmailDataForm: (e: any) => void;
+  passwordAdminValueDataForm: string;
+  handleOnChangePasswordAdminValueDataForm: (e: any) => void;
   checkboxValidatorDataForm: (_: any, value: boolean) => Promise<unknown>;
   isCheckboxCheckedDataForm: boolean;
   handleCheckboxChangeDataForm: (e: any) => void;
@@ -50,38 +44,33 @@ const EpsRegistrationFormData: React.FC<{
   handleButtonSubmitFormDataForm: () => void;
   handleOnChangeValidatorPasswordDataForm: (_: any, value: any) => void;
 }> = ({
-  epsCompanyLoadingDataForm,
-  epsCompanyValueDataForm,
-  handleOnChangeEpsCompanyDataForm,
-  epsCompanyListDataForm,
-  handleCreateUserEpsDataForm,
-  epsNameDataForm,
-  handleOnChangeEpsNameDataForm,
-  epsLastNameDataForm,
-  handleOnChangeEpsLastNameDataForm,
+  positionLevelLoadingDataForm,
+  positionLevelValueDataForm,
+  handleOnChangePositionLevelDataForm,
+  positionLevelListDataForm,
+  handleCreateAdminDataForm,
+  adminNameDataForm,
+  handleOnChangeAdminNameDataForm,
+  adminLastNameDataForm,
+  handleOnChangeAdminLastNameDataForm,
   idTypeSelectorLoadingDataForm,
-  epsIdTypeValueDataForm,
+  adminIdTypeValueDataForm,
   handleOnChangeSelectIdTypeDataForm,
-  epsIdTypeListDataForm,
-  epsIdNumberDataForm,
-  handleOnChangeEpsIdNumberDataForm,
+  adminIdTypeListDataForm,
+  adminIdNumberDataForm,
+  handleOnChangeAdminIdNumberDataForm,
   genderSelectorLoadingDataForm,
-  epsGenderValueDataForm,
+  adminGenderValueDataForm,
   handleOnChangeSelectGenderDataForm,
-  epsGenderListDataForm,
+  adminGenderListDataForm,
   companyAreasLoadingDataForm,
   companyAreaValueDataForm,
   handleOnChangeCompanyAreaDataForm,
-  epsCompanyAreasListDataForm,
-  epsEmailDataForm,
-  handleOnChangeEpsEmailDataForm,
-  epsCellphoneDataForm,
-  handleOnChangeEpsCellphoneDataForm,
-  epsAuthMethodValueDataForm,
-  handleOnChangeSelectAuthMethodDataForm,
-  epsAuthMethodListDataForm,
-  passwordUserEpsValueDataForm,
-  handleOnChangePasswordUserEpsValueDataForm,
+  adminCompanyAreasListDataForm,
+  adminEmailDataForm,
+  handleOnChangeAdminEmailDataForm,
+  passwordAdminValueDataForm,
+  handleOnChangePasswordAdminValueDataForm,
   checkboxValidatorDataForm,
   isCheckboxCheckedDataForm,
   handleCheckboxChangeDataForm,
@@ -89,59 +78,37 @@ const EpsRegistrationFormData: React.FC<{
   handleButtonSubmitFormDataForm,
   handleOnChangeValidatorPasswordDataForm,
 }) => {
+  const adminAuthMethodListDataForm = [
+    { id: "email", name: "CORREO ELECTRÓNICO" },
+    { id: "phone", name: "CELULAR" },
+  ];
+
+  const adminDefaultValueAuthMethod: string = adminAuthMethodListDataForm[0].id;
+
   return (
     <Form
-      id="create-eps-form"
-      name="create-eps-form"
-      className="create-eps-form"
-      onFinish={handleCreateUserEpsDataForm}
+      id="create-admin-form"
+      name="create-admin-form"
+      className="create-admin-form"
+      onFinish={handleCreateAdminDataForm}
       initialValues={{ remember: false }}
       autoComplete="false"
       layout="vertical"
     >
       <h2
-        className="title-create-eps-form"
+        className="title-create-admin-form"
         style={{
           ...titleStyleCss,
           textAlign: "center",
           marginBottom: "22px",
         }}
       >
-        Crear usuario EPS
+        Crear usuario ADMINISTRADOR
       </h2>
 
       <Form.Item
-        name="eps-company-eps-create-eps"
-        label="Empresa en la que labora el colaborador:"
-        style={{ marginBottom: "13px" }}
-        rules={[
-          {
-            required: true,
-            message:
-              "¡Por favor selecciona la empresa en la que labora el colaborador!",
-          },
-        ]}
-      >
-        {epsCompanyLoadingDataForm ? (
-          <CustomSpin />
-        ) : (
-          <Select
-            value={epsCompanyValueDataForm}
-            placeholder="Seleccionar empresa"
-            onChange={handleOnChangeEpsCompanyDataForm}
-          >
-            {epsCompanyListDataForm?.map((option: any) => (
-              <Select.Option key={option.id} value={option.id}>
-                {option.name}
-              </Select.Option>
-            ))}
-          </Select>
-        )}
-      </Form.Item>
-
-      <Form.Item
-        name="new-eps-name"
-        label="Nombre(s) del colaborador"
+        name="new-admin-name"
+        label="Nombre(s) del administrador"
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
           if (!value) return "";
@@ -152,7 +119,7 @@ const EpsRegistrationFormData: React.FC<{
         rules={[
           {
             required: true,
-            message: "¡Por favor ingrese el nombre del colaborador!",
+            message: "¡Por favor ingrese el nombre del administrador!",
           },
           {
             min: 3,
@@ -172,16 +139,16 @@ const EpsRegistrationFormData: React.FC<{
         <Input
           prefix={<MdDriveFileRenameOutline className="site-form-item-icon" />}
           type="text"
-          value={epsNameDataForm}
+          value={adminNameDataForm}
           placeholder="Nombre(s) completos"
-          onChange={handleOnChangeEpsNameDataForm}
+          onChange={handleOnChangeAdminNameDataForm}
           autoComplete="off"
         />
       </Form.Item>
 
       <Form.Item
-        name="new-eps-lastname"
-        label="Apellido(s) del colaborador"
+        name="new-admin-lastname"
+        label="Apellido(s) del administrador"
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
           if (!value) return "";
@@ -192,7 +159,7 @@ const EpsRegistrationFormData: React.FC<{
         rules={[
           {
             required: true,
-            message: "¡Por favor ingrese el apellido del colaborador!",
+            message: "¡Por favor ingrese el apellido del administrador!",
           },
           {
             min: 4,
@@ -212,22 +179,22 @@ const EpsRegistrationFormData: React.FC<{
         <Input
           prefix={<MdDriveFileRenameOutline className="site-form-item-icon" />}
           type="text"
-          value={epsLastNameDataForm}
+          value={adminLastNameDataForm}
           placeholder="Apellido(s) completos"
-          onChange={handleOnChangeEpsLastNameDataForm}
+          onChange={handleOnChangeAdminLastNameDataForm}
           autoComplete="off"
         />
       </Form.Item>
 
       <Form.Item
-        name="new-eps-id-types"
-        label="Tipo de identificación del colaborador"
+        name="new-admin-id-types"
+        label="Tipo de identificación del administrador"
         style={{ marginBottom: "13px" }}
         rules={[
           {
             required: true,
             message:
-              "¡Por favor selecciona el tipo de identificación del colaborador!",
+              "¡Por favor selecciona el tipo de identificación del administrador!",
           },
         ]}
       >
@@ -235,11 +202,11 @@ const EpsRegistrationFormData: React.FC<{
           <CustomSpin />
         ) : (
           <Select
-            value={epsIdTypeValueDataForm}
+            value={adminIdTypeValueDataForm}
             placeholder="Tipo de identificación"
             onChange={handleOnChangeSelectIdTypeDataForm}
           >
-            {epsIdTypeListDataForm?.map((option: any) => (
+            {adminIdTypeListDataForm?.map((option: any) => (
               <Select.Option key={option.id} value={option.id}>
                 {option.name}
               </Select.Option>
@@ -249,8 +216,8 @@ const EpsRegistrationFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="new-eps-id-number"
-        label="Número de identificación del colaborador"
+        name="new-admin-id-number"
+        label="Número de identificación del administrador"
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
           if (!value) return "";
@@ -261,7 +228,7 @@ const EpsRegistrationFormData: React.FC<{
           {
             required: true,
             message:
-              "¡Por favor ingresa el número de identificación del colaborador!",
+              "¡Por favor ingresa el número de identificación del administrador!",
           },
           {
             pattern: /^[0-9]+$/,
@@ -280,22 +247,23 @@ const EpsRegistrationFormData: React.FC<{
         <Input
           prefix={<IdcardOutlined className="site-form-item-icon" />}
           type="tel"
-          value={epsIdNumberDataForm}
+          value={adminIdNumberDataForm}
           placeholder="Número de identificación"
-          onChange={handleOnChangeEpsIdNumberDataForm}
+          onChange={handleOnChangeAdminIdNumberDataForm}
           autoComplete="off"
           min={0}
         />
       </Form.Item>
 
       <Form.Item
-        name="new-eps-gender"
-        label="Género del colaborador"
+        name="new-admin-gender"
+        label="Género del administrador"
         style={{ marginBottom: "13px" }}
         rules={[
           {
             required: true,
-            message: "¡Por favor selecciona el tipo de género del colaborador!",
+            message:
+              "¡Por favor selecciona el tipo de género del administrador!",
           },
         ]}
       >
@@ -303,11 +271,11 @@ const EpsRegistrationFormData: React.FC<{
           <CustomSpin />
         ) : (
           <Select
-            value={epsGenderValueDataForm}
+            value={adminGenderValueDataForm}
             placeholder="Seleccionar género"
             onChange={handleOnChangeSelectGenderDataForm}
           >
-            {epsGenderListDataForm?.map((option: any) => (
+            {adminGenderListDataForm?.map((option: any) => (
               <Select.Option key={option.id} value={option.id}>
                 {option.name}
               </Select.Option>
@@ -317,15 +285,45 @@ const EpsRegistrationFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="areas-company-eps-create-eps"
-        label="Área en la que se desempeña:"
-        tooltip="Aquí debes seleccionar el área de la empresa en la que desempeña el colaborador."
+        name="position-level-create-admin"
+        label="Nivel de cargo:"
+        tooltip="Aquí debes seleccionar el nivel del cargo que desempeña el administrador dentro de la empresa."
         style={{ marginBottom: "13px" }}
         rules={[
           {
             required: true,
             message:
-              "¡Por favor selecciona el área de empresa en la que se desempeña el colaborador!",
+              "¡Por favor selecciona el nivel de cargo del administrador!",
+          },
+        ]}
+      >
+        {positionLevelLoadingDataForm ? (
+          <CustomSpin />
+        ) : (
+          <Select
+            value={positionLevelValueDataForm}
+            placeholder="Seleccionar nivel de cargo"
+            onChange={handleOnChangePositionLevelDataForm}
+          >
+            {positionLevelListDataForm?.map((option: any) => (
+              <Select.Option key={option.id} value={option.id}>
+                {option.name}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
+      </Form.Item>
+
+      <Form.Item
+        name="areas-company-create-admin"
+        label="Área en la que se desempeña:"
+        tooltip="Aquí debes seleccionar el área de la empresa en la que desempeña el administrador."
+        style={{ marginBottom: "13px" }}
+        rules={[
+          {
+            required: true,
+            message:
+              "¡Por favor selecciona el área de empresa en la que se desempeña el administrador!",
           },
         ]}
       >
@@ -337,7 +335,7 @@ const EpsRegistrationFormData: React.FC<{
             placeholder="Seleccionar área"
             onChange={handleOnChangeCompanyAreaDataForm}
           >
-            {epsCompanyAreasListDataForm?.map((option: any) => (
+            {adminCompanyAreasListDataForm?.map((option: any) => (
               <Select.Option key={option.id} value={option.id}>
                 {option.name}
               </Select.Option>
@@ -347,7 +345,7 @@ const EpsRegistrationFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="new-eps-email"
+        name="new-admin-email"
         label="Correo electrónico corporativo"
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
@@ -359,7 +357,7 @@ const EpsRegistrationFormData: React.FC<{
           {
             required: true,
             message:
-              "¡Por favor ingresa el correo electrónico corporativo del colaborador!",
+              "¡Por favor ingresa el correo electrónico corporativo del administrador!",
           },
           {
             type: "email",
@@ -378,58 +376,20 @@ const EpsRegistrationFormData: React.FC<{
         <Input
           prefix={<MdOutlineEmail className="site-form-item-icon" />}
           type="email"
-          value={epsEmailDataForm}
+          value={adminEmailDataForm}
           placeholder="Correo electrónico"
-          onChange={handleOnChangeEpsEmailDataForm}
+          onChange={handleOnChangeAdminEmailDataForm}
           autoComplete="off"
         />
       </Form.Item>
 
       <Form.Item
-        name="new-eps-cellphone"
-        label="Celular corporativo"
-        style={{ marginBottom: "13px" }}
-        normalize={(value) => {
-          if (!value) return "";
-
-          return value.replace(/[^0-9]/g, "");
-        }}
-        rules={[
-          {
-            required: true,
-            message:
-              "¡Por favor ingresa el número de celular corporativo del colaborador!",
-          },
-          {
-            pattern: /^[0-9]+$/,
-            message:
-              "¡Por favor ingresa número de celular sin puntos ni comas!",
-          },
-          {
-            min: 7,
-            message: "¡Por favor ingresa mínimo 7 números!",
-          },
-          {
-            max: 11,
-            message: "¡Por favor ingresa máximo 11 números!",
-          },
-        ]}
-      >
-        <Input
-          prefix={<FiPhone className="site-form-item-icon" />}
-          type="tel"
-          value={epsCellphoneDataForm}
-          placeholder="Número de celular"
-          onChange={handleOnChangeEpsCellphoneDataForm}
-          autoComplete="off"
-          min={0}
-        />
-      </Form.Item>
-
-      <Form.Item
+        id="radio-select-auth-method"
         name="radio-select-auth-method"
+        className="radio-select-auth-method"
         label="Método de autenticación del colaborador"
         tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
+        initialValue={adminDefaultValueAuthMethod}
         style={{ marginBottom: "7px" }}
         rules={[
           {
@@ -439,12 +399,14 @@ const EpsRegistrationFormData: React.FC<{
         ]}
       >
         <Radio.Group
-          value={epsAuthMethodValueDataForm}
-          onChange={handleOnChangeSelectAuthMethodDataForm}
+          id="radio-select-auth-method"
+          name="radio-select-auth-method"
+          className="radio-select-auth-method"
           style={{ textAlign: "start" }}
+          disabled
         >
           <Space size={"small"} direction="horizontal">
-            {epsAuthMethodListDataForm?.map((option: any) => (
+            {adminAuthMethodListDataForm?.map((option: any) => (
               <Radio key={option.id} value={option.id}>
                 {option.name}
               </Radio>
@@ -454,9 +416,9 @@ const EpsRegistrationFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        id="eps-user-password-create"
-        name="eps-user-password-create"
-        className="eps-user-password-create"
+        id="admin-password-create"
+        name="admin-password-create"
+        className="admin-password-create"
         label="Contraseña"
         style={{ marginBottom: 13 }}
         rules={[
@@ -504,17 +466,17 @@ const EpsRegistrationFormData: React.FC<{
         <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          value={passwordUserEpsValueDataForm}
+          value={passwordAdminValueDataForm}
           placeholder="Contraseña"
-          onChange={handleOnChangePasswordUserEpsValueDataForm}
+          onChange={handleOnChangePasswordAdminValueDataForm}
         />
       </Form.Item>
 
       <Form.Item
-        name="eps-user-password-verify-create"
+        name="admin-password-verify-create"
         label="Verificar contraseña"
         style={{ marginBottom: 22 }}
-        dependencies={["eps-user-password-create"]}
+        dependencies={["admin-password-create"]}
         rules={[
           {
             required: true,
@@ -522,10 +484,7 @@ const EpsRegistrationFormData: React.FC<{
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
-              if (
-                !value ||
-                getFieldValue("eps-user-password-create") === value
-              ) {
+              if (!value || getFieldValue("admin-password-create") === value) {
                 return Promise.resolve();
               }
               return Promise.reject("Las contraseñas no coinciden.");
@@ -537,9 +496,9 @@ const EpsRegistrationFormData: React.FC<{
         <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          value={passwordUserEpsValueDataForm}
+          value={passwordAdminValueDataForm}
           placeholder="Verificar contraseña"
-          onChange={handleOnChangePasswordUserEpsValueDataForm}
+          onChange={handleOnChangePasswordAdminValueDataForm}
         />
       </Form.Item>
 
@@ -586,10 +545,10 @@ const EpsRegistrationFormData: React.FC<{
               color: "#f2f2f2",
             }}
             htmlType="submit"
-            className="create-eps-form-button"
+            className="create-admin-form-button"
             onClick={handleButtonSubmitFormDataForm}
           >
-            Crear usuario EPS
+            Crear usuario ADMIN.
           </Button>
         )}
       </Form.Item>
@@ -597,4 +556,4 @@ const EpsRegistrationFormData: React.FC<{
   );
 };
 
-export default EpsRegistrationFormData;
+export default AdminRegistrationFormData;

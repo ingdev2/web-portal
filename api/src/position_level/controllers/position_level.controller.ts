@@ -16,13 +16,13 @@ import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('position-level')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
 @Controller('position-level')
 export class PositionLevelController {
   constructor(private readonly positionLevelService: PositionLevelService) {}
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
   createPositionLevel(@Body() createPositionLevel: CreatePositionLevelDto) {
     return this.positionLevelService.createPositionLevel(createPositionLevel);
@@ -37,6 +37,7 @@ export class PositionLevelController {
 
   // PATCH METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/update/:id')
   updatePositionLevel(
     @Param('id') id: number,

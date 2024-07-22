@@ -4,23 +4,23 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, Col, DatePickerProps, Form, Input, Select } from "antd";
+import { Button, Card, Col, Form, Input, Select } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
-import CustomDatePicker from "@/components/common/custom_date_picker/CustomDatePicker";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { IdcardOutlined } from "@ant-design/icons";
+import { MdOutlineEmail } from "react-icons/md";
 
-import { setErrorsUserPatient } from "@/redux/features/patient/patientSlice";
+import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
 
 import {
-  useGetUserByIdNumberQuery,
-  useForgotPatientPasswordMutation,
-} from "@/redux/apis/users/usersApi";
+  useGetAdminByIdTypeAndNumberQuery,
+  useForgotPasswordMutation,
+} from "@/redux/apis/admins/adminsApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
+import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 
-import { validateRequiredDate } from "@/helpers/validate_required_values/validate_required_files";
 import { maskEmail } from "@/helpers/mask_email/mask_email";
 
 const AdminForgotPasswordForm: React.FC<{
@@ -29,22 +29,24 @@ const AdminForgotPasswordForm: React.FC<{
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const errorsPatientState = useAppSelector((state) => state.patient.errors);
-
   const [linkToResetPasswordSent, setLinkToResetPasswordSent] = useState(false);
   const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
 
-  const [idTypesListPatientLocalState, setIdTypesListPatientLocalState] =
-    useState<IdType[] | undefined>([]);
+  const errorsAdminState = useAppSelector((state) => state.admin.errors);
 
-  const [idTypePatientLocalState, setIdTypePatientLocalState] = useState(0);
-  const [idNumberPatientLocalState, setIdNumberPatientLocalState] =
+  const [idTypesListAdminLocalState, setIdTypesListAdminLocalState] = useState<
+    IdType[] | undefined
+  >([]);
+
+  const [idTypeAdminLocalState, setIdTypeAdminLocalState] = useState(0);
+  const [idNumberAdminLocalState, setIdNumberAdminLocalState] = useState("");
+  const [corporateEmailAdminLocalState, setCorporateEmailAdminLocalState] =
     useState("");
-  const [birthdatePatientLocalState, setBirthdatePatientLocalState] =
-    useState("");
-  const [emailPatientLocalState, setEmailPatientLocalState] = useState<
-    string | undefined
-  >("");
+
+  const [
+    corporateEmailAdminOfModalSuccessLocalState,
+    setCorporateEmailAdminOfModalSuccessLocalState,
+  ] = useState("");
 
   const [isSubmittingForgotPassword, setIsSubmittingForgotPassword] =
     useState(false);
@@ -58,63 +60,60 @@ const AdminForgotPasswordForm: React.FC<{
     useState(false);
 
   const [
-    forgotPasswordPatient,
+    forgotPasswordAdmin,
     {
-      data: forgotPasswordPatientData,
-      isLoading: forgotPasswordPatientLoading,
-      isSuccess: forgotPasswordPatientSuccess,
-      isError: forgotPasswordPatientError,
+      data: forgotPasswordEpsData,
+      isLoading: forgotPasswordEpsLoading,
+      isSuccess: forgotPasswordEpsSuccess,
+      isError: forgotPasswordEpsError,
     },
-  ] = useForgotPatientPasswordMutation({
-    fixedCacheKey: "forgotPasswordPatientData",
+  ] = useForgotPasswordMutation({
+    fixedCacheKey: "forgotPasswordAdminData",
   });
 
-  const idNumberPatientLocalStateInt = idNumberPatientLocalState
-    ? parseInt(idNumberPatientLocalState?.toString(), 10)
+  const idNumberAdminLocalStateInt = idNumberAdminLocalState
+    ? parseInt(idNumberAdminLocalState?.toString(), 10)
     : 0;
 
   const {
-    data: isUserData,
-    isLoading: isUserLoading,
-    isFetching: isUserFetching,
-    isError: isUserError,
-  } = useGetUserByIdNumberQuery({
-    user_id_type: idTypePatientLocalState,
-    id_number: idNumberPatientLocalStateInt,
+    data: isAdminData,
+    isLoading: isAdminLoading,
+    isFetching: isAdminFetching,
+    isError: isAdminError,
+  } = useGetAdminByIdTypeAndNumberQuery({
+    admin_id_type: idTypeAdminLocalState,
+    id_number: idNumberAdminLocalStateInt,
   });
 
   const {
-    data: idTypesPatientData,
-    isLoading: idTypesPatientLoading,
-    isFetching: idTypesPatientFetching,
-    error: idTypesPatientError,
+    data: idTypesAdminData,
+    isLoading: idTypesAdminLoading,
+    isFetching: idTypesAdminFetching,
+    error: idTypesAdminError,
   } = useGetAllIdTypesQuery(null);
 
   useEffect(() => {
-    if (isUserData) {
-      setEmailPatientLocalState(isUserData?.email);
+    if (isAdminData && !isAdminError) {
+      setCorporateEmailAdminOfModalSuccessLocalState(
+        isAdminData?.corporate_email
+      );
     }
-    if (
-      !idTypesPatientLoading &&
-      !idTypesPatientFetching &&
-      idTypesPatientData
-    ) {
-      setIdTypesListPatientLocalState(idTypesPatientData);
+    if (!idTypesAdminLoading && !idTypesAdminFetching && idTypesAdminData) {
+      setIdTypesListAdminLocalState(idTypesAdminData);
     }
-    if (idTypesPatientError) {
+    if (idTypesAdminError) {
       dispatch(
-        setErrorsUserPatient("¡No se pudo obtener los tipos de identificación!")
+        setErrorsAdmin("¡No se pudo obtener los tipos de identificación!")
       );
       setShowErrorMessageForgotPassword(true);
-      setIdTypesListPatientLocalState(idTypesPatientData);
+      setIdTypesListAdminLocalState(idTypesAdminData);
     }
   }, [
-    idTypesPatientData,
-    idTypePatientLocalState,
-    idNumberPatientLocalState,
-    birthdatePatientLocalState,
-    isUserData,
-    emailPatientLocalState,
+    isAdminData,
+    idTypesAdminData,
+    idTypeAdminLocalState,
+    idNumberAdminLocalState,
+    corporateEmailAdminLocalState,
   ]);
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -122,18 +121,18 @@ const AdminForgotPasswordForm: React.FC<{
       setIsSubmittingForgotPassword(true);
 
       if (
-        idTypePatientLocalState &&
-        idNumberPatientLocalState &&
-        birthdatePatientLocalState
+        idTypeAdminLocalState &&
+        idNumberAdminLocalState &&
+        corporateEmailAdminLocalState
       ) {
-        const idNumberPatientLocalStateInt = idNumberPatientLocalState
-          ? parseInt(idNumberPatientLocalState?.toString(), 10)
+        const idNumberPatientLocalStateInt = idNumberAdminLocalState
+          ? parseInt(idNumberAdminLocalState?.toString(), 10)
           : 0;
 
-        const response: any = await forgotPasswordPatient({
-          id_type: idTypePatientLocalState,
+        const response: any = await forgotPasswordAdmin({
+          admin_id_type: idTypeAdminLocalState,
           id_number: idNumberPatientLocalStateInt,
-          birthdate: birthdatePatientLocalState,
+          corporate_email: corporateEmailAdminLocalState,
         });
 
         var validationPatientData = response.data?.status;
@@ -143,7 +142,7 @@ const AdminForgotPasswordForm: React.FC<{
         if (validationPatientError !== 200 && !validationPatientData) {
           const errorMessage = response.error?.data?.message;
 
-          dispatch(setErrorsUserPatient(errorMessage));
+          dispatch(setErrorsAdmin(errorMessage));
           setShowErrorMessageForgotPassword(true);
         }
         if (validationPatientData === 202 && !validationPatientError) {
@@ -153,9 +152,9 @@ const AdminForgotPasswordForm: React.FC<{
           setShowSuccessMessageForgotPassword(true);
           setLinkToResetPasswordSent(true);
 
-          setIdTypePatientLocalState(0);
-          setIdNumberPatientLocalState("");
-          setBirthdatePatientLocalState("");
+          setIdTypeAdminLocalState(0);
+          setIdNumberAdminLocalState("");
+          setCorporateEmailAdminLocalState("");
         }
       }
     } catch (error) {
@@ -165,21 +164,17 @@ const AdminForgotPasswordForm: React.FC<{
     }
   };
 
-  const onChangeDate: DatePickerProps["onChange"] = (date, dateString) => {
-    setBirthdatePatientLocalState(dateString.toString());
-  };
-
   const handleGoToLogin = async () => {
     try {
       setIsSubmittingGoToLogin(true);
 
       await new Promise((resolve) => setTimeout(resolve, 700));
 
-      await router.replace("/login", {
+      await router.replace("/login_admin", {
         scroll: false,
       });
 
-      setEmailPatientLocalState("");
+      setCorporateEmailAdminOfModalSuccessLocalState("");
 
       setOpenModalForgotPassword(false);
     } catch (error) {
@@ -190,7 +185,7 @@ const AdminForgotPasswordForm: React.FC<{
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsUserPatient([]));
+    dispatch(setErrorsAdmin([]));
     setShowErrorMessageForgotPassword(false);
     setShowSuccessMessageForgotPassword(false);
   };
@@ -222,7 +217,7 @@ const AdminForgotPasswordForm: React.FC<{
       {showErrorMessageForgotPassword && (
         <CustomMessage
           typeMessage="error"
-          message={errorsPatientState?.toString() || "¡Error en la petición!"}
+          message={errorsAdminState?.toString() || "¡Error en la petición!"}
         />
       )}
 
@@ -231,20 +226,22 @@ const AdminForgotPasswordForm: React.FC<{
           typeMessage="success"
           message={
             successMessageForgotPassword?.toString() ||
-            "¡Link para reestablecer contraseña enviado al correo eléctronico registrado por el usuario!"
+            "¡Link para reestablecer contraseña enviado al correo eléctronico registrado por el administrador!"
           }
         />
       )}
 
-      {linkToResetPasswordSent ? (
+      {linkToResetPasswordSent &&
+      corporateEmailAdminOfModalSuccessLocalState ? (
         <CustomResultOneButton
-          key={"link-to-reset-password-sent-success-custom-result-patient"}
+          key={"link-to-reset-password-sent-success-custom-result-admin"}
           statusTypeResult={"success"}
           titleCustomResult="¡Link para restablecer contraseña enviado!"
           subtitleCustomResult={
             <p>
-              Se ha enviado al correo <b>{maskEmail(emailPatientLocalState)}</b>
-              un link para restablecer su contraseña de ingreso.
+              Se ha enviado al correo{" "}
+              <b>{maskEmail(corporateEmailAdminOfModalSuccessLocalState)}</b> un
+              link para restablecer su contraseña de ingreso.
             </p>
           }
           handleClickCustomResult={handleGoToLogin}
@@ -253,16 +250,16 @@ const AdminForgotPasswordForm: React.FC<{
         />
       ) : (
         <Form
-          id="forgot-password-form-patient"
-          name="forgot-password-form-patient"
-          className="forgot-password-form-patient"
+          id="forgot-password-form-admin"
+          name="forgot-password-form-admin"
+          className="forgot-password-form-admin"
           onFinish={handleChangePassword}
           initialValues={{ remember: false }}
           autoComplete="false"
           layout="vertical"
         >
           <h2
-            className="title-forgot-password-patient"
+            className="title-forgot-password-admin"
             style={{
               ...titleStyleCss,
               marginBlock: 22,
@@ -272,12 +269,12 @@ const AdminForgotPasswordForm: React.FC<{
             Olvide mi contraseña
           </h2>
 
-          {idTypesPatientLoading || idTypesPatientFetching ? (
+          {idTypesAdminLoading || idTypesAdminFetching ? (
             <CustomSpin />
           ) : (
             <Form.Item
-              name="user-id-type-forgot-password-patient"
-              label="Tipo de identificación del paciente"
+              name="user-id-type-forgot-password-admin"
+              label="Tipo de identificación del colaborador"
               style={{ marginBottom: 7 }}
               rules={[
                 {
@@ -287,11 +284,11 @@ const AdminForgotPasswordForm: React.FC<{
               ]}
             >
               <Select
-                value={idTypePatientLocalState}
+                value={idTypeAdminLocalState}
                 placeholder="Tipo de identificación"
-                onChange={(e) => setIdTypePatientLocalState(e)}
+                onChange={(e) => setIdTypeAdminLocalState(e)}
               >
-                {idTypesListPatientLocalState?.map((option: any) => (
+                {idTypesListAdminLocalState?.map((option: any) => (
                   <Select.Option key={option.id} value={option.id}>
                     {option.name}
                   </Select.Option>
@@ -301,8 +298,8 @@ const AdminForgotPasswordForm: React.FC<{
           )}
 
           <Form.Item
-            name="user-id-number-forgot-password-patient"
-            label="Número de identificación del paciente"
+            name="user-id-number-forgot-password-admin"
+            label="Número de identificación del colaborador"
             style={{ marginBottom: 7 }}
             normalize={(value) => {
               if (!value) return "";
@@ -332,29 +329,53 @@ const AdminForgotPasswordForm: React.FC<{
             <Input
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               type="tel"
-              value={idNumberPatientLocalState}
+              value={idNumberAdminLocalState}
               placeholder="Número de identificación"
-              onChange={(e) => setIdNumberPatientLocalState(e.target.value)}
+              onChange={(e) => setIdNumberAdminLocalState(e.target.value)}
               autoComplete="off"
               min={0}
             />
           </Form.Item>
 
           <Form.Item
-            name="date-picker-forgot-password-patient"
-            label="Fecha de nacimiento del paciente"
+            name="corporate-email-forgot-password-admin"
+            label="Correo electrónico corporativo del colaborador:"
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value) return "";
+
+              return value.toLowerCase().replace(/[^a-z0-9@._-]/g, "");
+            }}
             rules={[
               {
                 required: true,
-                validator: validateRequiredDate(
-                  birthdatePatientLocalState,
-                  "¡Por favor seleccionar la fecha de nacimiento!"
-                ),
+                message:
+                  "¡Por favor ingresa el correo electrónico corporativo del colaborador!",
+              },
+              {
+                type: "email",
+                message: "¡Por favor ingresa un correo electrónico valido!",
+              },
+              {
+                min: 10,
+                message: "¡Por favor ingresa mínimo 10 caracteres!",
+              },
+              {
+                max: 45,
+                message: "¡Por favor ingresa máximo 45 caracteres!",
               },
             ]}
           >
-            <CustomDatePicker onChangeDateCustomDatePicker={onChangeDate} />
+            <Input
+              prefix={<MdOutlineEmail className="site-form-item-icon" />}
+              type="email"
+              value={corporateEmailAdminLocalState}
+              placeholder="Correo electrónico"
+              onChange={(e) => {
+                setCorporateEmailAdminLocalState(e.target.value.toLowerCase());
+              }}
+              autoComplete="off"
+            />
           </Form.Item>
 
           <Form.Item

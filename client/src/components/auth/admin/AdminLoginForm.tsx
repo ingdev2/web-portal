@@ -198,28 +198,13 @@ const AdminLoginForm: React.FC = () => {
         style={{
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#fcfcfc",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+          backgroundColor: "#DFEBF2",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
           padding: "0px",
           marginBottom: "31px",
           marginInline: "22px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            paddingBottom: "7px",
-            margin: "0px",
-          }}
-        >
-          <img
-            src="/logos/LOGO-BONNADONA.png"
-            alt="Logo de Bonnadona"
-            style={{ height: 88 }}
-          />
-        </div>
-
         <h2
           className="title-login-admin"
           style={{
@@ -239,17 +224,38 @@ const AdminLoginForm: React.FC = () => {
             lg={12}
             style={{
               width: "100%",
+              display: "flex",
+              flexFlow: "column wrap",
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
               paddingInline: "13px",
               margin: "0px",
             }}
           >
             <img
-              src="/background/3d-neon-background.jpg"
-              alt="login-admin-image"
+              src="/logos/LOGO-BONNADONA.png"
+              alt="Logo de Bonnadona"
               style={{
-                width: "100%",
-                objectFit: "cover",
-                borderRadius: "13px",
+                width: "173px",
+                paddingBlock: "22px",
+              }}
+            />
+
+            <Divider
+              orientation="center"
+              style={{
+                marginBlock: 7,
+                borderWidth: 2,
+              }}
+            />
+
+            <img
+              src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
+              alt="Logo de Bonnadona"
+              style={{
+                width: "207px",
+                paddingBlock: "31px",
               }}
             />
           </Col>
@@ -376,7 +382,6 @@ const AdminLoginForm: React.FC = () => {
                 <CustomModalNoContent
                   key={"custom-modal-forgot-my-password-admin"}
                   widthCustomModalNoContent={"31%"}
-                  paddingBlockCustomModalNoContent={"88px"}
                   openCustomModalState={modalForgotMyPasswordIsOpen}
                   closableCustomModal={true}
                   maskClosableCustomModal={true}
