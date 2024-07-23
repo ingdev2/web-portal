@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
+import AdminDashboardLayout from "@/components/admin/homepage/AdminDashboardLayout";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -79,12 +80,12 @@ const DashboardAdminPage = () => {
         />
       )}
 
-      <h1>Dashboard Admin</h1>
-
       {!idNumberAdminLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-admin-content">"Dashboard aquí"</div>
+        <div className="dashboard-admin-content">
+          <AdminDashboardLayout />
+        </div>
       )}
     </div>
   );
