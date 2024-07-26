@@ -24,6 +24,7 @@ import { setDefaultValuesUserFamiliar } from "@/redux/features/familiar/familiar
 import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
+import { setResetModalAdmin } from "@/redux/features/common/modal/modalSlice";
 
 const AdminHeaderLayout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -69,6 +70,7 @@ const AdminHeaderLayout: React.FC = () => {
       dispatch(setDefaultValuesUserEps());
       dispatch(setDefaultValuesUserFamiliar());
       dispatch(setDefaultValuesMedicalReq());
+      dispatch(setResetModalAdmin());
       signOut({
         redirect: true,
         callbackUrl: "/login_admin",

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import AdminHeaderLayout from "@/components/admin/header_layout_dashboard/AdminHeaderLayout";
-import { Button, Col, Layout, Menu, MenuProps, Row, theme } from "antd";
+import { Button, Col, Layout, Menu, Row, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { ItemKeys } from "./enums/item_names_and_keys.enums";
 import { items } from "@/components/admin/items_menu_dashboard_admin/items_menu_dashboard_admin";

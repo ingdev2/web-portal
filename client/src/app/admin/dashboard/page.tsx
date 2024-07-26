@@ -15,9 +15,12 @@ import { setIdNumberAdmin } from "@/redux/features/admin/adminSlice";
 import {
   setIsPageLoading,
   setAdminModalIsOpen,
+  setSelectedKey,
 } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
+
+import { ItemKeys } from "@/components/common/custom_dashboard_layout/enums/item_names_and_keys.enums";
 
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
@@ -32,6 +35,7 @@ const DashboardAdminPage = () => {
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
+  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
 
   const idNumberAdminLoginState = useAppSelector(
     (state) => state.adminLogin.id_number
@@ -66,8 +70,12 @@ const DashboardAdminPage = () => {
     if (adminModalState) {
       dispatch(setAdminModalIsOpen(false));
     }
-    if (isPageLoadingState) {
+    if (
+      isPageLoadingState &&
+      selectedKeyState !== ItemKeys.SUB_ALL_REQUESTS_REQ_KEY
+    ) {
       dispatch(setIsPageLoading(false));
+      dispatch(setSelectedKey(ItemKeys.SUB_ALL_REQUESTS_REQ_KEY));
     }
   }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
 
