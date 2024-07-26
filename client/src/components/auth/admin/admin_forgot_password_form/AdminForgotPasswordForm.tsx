@@ -19,7 +19,6 @@ import {
   useForgotPasswordMutation,
 } from "@/redux/apis/admins/adminsApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
-import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 
 import { maskEmail } from "@/helpers/mask_email/mask_email";
 

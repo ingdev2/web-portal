@@ -1,13 +1,14 @@
-import { theme, type ThemeConfig } from "antd";
+import { type ThemeConfig } from "antd";
 
 const themeConfig: ThemeConfig = {
   token: {
-    fontSize: 13,
+    fontSize: 14,
     colorPrimary: "#015E90",
+    colorText: "#070707",
   },
   components: {
     Layout: {
-      siderBg: "#903301",
+      siderBg: "#013B5A",
     },
     Menu: {
       itemActiveBg: "#013B5A",
@@ -15,8 +16,9 @@ const themeConfig: ThemeConfig = {
       itemColor: "#F7F7F7",
       itemHoverBg: "#017DC0",
       itemHoverColor: "#F7F7F7",
-      itemSelectedColor: "#017DC0",
-      itemSelectedBg: "#DFEBF2",
+      itemSelectedColor: "#00B5E8",
+      itemSelectedBg: "#EFF7F8",
+      colorBgElevated: "#013B5A",
     },
   },
 };

@@ -25,6 +25,8 @@ import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
 
+import { maskEmail } from "@/helpers/mask_email/mask_email";
+
 const PatientModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -235,7 +237,7 @@ const PatientModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserPatientData?.email}
+            {maskEmail(isUserPatientData?.email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

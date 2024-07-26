@@ -24,10 +24,12 @@ import {
   setIdLoginFamiliar,
 } from "@/redux/features/login/familiarLoginSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
 import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useResendFamiliarVerificationCodeMutation } from "@/redux/apis/auth/loginRelativesApi";
-import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
+
+import { maskEmail } from "@/helpers/mask_email/mask_email";
 
 const FamiliarModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -255,7 +257,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {userFamiliarData?.email}
+            {maskEmail(userFamiliarData?.email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

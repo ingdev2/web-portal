@@ -25,6 +25,8 @@ import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useResendAdminVerificationCodeMutation } from "@/redux/apis/auth/loginAdminApi";
 
+import { maskEmail } from "@/helpers/mask_email/mask_email";
+
 const AdminModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -235,7 +237,7 @@ const AdminModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isAdminData?.corporate_email}
+            {maskEmail(isAdminData?.corporate_email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

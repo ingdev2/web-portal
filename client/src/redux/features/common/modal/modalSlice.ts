@@ -8,6 +8,7 @@ const initialState = {
   epsModalIsOpen: false,
   familiarModalIsOpen: false,
   passwordResetToken: "",
+  selectedKey: "",
 };
 
 export const modalSlice = createSlice({
@@ -35,6 +36,9 @@ export const modalSlice = createSlice({
     setPasswordResetToken: (state, action) => {
       state.passwordResetToken = action.payload;
     },
+    setSelectedKey: (state, action) => {
+      state.selectedKey = action.payload;
+    },
   },
 });
 
@@ -46,6 +50,7 @@ export const {
   setEpsModalIsOpen,
   setFamiliarModalIsOpen,
   setPasswordResetToken,
+  setSelectedKey,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

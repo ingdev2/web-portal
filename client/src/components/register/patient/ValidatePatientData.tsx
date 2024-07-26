@@ -737,7 +737,7 @@ const ValidatePatientData: React.FC = () => {
                       target="_blank"
                       style={{ textDecoration: "underline" }}
                     >
-                      Leer Política de Tratamiento de Datos
+                      Leer Política de Tratamiento de Datos Personales
                     </a>
                   </div>
                   <Checkbox

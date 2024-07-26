@@ -63,7 +63,10 @@ const FamiliarHeaderLayout: React.FC = () => {
       dispatch(setDefaultValuesUserFamiliar());
       dispatch(setDefaultValuesUserPatient());
       dispatch(setDefaultValuesMedicalReq());
-      signOut();
+      signOut({
+        redirect: true,
+        callbackUrl: "/login",
+      });
     } catch (error) {
       console.error(error);
     } finally {

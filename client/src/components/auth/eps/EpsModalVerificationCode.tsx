@@ -25,6 +25,8 @@ import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
 
+import { maskEmail } from "@/helpers/mask_email/mask_email";
+
 const EpsModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -233,7 +235,7 @@ const EpsModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserEpsData?.email}
+            {maskEmail(isUserEpsData?.email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

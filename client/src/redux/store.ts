@@ -44,6 +44,7 @@ const persistConfig = {
   version: 1,
   storage,
   whitelist: [
+    "admin",
     "patient",
     "eps",
     "familiar",
@@ -51,6 +52,7 @@ const persistConfig = {
     "patientUserLogin",
     "epsUserLogin",
     "familiarLogin",
+    "modal",
   ],
   blacklist: [],
 };

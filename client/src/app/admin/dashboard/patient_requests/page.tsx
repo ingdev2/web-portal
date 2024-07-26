@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
 
-import DashboardAllRequestLayout from "@/components/admin/homepage/DashboardAllRequestLayout";
+import PatientRequestsLayout from "@/components/admin/request_list/patient_requests/PatientRequestsLayout";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -19,7 +19,7 @@ import {
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 
-const DashboardAdminPage = () => {
+const PatientRequestsPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -83,12 +83,12 @@ const DashboardAdminPage = () => {
       {!idNumberAdminLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-all-requests-admin-content">
-          <DashboardAllRequestLayout />
+        <div className="dashboard-patient-requests-admin-content">
+          <PatientRequestsLayout />
         </div>
       )}
     </div>
   );
 };
 
-export default DashboardAdminPage;
+export default PatientRequestsPage;
