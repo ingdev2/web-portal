@@ -10,6 +10,7 @@ const initialState = {
   familiarModalIsOpen: false,
   passwordResetToken: "",
   selectedKey: ItemKeys.SUB_ALL_REQUESTS_REQ_KEY,
+  selectedOpenKeys: [""],
 };
 
 export const modalSlice = createSlice({
@@ -40,8 +41,12 @@ export const modalSlice = createSlice({
     setSelectedKey: (state, action) => {
       state.selectedKey = action.payload;
     },
+    setSelectedOpenKeys: (state, action) => {
+      state.selectedOpenKeys = action.payload;
+    },
     setResetModalAdmin: (state) => {
       state.selectedKey = ItemKeys.SUB_ALL_REQUESTS_REQ_KEY;
+      state.selectedOpenKeys = [""];
     },
   },
 });
@@ -55,6 +60,7 @@ export const {
   setFamiliarModalIsOpen,
   setPasswordResetToken,
   setSelectedKey,
+  setSelectedOpenKeys,
   setResetModalAdmin,
 } = modalSlice.actions;
 

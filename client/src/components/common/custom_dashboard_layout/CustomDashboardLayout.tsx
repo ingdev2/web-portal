@@ -9,7 +9,10 @@ import { Button, Col, Layout, Menu, Row, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { ItemKeys } from "./enums/item_names_and_keys.enums";
 import { items } from "@/components/admin/items_menu_dashboard_admin/items_menu_dashboard_admin";
-import { setSelectedKey } from "@/redux/features/common/modal/modalSlice";
+import {
+  setSelectedKey,
+  setSelectedOpenKeys,
+} from "@/redux/features/common/modal/modalSlice";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -21,11 +24,14 @@ const CustomDashboardLayout: React.FC<{
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
-
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
+  const selectedOpenKeysState = useAppSelector(
+    (state) => state.modal.selectedOpenKeys
+  );
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -33,6 +39,10 @@ const CustomDashboardLayout: React.FC<{
     dispatch(setSelectedKey(key));
 
     router.push(`/admin/dashboard/${key}`);
+  };
+
+  const handleOpenChange: any = (keys: string[]) => {
+    dispatch(setSelectedOpenKeys(keys));
   };
 
   return (
@@ -98,9 +108,11 @@ const CustomDashboardLayout: React.FC<{
         <Menu
           className="custom--dashboard-layout-menu"
           mode="inline"
+          items={items}
           selectedKeys={[selectedKeyState]}
           defaultSelectedKeys={[ItemKeys.ITEM_REQUESTS_KEY]}
-          items={items}
+          openKeys={selectedOpenKeysState}
+          onOpenChange={handleOpenChange}
           onClick={({ key }) => handleMenuClick(key)}
           style={{
             margin: "0px",
