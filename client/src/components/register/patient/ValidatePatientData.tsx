@@ -18,6 +18,7 @@ import {
   Col,
   Row,
 } from "antd";
+import PhoneInput from "antd-phone-input";
 import { titleStyleCss } from "@/theme/text_styles";
 import { LockOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import CustomSpin from "../../common/custom_spin/CustomSpin";
@@ -29,7 +30,6 @@ import {
   setPasswordUserPatient,
   setAuthMethodUserPatient,
   setErrorsUserPatient,
-  setWhatsappUserPatient,
   setIdUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
@@ -37,7 +37,10 @@ import { useCreateUserPatientMutation } from "@/redux/apis/register/registerUser
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import CustomModalTwoOptions from "../../common/custom_modal_two_options/CustomModalTwoOptions";
-import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import {
+  checkboxProcessingPersonalDataValidator,
+  checkboxMessagesValidator,
+} from "@/helpers/checkbox_validator/checkbox_validator";
 
 import { CONTACT_PBX } from "@/utils/constants/constants";
 
@@ -90,10 +93,18 @@ const ValidatePatientData: React.FC = () => {
     error: authMethodError,
   } = useGetAllAuthMethodsQuery(null);
 
+  const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
+    useState(false);
   const [showCustomCancelModal, setShowCustomCancelModal] = useState(false);
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
   const [allAuthMethodsData, setAllAuthMethodsData]: any[] = useState([]);
+
+  const [countryCode, setCountryCode] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [areaCode, setAreaCode] = useState("");
+  const [whatsAppUserPatientLocalState, setWhatsAppUserPatientLocalState] =
+    useState("");
 
   const [passwordUserPatientLocalState, setPasswordUserPatientLocalState] =
     useState("");
@@ -191,8 +202,10 @@ const ValidatePatientData: React.FC = () => {
         authentication_method: authMethodUserPatientLocalState,
       };
 
-      if (whatsappPatientState) {
-        patientData.whatsapp = whatsappPatientState;
+      if (countryCode && areaCode && phoneNumber) {
+        const fullWhatsappNumber = `${countryCode}${areaCode}${phoneNumber}`;
+
+        patientData.whatsapp = fullWhatsappNumber;
       }
 
       const response: any = await createUserPatient(patientData);
@@ -243,8 +256,44 @@ const ValidatePatientData: React.FC = () => {
     setShowErrorMessagePatient(false);
   };
 
+  const handlePhoneInputChange = (value: any) => {
+    if (value) {
+      setCountryCode(value.countryCode || 0);
+      setAreaCode(value.areaCode || "");
+      setPhoneNumber(value.phoneNumber || "");
+    }
+  };
+
+  const combinePhoneDetails = () => {
+    return `${areaCode}${phoneNumber}`;
+  };
+
+  const validatorWhatsappInput = (_: any, value: any) => {
+    const combinedPhone = combinePhoneDetails();
+
+    if (!combinedPhone) {
+      return Promise.resolve();
+    }
+
+    const phonePattern = /^[0-9]+$/;
+
+    if (
+      phonePattern.test(combinedPhone) &&
+      combinedPhone.length >= 7 &&
+      combinedPhone.length <= 17
+    ) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject("Número de teléfono inválido");
+  };
+
   const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
     setIsCheckboxChecked(e.target.checked);
+  };
+
+  const handleCheckboxMessageChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxMessagesChecked(e.target.checked);
   };
 
   return (
@@ -523,39 +572,30 @@ const ValidatePatientData: React.FC = () => {
                 label="Número de WhatsApp (opcional)"
                 style={{ marginBottom: 13 }}
                 normalize={(value) => {
-                  if (!value) return "";
+                  if (!value || typeof value !== "string") return "";
 
-                  return value.replace(/[^0-9]/g, "");
+                  return value.replace(/[^\d+]/g, "");
                 }}
                 rules={[
                   {
                     required: false,
-                  },
-                  {
-                    pattern: /^[0-9]+$/,
                     message:
-                      "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
+                      "¡Por favor ingresa el número de WhatsApp del paciente!",
                   },
                   {
-                    min: 7,
-                    message: "¡Por favor ingresa mínimo 7 números!",
-                  },
-                  {
-                    max: 11,
-                    message: "¡Por favor ingresa máximo 11 números!",
+                    validator: validatorWhatsappInput,
                   },
                 ]}
               >
-                <Input
+                <PhoneInput
                   prefix={<WhatsAppOutlined className="site-form-item-icon" />}
                   type="tel"
-                  value={whatsappPatientState}
+                  value={{ countryCode, areaCode, phoneNumber }}
                   placeholder="Número de WhatsApp"
-                  onChange={(e) =>
-                    dispatch(setWhatsappUserPatient(e.target.value))
-                  }
+                  onChange={handlePhoneInputChange}
                   autoComplete="off"
                   min={0}
+                  enableSearch
                 />
               </Form.Item>
 
@@ -582,6 +622,7 @@ const ValidatePatientData: React.FC = () => {
                     validator: (_, value) => {
                       const containsLowercase = /[a-z]/.test(value ?? "");
                       const containsUppercase = /[A-Z]/.test(value ?? "");
+
                       if (!containsLowercase || !containsUppercase) {
                         return Promise.reject(
                           "¡La contraseña debe contener al menos una letra minúscula y una letra mayúscula!"
@@ -722,7 +763,7 @@ const ValidatePatientData: React.FC = () => {
                 style={{ textAlign: "center", marginBottom: 13 }}
                 rules={[
                   {
-                    validator: checkboxValidator,
+                    validator: checkboxProcessingPersonalDataValidator,
                   },
                 ]}
               >
@@ -744,7 +785,29 @@ const ValidatePatientData: React.FC = () => {
                     checked={isCheckboxChecked}
                     onChange={handleCheckboxChange}
                   >
-                    Acepto las políticas de tratamiento de datos personales
+                    Declaro haber leído, entendido y aceptado la Política de
+                    Tratamiento de Datos Personales
+                  </Checkbox>
+                </div>
+              </Form.Item>
+
+              <Form.Item
+                name="checkbox-authorization-send-messages"
+                valuePropName="checked"
+                style={{ textAlign: "center", marginBottom: 13 }}
+                rules={[
+                  {
+                    validator: checkboxMessagesValidator,
+                  },
+                ]}
+              >
+                <div style={{ marginBottom: 13 }}>
+                  <Checkbox
+                    checked={isCheckboxMessagesChecked}
+                    onChange={handleCheckboxMessageChange}
+                  >
+                    Acepto el uso de medios electrónicos vía email o celular
+                    para recibir mensajes informativos
                   </Checkbox>
                 </div>
               </Form.Item>

@@ -20,7 +20,10 @@ import {
   setVerificationCodeLoginAdmin,
   setErrorsLoginAdmin,
 } from "@/redux/features/login/adminLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setAdminModalIsOpen,
+  setIsPageLoading,
+} from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useResendAdminVerificationCodeMutation } from "@/redux/apis/auth/loginAdminApi";
@@ -159,6 +162,8 @@ const AdminModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setAdminModalIsOpen(false));
+
     <Link href="/login_admin" scroll={false} />;
     window.location.reload();
   };

@@ -20,7 +20,10 @@ import {
   setVerificationCodeLoginEps,
   setErrorsLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setEpsModalIsOpen,
+  setIsPageLoading,
+} from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
@@ -157,6 +160,8 @@ const EpsModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setEpsModalIsOpen(false));
+
     <Link href="/login" scroll={false} />;
     window.location.reload();
   };

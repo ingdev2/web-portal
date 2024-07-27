@@ -568,7 +568,8 @@ const EpsRegistrationFormData: React.FC<{
             checked={isCheckboxCheckedDataForm}
             onChange={handleCheckboxChangeDataForm}
           >
-            Acepto las políticas de tratamiento de datos personales
+            Declaro haber leído, entendido y aceptado la Política de Tratamiento
+            de Datos Personales
           </Checkbox>
         </div>
       </Form.Item>

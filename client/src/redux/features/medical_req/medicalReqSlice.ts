@@ -292,7 +292,6 @@ export const medicalReqSlice = createSlice({
           (file) => file.originalname !== action.payload
         );
     },
-
     setResponseCommentsMedicalReq: (state, action) => {
       state.response_comments = action.payload;
     },

@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@types/antd": "^1.0.0",
     "antd": "^5.14.2",
+    "antd-phone-input": "^0.3.9",
     "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
     "next": "14.1.0",

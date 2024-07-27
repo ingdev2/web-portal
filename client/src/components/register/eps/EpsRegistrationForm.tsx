@@ -21,7 +21,7 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import { checkboxProcessingPersonalDataValidator } from "@/helpers/checkbox_validator/checkbox_validator";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 
 const EpsRegistrationForm: React.FC = () => {
@@ -445,7 +445,7 @@ const EpsRegistrationForm: React.FC = () => {
           handleOnChangePasswordUserEpsValueDataForm={(e) =>
             setPasswordUserEpsLocalState(e.target.value.trim())
           }
-          checkboxValidatorDataForm={checkboxValidator}
+          checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
           isCheckboxCheckedDataForm={isCheckboxChecked}
           handleCheckboxChangeDataForm={handleCheckboxChange}
           buttonSubmitFormLoadingDataForm={

@@ -23,7 +23,10 @@ import {
   setErrorsLoginFamiliar,
   setIdLoginFamiliar,
 } from "@/redux/features/login/familiarLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setFamiliarModalIsOpen,
+  setIsPageLoading,
+} from "@/redux/features/common/modal/modalSlice";
 import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
 import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
@@ -179,6 +182,8 @@ const FamiliarModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setFamiliarModalIsOpen(false));
+
     <Link href="/login" scroll={false} />;
     window.location.reload();
   };

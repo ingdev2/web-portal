@@ -5,8 +5,9 @@ import type { Metadata } from "next";
 import { Providers } from "@/redux/providers";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import SessionAuthProvider from "@/context/SessionAuthProvider";
-import { ConfigProvider, theme } from "antd";
+import { ConfigProvider } from "antd";
 import themeConfig from "@/theme/themeConfig";
+import es_ES from "antd/locale/es_ES";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <main className="container-main-app">
             <AntdRegistry>
               <SessionAuthProvider>
-                <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
+                <ConfigProvider theme={themeConfig} locale={es_ES}>
+                  {children}
+                </ConfigProvider>
               </SessionAuthProvider>
             </AntdRegistry>
           </main>

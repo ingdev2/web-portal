@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: Familiar = {
   id: "",
@@ -27,7 +27,8 @@ const initialState: Familiar = {
   createdAt: "",
   updateAt: "",
   deletedAt: "",
-  copy_familiar_citizenship_card: [],
+  copy_familiar_identification_document: [],
+  files_copy_familiar_citizenship_card: [],
   medical_req: [],
   errors: [],
 };
@@ -100,7 +101,22 @@ export const familiarSlice = createSlice({
       state.is_active = action.payload;
     },
     setCopyFamiliarCitizenshipCard: (state, action) => {
-      state.copy_familiar_citizenship_card = action.payload;
+      state.copy_familiar_identification_document = action.payload;
+    },
+    setFileCopyFamiliarCitizenshipCard: (
+      state,
+      action: PayloadAction<Array<Express.Multer.File>>
+    ) => {
+      state.files_copy_familiar_citizenship_card = action.payload;
+    },
+    removeFileCopyFamiliarCitizenshipCard: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.files_copy_familiar_citizenship_card =
+        state.files_copy_familiar_citizenship_card.filter(
+          (file) => file.originalname !== action.payload
+        );
     },
     setMedicalReqUserFamiliar: (state, action) => {
       state.medical_req = action.payload;
@@ -126,7 +142,7 @@ export const familiarSlice = createSlice({
       state.patient_name = "";
       state.rel_with_patient = 0;
       state.idTypesFamiliar = [];
-      state.copy_familiar_citizenship_card = [];
+      state.copy_familiar_identification_document = [];
       state.medical_req = [];
       state.errors = [];
     },
@@ -156,6 +172,8 @@ export const {
   setRoleUserFamiliar,
   setIsActiveUserPatient,
   setCopyFamiliarCitizenshipCard,
+  setFileCopyFamiliarCitizenshipCard,
+  removeFileCopyFamiliarCitizenshipCard,
   setMedicalReqUserFamiliar,
   setErrorsUserFamiliar,
   setDefaultValuesUserFamiliar,

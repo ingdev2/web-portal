@@ -4,6 +4,7 @@ import {
   IsString,
   MinLength,
   IsOptional,
+  IsArray,
 } from 'class-validator';
 
 export class CreateAuthorizedFamiliarDto {
@@ -19,6 +20,10 @@ export class CreateAuthorizedFamiliarDto {
 
   @IsNotEmpty({ message: '¡Por favor ingresa un número de identificación!' })
   id_number: number;
+
+  @IsOptional()
+  @IsArray()
+  copy_familiar_identification_document: string[];
 
   @IsNotEmpty({ message: '¡Por favor ingresa un correo electrónico!' })
   @IsEmail()

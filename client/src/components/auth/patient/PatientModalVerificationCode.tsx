@@ -20,7 +20,10 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setIsPageLoading,
+  setPatientModalIsOpen,
+} from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
@@ -159,6 +162,8 @@ const PatientModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setPatientModalIsOpen(false));
+
     <Link href="/login" scroll={false} />;
     window.location.reload();
   };

@@ -25,7 +25,8 @@ interface Familiar {
   createdAt: string;
   updateAt: string;
   deletedAt: string;
-  copy_familiar_citizenship_card: string[];
+  copy_familiar_identification_document: string[];
+  files_copy_familiar_citizenship_card: Array<Express.Multer.File>;
   medical_req: Array<MedicalReq>;
   errors: [];
 }

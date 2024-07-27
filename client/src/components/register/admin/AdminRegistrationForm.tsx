@@ -21,7 +21,7 @@ import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 
-import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import { checkboxProcessingPersonalDataValidator } from "@/helpers/checkbox_validator/checkbox_validator";
 
 const AdminRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -415,7 +415,7 @@ const AdminRegistrationForm: React.FC = () => {
           handleOnChangePasswordAdminValueDataForm={(e) =>
             setPasswordAdminLocalState(e.target.value.trim())
           }
-          checkboxValidatorDataForm={checkboxValidator}
+          checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
           isCheckboxCheckedDataForm={isCheckboxChecked}
           handleCheckboxChangeDataForm={handleCheckboxChange}
           buttonSubmitFormLoadingDataForm={
