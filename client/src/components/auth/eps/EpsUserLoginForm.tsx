@@ -6,9 +6,19 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
-import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Select,
+} from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import EpsModalVerificationCode from "./EpsModalVerificationCode";
+import EpsForgotPasswordForm from "./eps_forgot_password_form/EpsForgotPasswordForm";
 import CustomModalNoContent from "../../common/custom_modal_no_content/CustomModalNoContent";
 import CustomSpin from "../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../common/custom_messages/CustomMessage";
@@ -28,7 +38,12 @@ import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginEpsUsersMutation } from "@/redux/apis/auth/loginUsersApi";
 import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
-import EpsForgotPasswordForm from "./eps_forgot_password_form/EpsForgotPasswordForm";
+
+import {
+  checkboxProcessingPersonalDataValidator,
+  checkboxMessagesValidator,
+} from "@/helpers/checkbox_validator/checkbox_validator";
+import { CheckboxProps } from "antd/lib";
 
 const EpsUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -55,6 +70,9 @@ const EpsUserLoginForm: React.FC = () => {
   const [idNumberEpsLocalState, setIdNumberEpsLocalState] = useState("");
   const [passwordEpsLocalState, setPasswordEpsLocalState] = useState("");
 
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
+    useState(false);
   const [modalForgotMyPasswordIsOpen, setModalForgotMyPasswordIsOpen] =
     useState(false);
   const [isSubmittingRegisterPageEps, setIsSubmittingRegisterPageEps] =
@@ -147,6 +165,14 @@ const EpsUserLoginForm: React.FC = () => {
     } finally {
       setIsSubmittingEps(false);
     }
+  };
+
+  const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxChecked(e.target.checked);
+  };
+
+  const handleCheckboxMessageChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxMessagesChecked(e.target.checked);
   };
 
   const handleButtonClick = () => {
@@ -331,12 +357,66 @@ const EpsUserLoginForm: React.FC = () => {
                 textDecorationLine: "underline",
                 fontWeight: 500,
                 marginTop: 7,
-                marginBottom: 22,
+                marginBottom: 7,
               }}
               onClick={() => setModalForgotMyPasswordIsOpen(true)}
             >
               Olvidé mi contraseña
             </a>
+
+            <Form.Item
+              name="checkbox-data-autorization"
+              valuePropName="checked"
+              style={{ textAlign: "center", marginBottom: 13 }}
+              rules={[
+                {
+                  validator: checkboxProcessingPersonalDataValidator,
+                },
+              ]}
+            >
+              <div style={{ marginBlock: 13 }}>
+                <div style={{ marginBottom: "13px" }}>
+                  <a
+                    className="data-processing-autorization-link"
+                    href={
+                      process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK
+                    }
+                    target="_blank"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Leer Política de Tratamiento de Datos Personales
+                  </a>
+                </div>
+                <Checkbox
+                  checked={isCheckboxChecked}
+                  onChange={handleCheckboxChange}
+                >
+                  Declaro haber leído, entendido y aceptado la Política de
+                  Tratamiento de Datos Personales
+                </Checkbox>
+              </div>
+            </Form.Item>
+
+            <Form.Item
+              name="checkbox-authorization-send-messages"
+              valuePropName="checked"
+              style={{ textAlign: "center", marginBottom: 13 }}
+              rules={[
+                {
+                  validator: checkboxMessagesValidator,
+                },
+              ]}
+            >
+              <div style={{ marginBottom: 13 }}>
+                <Checkbox
+                  checked={isCheckboxMessagesChecked}
+                  onChange={handleCheckboxMessageChange}
+                >
+                  Acepto el uso de medios electrónicos vía email o celular para
+                  recibir mensajes informativos
+                </Checkbox>
+              </div>
+            </Form.Item>
 
             {isSubmittingEps && isLoginEpsLoading ? (
               <CustomSpin />

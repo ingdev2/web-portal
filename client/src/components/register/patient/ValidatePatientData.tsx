@@ -101,10 +101,8 @@ const ValidatePatientData: React.FC = () => {
   const [allAuthMethodsData, setAllAuthMethodsData]: any[] = useState([]);
 
   const [countryCode, setCountryCode] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [areaCode, setAreaCode] = useState("");
-  const [whatsAppUserPatientLocalState, setWhatsAppUserPatientLocalState] =
-    useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const [passwordUserPatientLocalState, setPasswordUserPatientLocalState] =
     useState("");
@@ -160,6 +158,9 @@ const ValidatePatientData: React.FC = () => {
     authMethodFetching,
     authMethodData,
     authMethodError,
+    areaCode,
+    phoneNumber,
+    passwordUserPatientLocalState,
   ]);
 
   const handleCorrectData = () => {
@@ -646,6 +647,13 @@ const ValidatePatientData: React.FC = () => {
                   },
                   {
                     validator: (_, value) => {
+                      if (
+                        !passwordUserPatientLocalState ||
+                        (!areaCode && !phoneNumber)
+                      ) {
+                        return Promise.resolve();
+                      }
+
                       const passwordUpperCase = value?.toUpperCase();
 
                       const nameWords = namePatientState
@@ -655,6 +663,8 @@ const ValidatePatientData: React.FC = () => {
                       const idNumber = String(idNumberPatientState);
 
                       const cellphoneNumber = String(cellphonePatientState);
+
+                      const whatsAppNumber = areaCode && phoneNumber;
 
                       const birthdate = birthdatePatientState
                         ?.replace(/\s+/g, "")
@@ -684,6 +694,14 @@ const ValidatePatientData: React.FC = () => {
                         return Promise.reject(
                           new Error(
                             "¡La contraseña no puede contener datos del número de celular del usuario!"
+                          )
+                        );
+                      }
+
+                      if (passwordUpperCase?.includes(whatsAppNumber)) {
+                        return Promise.reject(
+                          new Error(
+                            "¡La contraseña no puede contener datos del número de WhatsApp del usuario!"
                           )
                         );
                       }

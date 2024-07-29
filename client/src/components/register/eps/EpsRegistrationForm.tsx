@@ -21,7 +21,10 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import { checkboxProcessingPersonalDataValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import {
+  checkboxProcessingPersonalDataValidator,
+  checkboxMessagesValidator,
+} from "@/helpers/checkbox_validator/checkbox_validator";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 
 const EpsRegistrationForm: React.FC = () => {
@@ -42,7 +45,13 @@ const EpsRegistrationForm: React.FC = () => {
     []
   );
   const [epsEmailLocalState, setEpsEmailLocalState] = useState("");
-  const [epsCellphoneLocalState, setEpsCellphoneLocalState] = useState(0);
+
+  const [countryCode, setCountryCode] = useState(0);
+  const [areaCode, setAreaCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const fullCellphoneNumber = `${countryCode}${areaCode}${phoneNumber}`;
+
   const [
     companyAreaNumberUserEpsLocalState,
     setCompanyAreaNumberUserEpsLocalState,
@@ -65,6 +74,8 @@ const EpsRegistrationForm: React.FC = () => {
     useState("");
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
+    useState(false);
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
 
@@ -179,8 +190,9 @@ const EpsRegistrationForm: React.FC = () => {
     authMethodError,
     epsNameLocalState,
     epsLastNameLocalState,
-    epsCellphoneLocalState,
+    fullCellphoneNumber,
     epsIdNumberLocalState,
+    passwordUserEpsLocalState,
   ]);
 
   const handleCreateUserEps = () => {
@@ -208,7 +220,7 @@ const EpsRegistrationForm: React.FC = () => {
         user_gender: epsGenderLocalState,
         company_area: companyAreaNumberUserEpsLocalState,
         email: epsEmailLocalState,
-        cellphone: epsCellphoneLocalState,
+        cellphone: parseInt(fullCellphoneNumber, 10) || undefined,
         password: passwordUserEpsLocalState,
         authentication_method: epsAuthMethodLocalState,
       });
@@ -302,8 +314,44 @@ const EpsRegistrationForm: React.FC = () => {
     }
   };
 
+  const handlePhoneInputChange = (value: any) => {
+    if (value) {
+      setCountryCode(value.countryCode || 0);
+      setAreaCode(value.areaCode || "");
+      setPhoneNumber(value.phoneNumber || "");
+    }
+  };
+
+  const combinePhoneDetails = () => {
+    return `${areaCode}${phoneNumber}`;
+  };
+
+  const validatorCellphoneInput = (_: any, value: any) => {
+    const combinedPhone = combinePhoneDetails();
+
+    if (!combinedPhone) {
+      return Promise.resolve();
+    }
+
+    const phonePattern = /^[0-9]+$/;
+
+    if (
+      phonePattern.test(combinedPhone) &&
+      combinedPhone.length >= 7 &&
+      combinedPhone.length <= 17
+    ) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject("Número de teléfono inválido");
+  };
+
   const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
     setIsCheckboxChecked(e.target.checked);
+  };
+
+  const handleCheckboxMessageChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxMessagesChecked(e.target.checked);
   };
 
   const handleButtonClick = () => {
@@ -322,7 +370,7 @@ const EpsRegistrationForm: React.FC = () => {
         display: "flex",
         flexFlow: "column wrap",
         alignContent: "center",
-        paddingInline: "31px",
+        paddingInline: "13px",
       }}
     >
       <Card
@@ -432,10 +480,9 @@ const EpsRegistrationForm: React.FC = () => {
           handleOnChangeEpsEmailDataForm={(e) => {
             setEpsEmailLocalState(e.target.value.toLowerCase());
           }}
-          epsCellphoneDataForm={epsCellphoneLocalState}
-          handleOnChangeEpsCellphoneDataForm={(e) =>
-            setEpsCellphoneLocalState(parseInt(e.target.value, 10))
-          }
+          epsCellphoneDataForm={parseInt(fullCellphoneNumber, 10)}
+          validatorCellphoneInputFormData={validatorCellphoneInput}
+          handleOnChangeEpsCellphoneDataForm={handlePhoneInputChange}
           epsAuthMethodValueDataForm={epsAuthMethodLocalState}
           handleOnChangeSelectAuthMethodDataForm={(e) =>
             setEpsAuthMethodLocalState(e.target.value)
@@ -448,16 +495,20 @@ const EpsRegistrationForm: React.FC = () => {
           checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
           isCheckboxCheckedDataForm={isCheckboxChecked}
           handleCheckboxChangeDataForm={handleCheckboxChange}
+          checkboxValidatorMessagesDataForm={checkboxMessagesValidator}
+          isCheckboxCheckedMessagesDataForm={isCheckboxMessagesChecked}
+          handleCheckboxMessagesChangeDataForm={handleCheckboxMessageChange}
           buttonSubmitFormLoadingDataForm={
             isSubmittingConfirmModal && !modalIsOpenConfirm
           }
           handleButtonSubmitFormDataForm={handleButtonClick}
           handleOnChangeValidatorPasswordDataForm={(_, value) => {
             if (
+              !passwordUserEpsLocalState ||
               !epsNameLocalState ||
               !epsLastNameLocalState ||
               !epsIdNumberLocalState ||
-              !epsCellphoneLocalState
+              !`${areaCode}${phoneNumber}`
             ) {
               return Promise.resolve();
             }
@@ -472,7 +523,7 @@ const EpsRegistrationForm: React.FC = () => {
 
             const idNumber = String(epsIdNumberLocalState);
 
-            const cellphoneNumber = String(epsCellphoneLocalState);
+            const cellphoneNumber = `${areaCode}${phoneNumber}`;
 
             if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
               return Promise.reject(

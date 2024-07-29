@@ -87,7 +87,7 @@ const RegisterPatientPage: React.FC = () => {
               {
                 className: "admin-card-register",
                 key: "1",
-                label: "Creación de usuario Administrador",
+                label: "Creación de Administrador",
                 icon: <IoIosBusiness />,
                 children: <AdminRegistrationForm />,
               },

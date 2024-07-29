@@ -27,121 +27,119 @@ const CustomModalTwoOptions: React.FC<{
   isSubmittingConfirm,
 }) => {
   return (
-    <>
-      <Modal
-        className="custom-modal-two-options"
-        width={"45%"}
+    <Modal
+      className="custom-modal-two-options"
+      width={"45%"}
+      style={{
+        minWidth: "345px",
+        paddingBlock: "31px",
+        margin: "0px",
+      }}
+      open={openCustomModalState}
+      onOk={handleConfirmCustomModal}
+      confirmLoading={isSubmittingConfirm}
+      onCancel={handleCancelCustomModal}
+      destroyOnClose={true}
+      maskClosable={true}
+      footer={null}
+      centered
+    >
+      <div
+        className="content-custom-modal-two-options"
         style={{
-          minWidth: "345px",
-          paddingBlock: "31px",
-          margin: "0px",
+          display: "flex",
+          flexFlow: "column wrap",
+          textAlign: "center",
+          alignItems: "center",
+          alignContent: "center",
+          justifyContent: "center",
+          marginBlock: "13px",
+          marginInline: "7px",
         }}
-        open={openCustomModalState}
-        onOk={handleConfirmCustomModal}
-        confirmLoading={isSubmittingConfirm}
-        onCancel={handleCancelCustomModal}
-        destroyOnClose={true}
-        maskClosable={true}
-        footer={null}
-        centered
       >
-        <div
-          className="content-custom-modal-two-options"
-          style={{
-            display: "flex",
-            flexFlow: "column wrap",
-            textAlign: "center",
-            alignItems: "center",
-            alignContent: "center",
-            justifyContent: "center",
-            marginBlock: "13px",
-            marginInline: "7px",
-          }}
+        <Space
+          direction="vertical"
+          size="small"
+          style={{ display: "flex", justifyContent: "center" }}
         >
-          <Space
-            direction="vertical"
-            size="small"
-            style={{ display: "flex", justifyContent: "center" }}
+          <div style={{ marginBlock: 2 }}>{iconCustomModal}</div>
+
+          <h2
+            className="title-custom-modal"
+            style={{
+              ...titleStyleCss,
+              textAlign: "center",
+            }}
           >
-            <div style={{ marginBlock: 2 }}>{iconCustomModal}</div>
+            {titleCustomModal}
+          </h2>
 
-            <h2
-              className="title-custom-modal"
-              style={{
-                ...titleStyleCss,
-                textAlign: "center",
-              }}
-            >
-              {titleCustomModal}
-            </h2>
+          <h4
+            className="subtitle-modal-patient"
+            style={{
+              ...subtitleStyleCss,
+            }}
+          >
+            {subtitleCustomModal}
+          </h4>
 
-            <h4
-              className="subtitle-modal-patient"
-              style={{
-                ...subtitleStyleCss,
-              }}
-            >
-              {subtitleCustomModal}
-            </h4>
-
-            <Space
-              direction="horizontal"
-              size="large"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                alignContent: "center",
-                marginTop: 13,
-              }}
-            >
-              {isSubmittingConfirm ? (
-                <div
-                  style={{
-                    marginInline: 54,
-                  }}
-                >
-                  <CustomSpin />
-                </div>
-              ) : (
-                <Button
-                  key={"confirm-button-custom-modal"}
-                  className="confirm-button-custom-modal"
-                  size="large"
-                  style={{
-                    paddingInline: 54,
-                    borderRadius: 31,
-                    backgroundColor: "#015E90",
-                    color: "#f2f2f2",
-                  }}
-                  htmlType="submit"
-                  onClick={handleConfirmCustomModal}
-                  onMouseDown={handleClickCustomModal}
-                >
-                  SÍ
-                </Button>
-              )}
-
+          <Space
+            direction="horizontal"
+            size="large"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center",
+              marginTop: 13,
+            }}
+          >
+            {isSubmittingConfirm ? (
+              <div
+                style={{
+                  marginInline: 54,
+                }}
+              >
+                <CustomSpin />
+              </div>
+            ) : (
               <Button
-                key="cancel-button-custom-modal"
-                className="cancel-button-custom-modal"
+                key={"confirm-button-custom-modal"}
+                className="confirm-button-custom-modal"
                 size="large"
                 style={{
                   paddingInline: 54,
                   borderRadius: 31,
-                  backgroundColor: "#8C1111",
+                  backgroundColor: "#015E90",
                   color: "#f2f2f2",
                 }}
-                onClick={handleCancelCustomModal}
+                htmlType="submit"
+                onClick={handleConfirmCustomModal}
                 onMouseDown={handleClickCustomModal}
               >
-                NO
+                SÍ
               </Button>
-            </Space>
+            )}
+
+            <Button
+              key="cancel-button-custom-modal"
+              className="cancel-button-custom-modal"
+              size="large"
+              style={{
+                paddingInline: 54,
+                borderRadius: 31,
+                backgroundColor: "#8C1111",
+                color: "#f2f2f2",
+              }}
+              onClick={handleCancelCustomModal}
+              onMouseDown={handleClickCustomModal}
+            >
+              NO
+            </Button>
           </Space>
-        </div>
-      </Modal>
-    </>
+        </Space>
+      </div>
+    </Modal>
   );
 };
 

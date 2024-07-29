@@ -248,6 +248,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               onChange={onChangeEmailUserPatientFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </div>
@@ -300,6 +301,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
                   onChange={onChangeCellphoneUserPatientFormData}
                   autoComplete="off"
                   min={0}
+                  disabled
                 />
               </Form.Item>
             </div>
@@ -352,6 +354,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
                   onChange={onChangeWhatsappUserPatientFormData}
                   autoComplete="off"
                   min={0}
+                  disabled
                 />
               </Form.Item>
             </div>

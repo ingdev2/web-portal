@@ -298,7 +298,7 @@ const AdminRegistrationForm: React.FC = () => {
         display: "flex",
         flexFlow: "column wrap",
         alignContent: "center",
-        paddingInline: "31px",
+        paddingInline: "13px",
       }}
     >
       <Card

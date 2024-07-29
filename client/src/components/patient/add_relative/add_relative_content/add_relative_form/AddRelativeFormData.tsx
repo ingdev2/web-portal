@@ -37,7 +37,6 @@ const AddRelativeFormData: React.FC<{
   tooltipUploadFamilyIdentityDocumentDataform: string;
   fileStatusSetterFamilyIdentityDocumentDataform: React.SetStateAction<any>;
   fileStatusRemoverFamilyIdentityDocumentDataform: React.SetStateAction<any>;
-
   familiarEmailDataForm: string;
   handleOnChangeFamiliarEmailDataForm: (e: any) => void;
   familiarCellphoneDataForm: number;

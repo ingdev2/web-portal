@@ -4,6 +4,7 @@ import React from "react";
 
 import { Button, Checkbox, Form, Input, Radio, Select, Space } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import PhoneInput from "antd-phone-input";
 import { titleStyleCss } from "@/theme/text_styles";
 import { IdcardOutlined } from "@ant-design/icons";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
@@ -37,6 +38,7 @@ const EpsRegistrationFormData: React.FC<{
   epsEmailDataForm: string;
   handleOnChangeEpsEmailDataForm: (e: any) => void;
   epsCellphoneDataForm: number;
+  validatorCellphoneInputFormData: (_: any, value: any) => Promise<void>;
   handleOnChangeEpsCellphoneDataForm: (e: any) => void;
   epsAuthMethodValueDataForm: number;
   handleOnChangeSelectAuthMethodDataForm: (e: any) => void;
@@ -46,6 +48,12 @@ const EpsRegistrationFormData: React.FC<{
   checkboxValidatorDataForm: (_: any, value: boolean) => Promise<unknown>;
   isCheckboxCheckedDataForm: boolean;
   handleCheckboxChangeDataForm: (e: any) => void;
+  checkboxValidatorMessagesDataForm: (
+    _: any,
+    value: boolean
+  ) => Promise<unknown>;
+  isCheckboxCheckedMessagesDataForm: boolean;
+  handleCheckboxMessagesChangeDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
   handleOnChangeValidatorPasswordDataForm: (_: any, value: any) => void;
@@ -76,6 +84,7 @@ const EpsRegistrationFormData: React.FC<{
   epsEmailDataForm,
   handleOnChangeEpsEmailDataForm,
   epsCellphoneDataForm,
+  validatorCellphoneInputFormData,
   handleOnChangeEpsCellphoneDataForm,
   epsAuthMethodValueDataForm,
   handleOnChangeSelectAuthMethodDataForm,
@@ -85,6 +94,9 @@ const EpsRegistrationFormData: React.FC<{
   checkboxValidatorDataForm,
   isCheckboxCheckedDataForm,
   handleCheckboxChangeDataForm,
+  checkboxValidatorMessagesDataForm,
+  isCheckboxCheckedMessagesDataForm,
+  handleCheckboxMessagesChangeDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
   handleOnChangeValidatorPasswordDataForm,
@@ -390,39 +402,30 @@ const EpsRegistrationFormData: React.FC<{
         label="Celular corporativo"
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
-          if (!value) return "";
+          if (!value || typeof value !== "string") return "";
 
-          return value.replace(/[^0-9]/g, "");
+          return value.replace(/[^\d+]/g, "");
         }}
         rules={[
           {
-            required: true,
+            required: false,
             message:
               "¡Por favor ingresa el número de celular corporativo del colaborador!",
           },
           {
-            pattern: /^[0-9]+$/,
-            message:
-              "¡Por favor ingresa número de celular sin puntos ni comas!",
-          },
-          {
-            min: 7,
-            message: "¡Por favor ingresa mínimo 7 números!",
-          },
-          {
-            max: 11,
-            message: "¡Por favor ingresa máximo 11 números!",
+            validator: validatorCellphoneInputFormData,
           },
         ]}
       >
-        <Input
+        <PhoneInput
           prefix={<FiPhone className="site-form-item-icon" />}
           type="tel"
-          value={epsCellphoneDataForm}
+          value={epsCellphoneDataForm.toString()}
           placeholder="Número de celular"
           onChange={handleOnChangeEpsCellphoneDataForm}
           autoComplete="off"
           min={0}
+          enableSearch
         />
       </Form.Item>
 
@@ -570,6 +573,27 @@ const EpsRegistrationFormData: React.FC<{
           >
             Declaro haber leído, entendido y aceptado la Política de Tratamiento
             de Datos Personales
+          </Checkbox>
+        </div>
+      </Form.Item>
+
+      <Form.Item
+        name="checkbox-authorization-send-messages"
+        valuePropName="checked"
+        style={{ textAlign: "center", marginBottom: 13 }}
+        rules={[
+          {
+            validator: checkboxValidatorMessagesDataForm,
+          },
+        ]}
+      >
+        <div style={{ marginBottom: 13 }}>
+          <Checkbox
+            checked={isCheckboxCheckedMessagesDataForm}
+            onChange={handleCheckboxMessagesChangeDataForm}
+          >
+            Acepto el uso de medios electrónicos vía email o celular para
+            recibir mensajes informativos
           </Checkbox>
         </div>
       </Form.Item>

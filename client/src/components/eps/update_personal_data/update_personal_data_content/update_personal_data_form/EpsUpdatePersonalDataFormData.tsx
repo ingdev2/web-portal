@@ -250,6 +250,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               onChange={onChangeEmailUserEpsFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </div>
@@ -294,6 +295,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
               onChange={onChangeCellphoneUserEpsFormData}
               autoComplete="off"
               min={0}
+              disabled
             />
           </Form.Item>
         </div>

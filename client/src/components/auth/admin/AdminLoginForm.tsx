@@ -20,6 +20,7 @@ import {
 } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import AdminModalVerificationCode from "./AdminModalVerificationCode";
+import AdminForgotPasswordForm from "./admin_forgot_password_form/AdminForgotPasswordForm";
 import CustomModalNoContent from "../../common/custom_modal_no_content/CustomModalNoContent";
 import CustomSpin from "../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../common/custom_messages/CustomMessage";
@@ -37,7 +38,6 @@ import { setDefaultValuesAdmin } from "@/redux/features/admin/adminSlice";
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginAdminsMutation } from "@/redux/apis/auth/loginAdminApi";
-import AdminForgotPasswordForm from "./admin_forgot_password_form/AdminForgotPasswordForm";
 
 const AdminLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
