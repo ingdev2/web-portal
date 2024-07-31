@@ -11,10 +11,10 @@ import CustomMessage from "../../../../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
-import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import { MdPublishedWithChanges } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
-import { MdPublishedWithChanges } from "react-icons/md";
+import type { Dayjs } from "dayjs";
 
 import {
   setTypesMedicalReq,
@@ -23,6 +23,8 @@ import {
   setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
   setErrorsMedicalReq,
+  setHaveUserMessageMedicalReq,
+  setRegistrationDatesMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setIdUserEps } from "@/redux/features/eps/epsSlice";
@@ -66,6 +68,12 @@ const EpsCreateRequestForm: React.FC = () => {
   );
   const reqTypeState = useAppSelector(
     (state) => state.medicalReq.requirement_type
+  );
+  const haveUserMessageDocumentsState = useAppSelector(
+    (state) => state.medicalReq.have_user_message_documents
+  );
+  const registrationDatesState = useAppSelector(
+    (state) => state.medicalReq.registration_dates
   );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
@@ -212,6 +220,7 @@ const EpsCreateRequestForm: React.FC = () => {
           patient_id_number: idNumberPatientState,
           requirement_type: reqTypeState,
           user_message: userMessageMedicalReqState,
+          registration_dates: registrationDatesState,
           ...responses,
         },
       });
@@ -230,8 +239,9 @@ const EpsCreateRequestForm: React.FC = () => {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
 
-        dispatch(setDefaultValuesUserPatient());
+        dispatch(setHaveUserMessageMedicalReq(false));
         dispatch(setFileUserMessageMedicalReq([]));
+        dispatch(setDefaultValuesUserPatient());
       }
     } catch (error) {
       console.error(error);
@@ -260,6 +270,19 @@ const EpsCreateRequestForm: React.FC = () => {
       console.error(error);
     } finally {
       setModalIsOpenSuccess(false);
+    }
+  };
+
+  const onRangeChange = (
+    dates: null | (Dayjs | null)[],
+    dateStrings: string[]
+  ) => {
+    if (dates && dateStrings[1]) {
+      const formattedDates: string = `DESDE-> ${dateStrings[0]} HASTA-> ${dateStrings[1]}`;
+
+      dispatch(setRegistrationDatesMedicalReq(formattedDates.toString()));
+    } else {
+      dispatch(setRegistrationDatesMedicalReq(""));
     }
   };
 
@@ -400,7 +423,17 @@ const EpsCreateRequestForm: React.FC = () => {
             handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
             familiarReqTypeListDataForm={typesMedicalReqState}
             userMessageMedicalReqDataForm={userMessageMedicalReqState}
-            tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así ser mas precisos al darte respuesta."
+            haveReferenceDocumentDataForm={
+              haveUserMessageDocumentsState ? true : false
+            }
+            onChangeHaveReferenceDocumentFamiliarDataForm={(e) => {
+              const newValue = e.target.value === true;
+
+              dispatch(setHaveUserMessageMedicalReq(newValue));
+            }}
+            onChangeDateCustomDoubleDatePicker={onRangeChange}
+            tooltipRegistrationDatesDataform="Selecciona el rango de fecha en el que deseas ver tus registros del tipo de solicitud que requieres."
+            tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos de referencia adicionales, para así ser más exactos y precisos al darte respuesta a su solicitud."
             fileStatusSetterDataform={setFileUserMessageMedicalReq}
             fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
             handleOnChangeUserMessageMedicalReqDataForm={(e) =>
@@ -410,7 +443,7 @@ const EpsCreateRequestForm: React.FC = () => {
               isSubmittingConfirmModal && !modalIsOpenConfirm
             }
             handleButtonSubmitFormDataForm={handleButtonClick}
-            tooltipObservationsDataform="Especifique detalles específicos a tener en cuenta en su solicitud para así darte una respuesta asertiva, por ejemplo, fecha aprox. de procedimiento, tipo de procedimiento, entre otros."
+            tooltipObservationsDataform="Especifique detalles adicionales a tener en cuenta en su solicitud para así darte una respuesta asertiva."
           />
         </Card>
       ) : (

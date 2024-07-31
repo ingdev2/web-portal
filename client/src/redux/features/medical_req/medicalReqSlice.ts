@@ -4,6 +4,7 @@ const initialState: MedicalReq = {
   id: "",
   filing_number: "",
   requirement_type: 0,
+  registration_dates: "",
   right_petition: false,
   copy_right_petition: [],
   files_copy_right_petition: [],
@@ -44,6 +45,7 @@ const initialState: MedicalReq = {
   currently_in_area: 0,
   requirement_status: 0,
   user_message: "",
+  have_user_message_documents: false,
   user_message_documents: [],
   files_user_message_documents: [],
   response_comments: "",
@@ -70,6 +72,9 @@ export const medicalReqSlice = createSlice({
     },
     setReqTypeMedicalReq: (state, action) => {
       state.requirement_type = action.payload;
+    },
+    setRegistrationDatesMedicalReq: (state, action) => {
+      state.registration_dates = action.payload;
     },
     setRightPetitionMedicalReq: (state, action) => {
       state.right_petition = action.payload;
@@ -274,6 +279,9 @@ export const medicalReqSlice = createSlice({
     setUserMessageMedicalReq: (state, action) => {
       state.user_message = action.payload;
     },
+    setHaveUserMessageMedicalReq: (state, action) => {
+      state.have_user_message_documents = action.payload;
+    },
     setDocsUserMessageMedicalReq: (state, action) => {
       state.user_message_documents = action.payload;
     },
@@ -392,6 +400,7 @@ export const medicalReqSlice = createSlice({
 export const {
   setIdMedicalReq,
   setFilingNumberMedicalReq,
+  setRegistrationDatesMedicalReq,
   setReqTypeMedicalReq,
   setRightPetitionMedicalReq,
   setCopyRightPetitionMedicalReq,
@@ -440,6 +449,7 @@ export const {
   setCurrentlyInAreaMedicalReq,
   setRequirementStatusMedicalReq,
   setUserMessageMedicalReq,
+  setHaveUserMessageMedicalReq,
   setDocsUserMessageMedicalReq,
   setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,

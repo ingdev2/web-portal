@@ -373,6 +373,8 @@ export class MedicalReqService {
 
     const documentsFamiliarDetails = new CreateMedicalReqFamiliarDto();
 
+    documentsFamiliarDetails.registration_dates =
+      medicalReqFamiliar?.registration_dates;
     documentsFamiliarDetails.copy_right_petition =
       medicalReqFamiliar?.copy_right_petition;
     documentsFamiliarDetails.patient_class_status =
@@ -547,9 +549,14 @@ export class MedicalReqService {
 
     aplicantPatientDetails.filing_number = filingNumber;
 
+    aplicantPatientDetails.requirement_type =
+      medicalReqPatient.requirement_type;
+    aplicantPatientDetails.registration_dates =
+      medicalReqPatient.registration_dates;
     aplicantPatientDetails.aplicantId = userPatientFound.id;
     aplicantPatientDetails.patient_name = userPatientFound.name;
     aplicantPatientDetails.medicalReqUserType = userPatientFound.user_role;
+    aplicantPatientDetails.right_petition = medicalReqPatient.right_petition;
     aplicantPatientDetails.aplicant_name = userPatientFound.name;
     aplicantPatientDetails.aplicant_last_name = userPatientFound.last_name;
     aplicantPatientDetails.aplicant_gender = userPatientFound.user_gender;
@@ -562,11 +569,18 @@ export class MedicalReqService {
     aplicantPatientDetails.requirement_status = reqStatusStablished.id;
     aplicantPatientDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantPatientDetails.patient_id_number = userPatientFound.id_number;
-    aplicantPatientDetails.requirement_type =
-      medicalReqPatient.requirement_type;
 
     const currentDate = new Date();
     aplicantPatientDetails.date_of_admission = currentDate;
+
+    const { right_petition, copy_right_petition } = medicalReqPatient;
+
+    if (right_petition && !copy_right_petition) {
+      return new HttpException(
+        `No se ha adjuntado el documento de derecho de petición.`,
+        HttpStatus.CONFLICT,
+      );
+    }
 
     const userIdType = await this.userIdTypeRepository.findOne({
       where: {
@@ -759,6 +773,8 @@ export class MedicalReqService {
     aplicantEpsDetails.filing_number = filingNumber;
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
+    aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
+    aplicantEpsDetails.registration_dates = medicalReqEps.registration_dates;
     aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
@@ -775,7 +791,6 @@ export class MedicalReqService {
     aplicantEpsDetails.requirement_status = reqStatusEstablished.id;
     aplicantEpsDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantEpsDetails.patient_id_number = userPatientFound.id_number;
-    aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;

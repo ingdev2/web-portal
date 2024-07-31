@@ -17,6 +17,22 @@ export class CreateMedicalReqPatientDto {
   @IsNotEmpty()
   requirement_type: number;
 
+  @IsNotEmpty()
+  @IsString()
+  registration_dates: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  right_petition: boolean;
+
+  @IsOptional()
+  @IsArray()
+  copy_right_petition: string[];
+
+  @IsOptional()
+  @IsArray()
+  copy_patient_citizenship_card: string[];
+
   @IsOptional()
   @IsUUID()
   aplicantId: string;

@@ -2,6 +2,7 @@ interface MedicalReq {
   id: string;
   filing_number: string;
   requirement_type: number;
+  registration_dates: string;
   right_petition: boolean;
   copy_right_petition: string[];
   files_copy_right_petition: Array<Express.Multer.File>;
@@ -42,6 +43,7 @@ interface MedicalReq {
   currently_in_area: number;
   requirement_status: number;
   user_message: string;
+  have_user_message_documents: boolean;
   user_message_documents: string[];
   files_user_message_documents: Array<Express.Multer.File>;
   response_comments: string;

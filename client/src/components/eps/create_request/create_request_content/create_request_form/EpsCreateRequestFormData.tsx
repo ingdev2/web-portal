@@ -1,12 +1,16 @@
 "use client";
 
 import React, { ReactNode } from "react";
+import { useAppSelector } from "@/redux/hooks";
 
-import { Button, Form, Input, Select, Typography } from "antd";
+import { Button, Form, Input, Radio, Select, Space, Typography } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
+
+import { validateRequiredDate } from "@/helpers/validate_required_values/validate_required_files";
+import CustomDoubleDatePicker from "@/components/common/custom_double_date_picker/CustomDoubleDatePicker";
 
 const EpsCreateRequestFormData: React.FC<{
   patientNameDataForm: string;
@@ -24,6 +28,12 @@ const EpsCreateRequestFormData: React.FC<{
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
   tooltipUploadReferenceDocumentsDataform: string;
+  haveReferenceDocumentDataForm: boolean;
+  onChangeHaveReferenceDocumentFamiliarDataForm: (value: any) => void;
+  tooltipRegistrationDatesDataform: string;
+  onChangeDateCustomDoubleDatePicker:
+    | ((dates: any, dateStrings: [string, string]) => void)
+    | undefined;
   fileStatusSetterDataform: React.SetStateAction<any>;
   fileStatusRemoverDataform: React.SetStateAction<any>;
   tooltipObservationsDataform: string;
@@ -43,17 +53,28 @@ const EpsCreateRequestFormData: React.FC<{
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
   tooltipUploadReferenceDocumentsDataform,
+  haveReferenceDocumentDataForm,
+  onChangeHaveReferenceDocumentFamiliarDataForm,
+  tooltipRegistrationDatesDataform,
+  onChangeDateCustomDoubleDatePicker,
   fileStatusSetterDataform,
   fileStatusRemoverDataform,
   tooltipObservationsDataform,
 }) => {
+  const registrationDatesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.registration_dates
+  );
+
   return (
     <Form
       id="create-medical-req-form-eps"
       name="create-medical-req-form-eps"
       className="create-medical-req-form-eps"
       onFinish={handleCreateRequestDataForm}
-      initialValues={{ remember: false }}
+      initialValues={{
+        "radio-select-have-doc-user-message-eps": haveReferenceDocumentDataForm,
+        remember: false,
+      }}
       autoComplete="false"
       layout="vertical"
     >
@@ -164,21 +185,71 @@ const EpsCreateRequestFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
-        name="upload-files-reference-documents-eps"
-        label="Documento(s) de referencia (opcional)"
+        id="radio-select-have-doc-user-message-eps"
+        name="radio-select-have-doc-user-message-eps"
+        className="radio-select-have-doc-user-message-eps"
+        label="¿Desea adjuntar un documento complementario de referencia a la solicitud?"
         tooltip={tooltipUploadReferenceDocumentsDataform}
         style={{ marginBottom: "13px" }}
         rules={[
           {
-            required: false,
-            message: "¡Por favor adjunta mínimo un documento!",
+            required: true,
+            message: "¡Por favor selecciona si tiene derecho de petición!",
           },
         ]}
       >
-        <CustomUpload
-          titleCustomUpload="Cargar Documento(s)"
-          fileStatusSetterCustomUpload={fileStatusSetterDataform}
-          removeFileStatusSetterCustomUpload={fileStatusRemoverDataform}
+        <Radio.Group
+          value={haveReferenceDocumentDataForm}
+          onChange={onChangeHaveReferenceDocumentFamiliarDataForm}
+          style={{ textAlign: "start" }}
+        >
+          <Space size={"small"} direction="horizontal">
+            <Radio value={true}>SÍ</Radio>
+
+            <Radio value={false}>NO</Radio>
+          </Space>
+        </Radio.Group>
+      </Form.Item>
+
+      {haveReferenceDocumentDataForm && (
+        <Form.Item
+          name="upload-files-reference-documents-eps"
+          label="Documento(s) de referencia (opcional)"
+          style={{ marginBottom: "13px" }}
+          rules={[
+            {
+              required: false,
+              message: "¡Por favor adjunta mínimo un documento!",
+            },
+          ]}
+        >
+          <CustomUpload
+            titleCustomUpload="Cargar Documento(s)"
+            fileStatusSetterCustomUpload={fileStatusSetterDataform}
+            removeFileStatusSetterCustomUpload={fileStatusRemoverDataform}
+          />
+        </Form.Item>
+      )}
+
+      <Form.Item
+        name="range-date-picker-create-medical-req-patient"
+        label="Rango de fechas de registros a solicitar"
+        tooltip={tooltipRegistrationDatesDataform}
+        style={{ marginBottom: "13px" }}
+        rules={[
+          {
+            required: true,
+            validator: validateRequiredDate(
+              registrationDatesMedicalReqState,
+              "¡Por favor seleccionar un rango de fecha!"
+            ),
+          },
+        ]}
+      >
+        <CustomDoubleDatePicker
+          onChangeDateCustomDoubleDatePicker={
+            onChangeDateCustomDoubleDatePicker
+          }
         />
       </Form.Item>
 

@@ -12,14 +12,22 @@ import CustomModalNoContent from "@/components/common/custom_modal_no_content/Cu
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
+import type { Dayjs } from "dayjs";
 
 import {
   setTypesMedicalReq,
   setReqTypeMedicalReq,
+  setRegistrationDatesMedicalReq,
+  setHaveUserMessageMedicalReq,
   setUserMessageMedicalReq,
   setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
+  setRightPetitionMedicalReq,
+  setFileCopyRightPetitionMedicalReq,
+  removeFileCopyRightPetitionMedicalReq,
   setErrorsMedicalReq,
+  setFileCopyPatientCitizenshipCardMedicalReq,
+  removeFileCopyPatientCitizenshipCardMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
@@ -46,11 +54,26 @@ const PatientCreateRequestForm: React.FC = () => {
   const reqTypeState = useAppSelector(
     (state) => state.medicalReq.requirement_type
   );
-  const userMessageMedicalReqState = useAppSelector(
-    (state) => state.medicalReq.user_message
+  const registrationDatesState = useAppSelector(
+    (state) => state.medicalReq.registration_dates
+  );
+  const haveRightPetitionState = useAppSelector(
+    (state) => state.medicalReq.right_petition
+  );
+  const userFilesRightPetitionState = useAppSelector(
+    (state) => state.medicalReq.files_copy_right_petition
+  );
+  const haveUserMessageDocumentsState = useAppSelector(
+    (state) => state.medicalReq.have_user_message_documents
   );
   const userMessageFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_user_message_documents
+  );
+  const copyPatientCitizenshipCardFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_patient_citizenship_card
+  );
+  const userMessageMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.user_message
   );
   const medicalReqErrorsState = useAppSelector(
     (state) => state.medicalReq.errors
@@ -151,6 +174,14 @@ const PatientCreateRequestForm: React.FC = () => {
           state: userMessageFilesMedicalReqState,
           paramName: "user_message_documents",
         },
+        {
+          state: userFilesRightPetitionState,
+          paramName: "copy_right_petition",
+        },
+        {
+          state: copyPatientCitizenshipCardFilesMedicalReqState,
+          paramName: "copy_patient_citizenship_card",
+        },
       ];
 
       const responses: Record<string, string[]> = {};
@@ -182,6 +213,8 @@ const PatientCreateRequestForm: React.FC = () => {
         medicalReqPatient: {
           requirement_type: reqTypeState,
           user_message: userMessageMedicalReqState,
+          right_petition: haveRightPetitionState,
+          registration_dates: registrationDatesState,
           ...responses,
         },
       });
@@ -200,7 +233,10 @@ const PatientCreateRequestForm: React.FC = () => {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
 
+        dispatch(setHaveUserMessageMedicalReq(false));
         dispatch(setFileUserMessageMedicalReq([]));
+        dispatch(setRightPetitionMedicalReq(false));
+        dispatch(setFileCopyRightPetitionMedicalReq([]));
       }
     } catch (error) {
       console.error(error);
@@ -229,6 +265,19 @@ const PatientCreateRequestForm: React.FC = () => {
       console.error(error);
     } finally {
       setModalIsOpenSuccess(false);
+    }
+  };
+
+  const onRangeChange = (
+    dates: null | (Dayjs | null)[],
+    dateStrings: string[]
+  ) => {
+    if (dates && dateStrings[1]) {
+      const formattedDates: string = `DESDE-> ${dateStrings[0]} HASTA-> ${dateStrings[1]}`;
+
+      dispatch(setRegistrationDatesMedicalReq(formattedDates.toString()));
+    } else {
+      dispatch(setRegistrationDatesMedicalReq(""));
     }
   };
 
@@ -357,18 +406,48 @@ const PatientCreateRequestForm: React.FC = () => {
           familiarReqTypeValueDataForm={reqTypeState}
           handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
           familiarReqTypeListDataForm={typesMedicalReqState}
+          haveRightPetitionPatientDataForm={
+            haveRightPetitionState ? true : false
+          }
+          onChangeHaveRightPetitionFamiliarDataForm={(e) => {
+            const newValue = e.target.value === true;
+
+            dispatch(setRightPetitionMedicalReq(newValue));
+          }}
+          tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud."
+          copyRightPetitionSetterDataform={setFileCopyRightPetitionMedicalReq}
+          copyRightPetitionRemoverDataform={
+            removeFileCopyRightPetitionMedicalReq
+          }
           userMessageMedicalReqDataForm={userMessageMedicalReqState}
-          tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así ser mas precisos al darte respuesta."
+          haveReferenceDocumentDataForm={
+            haveUserMessageDocumentsState ? true : false
+          }
+          onChangeHaveReferenceDocumentFamiliarDataForm={(e) => {
+            const newValue = e.target.value === true;
+
+            dispatch(setHaveUserMessageMedicalReq(newValue));
+          }}
+          tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos de referencia adicionales, para así ser más exactos y precisos al darte respuesta a su solicitud."
           fileStatusSetterDataform={setFileUserMessageMedicalReq}
           fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
             dispatch(setUserMessageMedicalReq(e.target.value))
           }
+          onChangeDateCustomDoubleDatePicker={onRangeChange}
+          tooltipRegistrationDatesDataform="Selecciona el rango de fecha en el que deseas ver tus registros del tipo de solicitud que requieres."
+          tooltipUploadCitizenshipCardPatientDataform="Adjunte copia de su documento de identidad para así verificar que es usted."
+          copyPatientCitizenshipCardSetterDataform={
+            setFileCopyPatientCitizenshipCardMedicalReq
+          }
+          copyPatientCitizenshipCardRemoverDataform={
+            removeFileCopyPatientCitizenshipCardMedicalReq
+          }
           buttonSubmitFormLoadingDataForm={
             isSubmittingConfirmModal && !modalIsOpenConfirm
           }
           handleButtonSubmitFormDataForm={handleButtonClick}
-          tooltipObservationsDataform="Especifique detalles específicos a tener en cuenta en su solicitud para así darte una respuesta asertiva, por ejemplo, fecha aprox. de procedimiento, tipo de procedimiento, entre otros."
+          tooltipObservationsDataform="Especifique detalles adicionales a tener en cuenta en su solicitud para así darte una respuesta asertiva."
         />
       </Card>
     </Col>
