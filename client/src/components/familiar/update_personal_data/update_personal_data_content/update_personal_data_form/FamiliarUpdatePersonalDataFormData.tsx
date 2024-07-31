@@ -335,7 +335,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
                   {
                     pattern: /^[0-9]+$/,
                     message:
-                      "¡Por favor ingresa número de celular sin puntos ni comas!",
+                      "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
                   },
                   {
                     min: 7,
@@ -354,7 +354,6 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
                   onChange={onChangeWhatsappUserPatientFormData}
                   autoComplete="off"
                   min={0}
-                  disabled
                 />
               </Form.Item>
             </div>

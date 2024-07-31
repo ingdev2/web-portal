@@ -25,9 +25,9 @@ import {
   setRightPetitionMedicalReq,
   setFileCopyRightPetitionMedicalReq,
   removeFileCopyRightPetitionMedicalReq,
-  setErrorsMedicalReq,
   setFileCopyPatientCitizenshipCardMedicalReq,
   removeFileCopyPatientCitizenshipCardMedicalReq,
+  setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";

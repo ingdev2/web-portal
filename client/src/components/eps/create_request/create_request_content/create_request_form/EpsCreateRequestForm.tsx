@@ -22,9 +22,10 @@ import {
   setUserMessageMedicalReq,
   setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
-  setErrorsMedicalReq,
   setHaveUserMessageMedicalReq,
   setRegistrationDatesMedicalReq,
+  setFileCopyRightPetitionMedicalReq,
+  setErrorsMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setIdUserEps } from "@/redux/features/eps/epsSlice";
@@ -241,6 +242,8 @@ const EpsCreateRequestForm: React.FC = () => {
 
         dispatch(setHaveUserMessageMedicalReq(false));
         dispatch(setFileUserMessageMedicalReq([]));
+        dispatch(setHaveUserMessageMedicalReq(false));
+        dispatch(setFileCopyRightPetitionMedicalReq([]));
         dispatch(setDefaultValuesUserPatient());
       }
     } catch (error) {

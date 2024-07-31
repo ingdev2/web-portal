@@ -176,6 +176,10 @@ export class MedicalReqService {
 
     aplicantFamiliarDetails.filing_number = filingNumber;
 
+    aplicantFamiliarDetails.requirement_type =
+      medicalReqFamiliar.requirement_type;
+    aplicantFamiliarDetails.registration_dates =
+      medicalReqFamiliar?.registration_dates;
     aplicantFamiliarDetails.familiar_id = verifiedFamiliar.id;
     aplicantFamiliarDetails.patient_name = userPatientFound.name;
     aplicantFamiliarDetails.medicalReqUserType = verifiedFamiliar.user_role;
@@ -192,8 +196,6 @@ export class MedicalReqService {
     aplicantFamiliarDetails.requirement_status = reqStatusEstablished.id;
     aplicantFamiliarDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantFamiliarDetails.patient_id_number = userPatientFound.id_number;
-    aplicantFamiliarDetails.requirement_type =
-      medicalReqFamiliar.requirement_type;
 
     const currentDate = new Date();
     aplicantFamiliarDetails.date_of_admission = currentDate;
@@ -373,8 +375,6 @@ export class MedicalReqService {
 
     const documentsFamiliarDetails = new CreateMedicalReqFamiliarDto();
 
-    documentsFamiliarDetails.registration_dates =
-      medicalReqFamiliar?.registration_dates;
     documentsFamiliarDetails.copy_right_petition =
       medicalReqFamiliar?.copy_right_petition;
     documentsFamiliarDetails.patient_class_status =
