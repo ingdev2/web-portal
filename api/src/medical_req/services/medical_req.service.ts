@@ -874,7 +874,7 @@ export class MedicalReqService {
         is_it_reviewed: false,
       },
       order: {
-        createdAt: 'ASC',
+        createdAt: 'DESC',
       },
     });
 

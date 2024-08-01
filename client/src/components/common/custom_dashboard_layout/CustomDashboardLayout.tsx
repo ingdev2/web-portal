@@ -49,9 +49,8 @@ const CustomDashboardLayout: React.FC<{
     <Layout
       className="custom-dashboard-layout-sider"
       style={{
-        height: "100vh",
-        width: "100vw",
         minWidth: "777px",
+        minHeight: "100vh",
         backgroundColor: "transparent",
         margin: "0px",
         padding: "0px",
