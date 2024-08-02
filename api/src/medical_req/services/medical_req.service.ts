@@ -867,12 +867,29 @@ export class MedicalReqService {
 
   // GET FUNTIONS //
 
-  async getAllMedicalReqUsers() {
+  async getAllMedicalReqUsers(status?: RequirementStatusEnum) {
+    const whereCondition: any = {
+      is_deleted: false,
+      is_it_reviewed: false,
+    };
+
+    if (status) {
+      const reqStatus = await this.requerimentStatusRepository.findOne({
+        where: { name: status },
+      });
+
+      if (!reqStatus) {
+        throw new HttpException(
+          `El estado "${status}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_status = reqStatus.id;
+    }
+
     const allMedicalReqUsers = await this.medicalReqRepository.find({
-      where: {
-        is_deleted: false,
-        is_it_reviewed: false,
-      },
+      where: whereCondition,
       order: {
         createdAt: 'DESC',
       },
@@ -883,9 +900,9 @@ export class MedicalReqService {
         `No hay requerimientos creados actualmente.`,
         HttpStatus.CONFLICT,
       );
-    } else {
-      return allMedicalReqUsers;
     }
+
+    return allMedicalReqUsers;
   }
 
   async getAllMedicalReqOfAUsers(userId: string) {

@@ -15,6 +15,10 @@ import { getTagComponentStatus } from "@/components/common/custom_tags_medical_r
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
 import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
 
+import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
+import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
+import { Col, Divider, Row } from "antd";
+
 const aplicantNameKey: keyof MedicalReq = "aplicant_name";
 const filingNumberKey: keyof MedicalReq = "filing_number";
 const dateOfAdmissionKey: keyof MedicalReq = "date_of_admission";
@@ -32,6 +36,21 @@ const DashboardAllRequestLayout: React.FC = () => {
     isFetching: allMedicalReqUsersFetching,
     error: allMedicalReqUsersError,
   } = useGetAllMedicalReqUsersQuery(null);
+
+  const { data: allMedicalReqStatusCreatedData } =
+    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.CREATED);
+
+  const { data: allMedicalReqStatusVisualizedData } =
+    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.VISUALIZED);
+
+  const { data: allMedicalReqStatusUnderReviewData } =
+    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.UNDER_REVIEW);
+
+  const { data: allMedicalReqStatusDeliveredData } =
+    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.DELIVERED);
+
+  const { data: allMedicalReqStatusRejectedData } =
+    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.REJECTED);
 
   const {
     data: userMedicalReqTypeData,
@@ -60,16 +79,19 @@ const DashboardAllRequestLayout: React.FC = () => {
   );
   const idTypeGetName = transformIdToNameMap(idTypesData);
 
-  const transformedData = allMedicalReqUsersData?.map((req: any) => ({
-    ...req,
-    requirement_type:
-      requirementTypeGetName?.[req.requirement_type] || req.requirement_type,
-    requirement_status:
-      requirementStatusGetName?.[req.requirement_status] ||
-      req.requirement_status,
-    patient_id_type:
-      idTypeGetName?.[req.patient_id_type] || req.patient_id_type,
-  }));
+  const transformedData = Array.isArray(allMedicalReqUsersData)
+    ? allMedicalReqUsersData.map((req: any) => ({
+        ...req,
+        requirement_type:
+          requirementTypeGetName?.[req.requirement_type] ||
+          req.requirement_type,
+        requirement_status:
+          requirementStatusGetName?.[req.requirement_status] ||
+          req.requirement_status,
+        patient_id_type:
+          idTypeGetName?.[req.patient_id_type] || req.patient_id_type,
+      }))
+    : [];
 
   const columns = [
     {
@@ -150,7 +172,7 @@ const DashboardAllRequestLayout: React.FC = () => {
       title: "TIPO DE ID PACIENTE",
       key: patientIdTypeKey,
       dataIndex: patientIdTypeKey,
-      width: 173,
+      width: 270,
       filters:
         idTypesData?.map((type) => ({
           value: type.name,
@@ -183,10 +205,143 @@ const DashboardAllRequestLayout: React.FC = () => {
   return (
     <CustomDashboardLayout
       customLayoutContent={
-        <CustomTableFiltersAndSorting
-          dataCustomTable={transformedData || []}
-          columnsCustomTable={columns}
-        />
+        <>
+          <Col style={{ width: "100%", marginBlock: "7px" }}>
+            <h2
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                margin: "0px",
+              }}
+            >
+              Total de&nbsp;
+              <b>
+                {allMedicalReqUsersData?.length}
+                &nbsp;solicitud(es)
+              </b>
+            </h2>
+          </Col>
+
+          <Col style={{ width: "100%", marginBlock: "0px" }}>
+            <h3
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                color: "#1D8348",
+                fontWeight: "bold",
+                margin: "0px",
+              }}
+            >
+              Categorización por estados
+            </h3>
+          </Col>
+          <Row
+            align="middle"
+            style={{
+              height: "100%",
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+              marginBlock: "7px",
+            }}
+          >
+            <h4
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                margin: "0px",
+              }}
+            >
+              Creadas:&nbsp;
+              <b>{allMedicalReqStatusCreatedData?.length}</b>
+            </h4>
+
+            <Divider
+              type="vertical"
+              style={{
+                height: "22px",
+                borderWidth: "1.3px",
+                borderColor: "#8C11117F",
+              }}
+            />
+
+            <h4
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                margin: "0px",
+              }}
+            >
+              Visualizadas:&nbsp;
+              <b>{allMedicalReqStatusVisualizedData?.length}</b>
+            </h4>
+
+            <Divider
+              type="vertical"
+              style={{
+                height: "22px",
+                borderWidth: "1.3px",
+                borderColor: "#8C11117F",
+              }}
+            />
+
+            <h4
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                margin: "0px",
+              }}
+            >
+              En Revisión:&nbsp;
+              <b>{allMedicalReqStatusUnderReviewData?.length}</b>
+            </h4>
+
+            <Divider
+              type="vertical"
+              style={{
+                height: "22px",
+                borderWidth: "1.3px",
+                borderColor: "#8C11117F",
+              }}
+            />
+
+            <h4
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                margin: "0px",
+              }}
+            >
+              Docs. Entregados:&nbsp;
+              <b>{allMedicalReqStatusDeliveredData?.length}</b>
+            </h4>
+
+            <Divider
+              type="vertical"
+              style={{
+                height: "22px",
+                borderWidth: "1.3px",
+                borderColor: "#8C11117F",
+              }}
+            />
+
+            <h4
+              style={{
+                ...subtitleStyleCss,
+                textAlign: "center",
+                margin: "0px",
+              }}
+            >
+              Rechazadas:&nbsp;
+              <b>{allMedicalReqStatusRejectedData?.length}</b>
+            </h4>
+          </Row>
+
+          <CustomTableFiltersAndSorting
+            dataCustomTable={transformedData || []}
+            columnsCustomTable={columns}
+          />
+        </>
       }
     />
   );

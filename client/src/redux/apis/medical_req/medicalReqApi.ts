@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
+import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
+
 const addTokenToRequest = async (headers: any, { getState }: any) => {
   const session: any = await getSession();
 
@@ -72,8 +74,18 @@ export const medicalReqApi = createApi({
       query: (filingNumber) => `medicalReq/${filingNumber}`,
     }),
 
-    getAllMedicalReqUsers: builder.query<MedicalReq[], null>({
-      query: () => "getAllMedicalReqUsers",
+    getAllMedicalReqUsers: builder.query<
+      MedicalReq[],
+      RequirementStatusEnum | null
+    >({
+      query: (status) => {
+        const params = status ? { status } : {};
+
+        return {
+          url: "getAllMedicalReqUsers",
+          params,
+        };
+      },
     }),
 
     getAllMedicalReqUsersToLegalArea: builder.query<MedicalReq[], null>({

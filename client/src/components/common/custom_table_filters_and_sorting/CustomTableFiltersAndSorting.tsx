@@ -265,9 +265,11 @@ const CustomTableFiltersAndSorting: React.FC<{
       <div
         style={{
           width: "100%",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
+          display: "flex",
+          flexFlow: "row wrap",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
           paddingBlock: "7px",
         }}
       >
@@ -367,6 +369,7 @@ const CustomTableFiltersAndSorting: React.FC<{
           position: ["bottomCenter"],
           showQuickJumper: true,
         }}
+        bordered
       />
     </>
   );
