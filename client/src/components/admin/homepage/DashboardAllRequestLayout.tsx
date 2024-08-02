@@ -206,7 +206,7 @@ const DashboardAllRequestLayout: React.FC = () => {
     <CustomDashboardLayout
       customLayoutContent={
         <>
-          <Col style={{ width: "100%", marginBlock: "7px" }}>
+          <Col style={{ width: "100%", marginBlock: "13px" }}>
             <h2
               style={{
                 ...subtitleStyleCss,
@@ -222,120 +222,130 @@ const DashboardAllRequestLayout: React.FC = () => {
             </h2>
           </Col>
 
-          <Col style={{ width: "100%", marginBlock: "0px" }}>
-            <h3
-              style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                color: "#1D8348",
-                fontWeight: "bold",
-                margin: "0px",
-              }}
-            >
-              Categorización por estados
-            </h3>
-          </Col>
-          <Row
-            align="middle"
+          <div
             style={{
-              height: "100%",
-              justifyContent: "center",
-              alignContent: "center",
-              alignItems: "center",
-              marginBlock: "7px",
+              paddingBlock: "7px",
+              paddingInline: "13px",
+              backgroundColor: "#013B5A22",
+              borderRadius: "13px",
+              marginBottom: "13px",
             }}
           >
-            <h4
+            <Col style={{ width: "100%", marginBlock: "0px" }}>
+              <h3
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  color: "#1D8348",
+                  fontWeight: "bold",
+                  margin: "0px",
+                }}
+              >
+                Categorización por estados
+              </h3>
+            </Col>
+            <Row
+              align="middle"
               style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                margin: "0px",
+                height: "100%",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                marginBlock: "7px",
               }}
             >
-              Creadas:&nbsp;
-              <b>{allMedicalReqStatusCreatedData?.length}</b>
-            </h4>
+              <h4
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  margin: "0px",
+                }}
+              >
+                Creadas:&nbsp;
+                <b>{allMedicalReqStatusCreatedData?.length}</b>
+              </h4>
 
-            <Divider
-              type="vertical"
-              style={{
-                height: "22px",
-                borderWidth: "1.3px",
-                borderColor: "#8C11117F",
-              }}
-            />
+              <Divider
+                type="vertical"
+                style={{
+                  height: "22px",
+                  borderWidth: "1.3px",
+                  borderColor: "#8C11117F",
+                }}
+              />
 
-            <h4
-              style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                margin: "0px",
-              }}
-            >
-              Visualizadas:&nbsp;
-              <b>{allMedicalReqStatusVisualizedData?.length}</b>
-            </h4>
+              <h4
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  margin: "0px",
+                }}
+              >
+                Visualizadas:&nbsp;
+                <b>{allMedicalReqStatusVisualizedData?.length}</b>
+              </h4>
 
-            <Divider
-              type="vertical"
-              style={{
-                height: "22px",
-                borderWidth: "1.3px",
-                borderColor: "#8C11117F",
-              }}
-            />
+              <Divider
+                type="vertical"
+                style={{
+                  height: "22px",
+                  borderWidth: "1.3px",
+                  borderColor: "#8C11117F",
+                }}
+              />
 
-            <h4
-              style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                margin: "0px",
-              }}
-            >
-              En Revisión:&nbsp;
-              <b>{allMedicalReqStatusUnderReviewData?.length}</b>
-            </h4>
+              <h4
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  margin: "0px",
+                }}
+              >
+                En Revisión:&nbsp;
+                <b>{allMedicalReqStatusUnderReviewData?.length}</b>
+              </h4>
 
-            <Divider
-              type="vertical"
-              style={{
-                height: "22px",
-                borderWidth: "1.3px",
-                borderColor: "#8C11117F",
-              }}
-            />
+              <Divider
+                type="vertical"
+                style={{
+                  height: "22px",
+                  borderWidth: "1.3px",
+                  borderColor: "#8C11117F",
+                }}
+              />
 
-            <h4
-              style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                margin: "0px",
-              }}
-            >
-              Docs. Entregados:&nbsp;
-              <b>{allMedicalReqStatusDeliveredData?.length}</b>
-            </h4>
+              <h4
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  margin: "0px",
+                }}
+              >
+                Docs. Entregados:&nbsp;
+                <b>{allMedicalReqStatusDeliveredData?.length}</b>
+              </h4>
 
-            <Divider
-              type="vertical"
-              style={{
-                height: "22px",
-                borderWidth: "1.3px",
-                borderColor: "#8C11117F",
-              }}
-            />
+              <Divider
+                type="vertical"
+                style={{
+                  height: "22px",
+                  borderWidth: "1.3px",
+                  borderColor: "#8C11117F",
+                }}
+              />
 
-            <h4
-              style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                margin: "0px",
-              }}
-            >
-              Rechazadas:&nbsp;
-              <b>{allMedicalReqStatusRejectedData?.length}</b>
-            </h4>
-          </Row>
+              <h4
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  margin: "0px",
+                }}
+              >
+                Rechazadas:&nbsp;
+                <b>{allMedicalReqStatusRejectedData?.length}</b>
+              </h4>
+            </Row>
+          </div>
 
           <CustomTableFiltersAndSorting
             dataCustomTable={transformedData || []}

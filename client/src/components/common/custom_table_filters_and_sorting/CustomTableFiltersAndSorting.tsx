@@ -368,6 +368,10 @@ const CustomTableFiltersAndSorting: React.FC<{
           size: "default",
           position: ["bottomCenter"],
           showQuickJumper: true,
+          style: {
+            margin: "0px",
+            paddingTop: "13px",
+          },
         }}
         bordered
       />

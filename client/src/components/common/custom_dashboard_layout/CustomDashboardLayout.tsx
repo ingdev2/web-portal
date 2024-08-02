@@ -8,7 +8,7 @@ import AdminHeaderLayout from "@/components/admin/header_layout_dashboard/AdminH
 import { Button, Col, Layout, Menu, Row, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { ItemKeys } from "./enums/item_names_and_keys.enums";
-import { items } from "@/components/admin/items_menu_dashboard_admin/items_menu_dashboard_admin";
+import { useMenuItems } from "@/components/admin/items_menu_dashboard_admin/items_menu_dashboard_admin";
 import {
   setSelectedKey,
   setSelectedOpenKeys,
@@ -23,6 +23,7 @@ const CustomDashboardLayout: React.FC<{
 }> = ({ customLayoutHeader, customLayoutContent, customLayoutFooter }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const items = useMenuItems();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -61,7 +62,7 @@ const CustomDashboardLayout: React.FC<{
         className="custom--dashboard-layout-sider"
         breakpoint="md"
         collapsedWidth={54}
-        width={173}
+        width={207}
         onBreakpoint={(broken) => {}}
         onCollapse={(collapsed, type) => {}}
         collapsed={collapsed}
