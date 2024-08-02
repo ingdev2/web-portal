@@ -1,102 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
-import type { TableColumnsType, TableProps } from "antd";
-import { Button, Space, Table } from "antd";
+import type {
+  InputRef,
+  TableColumnsType,
+  TableColumnType,
+  TableProps,
+} from "antd";
+import { Button, Col, Input, Row, Space, Table } from "antd";
 import { FaFilterCircleXmark } from "react-icons/fa6";
 import { FaSort } from "react-icons/fa";
 import { LuListRestart } from "react-icons/lu";
+import { VscDebugRestart } from "react-icons/vsc";
+import { FaSearch } from "react-icons/fa";
+import Highlighter from "react-highlight-words";
 
 type GetSingle<T> = T extends (infer U)[] ? U : never;
 
-type OnChange = NonNullable<TableProps<MedicalReq>["onChange"]>;
+type OnChange = NonNullable<TableProps<any>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
 type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
+interface ColumnConfig<T> {
+  title: string;
+  key: string;
+  dataIndex: string;
+  width: string | number;
+  filters?: { text: string; value: React.Key }[];
+  onFilter?: (value: boolean | React.Key, record: T) => boolean;
+  sorter?: (a: T, b: T) => number;
+  searchable?: boolean;
+  fixed?: boolean | "left" | "right";
+}
+
 const CustomTableFiltersAndSorting: React.FC<{
   dataCustomTable: MedicalReq[];
-  column1TitleCustomTable: string;
-  column1KeyAndIndexCustomTable: string;
-  column1WidthCustomTable: string;
-  column1FiltersCustomTable?: {
-    text: string;
-    value: React.Key;
-  }[];
-  column1OnFilterCustomTable?: (
-    value: boolean | React.Key,
-    record: MedicalReq
-  ) => boolean;
-  column1SorterCustomTable?: (a: MedicalReq, b: MedicalReq) => number;
-  column2TitleCustomTable: string;
-  column2KeyAndIndexCustomTable: string;
-  column2WidthCustomTable: string;
-  column2FiltersCustomTable?: {
-    text: string;
-    value: React.Key;
-  }[];
-  column2OnFilterCustomTable?: (
-    value: boolean | React.Key,
-    record: MedicalReq
-  ) => boolean;
-  column2SorterCustomTable?: (a: MedicalReq, b: MedicalReq) => number;
-  column3TitleCustomTable: string;
-  column3KeyAndIndexCustomTable: string;
-  column3WidthCustomTable: string;
-  column3FiltersCustomTable?: {
-    text: string;
-    value: React.Key;
-  }[];
-  column3OnFilterCustomTable?: (
-    value: boolean | React.Key,
-    record: MedicalReq
-  ) => boolean;
-  column3SorterCustomTable?: (a: MedicalReq, b: MedicalReq) => number;
-  column4TitleCustomTable: string;
-  column4KeyAndIndexCustomTable: string;
-  column4WidthCustomTable: string;
-  column4FiltersCustomTable?: {
-    text: string;
-    value: React.Key;
-  }[];
-  column4OnFilterCustomTable?: (
-    value: boolean | React.Key,
-    record: MedicalReq
-  ) => boolean;
-  column4SorterCustomTable?: (a: MedicalReq, b: MedicalReq) => number;
-}> = ({
-  dataCustomTable,
-  column1TitleCustomTable,
-  column1KeyAndIndexCustomTable,
-  column1WidthCustomTable,
-  column1FiltersCustomTable,
-  column1OnFilterCustomTable,
-  column1SorterCustomTable,
-  column2TitleCustomTable,
-  column2KeyAndIndexCustomTable,
-  column2WidthCustomTable,
-  column2FiltersCustomTable,
-  column2OnFilterCustomTable,
-  column2SorterCustomTable,
-  column3TitleCustomTable,
-  column3KeyAndIndexCustomTable,
-  column3WidthCustomTable,
-  column3FiltersCustomTable,
-  column3OnFilterCustomTable,
-  column3SorterCustomTable,
-  column4TitleCustomTable,
-  column4KeyAndIndexCustomTable,
-  column4WidthCustomTable,
-  column4FiltersCustomTable,
-  column4OnFilterCustomTable,
-  column4SorterCustomTable,
-}) => {
+  columnsCustomTable: ColumnConfig<any>[];
+}> = ({ dataCustomTable, columnsCustomTable }) => {
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
+
   const [filteredInfo, setFilteredInfo] = useState<Filters>({});
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const handleChange: OnChange = (pagination, filters, sorter) => {
     setFilteredInfo(filters);
     setSortedInfo(sorter as Sorts);
+  };
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: () => void,
+    dataIndex: string
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
   };
 
   const clearFilters = () => {
@@ -110,78 +76,195 @@ const CustomTableFiltersAndSorting: React.FC<{
   const clearAll = () => {
     setFilteredInfo({});
     setSortedInfo({});
+    handleReset(clearFilters);
   };
 
-  const columns: TableColumnsType<MedicalReq> = [
-    {
-      title: column1TitleCustomTable,
-      key: column1KeyAndIndexCustomTable,
-      dataIndex: column1KeyAndIndexCustomTable,
-      width: column1WidthCustomTable,
-      filters: column1FiltersCustomTable,
-      filteredValue: filteredInfo[column1KeyAndIndexCustomTable] || null,
-      onFilter: column1OnFilterCustomTable,
-      sorter: column1SorterCustomTable,
-      sortOrder:
-        sortedInfo.columnKey === column1KeyAndIndexCustomTable
-          ? sortedInfo.order
-          : null,
-      ellipsis: true,
+  const getColumnSearchProps = (dataIndex: string): TableColumnType<any> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "column wrap",
+          width: "231px",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+          padding: "13px",
+          margin: "0px",
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Buscar en columna`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ display: "block", marginBottom: "13px", padding: "8px" }}
+        />
+
+        <Space
+          direction="vertical"
+          size={"small"}
+          style={{
+            width: "100%",
+          }}
+        >
+          <Col
+            style={{
+              display: "flex",
+              flexFlow: "row wrap",
+              justifyContent: "space-evenly",
+              alignContent: "center",
+              alignItems: "center",
+              paddingBottom: "7px",
+              margin: "0px",
+            }}
+          >
+            <Button
+              onClick={() =>
+                handleSearch(selectedKeys as string[], confirm, dataIndex)
+              }
+              icon={<FaSearch />}
+              size="middle"
+              style={{
+                width: "45%",
+                backgroundColor: "#015E90",
+                color: "#F7F7F7",
+                borderRadius: 22,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                marginInline: "2px",
+              }}
+            >
+              Buscar
+            </Button>
+
+            <Button
+              onClick={() => clearFilters && handleReset(clearFilters)}
+              icon={<VscDebugRestart />}
+              size="middle"
+              style={{
+                width: "45%",
+                color: "#137A2B",
+                borderColor: "#137A2B",
+                borderRadius: 22,
+                borderWidth: 1.3,
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                marginInline: "2px",
+              }}
+            >
+              Reiniciar
+            </Button>
+          </Col>
+
+          <Button
+            size="middle"
+            style={{
+              width: "100%",
+              color: "#015E90",
+              borderColor: "#015E90",
+              borderRadius: 22,
+              borderWidth: 0.7,
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+              paddingInline: "7px",
+              marginBottom: "7px",
+            }}
+            onClick={() => {
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filtrar
+          </Button>
+          <Button
+            size="middle"
+            style={{
+              width: "100%",
+              color: "#960202",
+              fontWeight: "bold",
+              borderColor: "#960202",
+              borderRadius: 22,
+              borderWidth: 1.3,
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+              paddingInline: "7px",
+              marginBottom: "7px",
+            }}
+            onClick={() => close()}
+          >
+            Cerrar
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <FaSearch style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
     },
-    {
-      title: column2TitleCustomTable,
-      key: column2KeyAndIndexCustomTable,
-      dataIndex: column2KeyAndIndexCustomTable,
-      width: column2WidthCustomTable,
-      filters: column2FiltersCustomTable,
-      filteredValue: filteredInfo[column2KeyAndIndexCustomTable] || null,
-      onFilter: column2OnFilterCustomTable,
-      sorter: column2SorterCustomTable,
-      sortOrder:
-        sortedInfo.columnKey === column2KeyAndIndexCustomTable
-          ? sortedInfo.order
-          : null,
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#F4D03F", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const columns: TableColumnsType<any> = columnsCustomTable.map((col) => {
+    const column = {
+      ...col,
+      filteredValue: filteredInfo[col.key] || null,
+      sortOrder: sortedInfo.columnKey === col.key ? sortedInfo.order : null,
       ellipsis: true,
-    },
-    {
-      title: column3TitleCustomTable,
-      key: column3KeyAndIndexCustomTable,
-      dataIndex: column3KeyAndIndexCustomTable,
-      width: column3WidthCustomTable,
-      filters: column3FiltersCustomTable,
-      filteredValue: filteredInfo[column3KeyAndIndexCustomTable] || null,
-      onFilter: column3OnFilterCustomTable,
-      sorter: column3SorterCustomTable,
-      sortOrder:
-        sortedInfo.columnKey === column3KeyAndIndexCustomTable
-          ? sortedInfo.order
-          : null,
-      ellipsis: true,
-    },
-    {
-      title: column4TitleCustomTable,
-      key: column4KeyAndIndexCustomTable,
-      dataIndex: column4KeyAndIndexCustomTable,
-      width: column4WidthCustomTable,
-      filters: column4FiltersCustomTable,
-      filteredValue: filteredInfo[column4KeyAndIndexCustomTable] || null,
-      onFilter: column4OnFilterCustomTable,
-      sorter: column4SorterCustomTable,
-      sortOrder:
-        sortedInfo.columnKey === column4KeyAndIndexCustomTable
-          ? sortedInfo.order
-          : null,
-      ellipsis: true,
-    },
-  ];
+    };
+
+    if (col.searchable) {
+      Object.assign(column, getColumnSearchProps(col.dataIndex));
+    }
+
+    if (col.fixed) {
+      column.fixed = col.fixed;
+    }
+
+    return column;
+  });
 
   return (
     <>
       <div
         style={{
           width: "100%",
-          display: "flex",
-          flexFlow: "row wrap",
           justifyContent: "flex-start",
           alignContent: "flex-start",
           alignItems: "flex-start",
@@ -197,11 +280,11 @@ const CustomTableFiltersAndSorting: React.FC<{
               borderColor: "#015E90",
               fontWeight: "bold",
               borderRadius: 22,
-              borderWidth: 2,
+              borderWidth: 1.3,
               justifyContent: "center",
               alignContent: "center",
               alignItems: "center",
-              paddingInline: 7,
+              paddingInline: 13,
               paddingBlock: 7,
             }}
             size="small"
@@ -218,11 +301,11 @@ const CustomTableFiltersAndSorting: React.FC<{
               borderColor: "#015E90",
               fontWeight: "bold",
               borderRadius: 22,
-              borderWidth: 2,
+              borderWidth: 1.3,
               justifyContent: "center",
               alignContent: "center",
               alignItems: "center",
-              paddingInline: 7,
+              paddingInline: 13,
               paddingBlock: 7,
             }}
             size="small"
@@ -239,11 +322,11 @@ const CustomTableFiltersAndSorting: React.FC<{
               borderColor: "#960202",
               fontWeight: "bold",
               borderRadius: 22,
-              borderWidth: 2,
+              borderWidth: 1.3,
               justifyContent: "center",
               alignContent: "center",
               alignItems: "center",
-              paddingInline: 7,
+              paddingInline: 13,
               paddingBlock: 7,
             }}
             size="small"
@@ -258,11 +341,19 @@ const CustomTableFiltersAndSorting: React.FC<{
       <Table
         size="small"
         style={{
-          marginBlock: "7px",
+          width: "540px",
+          minWidth: "100%",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+          padding: "0px",
+          margin: "0px",
+          marginBlock: "13px",
+          // overflowX: "auto",
         }}
         scroll={{
-          //   x: "max-content",
-          //   y: "max-content",
+          x: "min-content",
+          // y: "max-content",
           scrollToFirstRowOnChange: true,
         }}
         rowKey={(record) => record.id}
@@ -271,9 +362,10 @@ const CustomTableFiltersAndSorting: React.FC<{
         onChange={handleChange}
         footer={undefined}
         pagination={{
-          pageSize: 8,
+          pageSize: 7,
           size: "default",
           position: ["bottomCenter"],
+          showQuickJumper: true,
         }}
       />
     </>

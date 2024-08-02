@@ -22,7 +22,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
-            color: "#017DC0B2",
+            color: "#8E44ADB2",
             label: RequirementTypeEnum.MEDICAL_RESULTS,
           }}
         />
@@ -32,7 +32,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
-            color: "#017DC0B2",
+            color: "#34495EB2",
             label: RequirementTypeEnum.MEDICAL_ORDER,
           }}
         />
@@ -42,7 +42,7 @@ export const getTagComponentType = (typeName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
-            color: "#017DC0B2",
+            color: "#BA3400B2",
             label: RequirementTypeEnum.MEDICAL_DISABILITY,
           }}
         />

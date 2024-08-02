@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import PatientUserLoginForm from "@/components/auth/patient/PatientUserLoginForm";
 import EpsUserLoginForm from "@/components/auth/eps/EpsUserLoginForm";
@@ -11,7 +13,22 @@ import { FaUser } from "react-icons/fa";
 import { IoIosBusiness } from "react-icons/io";
 import { MdOutlineFamilyRestroom } from "react-icons/md";
 
+import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+
 const UsersLoginPage: React.FC = () => {
+  const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
+
+  const isPageLoadingState = useAppSelector(
+    (state) => state.modal.isPageLoading
+  );
+
+  useEffect(() => {
+    if (isPageLoadingState && status === "unauthenticated") {
+      dispatch(setIsPageLoading(false));
+    }
+  }, [status, isPageLoadingState]);
+
   return (
     <div
       style={{
