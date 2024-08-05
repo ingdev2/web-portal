@@ -17,6 +17,7 @@ import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { RequirementStatusEnum } from '../enums/requirement_status.enum';
+import { RequirementTypeEnum } from '../enums/requirement_type.enum';
 
 @ApiTags('medical-req')
 @ApiBearerAuth()
@@ -76,8 +77,11 @@ export class MedicalReqController {
 
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqUsers')
-  async getAllMedicalReqUsers(@Query('status') status?: RequirementStatusEnum) {
-    return await this.medicalReqService.getAllMedicalReqUsers(status);
+  async getAllMedicalReqUsers(
+    @Query('status') status?: RequirementStatusEnum,
+    @Query('type') type?: RequirementTypeEnum,
+  ) {
+    return await this.medicalReqService.getAllMedicalReqUsers(status, type);
   }
 
   @Auth(UserRolType.PATIENT, UserRolType.EPS)

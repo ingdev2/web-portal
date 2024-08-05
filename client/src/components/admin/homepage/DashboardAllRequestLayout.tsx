@@ -1,9 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
+import { Button, Col } from "antd";
+import CategorizationByItems from "./categorization_by_items/CategorizationByItems";
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
+import { FaRegEye } from "react-icons/fa";
+
+import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
+import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
+import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
 
 import { useGetAllMedicalReqUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
@@ -11,13 +19,7 @@ import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 
 import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
-import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
-import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
-import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
-
-import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
-import { Col, Divider, Row } from "antd";
+import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 
 const aplicantNameKey: keyof MedicalReq = "aplicant_name";
 const filingNumberKey: keyof MedicalReq = "filing_number";
@@ -27,30 +29,18 @@ const requirementStatusKey: keyof MedicalReq = "requirement_status";
 const patientNameKey: keyof MedicalReq = "patient_name";
 const patientIdTypeKey: keyof MedicalReq = "patient_id_type";
 const patientIdNumberKey: keyof MedicalReq = "patient_id_number";
-const userMessageKey: keyof MedicalReq = "user_message";
+const registrationDatesKey: keyof MedicalReq = "registration_dates";
 
 const DashboardAllRequestLayout: React.FC = () => {
+  const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
+    useState(false);
+
   const {
     data: allMedicalReqUsersData,
     isLoading: allMedicalReqUsersLoading,
     isFetching: allMedicalReqUsersFetching,
     error: allMedicalReqUsersError,
-  } = useGetAllMedicalReqUsersQuery(null);
-
-  const { data: allMedicalReqStatusCreatedData } =
-    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.CREATED);
-
-  const { data: allMedicalReqStatusVisualizedData } =
-    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.VISUALIZED);
-
-  const { data: allMedicalReqStatusUnderReviewData } =
-    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.UNDER_REVIEW);
-
-  const { data: allMedicalReqStatusDeliveredData } =
-    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.DELIVERED);
-
-  const { data: allMedicalReqStatusRejectedData } =
-    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.REJECTED);
+  } = useGetAllMedicalReqUsersQuery({});
 
   const {
     data: userMedicalReqTypeData,
@@ -92,6 +82,10 @@ const DashboardAllRequestLayout: React.FC = () => {
           idTypeGetName?.[req.patient_id_type] || req.patient_id_type,
       }))
     : [];
+
+  const handleClickSeeMore = (record: any) => {
+    setIsModalVisibleLocalState(true);
+  };
 
   const columns = [
     {
@@ -194,10 +188,37 @@ const DashboardAllRequestLayout: React.FC = () => {
       fixed: "right" as "right",
     },
     {
-      title: "MENSAJE DE SOLICITANTE",
-      key: userMessageKey,
-      dataIndex: userMessageKey,
-      width: 321,
+      title: "ACCIONES",
+      key: registrationDatesKey,
+      dataIndex: registrationDatesKey,
+      width: 88,
+      ellipsis: true,
+      fixed: "right" as "right",
+      render: () => (
+        <Button
+          style={{
+            display: "flex",
+            flexFlow: "row wrap",
+            color: "#F7F7F7",
+            backgroundColor: "#015E90",
+            borderRadius: 22,
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+            paddingInline: 13,
+            paddingBlock: 7,
+          }}
+          size="middle"
+          icon={<FaRegEye />}
+          onClick={handleClickSeeMore}
+        />
+      ),
+    },
+    {
+      title: "LAPSO DE TIEMPO REGISTROS",
+      key: registrationDatesKey,
+      dataIndex: registrationDatesKey,
+      width: 301,
       ellipsis: true,
     },
   ];
@@ -206,151 +227,30 @@ const DashboardAllRequestLayout: React.FC = () => {
     <CustomDashboardLayout
       customLayoutContent={
         <>
-          <Col style={{ width: "100%", marginBlock: "13px" }}>
-            <h2
-              style={{
-                ...subtitleStyleCss,
-                textAlign: "center",
-                margin: "0px",
+          {isModalVisibleLocalState && (
+            <CustomModalNoContent
+              key={"custom-modal-change-password-eps"}
+              widthCustomModalNoContent={"96%"}
+              openCustomModalState={isModalVisibleLocalState}
+              closableCustomModal={true}
+              maskClosableCustomModal={false}
+              handleCancelCustomModal={() => {
+                setIsModalVisibleLocalState(false);
               }}
-            >
-              Total de&nbsp;
-              <b>
-                {allMedicalReqUsersData?.length}
-                &nbsp;solicitud(es)
-              </b>
-            </h2>
-          </Col>
+              contentCustomModal={"Detalles de solicitud"}
+            />
+          )}
 
-          <div
-            style={{
-              paddingBlock: "7px",
-              paddingInline: "13px",
-              backgroundColor: "#013B5A22",
-              borderRadius: "13px",
-              marginBottom: "13px",
-            }}
-          >
-            <Col style={{ width: "100%", marginBlock: "0px" }}>
-              <h3
-                style={{
-                  ...subtitleStyleCss,
-                  textAlign: "center",
-                  color: "#1D8348",
-                  fontWeight: "bold",
-                  margin: "0px",
-                }}
-              >
-                Categorización por estados
-              </h3>
-            </Col>
-            <Row
-              align="middle"
-              style={{
-                height: "100%",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
-                marginBlock: "7px",
-              }}
-            >
-              <h4
-                style={{
-                  ...subtitleStyleCss,
-                  textAlign: "center",
-                  margin: "0px",
-                }}
-              >
-                Creadas:&nbsp;
-                <b>{allMedicalReqStatusCreatedData?.length}</b>
-              </h4>
+          <CategorizationByItems />
 
-              <Divider
-                type="vertical"
-                style={{
-                  height: "22px",
-                  borderWidth: "1.3px",
-                  borderColor: "#8C11117F",
-                }}
-              />
-
-              <h4
-                style={{
-                  ...subtitleStyleCss,
-                  textAlign: "center",
-                  margin: "0px",
-                }}
-              >
-                Visualizadas:&nbsp;
-                <b>{allMedicalReqStatusVisualizedData?.length}</b>
-              </h4>
-
-              <Divider
-                type="vertical"
-                style={{
-                  height: "22px",
-                  borderWidth: "1.3px",
-                  borderColor: "#8C11117F",
-                }}
-              />
-
-              <h4
-                style={{
-                  ...subtitleStyleCss,
-                  textAlign: "center",
-                  margin: "0px",
-                }}
-              >
-                En Revisión:&nbsp;
-                <b>{allMedicalReqStatusUnderReviewData?.length}</b>
-              </h4>
-
-              <Divider
-                type="vertical"
-                style={{
-                  height: "22px",
-                  borderWidth: "1.3px",
-                  borderColor: "#8C11117F",
-                }}
-              />
-
-              <h4
-                style={{
-                  ...subtitleStyleCss,
-                  textAlign: "center",
-                  margin: "0px",
-                }}
-              >
-                Docs. Entregados:&nbsp;
-                <b>{allMedicalReqStatusDeliveredData?.length}</b>
-              </h4>
-
-              <Divider
-                type="vertical"
-                style={{
-                  height: "22px",
-                  borderWidth: "1.3px",
-                  borderColor: "#8C11117F",
-                }}
-              />
-
-              <h4
-                style={{
-                  ...subtitleStyleCss,
-                  textAlign: "center",
-                  margin: "0px",
-                }}
-              >
-                Rechazadas:&nbsp;
-                <b>{allMedicalReqStatusRejectedData?.length}</b>
-              </h4>
-            </Row>
-          </div>
-
-          <CustomTableFiltersAndSorting
-            dataCustomTable={transformedData || []}
-            columnsCustomTable={columns}
-          />
+          {!transformedData ? (
+            <CustomSpin />
+          ) : (
+            <CustomTableFiltersAndSorting
+              dataCustomTable={transformedData || []}
+              columnsCustomTable={columns}
+            />
+          )}
         </>
       }
     />

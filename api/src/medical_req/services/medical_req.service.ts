@@ -24,6 +24,7 @@ import { RequirementStatus } from '../../requirement_status/entities/requirement
 import { RequirementStatusEnum } from '../enums/requirement_status.enum';
 import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
+import { RequirementTypeEnum } from '../enums/requirement_type.enum';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { S3FileUploaderService } from 'src/s3_file_uploader/services/s3_file_uploader.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
@@ -58,7 +59,7 @@ export class MedicalReqService {
     private userIdTypeRepository: Repository<IdTypeEntity>,
 
     @InjectRepository(RequirementType)
-    private medicalReqTypeRepository: Repository<IdTypeEntity>,
+    private requerimentTypeRepository: Repository<RequirementType>,
 
     @InjectRepository(CompanyArea)
     private companyAreaRepository: Repository<CompanyArea>,
@@ -358,7 +359,7 @@ export class MedicalReqService {
       );
     }
 
-    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+    const medicalReqType = await this.requerimentTypeRepository.findOne({
       where: { id: medicalReqFamiliar.requirement_type },
     });
 
@@ -595,7 +596,7 @@ export class MedicalReqService {
       );
     }
 
-    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+    const medicalReqType = await this.requerimentTypeRepository.findOne({
       where: { id: medicalReqPatient.requirement_type },
     });
 
@@ -808,7 +809,7 @@ export class MedicalReqService {
       );
     }
 
-    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+    const medicalReqType = await this.requerimentTypeRepository.findOne({
       where: { id: medicalReqEps.requirement_type },
     });
 
@@ -867,7 +868,10 @@ export class MedicalReqService {
 
   // GET FUNTIONS //
 
-  async getAllMedicalReqUsers(status?: RequirementStatusEnum) {
+  async getAllMedicalReqUsers(
+    status?: RequirementStatusEnum,
+    type?: RequirementTypeEnum,
+  ) {
     const whereCondition: any = {
       is_deleted: false,
       is_it_reviewed: false,
@@ -886,6 +890,21 @@ export class MedicalReqService {
       }
 
       whereCondition.requirement_status = reqStatus.id;
+    }
+
+    if (type) {
+      const reqType = await this.requerimentTypeRepository.findOne({
+        where: { name: type },
+      });
+
+      if (!reqType) {
+        throw new HttpException(
+          `El tipo "${status}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_type = reqType.id;
     }
 
     const allMedicalReqUsers = await this.medicalReqRepository.find({

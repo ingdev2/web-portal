@@ -10,8 +10,8 @@ const CustomCardDescription: React.FC<{
   descriptionCard2?: string;
   tagComponentCard2?: ReactNode;
   descriptionCard3?: string;
-  itemCard1?: ReactNode;
   descriptionCard4?: string;
+  itemCard1?: ReactNode;
   itemCard2?: ReactNode;
 }> = ({
   descriptionCard1,
@@ -19,8 +19,8 @@ const CustomCardDescription: React.FC<{
   descriptionCard2,
   tagComponentCard2,
   descriptionCard3,
-  itemCard1,
   descriptionCard4,
+  itemCard1,
   itemCard2,
 }) => {
   return (

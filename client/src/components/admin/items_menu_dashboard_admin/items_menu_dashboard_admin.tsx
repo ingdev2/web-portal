@@ -48,7 +48,7 @@ function getItem(
 
 export const useMenuItems = () => {
   const { data: allMedicalReqStatusCreatedData } =
-    useGetAllMedicalReqUsersQuery(RequirementStatusEnum.CREATED);
+    useGetAllMedicalReqUsersQuery({ status: RequirementStatusEnum.CREATED });
 
   const items: MenuItem[] = [
     getItem(
@@ -66,9 +66,7 @@ export const useMenuItems = () => {
         getItem(
           ItemNames.SUB_PATIENTS_REQ,
           ItemKeys.SUB_PATIENTS_REQ_KEY,
-          <RiFileList3Line />,
-          undefined,
-          allMedicalReqStatusCreatedData?.length
+          <RiFileList3Line />
         ),
         getItem(
           ItemNames.SUB_EPS_REQ,
