@@ -364,7 +364,7 @@ const CustomTableFiltersAndSorting: React.FC<{
         onChange={handleChange}
         footer={undefined}
         pagination={{
-          pageSize: 7,
+          pageSize: 6,
           size: "default",
           position: ["bottomCenter"],
           showQuickJumper: true,

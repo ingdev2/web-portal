@@ -37,7 +37,13 @@ export class ReasonsForRejectionController {
 
   // GET METHODS //
 
-  @Auth(UserRolType.PATIENT, UserRolType.EPS, UserRolType.AUTHORIZED_FAMILIAR)
+  @Auth(
+    AdminRolType.SUPER_ADMIN,
+    AdminRolType.ADMIN,
+    UserRolType.PATIENT,
+    UserRolType.EPS,
+    UserRolType.AUTHORIZED_FAMILIAR,
+  )
   @Get('/getAll')
   getAllReasonsForRejection() {
     return this.reasonsForRejectionService.getAllReasonsForRejection();

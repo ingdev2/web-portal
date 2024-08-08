@@ -103,6 +103,7 @@ const CategorizationByItems: React.FC = () => {
                 Categorización por estado de solicitud
               </h3>
             </Col>
+
             <Row
               align="middle"
               style={{
@@ -228,6 +229,7 @@ const CategorizationByItems: React.FC = () => {
                 Categorización por tipo de solicitud
               </h3>
             </Col>
+
             <Row
               align="middle"
               style={{

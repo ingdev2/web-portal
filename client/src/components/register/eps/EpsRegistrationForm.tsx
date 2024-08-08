@@ -12,7 +12,10 @@ import CustomModalNoContent from "@/components/common/custom_modal_no_content/Cu
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { FcInfo } from "react-icons/fc";
 
-import { setErrorsUserEps } from "@/redux/features/eps/epsSlice";
+import {
+  setAuthMethodUserEps,
+  setErrorsUserEps,
+} from "@/redux/features/eps/epsSlice";
 
 import { useCreateUserEpsMutation } from "@/redux/apis/register/registerUsersApi";
 import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
@@ -26,11 +29,15 @@ import {
   checkboxMessagesValidator,
 } from "@/helpers/checkbox_validator/checkbox_validator";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import { AuthenticationMethodEnum } from "@/../../api/src/utils/enums/authentication_method.enum";
 
 const EpsRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const epsAuthMethodState = useAppSelector(
+    (state) => state.eps.authentication_method
+  );
   const userEpsErrorsState = useAppSelector((state) => state.eps.errors);
 
   const [epsNameLocalState, setEpsNameLocalState] = useState("");
@@ -67,7 +74,6 @@ const EpsRegistrationForm: React.FC = () => {
   );
   const [epsCompanyNameUserEpsLocalState, setEpsCompanyNameUserEpsLocalState] =
     useState("");
-  const [epsAuthMethodLocalState, setEpsAuthMethodLocalState] = useState(0);
   const [epsAuthMethodsListLocalState, setEpsAuthMethodsListLocalState]: any[] =
     useState([]);
   const [passwordUserEpsLocalState, setPasswordUserEpsLocalState] =
@@ -177,6 +183,15 @@ const EpsRegistrationForm: React.FC = () => {
       setShowErrorMessageUserEps(true);
       setEpsAuthMethodsListLocalState(authMethodData);
     }
+    if (epsAuthMethodsListLocalState.length > 0) {
+      const defaultMethod = epsAuthMethodsListLocalState.find(
+        (method: AuthMethod) => method.name === AuthenticationMethodEnum.EMAIL
+      );
+
+      if (defaultMethod) {
+        dispatch(setAuthMethodUserEps(defaultMethod.id));
+      }
+    }
   }, [
     epsCompanyData,
     epsCompanyError,
@@ -188,6 +203,7 @@ const EpsRegistrationForm: React.FC = () => {
     companyAreaError,
     authMethodData,
     authMethodError,
+    epsAuthMethodsListLocalState,
     epsNameLocalState,
     epsLastNameLocalState,
     fullCellphoneNumber,
@@ -222,7 +238,7 @@ const EpsRegistrationForm: React.FC = () => {
         email: epsEmailLocalState,
         cellphone: parseInt(fullCellphoneNumber, 10) || undefined,
         password: passwordUserEpsLocalState,
-        authentication_method: epsAuthMethodLocalState,
+        authentication_method: epsAuthMethodState,
       });
 
       var createUserEpsError = response.error;
@@ -483,10 +499,7 @@ const EpsRegistrationForm: React.FC = () => {
           epsCellphoneDataForm={parseInt(fullCellphoneNumber, 10)}
           validatorCellphoneInputFormData={validatorCellphoneInput}
           handleOnChangeEpsCellphoneDataForm={handlePhoneInputChange}
-          epsAuthMethodValueDataForm={epsAuthMethodLocalState}
-          handleOnChangeSelectAuthMethodDataForm={(e) =>
-            setEpsAuthMethodLocalState(e.target.value)
-          }
+          epsAuthMethodValueDataForm={epsAuthMethodState}
           epsAuthMethodListDataForm={epsAuthMethodsListLocalState}
           passwordUserEpsValueDataForm={passwordUserEpsLocalState}
           handleOnChangePasswordUserEpsValueDataForm={(e) =>

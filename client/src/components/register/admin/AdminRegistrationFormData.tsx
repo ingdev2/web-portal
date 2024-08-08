@@ -399,9 +399,9 @@ const AdminRegistrationFormData: React.FC<{
         ]}
       >
         <Radio.Group
-          id="radio-select-auth-method"
-          name="radio-select-auth-method"
-          className="radio-select-auth-method"
+          id="radio-select-auth-method-admin"
+          name="radio-select-auth-method-admin"
+          className="radio-select-auth-method-admin"
           style={{ textAlign: "start" }}
           disabled
         >

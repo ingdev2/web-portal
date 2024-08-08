@@ -41,7 +41,6 @@ const EpsRegistrationFormData: React.FC<{
   validatorCellphoneInputFormData: (_: any, value: any) => Promise<void>;
   handleOnChangeEpsCellphoneDataForm: (e: any) => void;
   epsAuthMethodValueDataForm: number;
-  handleOnChangeSelectAuthMethodDataForm: (e: any) => void;
   epsAuthMethodListDataForm: string[];
   passwordUserEpsValueDataForm: string;
   handleOnChangePasswordUserEpsValueDataForm: (e: any) => void;
@@ -87,7 +86,6 @@ const EpsRegistrationFormData: React.FC<{
   validatorCellphoneInputFormData,
   handleOnChangeEpsCellphoneDataForm,
   epsAuthMethodValueDataForm,
-  handleOnChangeSelectAuthMethodDataForm,
   epsAuthMethodListDataForm,
   passwordUserEpsValueDataForm,
   handleOnChangePasswordUserEpsValueDataForm,
@@ -430,9 +428,12 @@ const EpsRegistrationFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
+        id="radio-select-auth-method"
         name="radio-select-auth-method"
+        className="radio-select-auth-method"
         label="Método de autenticación del colaborador"
         tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
+        initialValue={epsAuthMethodValueDataForm}
         style={{ marginBottom: "7px" }}
         rules={[
           {
@@ -442,9 +443,11 @@ const EpsRegistrationFormData: React.FC<{
         ]}
       >
         <Radio.Group
-          value={epsAuthMethodValueDataForm}
-          onChange={handleOnChangeSelectAuthMethodDataForm}
+          id="radio-select-auth-method-eps"
+          name="radio-select-auth-method-eps"
+          className="radio-select-auth-method-eps"
           style={{ textAlign: "start" }}
+          disabled
         >
           <Space size={"small"} direction="horizontal">
             {epsAuthMethodListDataForm?.map((option: any) => (
