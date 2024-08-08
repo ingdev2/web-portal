@@ -28,6 +28,7 @@ import { loginRelativesApi } from "./apis/auth/loginRelativesApi";
 import { medicalReqApi } from "./apis/medical_req/medicalReqApi";
 import { epsCompanyApi } from "./apis/eps_company/epsCompanyApi";
 import { companyAreaApi } from "./apis/company_area/companyAreaApi";
+import { positionLevelApi } from "./apis/position_level/positionLevelApi";
 import { uploadViewFilesApi } from "./apis/upload_view_files/uploadViewFilesApi";
 import { typesMedicalReqApi } from "./apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { statusMedicalReqApi } from "./apis/medical_req/status_medical_req/statusMedicalReqApi";
@@ -43,6 +44,7 @@ const persistConfig = {
   version: 1,
   storage,
   whitelist: [
+    "admin",
     "patient",
     "eps",
     "familiar",
@@ -50,6 +52,7 @@ const persistConfig = {
     "patientUserLogin",
     "epsUserLogin",
     "familiarLogin",
+    "modal",
   ],
   blacklist: [],
 };
@@ -79,6 +82,7 @@ const rootReducer = combineReducers({
   [medicalReqApi.reducerPath]: medicalReqApi.reducer,
   [epsCompanyApi.reducerPath]: epsCompanyApi.reducer,
   [companyAreaApi.reducerPath]: companyAreaApi.reducer,
+  [positionLevelApi.reducerPath]: positionLevelApi.reducer,
   [uploadViewFilesApi.reducerPath]: uploadViewFilesApi.reducer,
   [typesMedicalReqApi.reducerPath]: typesMedicalReqApi.reducer,
   [statusMedicalReqApi.reducerPath]: statusMedicalReqApi.reducer,
@@ -114,6 +118,7 @@ export const store = configureStore({
       medicalReqApi.middleware,
       epsCompanyApi.middleware,
       companyAreaApi.middleware,
+      positionLevelApi.middleware,
       uploadViewFilesApi.middleware,
       typesMedicalReqApi.middleware,
       statusMedicalReqApi.middleware,

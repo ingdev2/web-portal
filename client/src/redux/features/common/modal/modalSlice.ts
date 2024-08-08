@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { ItemKeys } from "@/components/common/custom_dashboard_layout/enums/item_names_and_keys.enums";
 
 const initialState = {
   isPageLoading: false,
@@ -8,6 +9,8 @@ const initialState = {
   epsModalIsOpen: false,
   familiarModalIsOpen: false,
   passwordResetToken: "",
+  selectedKey: ItemKeys.SUB_ALL_REQUESTS_REQ_KEY,
+  selectedOpenKeys: [""],
 };
 
 export const modalSlice = createSlice({
@@ -35,6 +38,16 @@ export const modalSlice = createSlice({
     setPasswordResetToken: (state, action) => {
       state.passwordResetToken = action.payload;
     },
+    setSelectedKey: (state, action) => {
+      state.selectedKey = action.payload;
+    },
+    setSelectedOpenKeys: (state, action) => {
+      state.selectedOpenKeys = action.payload;
+    },
+    setResetModalAdmin: (state) => {
+      state.selectedKey = ItemKeys.SUB_ALL_REQUESTS_REQ_KEY;
+      state.selectedOpenKeys = [""];
+    },
   },
 });
 
@@ -46,6 +59,9 @@ export const {
   setEpsModalIsOpen,
   setFamiliarModalIsOpen,
   setPasswordResetToken,
+  setSelectedKey,
+  setSelectedOpenKeys,
+  setResetModalAdmin,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

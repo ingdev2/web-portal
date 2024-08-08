@@ -8,14 +8,41 @@ export const loginAdminApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    loginAdmins: builder.mutation<Partial<UserLogin>, Partial<UserLogin>>({
+    loginAdmins: builder.mutation<Partial<AdminLogin>, Partial<AdminLogin>>({
       query: (newAdminLogin) => ({
         url: "loginAdmins",
         method: "POST",
         body: newAdminLogin,
       }),
     }),
+
+    verifyAdminCode: builder.mutation<
+      Partial<AdminLogin>,
+      { verification_code: number; id_number: number }
+    >({
+      query: ({ verification_code, id_number }) => ({
+        url: `verifiedLoginAdmins/${id_number}`,
+        method: "POST",
+        params: { id_number },
+        body: { verification_code },
+      }),
+    }),
+
+    resendAdminVerificationCode: builder.mutation<
+      Partial<AdminLogin>,
+      { id_type: number; id_number: number }
+    >({
+      query: ({ id_type, id_number }) => ({
+        url: `resendVerificationAdminCode`,
+        method: "POST",
+        body: { id_type, id_number },
+      }),
+    }),
   }),
 });
 
-export const { useLoginAdminsMutation } = loginAdminApi;
+export const {
+  useLoginAdminsMutation,
+  useVerifyAdminCodeMutation,
+  useResendAdminVerificationCodeMutation,
+} = loginAdminApi;

@@ -20,10 +20,15 @@ import {
   setVerificationCodeLoginEps,
   setErrorsLoginEps,
 } from "@/redux/features/login/epsUserLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setEpsModalIsOpen,
+  setIsPageLoading,
+} from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
+
+import { maskEmail } from "@/helpers/mask_email/mask_email";
 
 const EpsModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -91,11 +96,14 @@ const EpsModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberEpsState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("users-auth", {
-        verification_code: verificationCode,
-        id_number: idNumber,
-        redirect: false,
-      });
+      const responseNextAuth = await signIn(
+        process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_USERS,
+        {
+          verification_code: verificationCode,
+          id_number: idNumber,
+          redirect: false,
+        }
+      );
 
       if (responseNextAuth?.error) {
         dispatch(setErrorsLoginEps(responseNextAuth.error.split(",")));
@@ -152,6 +160,8 @@ const EpsModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setEpsModalIsOpen(false));
+
     <Link href="/login" scroll={false} />;
     window.location.reload();
   };
@@ -230,7 +240,7 @@ const EpsModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserEpsData?.email}
+            {maskEmail(isUserEpsData?.email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

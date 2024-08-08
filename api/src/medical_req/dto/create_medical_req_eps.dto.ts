@@ -17,6 +17,10 @@ export class CreateMedicalReqEpsDto {
   @IsNotEmpty()
   requirement_type: number;
 
+  @IsNotEmpty()
+  @IsString()
+  registration_dates: string;
+
   @IsOptional()
   @IsUUID()
   aplicantId: string;

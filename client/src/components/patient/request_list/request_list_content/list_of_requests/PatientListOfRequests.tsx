@@ -74,7 +74,7 @@ const PatientListOfRequests: React.FC = () => {
       lg={24}
       style={{
         width: "100vw",
-        maxWidth: "690px",
+        maxWidth: "450px",
         minWidth: "231px",
         alignItems: "center",
         alignContent: "center",

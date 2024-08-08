@@ -61,7 +61,10 @@ const PatientHeaderLayout: React.FC = () => {
       dispatch(resetLoginStatePatient());
       dispatch(setDefaultValuesUserPatient());
       dispatch(setDefaultValuesMedicalReq());
-      signOut();
+      signOut({
+        redirect: true,
+        callbackUrl: "/login",
+      });
     } catch (error) {
       console.error(error);
     } finally {

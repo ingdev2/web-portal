@@ -29,7 +29,7 @@ export const uploadViewFilesApi = createApi({
       }),
     }),
 
-    viewFile: builder.query<string[], string[]>({
+    viewFile: builder.query<string[], string[] | undefined>({
       query: (keys) => {
         const params = keys
           ?.map((key) => `key=${encodeURIComponent(key)}`)

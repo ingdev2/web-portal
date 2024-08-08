@@ -43,6 +43,7 @@ import {
 } from "@/redux/apis/users/usersApi";
 
 import { IdTypeAbbrev } from "../../../../../api/src/users/enums/id_type_abbrev.enum";
+import CustomPopover from "@/components/common/custom_popover/CustomPopover";
 
 const ValidatePatientExistForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -381,7 +382,13 @@ const ValidatePatientExistForm: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Validación de existencia usuario Paciente
+            Validación pre registro Paciente
+            <CustomPopover
+              titleCustomPopover={"¿Qué validamos aquí?"}
+              contentCustomPopover={
+                "Aquí debemos validar antes de registrarte que no tienes cuenta activa en nuestro portal y que te encuentres registrado como paciente de la Clínica Bonnadona Prevenir."
+              }
+            />
           </h2>
 
           <Form.Item

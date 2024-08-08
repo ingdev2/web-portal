@@ -24,6 +24,7 @@ import { RequirementStatus } from '../../requirement_status/entities/requirement
 import { RequirementStatusEnum } from '../enums/requirement_status.enum';
 import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
+import { RequirementTypeEnum } from '../enums/requirement_type.enum';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { S3FileUploaderService } from 'src/s3_file_uploader/services/s3_file_uploader.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
@@ -58,7 +59,7 @@ export class MedicalReqService {
     private userIdTypeRepository: Repository<IdTypeEntity>,
 
     @InjectRepository(RequirementType)
-    private medicalReqTypeRepository: Repository<IdTypeEntity>,
+    private requerimentTypeRepository: Repository<RequirementType>,
 
     @InjectRepository(CompanyArea)
     private companyAreaRepository: Repository<CompanyArea>,
@@ -176,6 +177,10 @@ export class MedicalReqService {
 
     aplicantFamiliarDetails.filing_number = filingNumber;
 
+    aplicantFamiliarDetails.requirement_type =
+      medicalReqFamiliar.requirement_type;
+    aplicantFamiliarDetails.registration_dates =
+      medicalReqFamiliar?.registration_dates;
     aplicantFamiliarDetails.familiar_id = verifiedFamiliar.id;
     aplicantFamiliarDetails.patient_name = userPatientFound.name;
     aplicantFamiliarDetails.medicalReqUserType = verifiedFamiliar.user_role;
@@ -192,8 +197,6 @@ export class MedicalReqService {
     aplicantFamiliarDetails.requirement_status = reqStatusEstablished.id;
     aplicantFamiliarDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantFamiliarDetails.patient_id_number = userPatientFound.id_number;
-    aplicantFamiliarDetails.requirement_type =
-      medicalReqFamiliar.requirement_type;
 
     const currentDate = new Date();
     aplicantFamiliarDetails.date_of_admission = currentDate;
@@ -356,7 +359,7 @@ export class MedicalReqService {
       );
     }
 
-    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+    const medicalReqType = await this.requerimentTypeRepository.findOne({
       where: { id: medicalReqFamiliar.requirement_type },
     });
 
@@ -547,9 +550,14 @@ export class MedicalReqService {
 
     aplicantPatientDetails.filing_number = filingNumber;
 
+    aplicantPatientDetails.requirement_type =
+      medicalReqPatient.requirement_type;
+    aplicantPatientDetails.registration_dates =
+      medicalReqPatient.registration_dates;
     aplicantPatientDetails.aplicantId = userPatientFound.id;
     aplicantPatientDetails.patient_name = userPatientFound.name;
     aplicantPatientDetails.medicalReqUserType = userPatientFound.user_role;
+    aplicantPatientDetails.right_petition = medicalReqPatient.right_petition;
     aplicantPatientDetails.aplicant_name = userPatientFound.name;
     aplicantPatientDetails.aplicant_last_name = userPatientFound.last_name;
     aplicantPatientDetails.aplicant_gender = userPatientFound.user_gender;
@@ -562,11 +570,18 @@ export class MedicalReqService {
     aplicantPatientDetails.requirement_status = reqStatusStablished.id;
     aplicantPatientDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantPatientDetails.patient_id_number = userPatientFound.id_number;
-    aplicantPatientDetails.requirement_type =
-      medicalReqPatient.requirement_type;
 
     const currentDate = new Date();
     aplicantPatientDetails.date_of_admission = currentDate;
+
+    const { right_petition, copy_right_petition } = medicalReqPatient;
+
+    if (right_petition && !copy_right_petition) {
+      return new HttpException(
+        `No se ha adjuntado el documento de derecho de petición.`,
+        HttpStatus.CONFLICT,
+      );
+    }
 
     const userIdType = await this.userIdTypeRepository.findOne({
       where: {
@@ -581,7 +596,7 @@ export class MedicalReqService {
       );
     }
 
-    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+    const medicalReqType = await this.requerimentTypeRepository.findOne({
       where: { id: medicalReqPatient.requirement_type },
     });
 
@@ -759,6 +774,8 @@ export class MedicalReqService {
     aplicantEpsDetails.filing_number = filingNumber;
 
     aplicantEpsDetails.aplicantId = userEpsFound.id;
+    aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
+    aplicantEpsDetails.registration_dates = medicalReqEps.registration_dates;
     aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
@@ -775,7 +792,6 @@ export class MedicalReqService {
     aplicantEpsDetails.requirement_status = reqStatusEstablished.id;
     aplicantEpsDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantEpsDetails.patient_id_number = userPatientFound.id_number;
-    aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;
@@ -793,7 +809,7 @@ export class MedicalReqService {
       );
     }
 
-    const medicalReqType = await this.medicalReqTypeRepository.findOne({
+    const medicalReqType = await this.requerimentTypeRepository.findOne({
       where: { id: medicalReqEps.requirement_type },
     });
 
@@ -852,14 +868,49 @@ export class MedicalReqService {
 
   // GET FUNTIONS //
 
-  async getAllMedicalReqUsers() {
+  async getAllMedicalReqUsers(
+    status?: RequirementStatusEnum,
+    type?: RequirementTypeEnum,
+  ) {
+    const whereCondition: any = {
+      is_deleted: false,
+      is_it_reviewed: false,
+    };
+
+    if (status) {
+      const reqStatus = await this.requerimentStatusRepository.findOne({
+        where: { name: status },
+      });
+
+      if (!reqStatus) {
+        throw new HttpException(
+          `El estado "${status}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_status = reqStatus.id;
+    }
+
+    if (type) {
+      const reqType = await this.requerimentTypeRepository.findOne({
+        where: { name: type },
+      });
+
+      if (!reqType) {
+        throw new HttpException(
+          `El tipo "${status}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_type = reqType.id;
+    }
+
     const allMedicalReqUsers = await this.medicalReqRepository.find({
-      where: {
-        is_deleted: false,
-        is_it_reviewed: false,
-      },
+      where: whereCondition,
       order: {
-        createdAt: 'ASC',
+        createdAt: 'DESC',
       },
     });
 
@@ -868,9 +919,9 @@ export class MedicalReqService {
         `No hay requerimientos creados actualmente.`,
         HttpStatus.CONFLICT,
       );
-    } else {
-      return allMedicalReqUsers;
     }
+
+    return allMedicalReqUsers;
   }
 
   async getAllMedicalReqOfAUsers(userId: string) {

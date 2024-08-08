@@ -126,10 +126,6 @@ const PatientRequestCardList: React.FC<{
     error: userMedicalReqStatusError,
   } = useGetAllMedicalReqStatusQuery(null);
 
-  const [deletedMedicalReqPatient] = useDeletedMedicalReqMutation({
-    fixedCacheKey: "deletedMedicalReqPatientData",
-  });
-
   const {
     data: userMedicalReqReasonsForRejectionData,
     isLoading: userMedicalReqReasonsForRejectionLoading,
@@ -143,6 +139,10 @@ const PatientRequestCardList: React.FC<{
   const reasonForRejectionMapList = reasonForRejectionMap(
     userMedicalReqReasonsForRejectionData || []
   );
+
+  const [deletedMedicalReqPatient] = useDeletedMedicalReqMutation({
+    fixedCacheKey: "deletedMedicalReqPatientData",
+  });
 
   useEffect(() => {
     if (

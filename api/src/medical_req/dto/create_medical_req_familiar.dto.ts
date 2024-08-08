@@ -18,6 +18,10 @@ export class CreateMedicalReqFamiliarDto {
   requirement_type: number;
 
   @IsNotEmpty()
+  @IsString()
+  registration_dates: string;
+
+  @IsNotEmpty()
   patient_class_status: number;
 
   @IsNotEmpty()
@@ -37,6 +41,10 @@ export class CreateMedicalReqFamiliarDto {
   @IsBoolean()
   right_petition: boolean;
 
+  @IsOptional()
+  @IsArray()
+  copy_right_petition: string[];
+
   @IsNotEmpty()
   @IsString()
   user_message: string;
@@ -44,10 +52,6 @@ export class CreateMedicalReqFamiliarDto {
   @IsOptional()
   @IsArray()
   user_message_documents: string[];
-
-  @IsOptional()
-  @IsArray()
-  copy_right_petition: string[];
 
   @IsOptional()
   medicalReqUserType: number;

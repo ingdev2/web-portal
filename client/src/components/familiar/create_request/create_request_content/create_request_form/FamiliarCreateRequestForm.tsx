@@ -13,6 +13,7 @@ import CustomResultOneButton from "@/components/common/custom_result_one_button/
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FcInfo } from "react-icons/fc";
+import type { Dayjs } from "dayjs";
 
 import {
   setTypesMedicalReq,
@@ -39,6 +40,8 @@ import {
   removeFileCopyParentsCitizenshipCardMedicalReq,
   setFileUserMessageMedicalReq,
   removeFileUserMessageMessageMedicalReq,
+  setRegistrationDatesMedicalReq,
+  setHaveUserMessageMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import {
   setDefaultValuesUserFamiliar,
@@ -117,6 +120,12 @@ const FamiliarCreateRequestForm: React.FC = () => {
   );
   const rightPetitionFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_right_petition
+  );
+  const registrationDatesState = useAppSelector(
+    (state) => state.medicalReq.registration_dates
+  );
+  const haveUserMessageDocumentsState = useAppSelector(
+    (state) => state.medicalReq.have_user_message_documents
   );
   const userMessageMedicalReqState = useAppSelector(
     (state) => state.medicalReq.user_message
@@ -361,6 +370,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
           patient_id_type: idTypePatientOfFamiliarState,
           patient_id_number: idNumberPatientOfFamiliarState,
           right_petition: haveRightPetitionState,
+          registration_dates: registrationDatesState,
           user_message: userMessageMedicalReqState,
           ...responses,
         },
@@ -410,6 +420,19 @@ const FamiliarCreateRequestForm: React.FC = () => {
       console.error(error);
     } finally {
       setModalIsOpenSuccess(false);
+    }
+  };
+
+  const onRangeChange = (
+    dates: null | (Dayjs | null)[],
+    dateStrings: string[]
+  ) => {
+    if (dates && dateStrings[1]) {
+      const formattedDates: string = `DESDE-> ${dateStrings[0]} HASTA-> ${dateStrings[1]}`;
+
+      dispatch(setRegistrationDatesMedicalReq(formattedDates.toString()));
+    } else {
+      dispatch(setRegistrationDatesMedicalReq(""));
     }
   };
 
@@ -556,10 +579,19 @@ const FamiliarCreateRequestForm: React.FC = () => {
 
               dispatch(setRightPetitionMedicalReq(newValue));
             }}
+            tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud."
             copyRightPetitionSetterDataform={setFileCopyRightPetitionMedicalReq}
             copyRightPetitionRemoverDataform={
               removeFileCopyRightPetitionMedicalReq
             }
+            haveReferenceDocumentDataForm={
+              haveUserMessageDocumentsState ? true : false
+            }
+            onChangeHaveReferenceDocumentFamiliarDataForm={(e) => {
+              const newValue = e.target.value === true;
+
+              dispatch(setHaveUserMessageMedicalReq(newValue));
+            }}
             thePatientHasDiedDataForm={
               thePatienHasDiedLocalState ? true : false
             }
@@ -606,6 +638,8 @@ const FamiliarCreateRequestForm: React.FC = () => {
             copyParentCitizenshipCardRemoverDataform={
               removeFileCopyParentsCitizenshipCardMedicalReq
             }
+            onChangeDateCustomDoubleDatePicker={onRangeChange}
+            tooltipRegistrationDatesDataform="Selecciona el rango de fecha en el que deseas ver tus registros del tipo de solicitud que requieres."
             tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos relacionados con la solicitud que estas haciendo, para así ser mas precisos al darte respuesta."
             copyReferenceDocumentsRequestSetterDataform={
               setFileUserMessageMedicalReq
@@ -620,7 +654,7 @@ const FamiliarCreateRequestForm: React.FC = () => {
               isSubmittingConfirmModal && !modalIsOpenConfirm
             }
             handleButtonSubmitFormDataForm={handleButtonClick}
-            tooltipObservationsDataform="Especifique detalles específicos a tener en cuenta en su solicitud para así darte una respuesta asertiva, por ejemplo, fecha aprox. de procedimiento, tipo de procedimiento, entre otros."
+            tooltipObservationsDataform="Especifique detalles adicionales a tener en cuenta en su solicitud para así darte una respuesta asertiva."
           />
         )}
       </Card>

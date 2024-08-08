@@ -169,6 +169,20 @@ export class AuthorizedFamiliarService {
       );
     }
 
+    const [relatives, count] = await this.familiarRepository.findAndCount({
+      where: {
+        is_active: true,
+        patient_id_number: patientFound.id_number,
+      },
+    });
+
+    if (count >= 3) {
+      return new HttpException(
+        `El paciente no puede tener más de 3 familiares registrados`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const familiarWithAnotherPatient = await this.familiarRepository.findOne({
       where: {
         id_number: familiar.id_number,

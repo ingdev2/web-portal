@@ -61,7 +61,10 @@ const EpsHeaderLayout: React.FC = () => {
       dispatch(resetLoginStateLoginEps());
       dispatch(setDefaultValuesUserEps());
       dispatch(setDefaultValuesMedicalReq());
-      signOut();
+      signOut({
+        redirect: true,
+        callbackUrl: "/login",
+      });
     } catch (error) {
       console.error(error);
     } finally {

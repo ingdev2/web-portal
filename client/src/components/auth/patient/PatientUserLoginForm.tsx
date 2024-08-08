@@ -10,6 +10,7 @@ import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import PatientModalVerificationCode from "./PatientModalVerificationCode";
+import PatientForgotPasswordForm from "./patient_forgot_password_form/PatientForgotPasswordForm";
 import CustomModalNoContent from "../../common/custom_modal_no_content/CustomModalNoContent";
 import CustomSpin from "../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../common/custom_messages/CustomMessage";
@@ -28,7 +29,6 @@ import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSli
 
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useLoginPatientUsersMutation } from "@/redux/apis/auth/loginUsersApi";
-import PatientForgotPasswordForm from "./patient_forgot_password_form/PatientForgotPasswordForm";
 
 const PatientUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -155,7 +155,7 @@ const PatientUserLoginForm: React.FC = () => {
         }
       }
 
-      if (isLoginUserSuccess) {
+      if (isLoginUserSuccess && !isLoginUserError) {
         dispatch(setIdTypeLoginPatient(idTypePatientLocalState));
         dispatch(setIdNumberLoginPatient(idNumberPatientLocalStateInt));
         dispatch(setPasswordLoginPatient(passwordPatientLocalState));

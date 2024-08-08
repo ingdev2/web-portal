@@ -33,8 +33,9 @@ const EpsForgotPasswordForm: React.FC<{
 
   const errorsEpsState = useAppSelector((state) => state.eps.errors);
 
-  const [idTypesListPatientLocalState, setIdTypesListPatientLocalState] =
-    useState<IdType[] | undefined>([]);
+  const [idTypesListEpsLocalState, setIdTypesListEpsLocalState] = useState<
+    IdType[] | undefined
+  >([]);
 
   const [idTypeEpsLocalState, setIdTypeEpsLocalState] = useState(0);
   const [idNumberEpsLocalState, setIdNumberEpsLocalState] = useState("");
@@ -115,14 +116,14 @@ const EpsForgotPasswordForm: React.FC<{
       setEpsCompanyListLocalState(epsCompanyData);
     }
     if (!idTypesEpsLoading && !idTypesEpsFetching && idTypesEpsData) {
-      setIdTypesListPatientLocalState(idTypesEpsData);
+      setIdTypesListEpsLocalState(idTypesEpsData);
     }
     if (idTypesEpsError) {
       dispatch(
         setErrorsUserEps("¡No se pudo obtener los tipos de identificación!")
       );
       setShowErrorMessageForgotPassword(true);
-      setIdTypesListPatientLocalState(idTypesEpsData);
+      setIdTypesListEpsLocalState(idTypesEpsData);
     }
   }, [
     epsCompanyData,
@@ -314,7 +315,7 @@ const EpsForgotPasswordForm: React.FC<{
                 placeholder="Tipo de identificación"
                 onChange={(e) => setIdTypeEpsLocalState(e)}
               >
-                {idTypesListPatientLocalState?.map((option: any) => (
+                {idTypesListEpsLocalState?.map((option: any) => (
                   <Select.Option key={option.id} value={option.id}>
                     {option.name}
                   </Select.Option>

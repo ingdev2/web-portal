@@ -352,6 +352,7 @@ export class AdminsService {
     return await this.adminRepository.findOneBy({
       admin_id_type: idType,
       id_number: idNumber,
+      is_active: true,
     });
   }
 
@@ -482,9 +483,13 @@ export class AdminsService {
     );
   }
 
-  async forgotAdminPassword({ corporate_email }: ForgotPasswordAdminDto) {
+  async forgotAdminPassword({
+    admin_id_type,
+    id_number,
+    corporate_email,
+  }: ForgotPasswordAdminDto) {
     const adminFound = await this.adminRepository.findOne({
-      where: { corporate_email, is_active: true },
+      where: { admin_id_type, id_number, corporate_email, is_active: true },
     });
 
     if (adminFound) {

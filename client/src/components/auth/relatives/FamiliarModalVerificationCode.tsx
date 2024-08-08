@@ -23,11 +23,16 @@ import {
   setErrorsLoginFamiliar,
   setIdLoginFamiliar,
 } from "@/redux/features/login/familiarLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setFamiliarModalIsOpen,
+  setIsPageLoading,
+} from "@/redux/features/common/modal/modalSlice";
+import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 
 import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useResendFamiliarVerificationCodeMutation } from "@/redux/apis/auth/loginRelativesApi";
-import { setIdUserFamiliar } from "@/redux/features/familiar/familiarSlice";
+
+import { maskEmail } from "@/helpers/mask_email/mask_email";
 
 const FamiliarModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -108,11 +113,14 @@ const FamiliarModalVerificationCode: React.FC = () => {
         ? parseInt(verificationCodeFamiliarState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("relatives-auth", {
-        id_number: idNumber,
-        verification_code: verificationCode,
-        redirect: false,
-      });
+      const responseNextAuth = await signIn(
+        process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_RELATIVES,
+        {
+          id_number: idNumber,
+          verification_code: verificationCode,
+          redirect: false,
+        }
+      );
 
       if (responseNextAuth?.error) {
         dispatch(setErrorsLoginFamiliar(responseNextAuth.error.split(",")));
@@ -174,6 +182,8 @@ const FamiliarModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setFamiliarModalIsOpen(false));
+
     <Link href="/login" scroll={false} />;
     window.location.reload();
   };
@@ -252,7 +262,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {userFamiliarData?.email}
+            {maskEmail(userFamiliarData?.email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

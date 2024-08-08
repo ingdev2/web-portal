@@ -16,6 +16,7 @@ export class S3FileUploaderService {
       region: this.awsRegion,
       accessKeyId: this.awsAccessKey,
       secretAccessKey: this.awsSecretKey,
+      // signatureVersion: 'v4',
     });
   }
 

@@ -48,7 +48,7 @@ export class AuthController {
     return await this.authService.registerSuperAdmin(registerSuperAdmin);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
+  // @Auth(AdminRolType.SUPER_ADMIN)
   @Post('registerAdmin')
   async registerAdmin(@Body() registerAdmin: CreateAdminDto) {
     return await this.authService.registerAdmin(registerAdmin);

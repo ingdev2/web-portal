@@ -1,13 +1,18 @@
 "use client";
 
 import React from "react";
+import { useAppSelector } from "@/redux/hooks";
 
 import { Button, Checkbox, Form, Input, Radio, Select, Space } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import CustomUpload from "@/components/common/custom_upload/CustomUpload";
+import PhoneInput from "antd-phone-input";
 import { titleStyleCss } from "@/theme/text_styles";
 import { IdcardOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
+
+import { validateRequiredFiles } from "@/helpers/validate_required_values/validate_required_files";
 
 const AddRelativeFormData: React.FC<{
   handleAddAuthFamiliarDataForm: () => void;
@@ -29,18 +34,29 @@ const AddRelativeFormData: React.FC<{
   familiarGenderValueDataForm: number;
   handleOnChangeSelectGenderDataForm: (value: number) => void;
   familiarGenderListDataForm: string[];
+  tooltipUploadFamilyIdentityDocumentDataform: string;
+  fileStatusSetterFamilyIdentityDocumentDataform: React.SetStateAction<any>;
+  fileStatusRemoverFamilyIdentityDocumentDataform: React.SetStateAction<any>;
   familiarEmailDataForm: string;
   handleOnChangeFamiliarEmailDataForm: (e: any) => void;
   familiarCellphoneDataForm: number;
+  validatorCellphoneInputFormData: (_: any, value: any) => Promise<void>;
   handleOnChangeFamiliarCellphoneDataForm: (e: any) => void;
   familiarAuthMethodValueDataForm: number;
   handleOnChangeSelectAuthMethodDataForm: (e: any) => void;
   familiarAuthMethodListDataForm: string[];
   familiarWhatsappDataForm: number;
+  validatorWhatsappInputFormData: (_: any, value: any) => Promise<void>;
   handleOnChangeFamiliarWhatsappDataForm: (e: any) => void;
   checkboxValidatorDataForm: (_: any, value: boolean) => Promise<unknown>;
   isCheckboxCheckedDataForm: boolean;
   handleCheckboxChangeDataForm: (e: any) => void;
+  checkboxValidatorMessagesDataForm: (
+    _: any,
+    value: boolean
+  ) => Promise<unknown>;
+  isCheckboxCheckedMessagesDataForm: boolean;
+  handleCheckboxMessagesChangeDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
 }> = ({
@@ -63,21 +79,33 @@ const AddRelativeFormData: React.FC<{
   familiarGenderValueDataForm,
   handleOnChangeSelectGenderDataForm,
   familiarGenderListDataForm,
+  tooltipUploadFamilyIdentityDocumentDataform,
+  fileStatusSetterFamilyIdentityDocumentDataform,
+  fileStatusRemoverFamilyIdentityDocumentDataform,
   familiarEmailDataForm,
   handleOnChangeFamiliarEmailDataForm,
   familiarCellphoneDataForm,
+  validatorCellphoneInputFormData,
   handleOnChangeFamiliarCellphoneDataForm,
   familiarAuthMethodValueDataForm,
   handleOnChangeSelectAuthMethodDataForm,
   familiarAuthMethodListDataForm,
   familiarWhatsappDataForm,
+  validatorWhatsappInputFormData,
   handleOnChangeFamiliarWhatsappDataForm,
   checkboxValidatorDataForm,
   isCheckboxCheckedDataForm,
   handleCheckboxChangeDataForm,
+  checkboxValidatorMessagesDataForm,
+  isCheckboxCheckedMessagesDataForm,
+  handleCheckboxMessagesChangeDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
 }) => {
+  const copyFamiliarCitizenshipCardFilesState = useAppSelector(
+    (state) => state.familiar.files_copy_familiar_citizenship_card
+  );
+
   return (
     <Form
       id="add-relative-form"
@@ -306,6 +334,31 @@ const AddRelativeFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
+        name="upload-file-family-identity-document"
+        label="Documento de identidad del familiar"
+        tooltip={tooltipUploadFamilyIdentityDocumentDataform}
+        style={{ marginBottom: "13px" }}
+        rules={[
+          {
+            validator: validateRequiredFiles(
+              copyFamiliarCitizenshipCardFilesState,
+              "¡Por favor documento de identidad del familiar!"
+            ),
+          },
+        ]}
+      >
+        <CustomUpload
+          titleCustomUpload="Cargar Documento de identidad del familiar"
+          fileStatusSetterCustomUpload={
+            fileStatusSetterFamilyIdentityDocumentDataform
+          }
+          removeFileStatusSetterCustomUpload={
+            fileStatusRemoverFamilyIdentityDocumentDataform
+          }
+        />
+      </Form.Item>
+
+      <Form.Item
         name="new-familiar-email"
         label="Correo electrónico del familiar"
         style={{ marginBottom: "13px" }}
@@ -348,9 +401,9 @@ const AddRelativeFormData: React.FC<{
         label="Celular del familiar"
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
-          if (!value) return "";
+          if (!value || typeof value !== "string") return "";
 
-          return value.replace(/[^0-9]/g, "");
+          return value.replace(/[^\d+]/g, "");
         }}
         rules={[
           {
@@ -358,28 +411,19 @@ const AddRelativeFormData: React.FC<{
             message: "¡Por favor ingresa el número de celular del familiar!",
           },
           {
-            pattern: /^[0-9]+$/,
-            message:
-              "¡Por favor ingresa número de celular sin puntos ni comas!",
-          },
-          {
-            min: 7,
-            message: "¡Por favor ingresa mínimo 7 números!",
-          },
-          {
-            max: 11,
-            message: "¡Por favor ingresa máximo 11 números!",
+            validator: validatorCellphoneInputFormData,
           },
         ]}
       >
-        <Input
+        <PhoneInput
           prefix={<FiPhone className="site-form-item-icon" />}
           type="tel"
-          value={familiarCellphoneDataForm}
+          value={familiarCellphoneDataForm.toString()}
           placeholder="Número de celular"
           onChange={handleOnChangeFamiliarCellphoneDataForm}
           autoComplete="off"
           min={0}
+          enableSearch
         />
       </Form.Item>
 
@@ -416,37 +460,28 @@ const AddRelativeFormData: React.FC<{
         tooltip="El número de WhatsApp no es un medio autorizado para enviar código de acceso a la plataforma, este es para comunicación vía chat de texto en caso de que el número de celular indicado no esté habilitado."
         style={{ marginBottom: "13px" }}
         normalize={(value) => {
-          if (!value) return "";
+          if (!value || typeof value !== "string") return "";
 
-          return value.replace(/[^0-9]/g, "");
+          return value.replace(/[^\d+]/g, "");
         }}
         rules={[
           {
             required: false,
           },
           {
-            pattern: /^[0-9]+$/,
-            message:
-              "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
-          },
-          {
-            min: 7,
-            message: "¡Por favor ingresa mínimo 7 números!",
-          },
-          {
-            max: 11,
-            message: "¡Por favor ingresa máximo 11 números!",
+            validator: validatorWhatsappInputFormData,
           },
         ]}
       >
-        <Input
+        <PhoneInput
           prefix={<WhatsAppOutlined className="site-form-item-icon" />}
           type="tel"
-          value={familiarWhatsappDataForm}
+          value={familiarWhatsappDataForm.toString()}
           placeholder="Número de WhatsApp"
           onChange={handleOnChangeFamiliarWhatsappDataForm}
           autoComplete="off"
           min={0}
+          enableSearch
         />
       </Form.Item>
 
@@ -468,14 +503,36 @@ const AddRelativeFormData: React.FC<{
               target="_blank"
               style={{ textDecoration: "underline" }}
             >
-              Leer Política de Tratamiento de Datos
+              Leer Política de Tratamiento de Datos Personales
             </a>
           </div>
           <Checkbox
             checked={isCheckboxCheckedDataForm}
             onChange={handleCheckboxChangeDataForm}
           >
-            Acepto las políticas de tratamiento de datos personales
+            Declaro haber leído, entendido y aceptado la Política de Tratamiento
+            de Datos Personales
+          </Checkbox>
+        </div>
+      </Form.Item>
+
+      <Form.Item
+        name="checkbox-authorization-send-messages"
+        valuePropName="checked"
+        style={{ textAlign: "center", marginBottom: 13 }}
+        rules={[
+          {
+            validator: checkboxValidatorMessagesDataForm,
+          },
+        ]}
+      >
+        <div style={{ marginBottom: 13 }}>
+          <Checkbox
+            checked={isCheckboxCheckedMessagesDataForm}
+            onChange={handleCheckboxMessagesChangeDataForm}
+          >
+            Acepto el uso de medios electrónicos vía email o celular para
+            recibir mensajes informativos
           </Checkbox>
         </div>
       </Form.Item>

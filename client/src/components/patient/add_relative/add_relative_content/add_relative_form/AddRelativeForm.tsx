@@ -15,6 +15,8 @@ import { FcInfo } from "react-icons/fc";
 
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import {
+  setFileCopyFamiliarCitizenshipCard,
+  removeFileCopyFamiliarCitizenshipCard,
   setErrorsUserFamiliar,
   setIdTypesUserFamiliar,
 } from "@/redux/features/familiar/familiarSlice";
@@ -26,11 +28,17 @@ import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import { checkboxValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+
+import {
+  checkboxProcessingPersonalDataValidator,
+  checkboxMessagesValidator,
+} from "@/helpers/checkbox_validator/checkbox_validator";
 
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { uploadFiles } = processAndUploadFiles();
 
   const idUserPatientState = useAppSelector((state) => state.patient.id);
   const idNumberUserPatientState = useAppSelector(
@@ -46,6 +54,10 @@ const AddRelativeForm: React.FC = () => {
     (state) => state.familiar.errors
   );
 
+  const copyFamiliarCitizenshipCardFilesState = useAppSelector(
+    (state) => state.familiar.files_copy_familiar_citizenship_card
+  );
+
   const [familiarNameLocalState, setFamiliarNameLocalState] = useState("");
   const [familiarLastNameLocalState, setFamiliarLastNameLocalState] =
     useState("");
@@ -58,10 +70,19 @@ const AddRelativeForm: React.FC = () => {
   const [familiarGenderListLocalState, setFamiliarGenderListLocalState]: any[] =
     useState([]);
   const [familiarEmailLocalState, setFamiliarEmailLocalState] = useState("");
-  const [familiarCellphoneLocalState, setFamiliarCellphoneLocalState] =
-    useState(0);
-  const [familiarWhatsappLocalState, setFamiliarWhatsappLocalState] =
-    useState(0);
+
+  const [countryCode, setCountryCode] = useState(0);
+  const [areaCode, setAreaCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const fullCellphoneNumber = `${countryCode}${areaCode}${phoneNumber}`;
+
+  const [countryCodeWhatsApp, setCountryCodeWhatsApp] = useState(0);
+  const [areaCodeWhatsApp, setAreaCodeWhatsApp] = useState("");
+  const [phoneNumberWhatsApp, setPhoneNumberWhatsApp] = useState("");
+
+  const fullWhatsAppNumber = `${countryCodeWhatsApp}${areaCodeWhatsApp}${phoneNumberWhatsApp}`;
+
   const [
     familiarRelationshipListLocalState,
     setFamiliarRelationshipListLocalState,
@@ -80,6 +101,8 @@ const AddRelativeForm: React.FC = () => {
   ]: any[] = useState([]);
 
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
+    useState(false);
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
 
@@ -226,6 +249,37 @@ const AddRelativeForm: React.FC = () => {
     try {
       setIsSubmittingNewFamiliar(true);
 
+      const statesToUpload = [
+        {
+          state: copyFamiliarCitizenshipCardFilesState,
+          paramName: "copy_familiar_identification_document",
+        },
+      ];
+
+      const responses: Record<string, string[]> = {};
+
+      let errors: string[] = [];
+
+      if (statesToUpload.some(({ state }) => state && state.length > 0)) {
+        for (const { state, paramName } of statesToUpload) {
+          if (state && state.length > 0) {
+            const { success, error } = await uploadFiles(state);
+            if (error) {
+              errors.push(error);
+            } else {
+              responses[paramName] = success;
+            }
+          }
+        }
+      }
+
+      if (errors.length > 0) {
+        dispatch(setErrorsUserFamiliar(errors[0]));
+        setShowErrorMessageUserFamiliar(true);
+
+        return;
+      }
+
       const response: any = await addAuthFamiliarToPatient({
         patientId: idUserPatientState,
         newFamiliar: {
@@ -235,10 +289,11 @@ const AddRelativeForm: React.FC = () => {
           id_number: familiarIdNumberLocalState,
           user_gender: familiarGenderLocalState,
           email: familiarEmailLocalState,
-          cellphone: familiarCellphoneLocalState || undefined,
+          cellphone: parseInt(fullCellphoneNumber, 10) || undefined,
           authentication_method: familiarAuthMethodLocalState,
           rel_with_patient: familiarRelationshipLocalState,
-          whatsapp: familiarWhatsappLocalState || undefined,
+          whatsapp: parseInt(fullWhatsAppNumber, 10) || undefined,
+          ...responses,
         },
       });
 
@@ -320,8 +375,76 @@ const AddRelativeForm: React.FC = () => {
     }
   };
 
+  const handlePhoneInputChange = (value: any) => {
+    if (value) {
+      setCountryCode(value.countryCode || 0);
+      setAreaCode(value.areaCode || "");
+      setPhoneNumber(value.phoneNumber || "");
+    }
+  };
+
+  const combinePhoneDetails = () => {
+    return `${areaCode}${phoneNumber}`;
+  };
+
+  const validatorCellphoneInput = (_: any, value: any) => {
+    const combinedPhone = combinePhoneDetails();
+
+    if (!combinedPhone) {
+      return Promise.resolve();
+    }
+
+    const phonePattern = /^[0-9]+$/;
+
+    if (
+      phonePattern.test(combinedPhone) &&
+      combinedPhone.length >= 7 &&
+      combinedPhone.length <= 17
+    ) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject("Número de teléfono inválido");
+  };
+
+  const handleWhatsAppInputChange = (value: any) => {
+    if (value) {
+      setCountryCodeWhatsApp(value.countryCode || 0);
+      setAreaCodeWhatsApp(value.areaCode || "");
+      setPhoneNumberWhatsApp(value.phoneNumber || "");
+    }
+  };
+
+  const combineWhatsAppDetails = () => {
+    return `${areaCodeWhatsApp}${phoneNumberWhatsApp}`;
+  };
+
+  const validatorWhatsappInput = (_: any, value: any) => {
+    const combinedWhatsApp = combineWhatsAppDetails();
+
+    if (!combinedWhatsApp) {
+      return Promise.resolve();
+    }
+
+    const whatsAppPattern = /^[0-9]+$/;
+
+    if (
+      whatsAppPattern.test(combinedWhatsApp) &&
+      combinedWhatsApp.length >= 7 &&
+      combinedWhatsApp.length <= 17
+    ) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject("Número de WhatsApp inválido");
+  };
+
   const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
     setIsCheckboxChecked(e.target.checked);
+  };
+
+  const handleCheckboxMessageChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxMessagesChecked(e.target.checked);
   };
 
   const handleButtonClick = () => {
@@ -480,26 +603,34 @@ const AddRelativeForm: React.FC = () => {
             setFamiliarGenderLocalState(e);
           }}
           familiarGenderListDataForm={familiarGenderListLocalState}
+          tooltipUploadFamilyIdentityDocumentDataform="Adjunta el documento de identidad del familiar que deseas agregar a tu núcleo"
+          fileStatusSetterFamilyIdentityDocumentDataform={
+            setFileCopyFamiliarCitizenshipCard
+          }
+          fileStatusRemoverFamilyIdentityDocumentDataform={
+            removeFileCopyFamiliarCitizenshipCard
+          }
           familiarEmailDataForm={familiarEmailLocalState}
           handleOnChangeFamiliarEmailDataForm={(e) => {
             setFamiliarEmailLocalState(e.target.value.toLowerCase());
           }}
-          familiarCellphoneDataForm={familiarCellphoneLocalState}
-          handleOnChangeFamiliarCellphoneDataForm={(e) =>
-            setFamiliarCellphoneLocalState(parseInt(e.target.value, 10))
-          }
+          familiarCellphoneDataForm={parseInt(fullCellphoneNumber, 10)}
+          validatorCellphoneInputFormData={validatorCellphoneInput}
+          handleOnChangeFamiliarCellphoneDataForm={handlePhoneInputChange}
           familiarAuthMethodValueDataForm={familiarAuthMethodLocalState}
           handleOnChangeSelectAuthMethodDataForm={(e) =>
             setFamiliarAuthMethodLocalState(e.target.value)
           }
           familiarAuthMethodListDataForm={familiarAuthMethodsListLocalState}
-          familiarWhatsappDataForm={familiarWhatsappLocalState}
-          handleOnChangeFamiliarWhatsappDataForm={(e) =>
-            setFamiliarWhatsappLocalState(parseInt(e.target.value, 10))
-          }
-          checkboxValidatorDataForm={checkboxValidator}
+          familiarWhatsappDataForm={parseInt(fullWhatsAppNumber, 10)}
+          validatorWhatsappInputFormData={validatorWhatsappInput}
+          handleOnChangeFamiliarWhatsappDataForm={handleWhatsAppInputChange}
+          checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
           isCheckboxCheckedDataForm={isCheckboxChecked}
           handleCheckboxChangeDataForm={handleCheckboxChange}
+          checkboxValidatorMessagesDataForm={checkboxMessagesValidator}
+          isCheckboxCheckedMessagesDataForm={isCheckboxMessagesChecked}
+          handleCheckboxMessagesChangeDataForm={handleCheckboxMessageChange}
           buttonSubmitFormLoadingDataForm={
             isSubmittingConfirmModal && !modalIsOpenConfirm
           }

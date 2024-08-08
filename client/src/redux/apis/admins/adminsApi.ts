@@ -30,7 +30,12 @@ export const adminsApi = createApi({
     }),
 
     getAdminByIdNumber: builder.query<Admin, number>({
-      query: (idNumber) => `getAdminById/${idNumber}`,
+      query: (idNumber) => `getAdminByIdNumber/${idNumber}`,
+    }),
+
+    getAdminByIdTypeAndNumber: builder.query<Admin, Partial<Admin>>({
+      query: ({ admin_id_type: user_id_type, id_number }) =>
+        `getAdminByIdTypeAndNumber/${user_id_type}/${id_number}`,
     }),
 
     updateAdmin: builder.mutation<
@@ -59,7 +64,7 @@ export const adminsApi = createApi({
 
     forgotPassword: builder.mutation<any, ForgotAdminsPassword>({
       query: (ForgotAdminsPassword) => ({
-        url: "forgotPassword",
+        url: "forgotAdminsPassword",
         method: "PATCH",
         body: ForgotAdminsPassword,
       }),
@@ -79,6 +84,7 @@ export const {
   useGetAllAdminsQuery,
   useGetAdminByIdQuery,
   useGetAdminByIdNumberQuery,
+  useGetAdminByIdTypeAndNumberQuery,
   useUpdateAdminMutation,
   useUpdatePasswordMutation,
   useForgotPasswordMutation,

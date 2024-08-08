@@ -66,9 +66,9 @@ const EpsRequestDetailsModal: React.FC<{
           titleDescription={"Detalles de solicitud"}
           labelFilingNumber={"N° de Radicado:"}
           selectedRequestFilingNumber={selectedRequestFilingNumberModal}
-          labelRequestType={"Tipo:"}
+          labelRequestType={"Tipo de solicitud:"}
           selectedRequestType={selectedRequestTypeModal}
-          labelRequestStatus={"Estado:"}
+          labelRequestStatus={"Estado de solicitud:"}
           selectedRequestStatus={selectedRequestStatusModal}
           labelResponseDocuments={"Documentos de respuesta a solicitud:"}
           selectedRequestResponseDocuments={

@@ -36,13 +36,12 @@ export class AdminsController {
     return await this.adminsService.getAdminById(id);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
-  @Get('/getAdminById/:id')
+  @Get('/getAdminByIdNumber/:id')
   async getAdminByIdNumber(@Param('id') idNumber: number) {
     return await this.adminsService.getAdminByIdNumber(idNumber);
   }
 
-  @Get('/getAdminByIdNumber/:idType/:idNumber')
+  @Get('/getAdminByIdTypeAndNumber/:idType/:idNumber')
   async getAdminFoundByIdNumber(
     @Param('idType') idType: number,
     @Param('idNumber') idNumber: number,
@@ -76,9 +75,13 @@ export class AdminsController {
   @Patch('/forgotAdminsPassword')
   async forgotAdminPassword(
     @Body()
-    { corporate_email }: ForgotPasswordAdminDto,
+    { admin_id_type, id_number, corporate_email }: ForgotPasswordAdminDto,
   ) {
-    return await this.adminsService.forgotAdminPassword({ corporate_email });
+    return await this.adminsService.forgotAdminPassword({
+      admin_id_type,
+      id_number,
+      corporate_email,
+    });
   }
 
   @Patch('/resetPassword')

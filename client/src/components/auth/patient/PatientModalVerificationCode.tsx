@@ -20,10 +20,15 @@ import {
   setVerificationCodeLoginPatient,
   setErrorsLoginPatient,
 } from "@/redux/features/login/patientUserLoginSlice";
-import { setIsPageLoading } from "@/redux/features/common/modal/modalSlice";
+import {
+  setIsPageLoading,
+  setPatientModalIsOpen,
+} from "@/redux/features/common/modal/modalSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 import { useResendUserVerificationCodeMutation } from "@/redux/apis/auth/loginUsersApi";
+
+import { maskEmail } from "@/helpers/mask_email/mask_email";
 
 const PatientModalVerificationCode: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -95,11 +100,14 @@ const PatientModalVerificationCode: React.FC = () => {
         ? parseInt(idNumberPatientState?.toString(), 10)
         : "";
 
-      const responseNextAuth = await signIn("users-auth", {
-        verification_code: verificationCode,
-        id_number: idNumber,
-        redirect: false,
-      });
+      const responseNextAuth = await signIn(
+        process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_USERS,
+        {
+          verification_code: verificationCode,
+          id_number: idNumber,
+          redirect: false,
+        }
+      );
 
       if (responseNextAuth?.error) {
         dispatch(setErrorsLoginPatient(responseNextAuth.error.split(",")));
@@ -154,6 +162,8 @@ const PatientModalVerificationCode: React.FC = () => {
   };
 
   const handleCancel = () => {
+    dispatch(setPatientModalIsOpen(false));
+
     <Link href="/login" scroll={false} />;
     window.location.reload();
   };
@@ -232,7 +242,7 @@ const PatientModalVerificationCode: React.FC = () => {
               marginBlock: 7,
             }}
           >
-            {isUserPatientData?.email}
+            {maskEmail(isUserPatientData?.email)}
           </h5>
 
           <CustomLoadingOverlay isLoading={isPageLoadingState} />

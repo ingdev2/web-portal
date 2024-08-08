@@ -248,6 +248,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               onChange={onChangeEmailUserPatientFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </div>
@@ -300,6 +301,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
                   onChange={onChangeCellphoneUserPatientFormData}
                   autoComplete="off"
                   min={0}
+                  disabled
                 />
               </Form.Item>
             </div>
@@ -333,7 +335,7 @@ const FamiliarUpdatePersonalDataFormData: React.FC<{
                   {
                     pattern: /^[0-9]+$/,
                     message:
-                      "¡Por favor ingresa número de celular sin puntos ni comas!",
+                      "¡Por favor ingresa número de WhatsApp sin puntos ni comas!",
                   },
                   {
                     min: 7,

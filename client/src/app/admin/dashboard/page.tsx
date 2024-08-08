@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
+import DashboardAllRequestLayout from "@/components/admin/homepage/DashboardAllRequestLayout";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -14,9 +15,12 @@ import { setIdNumberAdmin } from "@/redux/features/admin/adminSlice";
 import {
   setIsPageLoading,
   setAdminModalIsOpen,
+  setSelectedKey,
 } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
+
+import { ItemKeys } from "@/components/common/custom_dashboard_layout/enums/item_names_and_keys.enums";
 
 const DashboardAdminPage = () => {
   const { data: session, status } = useSession();
@@ -31,6 +35,7 @@ const DashboardAdminPage = () => {
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
+  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
 
   const idNumberAdminLoginState = useAppSelector(
     (state) => state.adminLogin.id_number
@@ -55,18 +60,22 @@ const DashboardAdminPage = () => {
     if (!idNumberAdminLoginState) {
       setShowErrorMessage(true);
       setErrorMessage("¡Usuario no encontrado!");
-      redirect("/login");
+      redirect("/login_admin");
     }
     if (status === "unauthenticated") {
       setShowErrorMessage(true);
       setErrorMessage("¡No autenticado!");
-      redirect("/login");
+      redirect("/login_admin");
     }
     if (adminModalState) {
       dispatch(setAdminModalIsOpen(false));
     }
-    if (isPageLoadingState) {
+    if (
+      isPageLoadingState &&
+      selectedKeyState !== ItemKeys.SUB_ALL_REQUESTS_REQ_KEY
+    ) {
       dispatch(setIsPageLoading(false));
+      dispatch(setSelectedKey(ItemKeys.SUB_ALL_REQUESTS_REQ_KEY));
     }
   }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
 
@@ -79,12 +88,12 @@ const DashboardAdminPage = () => {
         />
       )}
 
-      <h1>Dashboard Admin</h1>
-
       {!idNumberAdminLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-admin-content">"Dashboard aquí"</div>
+        <div className="dashboard-all-requests-admin-content">
+          <DashboardAllRequestLayout />
+        </div>
       )}
     </div>
   );

@@ -2,12 +2,17 @@ export const maskEmail = (email: string | undefined): string | undefined => {
   if (email) {
     const [localPart, domain] = email.split("@");
 
-    const halfLength = Math.floor(localPart.length / 2);
+    const visiblePercentage = 0.1;
 
-    const visiblePart = localPart.substring(0, halfLength);
-    const maskedPart = "*".repeat(localPart.length - halfLength);
+    const startLength = Math.ceil(localPart.length * visiblePercentage);
+    const endLength = Math.ceil(localPart.length * visiblePercentage);
 
-    return `${visiblePart}${maskedPart}@${domain}`;
+    const startVisiblePart = localPart.substring(0, startLength);
+    const endVisiblePart = localPart.substring(localPart.length - endLength);
+
+    const maskedPart = "*".repeat(localPart.length - startLength - endLength);
+
+    return `${startVisiblePart}${maskedPart}${endVisiblePart}@${domain}`;
   }
   return undefined;
 };

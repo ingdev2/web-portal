@@ -6,12 +6,13 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
-import { Button, Card, Col, Form, Input, Select } from "antd";
+import { Button, Card, Checkbox, Col, Form, Input, Select } from "antd";
 import { IdcardOutlined } from "@ant-design/icons";
 import { MdOutlineEmail } from "react-icons/md";
 import FamiliarModalVerificationCode from "./FamiliarModalVerificationCode";
 import CustomSpin from "../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../common/custom_messages/CustomMessage";
+import { CheckboxProps } from "antd/lib";
 import { titleStyleCss } from "@/theme/text_styles";
 
 import {
@@ -34,6 +35,11 @@ import { useLoginRelativesMutation } from "@/redux/apis/auth/loginRelativesApi";
 import { useGetFamiliarByIdNumberQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllRelationshipTypesQuery } from "@/redux/apis/relatives/relationship_types/relationshipTypesApi";
+
+import {
+  checkboxProcessingPersonalDataValidator,
+  checkboxMessagesValidator,
+} from "@/helpers/checkbox_validator/checkbox_validator";
 
 const FamiliarUserLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
@@ -71,6 +77,9 @@ const FamiliarUserLoginForm: React.FC = () => {
   const [idNumberPatientLocalState, setIdNumberPatientLocalState] =
     useState("");
 
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
+    useState(false);
   const [isSubmittingFamiliar, setIsSubmittingFamiliar] = useState(false);
   const [showErrorMessageFamiliar, setShowErrorMessageFamiliar] =
     useState(false);
@@ -194,7 +203,7 @@ const FamiliarUserLoginForm: React.FC = () => {
         }
       }
 
-      if (isLoginUserFamiliarSuccess) {
+      if (isLoginUserFamiliarSuccess && !isLoginUserFamiliarError) {
         if (userFamiliarData && !userFamiliarError) {
           dispatch(setIdLoginFamiliar(userFamiliarData.id));
         }
@@ -210,6 +219,14 @@ const FamiliarUserLoginForm: React.FC = () => {
     } finally {
       setIsSubmittingFamiliar(false);
     }
+  };
+
+  const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxChecked(e.target.checked);
+  };
+
+  const handleCheckboxMessageChange: CheckboxProps["onChange"] = (e) => {
+    setIsCheckboxMessagesChecked(e.target.checked);
   };
 
   const handleButtonClick = () => {
@@ -423,7 +440,7 @@ const FamiliarUserLoginForm: React.FC = () => {
             <Form.Item
               name="familiar-relationship-with-patient"
               label="Parentesco con paciente"
-              style={{ marginBottom: 22 }}
+              style={{ marginBottom: 13 }}
               rules={[
                 {
                   required: true,
@@ -445,6 +462,60 @@ const FamiliarUserLoginForm: React.FC = () => {
               </Select>
             </Form.Item>
           )}
+
+          <Form.Item
+            name="checkbox-data-autorization"
+            valuePropName="checked"
+            style={{ textAlign: "center", marginBottom: 13 }}
+            rules={[
+              {
+                validator: checkboxProcessingPersonalDataValidator,
+              },
+            ]}
+          >
+            <div style={{ marginBlock: 13 }}>
+              <div style={{ marginBottom: "13px" }}>
+                <a
+                  className="data-processing-autorization-link"
+                  href={
+                    process.env.NEXT_PUBLIC_DATA_PROCESSING_AUTORIZATION_LINK
+                  }
+                  target="_blank"
+                  style={{ textDecoration: "underline" }}
+                >
+                  Leer Política de Tratamiento de Datos Personales
+                </a>
+              </div>
+              <Checkbox
+                checked={isCheckboxChecked}
+                onChange={handleCheckboxChange}
+              >
+                Declaro haber leído, entendido y aceptado la Política de
+                Tratamiento de Datos Personales
+              </Checkbox>
+            </div>
+          </Form.Item>
+
+          <Form.Item
+            name="checkbox-authorization-send-messages"
+            valuePropName="checked"
+            style={{ textAlign: "center", marginBottom: 13 }}
+            rules={[
+              {
+                validator: checkboxMessagesValidator,
+              },
+            ]}
+          >
+            <div style={{ marginBottom: 13 }}>
+              <Checkbox
+                checked={isCheckboxMessagesChecked}
+                onChange={handleCheckboxMessageChange}
+              >
+                Acepto el uso de medios electrónicos vía email o celular para
+                recibir mensajes informativos
+              </Checkbox>
+            </div>
+          </Form.Item>
 
           <Form.Item style={{ textAlign: "center" }}>
             {isSubmittingFamiliar && isLoginFamiliarLoading ? (

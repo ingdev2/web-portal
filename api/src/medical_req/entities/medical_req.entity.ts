@@ -33,6 +33,9 @@ export class MedicalReq {
   @Column()
   requirement_type: number;
 
+  @Column({ type: 'text', nullable: false })
+  registration_dates: string;
+
   @Column({ type: 'boolean', default: false })
   right_petition: boolean;
 
