@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -23,6 +23,7 @@ import { useViewFileQuery } from "@/redux/apis/upload_view_files/uploadViewFiles
 import { useGetAllPatientClassStatusQuery } from "@/redux/apis/patient_class_status/patientClassStatusApi";
 import { useGetAllRelationshipTypesQuery } from "@/redux/apis/relatives/relationship_types/relationshipTypesApi";
 import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
+import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 
 import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
@@ -33,18 +34,22 @@ import StatusItems from "./categorization_by_items/StatusItems";
 const aplicantNameKey: keyof MedicalReq = "aplicant_name";
 const filingNumberKey: keyof MedicalReq = "filing_number";
 const dateOfAdmissionKey: keyof MedicalReq = "date_of_admission";
+const answerDateKey: keyof MedicalReq = "answer_date";
 const requirementTypeKey: keyof MedicalReq = "requirement_type";
 const requirementStatusKey: keyof MedicalReq = "requirement_status";
 const patientNameKey: keyof MedicalReq = "patient_name";
 const patientIdTypeKey: keyof MedicalReq = "patient_id_type";
 const patientIdNumberKey: keyof MedicalReq = "patient_id_number";
-const registrationDatesKey: keyof MedicalReq = "registration_dates";
+const responseTimeKey: keyof MedicalReq = "response_time";
 
 const DashboardAllRequestLayout: React.FC = () => {
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
   const [selectedRowDataLocalState, setSelectedRowDataLocalState] =
     useState<MedicalReq | null>(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<
+    string[] | undefined
+  >([]);
 
   const {
     data: allMedicalReqUsersData,
@@ -89,6 +94,13 @@ const DashboardAllRequestLayout: React.FC = () => {
   } = useGetAllRelationshipTypesQuery(null);
 
   const {
+    data: allCompanyAreasData,
+    isLoading: allCompanyAreasLoading,
+    isFetching: allCompanyAreasFetching,
+    error: allCompanyAreasError,
+  } = useGetAllCompanyAreaQuery(null);
+
+  const {
     data: userMedicalReqReasonsForRejectionData,
     isLoading: userMedicalReqReasonsForRejectionLoading,
     isFetching: userMedicalReqReasonsForRejectionFetching,
@@ -96,13 +108,30 @@ const DashboardAllRequestLayout: React.FC = () => {
   } = useGetAllMedicalReqReasonsForRejectionQuery(null);
 
   const {
-    data: userViewResponseDocumentsData,
-    isLoading: userViewResponseDocumentsLoading,
-    isFetching: userViewResponseDocumentsFetching,
-    error: userViewResponseDocumentsError,
-  } = useViewFileQuery(selectedRowDataLocalState?.documents_delivered, {
-    skip: !selectedRowDataLocalState?.documents_delivered,
-  });
+    data: documentUrls,
+    isLoading: documentUrlsLoading,
+    isFetching: documentUrlsFetching,
+    error: documentUrlsError,
+  } = useViewFileQuery(selectedDocumentId, { skip: !selectedDocumentId });
+
+  useEffect(() => {
+    if (
+      documentUrls &&
+      documentUrls.length > 0 &&
+      !documentUrlsLoading &&
+      !documentUrlsFetching &&
+      !documentUrlsError
+    ) {
+      documentUrls.forEach((url) => {
+        window.open(url, "_blank");
+      });
+    }
+  }, [
+    documentUrls,
+    documentUrlsLoading,
+    documentUrlsFetching,
+    documentUrlsError,
+  ]);
 
   const idTypeGetName = transformIdToNameMap(idTypesData);
   const requirementTypeGetName = transformIdToNameMap(userMedicalReqTypeData);
@@ -115,6 +144,7 @@ const DashboardAllRequestLayout: React.FC = () => {
   const relationshipWithPatientGetName = transformIdToNameMap(
     allRelationshipWithPatientData
   );
+  const companyAreaGetName = transformIdToNameMap(allCompanyAreasData);
 
   const transformedData = Array.isArray(allMedicalReqUsersData)
     ? allMedicalReqUsersData.map((req: any) => ({
@@ -135,6 +165,8 @@ const DashboardAllRequestLayout: React.FC = () => {
           req.relationship_with_patient,
         aplicant_id_type:
           idTypeGetName?.[req.aplicant_id_type] || req.aplicant_id_type,
+        currently_in_area:
+          companyAreaGetName?.[req.currently_in_area] || req.currently_in_area,
       }))
     : [];
 
@@ -150,20 +182,6 @@ const DashboardAllRequestLayout: React.FC = () => {
     setSelectedRowDataLocalState(record);
 
     setIsModalVisibleLocalState(true);
-  };
-
-  const handleButtonClick = () => {
-    if (
-      userViewResponseDocumentsData &&
-      userViewResponseDocumentsData.length > 0 &&
-      !userViewResponseDocumentsLoading &&
-      !userViewResponseDocumentsFetching &&
-      !userViewResponseDocumentsError
-    ) {
-      userViewResponseDocumentsData.map((url: string) => {
-        window.open(url, "_blank");
-      });
-    }
   };
 
   const columns = [
@@ -200,6 +218,25 @@ const DashboardAllRequestLayout: React.FC = () => {
         a.date_of_admission.localeCompare(b.date_of_admission),
       ellipsis: true,
       searchable: true,
+    },
+    {
+      title: "FECHA DE RESPUESTA",
+      key: answerDateKey,
+      dataIndex: answerDateKey,
+      width: 100,
+      sorter: (a: MedicalReq, b: MedicalReq) =>
+        a.answer_date.localeCompare(b.answer_date),
+      ellipsis: true,
+      searchable: true,
+    },
+    {
+      title: "TIEMPO DE RESPUESTA",
+      key: responseTimeKey,
+      dataIndex: responseTimeKey,
+      width: 173,
+      sorter: (a: MedicalReq, b: MedicalReq) =>
+        a.response_time.localeCompare(b.response_time),
+      ellipsis: true,
     },
     {
       title: "TIPO DE SOLICITUD",
@@ -268,8 +305,8 @@ const DashboardAllRequestLayout: React.FC = () => {
     },
     {
       title: "ACCIONES",
-      key: registrationDatesKey,
-      dataIndex: registrationDatesKey,
+      key: filingNumberKey,
+      dataIndex: filingNumberKey,
       width: 88,
       ellipsis: true,
       fixed: "right" as "right",
@@ -295,6 +332,10 @@ const DashboardAllRequestLayout: React.FC = () => {
     },
   ];
 
+  const handleButtonClick = (documentId: string[] | undefined) => {
+    setSelectedDocumentId(documentId);
+  };
+
   return (
     <CustomDashboardLayout
       customLayoutContent={
@@ -302,13 +343,15 @@ const DashboardAllRequestLayout: React.FC = () => {
           {isModalVisibleLocalState && (
             <CustomModalNoContent
               key={"custom-modal-change-password-eps"}
-              widthCustomModalNoContent={"96%"}
+              widthCustomModalNoContent={"100%"}
               minWidthCustomModalNoContent="960px"
               openCustomModalState={isModalVisibleLocalState}
               closableCustomModal={true}
               maskClosableCustomModal={false}
               handleCancelCustomModal={() => {
                 setIsModalVisibleLocalState(false);
+
+                setSelectedRowDataLocalState(null);
               }}
               contentCustomModal={
                 <AdminRequestDetailsModalContent
@@ -339,7 +382,11 @@ const DashboardAllRequestLayout: React.FC = () => {
                           backgroundColor: "#015E90",
                           color: "#F7F7F7",
                         }}
-                        onClick={handleButtonClick}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.documents_delivered
+                          )
+                        }
                       >
                         <div
                           style={{
@@ -370,7 +417,11 @@ const DashboardAllRequestLayout: React.FC = () => {
                           backgroundColor: "#015E90",
                           color: "#F7F7F7",
                         }}
-                        onClick={handleButtonClick}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_right_petition
+                          )
+                        }
                       >
                         <div
                           style={{
@@ -415,8 +466,236 @@ const DashboardAllRequestLayout: React.FC = () => {
                   selectedAplicantEmail={
                     selectedRowDataLocalState?.aplicant_email
                   }
-                  labelAnswerDate="Fecha de creación:"
-                  selectedAnswerDate={selectedRowDataLocalState?.answer_date}
+                  labelCopyAplicantIdDocument="Copia de documento de identidad del solicitante"
+                  selectedCopyAplicantIdDocument={
+                    selectedRowDataLocalState?.copy_applicant_identification_document ? (
+                      <Button
+                        className="document-aplicant-id-button-admin"
+                        size="middle"
+                        style={{
+                          backgroundColor: "#015E90",
+                          color: "#F7F7F7",
+                        }}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_applicant_identification_document
+                          )
+                        }
+                      >
+                        <div
+                          style={{
+                            minWidth: "137px",
+                            display: "flex",
+                            flexFlow: "row wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TbEye size={17} />
+                          &nbsp;Ver documentos
+                        </div>
+                      </Button>
+                    ) : (
+                      <b style={{ color: "#960202" }}>
+                        No hay documentos anexados
+                      </b>
+                    )
+                  }
+                  labelCopyPatientCitizenshipCard="Copia de cédula del paciente"
+                  selectedCopyPatientCitizenshipCard={
+                    selectedRowDataLocalState?.copy_patient_citizenship_card ? (
+                      <Button
+                        className="document-patient-citizenship-card-button-admin"
+                        size="middle"
+                        style={{
+                          backgroundColor: "#015E90",
+                          color: "#F7F7F7",
+                        }}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_patient_citizenship_card
+                          )
+                        }
+                      >
+                        <div
+                          style={{
+                            minWidth: "137px",
+                            display: "flex",
+                            flexFlow: "row wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TbEye size={17} />
+                          &nbsp;Ver documentos
+                        </div>
+                      </Button>
+                    ) : (
+                      <b style={{ color: "#960202" }}>
+                        No hay documentos anexados
+                      </b>
+                    )
+                  }
+                  labelCopyPatientCivilRegistration="Copia de registro civil del paciente"
+                  selectedCopyPatientCivilRegistration={
+                    selectedRowDataLocalState?.copy_patient_civil_registration ? (
+                      <Button
+                        className="document-patient-civil-registration-button-admin"
+                        size="middle"
+                        style={{
+                          backgroundColor: "#015E90",
+                          color: "#F7F7F7",
+                        }}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_patient_civil_registration
+                          )
+                        }
+                      >
+                        <div
+                          style={{
+                            minWidth: "137px",
+                            display: "flex",
+                            flexFlow: "row wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TbEye size={17} />
+                          &nbsp;Ver documentos
+                        </div>
+                      </Button>
+                    ) : (
+                      <b style={{ color: "#960202" }}>
+                        No hay documentos anexados
+                      </b>
+                    )
+                  }
+                  labelCopyParentsCitizenshipCard="Copia de cédula de padre o madre"
+                  selectedCopyParentsCitizenshipCard={
+                    selectedRowDataLocalState?.copy_parents_citizenship_card ? (
+                      <Button
+                        className="document-parents-citizenship-card-button-admin"
+                        size="middle"
+                        style={{
+                          backgroundColor: "#015E90",
+                          color: "#F7F7F7",
+                        }}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_parents_citizenship_card
+                          )
+                        }
+                      >
+                        <div
+                          style={{
+                            minWidth: "137px",
+                            display: "flex",
+                            flexFlow: "row wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TbEye size={17} />
+                          &nbsp;Ver documentos
+                        </div>
+                      </Button>
+                    ) : (
+                      <b style={{ color: "#960202" }}>
+                        No hay documentos anexados
+                      </b>
+                    )
+                  }
+                  labelCopyMarriageCertificate="Copia de partida de matrimonio o certificado de unión libre"
+                  selectedCopyMarriageCertificate={
+                    selectedRowDataLocalState?.copy_marriage_certificate ? (
+                      <Button
+                        className="document-marriage-certificate-button-admin"
+                        size="middle"
+                        style={{
+                          backgroundColor: "#015E90",
+                          color: "#F7F7F7",
+                        }}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_marriage_certificate
+                          )
+                        }
+                      >
+                        <div
+                          style={{
+                            minWidth: "137px",
+                            display: "flex",
+                            flexFlow: "row wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TbEye size={17} />
+                          &nbsp;Ver documentos
+                        </div>
+                      </Button>
+                    ) : (
+                      <b style={{ color: "#960202" }}>
+                        No hay documentos anexados
+                      </b>
+                    )
+                  }
+                  labelCopyCohabitationCertificate="Certificado de convivencia"
+                  selectedCopyCohabitationCertificate={
+                    selectedRowDataLocalState?.copy_cohabitation_certificate ? (
+                      <Button
+                        className="document-cohabitation-certificate-button-admin"
+                        size="middle"
+                        style={{
+                          backgroundColor: "#015E90",
+                          color: "#F7F7F7",
+                        }}
+                        onClick={() =>
+                          handleButtonClick(
+                            selectedRowDataLocalState?.copy_cohabitation_certificate
+                          )
+                        }
+                      >
+                        <div
+                          style={{
+                            minWidth: "137px",
+                            display: "flex",
+                            flexFlow: "row wrap",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TbEye size={17} />
+                          &nbsp;Ver documentos
+                        </div>
+                      </Button>
+                    ) : (
+                      <b style={{ color: "#960202" }}>
+                        No hay documentos anexados
+                      </b>
+                    )
+                  }
+                  labelDateOfAdmission="Fecha de creación de solicitud:"
+                  selectedDateOfAdmission={
+                    selectedRowDataLocalState?.date_of_admission
+                  }
+                  labelAnswerDate="Fecha de respuesta de solicitud:"
+                  selectedAnswerDate={
+                    selectedRowDataLocalState?.answer_date || (
+                      <b style={{ color: "#960202" }}>En Revisión</b>
+                    )
+                  }
+                  labelResponseTime="Tiempo de respuesta a solicitud"
+                  selectedResponseTime={
+                    selectedRowDataLocalState?.response_time || (
+                      <b style={{ color: "#960202" }}>En Revisión</b>
+                    )
+                  }
+                  labelCurrentlyInArea="Área actual"
+                  selectedCurrentlyInArea={
+                    selectedRowDataLocalState?.currently_in_area
+                  }
                   labelDocumentExpirationDate="Fecha de expiración de documentos:"
                   selectedRequestDocumentExpirationDate={
                     selectedRowDataLocalState?.download_expiration_date || (

@@ -53,7 +53,7 @@ const CustomModalNoContent: React.FC<{
           alignContent: "center",
           justifyContent: "center",
           marginBlock: "7px",
-          marginInline: "7px",
+          marginInline: "2px",
         }}
       >
         {contentCustomModal}

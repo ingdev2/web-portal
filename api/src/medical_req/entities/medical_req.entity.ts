@@ -131,6 +131,9 @@ export class MedicalReq {
   @Column({ type: 'date', nullable: true })
   answer_date: Date;
 
+  @Column({ type: 'text', nullable: true })
+  response_time: string;
+
   @Column({ type: 'date', nullable: true })
   download_expiration_date: Date;
 

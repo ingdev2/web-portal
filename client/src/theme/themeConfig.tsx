@@ -20,6 +20,9 @@ const themeConfig: ThemeConfig = {
       itemSelectedBg: "#EFF7F8",
       colorBgElevated: "#013B5A",
     },
+    Descriptions: {
+      labelBg: "#015E9017",
+    },
   },
 };
 

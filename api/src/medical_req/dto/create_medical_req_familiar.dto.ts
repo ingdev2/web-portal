@@ -121,6 +121,10 @@ export class CreateMedicalReqFamiliarDto {
   answer_date: Date;
 
   @IsOptional()
+  @IsString()
+  response_time: string;
+
+  @IsOptional()
   @IsDateString()
   download_expiration_date: Date;
 

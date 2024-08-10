@@ -42,6 +42,11 @@ const StatusItems: React.FC = () => {
       status: RequirementStatusEnum.REJECTED,
     });
 
+  const { data: allMedicalReqStatusExpiredData } =
+    useGetAllMedicalReqUsersQuery({
+      status: RequirementStatusEnum.EXPIRED,
+    });
+
   return (
     <Row
       align="middle"
@@ -63,7 +68,7 @@ const StatusItems: React.FC = () => {
       >
         Total de&nbsp;
         <b>
-          {allMedicalReqUsersData?.length}
+          {allMedicalReqUsersData?.length || 0}
           &nbsp;solicitud(es)
         </b>
       </h2>
@@ -77,7 +82,7 @@ const StatusItems: React.FC = () => {
         }}
       >
         Creadas:&nbsp;
-        <b>{allMedicalReqStatusCreatedData?.length}</b>
+        <b>{allMedicalReqStatusCreatedData?.length || 0}</b>
       </h4>
 
       <Divider
@@ -98,7 +103,7 @@ const StatusItems: React.FC = () => {
         }}
       >
         Visualizadas:&nbsp;
-        <b>{allMedicalReqStatusVisualizedData?.length}</b>
+        <b>{allMedicalReqStatusVisualizedData?.length || 0}</b>
       </h4>
 
       <Divider
@@ -119,7 +124,7 @@ const StatusItems: React.FC = () => {
         }}
       >
         En Revisión:&nbsp;
-        <b>{allMedicalReqStatusUnderReviewData?.length}</b>
+        <b>{allMedicalReqStatusUnderReviewData?.length || 0}</b>
       </h4>
 
       <Divider
@@ -140,7 +145,7 @@ const StatusItems: React.FC = () => {
         }}
       >
         Docs. Entregados:&nbsp;
-        <b>{allMedicalReqStatusDeliveredData?.length}</b>
+        <b>{allMedicalReqStatusDeliveredData?.length || 0}</b>
       </h4>
 
       <Divider
@@ -161,7 +166,28 @@ const StatusItems: React.FC = () => {
         }}
       >
         Rechazadas:&nbsp;
-        <b>{allMedicalReqStatusRejectedData?.length}</b>
+        <b>{allMedicalReqStatusRejectedData?.length || 0}</b>
+      </h4>
+
+      <Divider
+        type="vertical"
+        style={{
+          height: "22px",
+          borderWidth: "1.3px",
+          borderColor: "#8C11117F",
+        }}
+      />
+
+      <h4
+        style={{
+          ...subtitleStyleCss,
+          textAlign: "center",
+          margin: "0px",
+          color: "#BA3400",
+        }}
+      >
+        Expiradas:&nbsp;
+        <b>{allMedicalReqStatusExpiredData?.length || 0} </b>
       </h4>
     </Row>
   );
