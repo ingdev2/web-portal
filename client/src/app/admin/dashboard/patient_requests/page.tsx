@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
 
-import PatientRequestsLayout from "@/components/admin/request_list/patient_requests/PatientRequestsLayout";
+import PatientRequestsContent from "@/components/admin/request_list/patient_requests/PatientRequestsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -84,7 +84,7 @@ const PatientRequestsPage = () => {
         <CustomSpin />
       ) : (
         <div className="dashboard-patient-requests-admin-content">
-          <PatientRequestsLayout />
+          <PatientRequestsContent />
         </div>
       )}
     </div>

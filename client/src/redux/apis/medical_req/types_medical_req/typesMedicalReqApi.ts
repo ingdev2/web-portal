@@ -22,8 +22,8 @@ export const typesMedicalReqApi = createApi({
 
   endpoints: (builder) => ({
     createMedicalReqType: builder.mutation<
-      MedicalReqStatus,
-      Partial<MedicalReqStatus>
+      MedicalReqType,
+      Partial<MedicalReqType>
     >({
       query: (newMedicalReqType) => ({
         url: `create`,
@@ -32,11 +32,11 @@ export const typesMedicalReqApi = createApi({
       }),
     }),
 
-    getAllMedicalReqTypes: builder.query<MedicalReqStatus[], null>({
+    getAllMedicalReqTypes: builder.query<MedicalReqType[], null>({
       query: () => "getAll",
     }),
 
-    getMedicalReqTypeById: builder.query<MedicalReqStatus, number>({
+    getMedicalReqTypeById: builder.query<MedicalReqType, number>({
       query: (id) => `getReqType/${id}`,
     }),
 

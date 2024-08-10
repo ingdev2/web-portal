@@ -130,9 +130,25 @@ export const medicalReqApi = createApi({
       query: (id) => `medicalReqEps/${id}`,
     }),
 
+    changeStatusToVisualized: builder.mutation<any, string>({
+      query: (reqId) => ({
+        url: `visualizedStatus/${reqId}`,
+        method: "PATCH",
+        params: { reqId },
+      }),
+    }),
+
+    changeStatusToUnderReview: builder.mutation<any, string>({
+      query: (reqId) => ({
+        url: `underReviewStatus/${reqId}`,
+        method: "PATCH",
+        params: { reqId },
+      }),
+    }),
+
     changeStatusToDelivered: builder.mutation<
       any,
-      { reqId: string; updateStatus: Partial<MedicalReq> }
+      { reqId: string; updateStatus: Partial<UpdateStatusMedicalReq> }
     >({
       query: ({ reqId, updateStatus }) => ({
         url: `deliveredStatus/${reqId}`,
@@ -144,7 +160,7 @@ export const medicalReqApi = createApi({
 
     changeStatusToRejected: builder.mutation<
       any,
-      { reqId: string; updateStatus: Partial<MedicalReq> }
+      { reqId: string; updateStatus: Partial<UpdateStatusMedicalReq> }
     >({
       query: ({ reqId, updateStatus }) => ({
         url: `rejectedStatus/${reqId}`,
@@ -156,13 +172,13 @@ export const medicalReqApi = createApi({
 
     forwardToAnotherArea: builder.mutation<
       any,
-      { reqId: string; updateStatus: Partial<MedicalReq> }
+      { reqId: string; sendToAnotherArea: Partial<UpdateStatusMedicalReq> }
     >({
-      query: ({ reqId, updateStatus }) => ({
-        url: `rejectedStatus/${reqId}`,
+      query: ({ reqId, sendToAnotherArea }) => ({
+        url: `sendToAnotherArea/${reqId}`,
         method: "PATCH",
         params: { reqId },
-        body: updateStatus,
+        body: sendToAnotherArea,
       }),
     }),
 
@@ -193,6 +209,8 @@ export const {
   useGetMedicalReqPatientByIdQuery,
   useGetMedicalReqFamiliarByIdQuery,
   useGetMedicalReqEpsByIdQuery,
+  useChangeStatusToVisualizedMutation,
+  useChangeStatusToUnderReviewMutation,
   useChangeStatusToDeliveredMutation,
   useChangeStatusToRejectedMutation,
   useForwardToAnotherAreaMutation,

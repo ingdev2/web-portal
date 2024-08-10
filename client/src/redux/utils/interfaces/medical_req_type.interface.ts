@@ -1,4 +1,4 @@
-interface MedicalReqStatus {
+interface MedicalReqType {
   id: number;
   name: string;
 }

@@ -6,7 +6,7 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const AdminRequestDetailsModalContent: React.FC<{
+const ModalRequestsDetails: React.FC<{
   titleDescription: string;
   labelFilingNumber: string;
   selectedRequestFilingNumber: string;
@@ -392,4 +392,4 @@ const AdminRequestDetailsModalContent: React.FC<{
   );
 };
 
-export default AdminRequestDetailsModalContent;
+export default ModalRequestsDetails;
