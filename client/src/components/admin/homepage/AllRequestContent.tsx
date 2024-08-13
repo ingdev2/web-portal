@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useAppDispatch } from "@/redux/hooks";
 
 import { Button } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -11,15 +12,24 @@ import CustomModalNoContent from "@/components/common/custom_modal_no_content/Cu
 import { tableColumnsAllRequests } from "./table_columns_all_requests/TableColumnsAllRequests";
 import { TbEye } from "react-icons/tb";
 
+import ModalActionButtons from "./modal_action_buttons/ModalActionButtons";
 import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
 import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
+import { getTagComponentRelationshipType } from "@/components/common/custom_tags_relationship_types/CustomTagsRelationshipTypes";
+import StatusItems from "./categorization_by_items/StatusItems";
 
-import { useGetAllMedicalReqUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
+import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
+
+import {
+  useChangeStatusToVisualizedMutation,
+  useGetAllMedicalReqUsersQuery,
+} from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useViewFileQuery } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
+import { useGetAllUserRolesQuery } from "@/redux/apis/user_roles/userRolesApi";
 import { useGetAllPatientClassStatusQuery } from "@/redux/apis/patient_class_status/patientClassStatusApi";
 import { useGetAllRelationshipTypesQuery } from "@/redux/apis/relatives/relationship_types/relationshipTypesApi";
 import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
@@ -28,11 +38,12 @@ import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyArea
 import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
-import { getTagComponentRelationshipType } from "@/components/common/custom_tags_relationship_types/CustomTagsRelationshipTypes";
-import StatusItems from "./categorization_by_items/StatusItems";
-import ModalActionButtons from "./modal_action_buttons/ModalActionButtons";
+
+import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 
 const AllRequestContent: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
   const [selectedRowDataLocalState, setSelectedRowDataLocalState] =
@@ -46,6 +57,7 @@ const AllRequestContent: React.FC = () => {
     isLoading: allMedicalReqUsersLoading,
     isFetching: allMedicalReqUsersFetching,
     error: allMedicalReqUsersError,
+    refetch: refecthAllMedicalReqUsers,
   } = useGetAllMedicalReqUsersQuery({});
 
   const {
@@ -68,6 +80,13 @@ const AllRequestContent: React.FC = () => {
     isFetching: idTypesFetching,
     error: idTypesError,
   } = useGetAllIdTypesQuery(null);
+
+  const {
+    data: allUserRolesData,
+    isLoading: allUserRolesLoading,
+    isFetching: allUserRolesFetching,
+    error: allUserRolesError,
+  } = useGetAllUserRolesQuery(null);
 
   const {
     data: allPatientClassStatusData,
@@ -96,6 +115,18 @@ const AllRequestContent: React.FC = () => {
     isFetching: userMedicalReqReasonsForRejectionFetching,
     error: userMedicalReqReasonsForRejectionError,
   } = useGetAllMedicalReqReasonsForRejectionQuery(null);
+
+  const [
+    changeStatusToVisualized,
+    {
+      data: changeStatusToVisualizedData,
+      isLoading: changeStatusToVisualizedLoading,
+      isSuccess: changeStatusToVisualizedFetching,
+      isError: changeStatusToVisualizedError,
+    },
+  ] = useChangeStatusToVisualizedMutation({
+    fixedCacheKey: "changeStatusToVisualizedData",
+  });
 
   const {
     data: documentUrls,
@@ -128,6 +159,7 @@ const AllRequestContent: React.FC = () => {
   const requirementStatusGetName = transformIdToNameMap(
     userMedicalReqStatusData
   );
+  const allUserRolesGetName = transformIdToNameMap(allUserRolesData);
   const patientClassStatusGetName = transformIdToNameMap(
     allPatientClassStatusData
   );
@@ -147,6 +179,9 @@ const AllRequestContent: React.FC = () => {
           req.requirement_status,
         patient_id_type:
           idTypeGetName?.[req.patient_id_type] || req.patient_id_type,
+        medicalReqUserType:
+          allUserRolesGetName?.[req.medicalReqUserType] ||
+          req.medicalReqUserType,
         patient_class_status:
           patientClassStatusGetName?.[req.patient_class_status] ||
           req.patient_class_status,
@@ -168,14 +203,35 @@ const AllRequestContent: React.FC = () => {
     (id) => reasonForRejectionMapList[id]
   );
 
+  const namesOfMedicalReqStates = [RequirementStatusEnum.CREATED.toString()];
+
+  const idsOfMedicalReqStates = userMedicalReqStatusData
+    ?.filter((status) => namesOfMedicalReqStates.includes(status.name))
+    .map((status) => status.name);
+
   const handleClickSeeMore = (record: MedicalReq) => {
+    dispatch(setTableRowId(""));
     setSelectedRowDataLocalState(record);
+
+    if (
+      record &&
+      idsOfMedicalReqStates &&
+      idsOfMedicalReqStates.includes(record.requirement_status.toString())
+    ) {
+      changeStatusToVisualized(record.id);
+    }
+
+    dispatch(setTableRowId(record.id));
 
     setIsModalVisibleLocalState(true);
   };
 
   const handleButtonClick = (documentId: string[] | undefined) => {
     setSelectedDocumentId(documentId);
+  };
+
+  const handleButtonUpdate = () => {
+    refecthAllMedicalReqUsers();
   };
 
   return (
@@ -573,6 +629,12 @@ const AllRequestContent: React.FC = () => {
                     selectedPatientIdNumber={
                       selectedRowDataLocalState?.patient_id_number
                     }
+                    labelAplicantType="Tipo de solicitante"
+                    selectedAplicantType={
+                      selectedRowDataLocalState?.medicalReqUserType || (
+                        <b style={{ color: "#960202" }}>No aplica</b>
+                      )
+                    }
                     labelPatientClassStatus="Tipo de paciente"
                     selectedPatientClassStatus={
                       selectedRowDataLocalState?.patient_class_status || (
@@ -611,7 +673,9 @@ const AllRequestContent: React.FC = () => {
                   idTypesData: idTypesData,
                   userMedicalReqTypeData: userMedicalReqTypeData,
                   userMedicalReqStatusData: userMedicalReqStatusData,
+                  aplicantTypeData: allUserRolesData,
                 })}
+                onClickUpdateCustomTable={handleButtonUpdate}
               />
             </>
           )}

@@ -1,6 +1,7 @@
 import { Button } from "antd";
 import { FaRegEye } from "react-icons/fa";
 
+const aplicantTypeKey: keyof MedicalReq = "medicalReqUserType";
 const aplicantNameKey: keyof MedicalReq = "aplicant_name";
 const filingNumberKey: keyof MedicalReq = "filing_number";
 const dateOfAdmissionKey: keyof MedicalReq = "date_of_admission";
@@ -16,6 +17,7 @@ interface TableColumnProps {
   handleClickSeeMore: (record: MedicalReq) => void;
   userMedicalReqTypeData: MedicalReqType[] | undefined;
   userMedicalReqStatusData: MedicalReqStatus[] | undefined;
+  aplicantTypeData: UserRole[] | undefined;
   idTypesData: IdType[] | undefined;
 }
 
@@ -23,6 +25,7 @@ export const tableColumnsAllRequests = ({
   handleClickSeeMore,
   userMedicalReqTypeData,
   userMedicalReqStatusData,
+  aplicantTypeData,
   idTypesData,
 }: TableColumnProps) => [
   {
@@ -50,6 +53,21 @@ export const tableColumnsAllRequests = ({
     fixed: "left" as "left",
   },
   {
+    title: "TIPO DE SOLICITANTE",
+    key: aplicantTypeKey,
+    dataIndex: aplicantTypeKey,
+    width: 88,
+    ellipsis: true,
+    filters:
+      aplicantTypeData?.map((aplicantType) => ({
+        value: aplicantType.name,
+        text: aplicantType.name,
+      })) || [],
+    onFilter: (value: any, record: any) => {
+      return String(record.medicalReqUserType) === String(value);
+    },
+  },
+  {
     title: "FECHA DE CREACIÓN",
     key: dateOfAdmissionKey,
     dataIndex: dateOfAdmissionKey,
@@ -64,18 +82,13 @@ export const tableColumnsAllRequests = ({
     key: answerDateKey,
     dataIndex: answerDateKey,
     width: 100,
-    sorter: (a: MedicalReq, b: MedicalReq) =>
-      a.answer_date.localeCompare(b.answer_date),
     ellipsis: true,
-    searchable: true,
   },
   {
     title: "TIEMPO DE RESPUESTA",
     key: responseTimeKey,
     dataIndex: responseTimeKey,
     width: 173,
-    sorter: (a: MedicalReq, b: MedicalReq) =>
-      a.response_time.localeCompare(b.response_time),
     ellipsis: true,
   },
   {
@@ -144,10 +157,10 @@ export const tableColumnsAllRequests = ({
     fixed: "right" as "right",
   },
   {
-    title: "ACCIONES",
+    title: "VER SOLICITUD COMPLETA",
     key: filingNumberKey,
     dataIndex: filingNumberKey,
-    width: 88,
+    width: 77,
     ellipsis: true,
     fixed: "right" as "right",
     render: (_: any, record: MedicalReq) => (

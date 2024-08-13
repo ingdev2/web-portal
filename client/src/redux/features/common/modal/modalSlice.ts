@@ -11,6 +11,7 @@ const initialState = {
   passwordResetToken: "",
   selectedKey: ItemKeys.SUB_ALL_REQUESTS_REQ_KEY,
   selectedOpenKeys: [""],
+  tableRowId: "",
 };
 
 export const modalSlice = createSlice({
@@ -44,6 +45,9 @@ export const modalSlice = createSlice({
     setSelectedOpenKeys: (state, action) => {
       state.selectedOpenKeys = action.payload;
     },
+    setTableRowId: (state, action) => {
+      state.tableRowId = action.payload;
+    },
     setResetModalAdmin: (state) => {
       state.selectedKey = ItemKeys.SUB_ALL_REQUESTS_REQ_KEY;
       state.selectedOpenKeys = [""];
@@ -61,6 +65,7 @@ export const {
   setPasswordResetToken,
   setSelectedKey,
   setSelectedOpenKeys,
+  setTableRowId,
   setResetModalAdmin,
 } = modalSlice.actions;
 

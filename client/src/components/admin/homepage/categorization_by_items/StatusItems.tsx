@@ -55,14 +55,14 @@ const StatusItems: React.FC = () => {
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
-        marginBlock: "13px",
+        marginBlock: "7px",
       }}
     >
       <h2
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           paddingInline: "22px",
         }}
       >
@@ -77,7 +77,7 @@ const StatusItems: React.FC = () => {
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           color: "#013B5A",
         }}
       >
@@ -98,7 +98,7 @@ const StatusItems: React.FC = () => {
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           color: "#9960B0",
         }}
       >
@@ -119,7 +119,7 @@ const StatusItems: React.FC = () => {
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           color: "#F4D03F",
         }}
       >
@@ -140,7 +140,7 @@ const StatusItems: React.FC = () => {
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           color: "#137A2B",
         }}
       >
@@ -161,7 +161,7 @@ const StatusItems: React.FC = () => {
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           color: "#8C1111",
         }}
       >
@@ -182,7 +182,7 @@ const StatusItems: React.FC = () => {
         style={{
           ...subtitleStyleCss,
           textAlign: "center",
-          margin: "0px",
+          marginBlock: "7px",
           color: "#BA3400",
         }}
       >

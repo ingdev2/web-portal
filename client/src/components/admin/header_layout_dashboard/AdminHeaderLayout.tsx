@@ -22,9 +22,9 @@ import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSli
 import { setDefaultValuesUserEps } from "@/redux/features/eps/epsSlice";
 import { setDefaultValuesUserFamiliar } from "@/redux/features/familiar/familiarSlice";
 import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
+import { setResetModalAdmin } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
-import { setResetModalAdmin } from "@/redux/features/common/modal/modalSlice";
 
 const AdminHeaderLayout: React.FC = () => {
   const dispatch = useAppDispatch();

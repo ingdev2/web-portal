@@ -34,6 +34,8 @@ const ModalRequestsDetails: React.FC<{
   selectedRegistrationDates: string | undefined;
   labelRelationShipWithPatient: string;
   selectedRelationShipWithPatient: ReactNode;
+  labelAplicantType: string;
+  selectedAplicantType: ReactNode;
   labelAplicantName: string;
   selectedAplicantName: string | undefined;
   labelAplicantIdType: string;
@@ -96,6 +98,8 @@ const ModalRequestsDetails: React.FC<{
   selectedRegistrationDates,
   labelRelationShipWithPatient,
   selectedRelationShipWithPatient,
+  labelAplicantType,
+  selectedAplicantType,
   labelAplicantName,
   selectedAplicantName,
   labelAplicantIdType,
@@ -141,9 +145,19 @@ const ModalRequestsDetails: React.FC<{
         margin: "0px",
       }}
     >
+      <h2
+        style={{
+          width: "100%",
+          ...titleStyleCss,
+          margin: "0px",
+          paddingBottom: "13px",
+        }}
+      >
+        {titleDescription}
+      </h2>
+
       <Descriptions
-        className="description1-request-details-admin"
-        title={titleDescription}
+        className="description-request-details-admin"
         layout="vertical"
         size="middle"
         style={{ paddingBlock: "7px" }}
@@ -196,6 +210,8 @@ const ModalRequestsDetails: React.FC<{
           {selectedRequestUserComments}
         </Descriptions.Item>
 
+        {/* FILA 1 */}
+
         <Descriptions.Item
           label={labelPatientClassStatus}
           style={{ textAlign: "center" }}
@@ -236,12 +252,14 @@ const ModalRequestsDetails: React.FC<{
           {selectedRegistrationDates}
         </Descriptions.Item>
 
+        {/* FILA 2 */}
+
         <Descriptions.Item
-          label={labelRelationShipWithPatient}
+          label={labelAplicantType}
           style={{ textAlign: "center" }}
           span={1}
         >
-          {selectedRelationShipWithPatient}
+          {selectedAplicantType}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -269,9 +287,19 @@ const ModalRequestsDetails: React.FC<{
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAplicantEmail}
+          label={labelRelationShipWithPatient}
           style={{ textAlign: "center" }}
           span={7}
+        >
+          {selectedRelationShipWithPatient}
+        </Descriptions.Item>
+
+        {/* FILA 3 */}
+
+        <Descriptions.Item
+          label={labelAplicantEmail}
+          style={{ textAlign: "center" }}
+          span={1}
         >
           {selectedAplicantEmail}
         </Descriptions.Item>
@@ -279,7 +307,7 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelCopyAplicantIdDocument}
           style={{ textAlign: "center" }}
-          span={1}
+          span={2}
         >
           {selectedCopyAplicantIdDocument}
         </Descriptions.Item>
@@ -303,15 +331,17 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelCopyParentsCitizenshipCard}
           style={{ textAlign: "center" }}
-          span={2}
+          span={7}
         >
           {selectedCopyParentsCitizenshipCard}
         </Descriptions.Item>
 
+        {/* FILA 4 */}
+
         <Descriptions.Item
           label={labelCopyMarriageCertificate}
           style={{ textAlign: "center" }}
-          span={7}
+          span={1}
         >
           {selectedCopyMarriageCertificate}
         </Descriptions.Item>
@@ -319,7 +349,7 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelCopyCohabitationCertificate}
           style={{ textAlign: "center" }}
-          span={1}
+          span={2}
         >
           {selectedCopyCohabitationCertificate}
         </Descriptions.Item>
@@ -343,15 +373,17 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelResponseTime}
           style={{ textAlign: "center" }}
-          span={2}
+          span={7}
         >
           {selectedResponseTime}
         </Descriptions.Item>
 
+        {/* FILA 5 */}
+
         <Descriptions.Item
           label={labelCurrentlyInArea}
           style={{ textAlign: "center" }}
-          span={7}
+          span={1}
         >
           {selectedCurrentlyInArea}
         </Descriptions.Item>
@@ -359,7 +391,7 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelResponseDocuments}
           style={{ textAlign: "center" }}
-          span={1}
+          span={2}
         >
           {selectedRequestResponseDocuments}
         </Descriptions.Item>
@@ -375,7 +407,7 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelRequestResponse}
           style={{ textAlign: "center" }}
-          span={4}
+          span={2}
         >
           {selectedRequestResponse}
         </Descriptions.Item>
@@ -388,6 +420,8 @@ const ModalRequestsDetails: React.FC<{
           {selectedRequestReasonsForRejection}
         </Descriptions.Item>
       </Descriptions>
+
+      {/* FILA 6 */}
     </Col>
   );
 };

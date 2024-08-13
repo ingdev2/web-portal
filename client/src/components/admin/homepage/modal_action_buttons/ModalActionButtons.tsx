@@ -1,39 +1,233 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Button, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import { LuInspect } from "react-icons/lu";
 import { GrSend } from "react-icons/gr";
+import { FaCheck } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
+
+import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
+
+import {
+  useChangeStatusToUnderReviewMutation,
+  useGetMedicalReqByIdQuery,
+} from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
+
+import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 
 const ModalActionButtons: React.FC<{}> = ({}) => {
-  return (
-    <Row justify={"center"} align={"middle"}>
-      <Button
-        className="send-to-another-area-button"
-        size="large"
-        style={{
-          backgroundColor: "#015E90",
-          color: "#F7F7F7",
-        }}
-        onClick={() => {}}
-      >
-        <div
-          style={{
-            minWidth: "137px",
-            display: "flex",
-            flexFlow: "row wrap",
-            alignItems: "center",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          <LuInspect size={17} />
-          &nbsp;Gestionar solicitud
-        </div>
-      </Button>
-    </Row>
-  );
+  const dispatch = useAppDispatch();
+
+  const [
+    isManagementOptionsVisibleLocalState,
+    setIsManagementOptionsVisibleLocalState,
+  ] = useState(false);
+
+  const tableRowIdState = useAppSelector((state) => state.modal.tableRowId);
+
+  const {
+    data: medicalReqByIdData,
+    isLoading: medicalReqByIdLoading,
+    isFetching: medicalReqByIdFetching,
+    error: medicalReqByIdError,
+  } = useGetMedicalReqByIdQuery(tableRowIdState);
+
+  const [
+    changeStatusToUnderReview,
+    {
+      data: changeStatusToUnderReviewData,
+      isLoading: changeStatusToUnderReviewLoading,
+      isSuccess: changeStatusToUnderReviewFetching,
+      isError: changeStatusToUnderReviewError,
+    },
+  ] = useChangeStatusToUnderReviewMutation({
+    fixedCacheKey: "changeStatusToUnderReviewData",
+  });
+
+  const {
+    data: userMedicalReqStatusData,
+    isLoading: userMedicalReqStatusLoading,
+    isFetching: userMedicalReqStatusFetching,
+    error: userMedicalReqStatusError,
+  } = useGetAllMedicalReqStatusQuery(null);
+
+  const namesOfMedicalReqStates = [
+    RequirementStatusEnum.DELIVERED.toString(),
+    RequirementStatusEnum.REJECTED.toString(),
+    RequirementStatusEnum.EXPIRED.toString(),
+  ];
+
+  const medicalReqUnderReviewState = [
+    RequirementStatusEnum.UNDER_REVIEW.toString(),
+  ];
+
+  const idsOfMedicalReqStates = userMedicalReqStatusData
+    ?.filter((status) => namesOfMedicalReqStates.includes(status.name))
+    .map((status) => status.id);
+
+  const idOfMedicalReqUnderReviewState = userMedicalReqStatusData
+    ?.filter((status) => medicalReqUnderReviewState.includes(status.name))
+    .map((status) => status.id);
+
+  useEffect(() => {
+    if (
+      medicalReqByIdData &&
+      idOfMedicalReqUnderReviewState &&
+      idOfMedicalReqUnderReviewState.includes(
+        medicalReqByIdData.requirement_status
+      )
+    ) {
+      setIsManagementOptionsVisibleLocalState(true);
+    }
+  }, [
+    isManagementOptionsVisibleLocalState,
+    medicalReqByIdData,
+    idOfMedicalReqUnderReviewState,
+  ]);
+
+  if (
+    medicalReqByIdData &&
+    idsOfMedicalReqStates &&
+    !idsOfMedicalReqStates.includes(medicalReqByIdData.requirement_status)
+  ) {
+    return (
+      <Col>
+        {!isManagementOptionsVisibleLocalState &&
+          idOfMedicalReqUnderReviewState &&
+          !idOfMedicalReqUnderReviewState.includes(
+            medicalReqByIdData.requirement_status
+          ) && (
+            <Button
+              className="manage-the-request-button"
+              size="large"
+              style={{
+                backgroundColor: "#015E90",
+                color: "#F7F7F7",
+                borderRadius: "31px",
+                paddingInline: "31px",
+                marginBlock: "13px",
+              }}
+              onClick={() => {
+                if (!isManagementOptionsVisibleLocalState) {
+                  setIsManagementOptionsVisibleLocalState(true);
+
+                  changeStatusToUnderReview(tableRowIdState);
+
+                  dispatch(setTableRowId(""));
+                }
+              }}
+            >
+              <div
+                style={{
+                  minWidth: "137px",
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  alignItems: "center",
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <LuInspect size={17} />
+                &nbsp;Gestionar solicitud
+              </div>
+            </Button>
+          )}
+
+        {isManagementOptionsVisibleLocalState && (
+          <Row
+            justify={"center"}
+            align={"middle"}
+            style={{ marginBlock: "13px" }}
+          >
+            <Button
+              className="send-to-another-area-button"
+              size="large"
+              style={{
+                backgroundColor: "#013B5A",
+                color: "#F7F7F7",
+                borderRadius: "31px",
+                paddingInline: "31px",
+                marginInline: "22px",
+              }}
+              onClick={() => {}}
+            >
+              <div
+                style={{
+                  minWidth: "137px",
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  alignItems: "center",
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <GrSend size={17} />
+                &nbsp;Enviar a otra área
+              </div>
+            </Button>
+
+            <Button
+              className="deliver-documents-button"
+              size="large"
+              style={{
+                backgroundColor: "#1D8348",
+                color: "#F7F7F7",
+                borderRadius: "31px",
+                paddingInline: "31px",
+                marginInline: "22px",
+              }}
+              onClick={() => {}}
+            >
+              <div
+                style={{
+                  minWidth: "137px",
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  alignItems: "center",
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FaCheck size={17} />
+                &nbsp;Entregar documentos
+              </div>
+            </Button>
+
+            <Button
+              className="reject-request-button"
+              size="large"
+              style={{
+                backgroundColor: "#8C1111",
+                color: "#F7F7F7",
+                borderRadius: "31px",
+                paddingInline: "31px",
+                marginInline: "22px",
+              }}
+              onClick={() => {}}
+            >
+              <div
+                style={{
+                  minWidth: "137px",
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  alignItems: "center",
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <FaTimes size={17} />
+                &nbsp;Rechazar solicitud
+              </div>
+            </Button>
+          </Row>
+        )}
+      </Col>
+    );
+  }
 };
 
 export default ModalActionButtons;

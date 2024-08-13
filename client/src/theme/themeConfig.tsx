@@ -22,6 +22,11 @@ const themeConfig: ThemeConfig = {
     },
     Descriptions: {
       labelBg: "#015E9017",
+      lineWidth: 2,
+    },
+    Table: {
+      rowHoverBg: "#DFEBF2",
+      headerBg: "#DFEBF2",
     },
   },
 };

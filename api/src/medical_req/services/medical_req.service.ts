@@ -1113,6 +1113,28 @@ export class MedicalReqService {
     }
   }
 
+  async getMedicalReqById(id: string) {
+    const medicalByIdFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+        is_deleted: false,
+        is_it_reviewed: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (!medicalByIdFound) {
+      return new HttpException(
+        `El requerimiento médico con número de ID: ${id} no está registrado o no esta por revisar.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return medicalByIdFound;
+    }
+  }
+
   async getMedicalReqPatientById(id: string) {
     const userRolePatient = await this.userRoleRepository.findOne({
       where: {

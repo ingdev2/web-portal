@@ -118,6 +118,10 @@ export const medicalReqApi = createApi({
       query: () => "getAllMedicalReqEps",
     }),
 
+    getMedicalReqById: builder.query<MedicalReq, string>({
+      query: (id) => `medicalReqById/${id}`,
+    }),
+
     getMedicalReqPatientById: builder.query<MedicalReq[], string>({
       query: (id) => `medicalReqPatient/${id}`,
     }),
@@ -206,6 +210,7 @@ export const {
   useGetAllMedicalReqPatientQuery,
   useGetAllMedicalReqFamiliarQuery,
   useGetAllMedicalReqEpsQuery,
+  useGetMedicalReqByIdQuery,
   useGetMedicalReqPatientByIdQuery,
   useGetMedicalReqFamiliarByIdQuery,
   useGetMedicalReqEpsByIdQuery,

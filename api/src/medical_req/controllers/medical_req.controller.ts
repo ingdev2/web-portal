@@ -115,6 +115,12 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
+  @Get('/medicalReqById/:id')
+  async getMedicalReqById(@Param('id') id: string) {
+    return await this.medicalReqService.getMedicalReqById(id);
+  }
+
+  @Auth(AdminRolType.ADMIN)
   @Get('/medicalReqPatient/:id')
   async getMedicalReqPatientById(@Param('id') id: string) {
     return await this.medicalReqService.getMedicalReqPatientById(id);
