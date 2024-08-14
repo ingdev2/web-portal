@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 
 import { Button, Col, Row } from "antd";
 import { LuInspect } from "react-icons/lu";
-import { GrSend } from "react-icons/gr";
 import { FaCheck } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
-
-import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
 
 import {
   useChangeStatusToUnderReviewMutation,
@@ -18,10 +15,9 @@ import {
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
 
 import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
+import SendToAnotherAreaButton from "./action_buttons/SendToAnotherAreaButton";
 
 const ModalActionButtons: React.FC<{}> = ({}) => {
-  const dispatch = useAppDispatch();
-
   const [
     isManagementOptionsVisibleLocalState,
     setIsManagementOptionsVisibleLocalState,
@@ -116,8 +112,6 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
                   setIsManagementOptionsVisibleLocalState(true);
 
                   changeStatusToUnderReview(tableRowIdState);
-
-                  dispatch(setTableRowId(""));
                 }
               }}
             >
@@ -143,32 +137,7 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
             align={"middle"}
             style={{ marginBlock: "13px" }}
           >
-            <Button
-              className="send-to-another-area-button"
-              size="large"
-              style={{
-                backgroundColor: "#013B5A",
-                color: "#F7F7F7",
-                borderRadius: "31px",
-                paddingInline: "31px",
-                marginInline: "22px",
-              }}
-              onClick={() => {}}
-            >
-              <div
-                style={{
-                  minWidth: "137px",
-                  display: "flex",
-                  flexFlow: "row wrap",
-                  alignItems: "center",
-                  alignContent: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <GrSend size={17} />
-                &nbsp;Enviar a otra área
-              </div>
-            </Button>
+            <SendToAnotherAreaButton />
 
             <Button
               className="deliver-documents-button"

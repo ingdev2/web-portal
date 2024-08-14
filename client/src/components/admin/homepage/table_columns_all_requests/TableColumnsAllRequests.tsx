@@ -175,11 +175,13 @@ export const tableColumnsAllRequests = ({
           alignContent: "center",
           alignItems: "center",
           paddingInline: 13,
-          paddingBlock: 7,
+          paddingBlock: 13,
         }}
-        size="middle"
+        size="small"
         icon={<FaRegEye />}
-        onClick={() => handleClickSeeMore(record)}
+        onClick={() => {
+          handleClickSeeMore(record);
+        }}
       />
     ),
   },

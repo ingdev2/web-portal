@@ -68,6 +68,8 @@ const ModalRequestsDetails: React.FC<{
   selectedRequestResponse: ReactNode;
   labelReasonsForRejection: string;
   selectedRequestReasonsForRejection: ReactNode;
+  labelAreaRedirectionMessage: string;
+  selectedAreaRedirectionMessage: ReactNode;
 }> = ({
   titleDescription,
   labelFilingNumber,
@@ -130,6 +132,8 @@ const ModalRequestsDetails: React.FC<{
   selectedRequestResponse,
   labelReasonsForRejection,
   selectedRequestReasonsForRejection,
+  labelAreaRedirectionMessage,
+  selectedAreaRedirectionMessage,
 }) => {
   return (
     <Col
@@ -407,9 +411,18 @@ const ModalRequestsDetails: React.FC<{
         <Descriptions.Item
           label={labelRequestResponse}
           style={{ textAlign: "center" }}
-          span={2}
+          span={9}
         >
           {selectedRequestResponse}
+        </Descriptions.Item>
+
+        {/* FILA 6 */}
+        <Descriptions.Item
+          label={labelAreaRedirectionMessage}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedAreaRedirectionMessage}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -419,9 +432,9 @@ const ModalRequestsDetails: React.FC<{
         >
           {selectedRequestReasonsForRejection}
         </Descriptions.Item>
-      </Descriptions>
 
-      {/* FILA 6 */}
+        {/* FILA 7 */}
+      </Descriptions>
     </Col>
   );
 };

@@ -27,6 +27,7 @@ const themeConfig: ThemeConfig = {
     Table: {
       rowHoverBg: "#DFEBF2",
       headerBg: "#DFEBF2",
+      lineWidth: 1.3,
     },
   },
 };

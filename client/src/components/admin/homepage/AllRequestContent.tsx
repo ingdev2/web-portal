@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import { Button } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -51,6 +51,13 @@ const AllRequestContent: React.FC = () => {
   const [selectedDocumentId, setSelectedDocumentId] = useState<
     string[] | undefined
   >([]);
+
+  const currentlyInAreaState = useAppSelector(
+    (state) => state.medicalReq.currently_in_area
+  );
+  const areaRedirectionMessageState = useAppSelector(
+    (state) => state.medicalReq.area_redirection_message
+  );
 
   const {
     data: allMedicalReqUsersData,
@@ -136,6 +143,13 @@ const AllRequestContent: React.FC = () => {
   } = useViewFileQuery(selectedDocumentId, { skip: !selectedDocumentId });
 
   useEffect(() => {
+    if (currentlyInAreaState && areaRedirectionMessageState) {
+      refecthAllMedicalReqUsers();
+
+      setTimeout(() => {
+        setIsModalVisibleLocalState(false);
+      }, 4000);
+    }
     if (
       documentUrls &&
       documentUrls.length > 0 &&
@@ -152,6 +166,8 @@ const AllRequestContent: React.FC = () => {
     documentUrlsLoading,
     documentUrlsFetching,
     documentUrlsError,
+    currentlyInAreaState,
+    areaRedirectionMessageState,
   ]);
 
   const idTypeGetName = transformIdToNameMap(idTypesData);
@@ -240,7 +256,7 @@ const AllRequestContent: React.FC = () => {
         <>
           {isModalVisibleLocalState && (
             <CustomModalNoContent
-              key={"custom-modal-change-password-eps"}
+              key={"custom-modal-request-details-admin"}
               widthCustomModalNoContent={"100%"}
               minWidthCustomModalNoContent="960px"
               openCustomModalState={isModalVisibleLocalState}
@@ -651,6 +667,12 @@ const AllRequestContent: React.FC = () => {
                         <b style={{ color: "#960202" }}>
                           En espera de respuesta
                         </b>
+                      )
+                    }
+                    labelAreaRedirectionMessage="Mensaje de envio de solicitud:"
+                    selectedAreaRedirectionMessage={
+                      selectedRowDataLocalState?.area_redirection_message || (
+                        <b style={{ color: "#960202" }}>No aplica</b>
                       )
                     }
                   />

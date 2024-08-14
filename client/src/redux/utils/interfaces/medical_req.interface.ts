@@ -42,6 +42,7 @@ interface MedicalReq {
   download_expiration_date: string;
   is_deleted: boolean;
   currently_in_area: number;
+  area_redirection_message: string;
   requirement_status: number;
   user_message: string;
   have_user_message_documents: boolean;
