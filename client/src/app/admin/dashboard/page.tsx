@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
-import DashboardAllRequestLayout from "@/components/admin/homepage/DashboardAllRequestLayout";
+import AllRequestContent from "@/components/admin/homepage/AllRequestContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -92,7 +92,7 @@ const DashboardAdminPage = () => {
         <CustomSpin />
       ) : (
         <div className="dashboard-all-requests-admin-content">
-          <DashboardAllRequestLayout />
+          <AllRequestContent />
         </div>
       )}
     </div>

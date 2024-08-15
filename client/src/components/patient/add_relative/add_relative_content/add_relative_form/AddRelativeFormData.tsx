@@ -355,6 +355,12 @@ const AddRelativeFormData: React.FC<{
           removeFileStatusSetterCustomUpload={
             fileStatusRemoverFamilyIdentityDocumentDataform
           }
+          maximumNumberOfFiles={Number(
+            process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+          )}
+          maximumSizeFilesInMegaBytes={Number(
+            process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+          )}
         />
       </Form.Item>
 

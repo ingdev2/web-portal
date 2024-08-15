@@ -10,40 +10,30 @@ const addTokenToRequest = async (headers: any, { getState }: any) => {
   return headers;
 };
 
-export const typesMedicalReqApi = createApi({
-  reducerPath: "typesMedicalReqApi",
+export const userRolesApi = createApi({
+  reducerPath: "userRolesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/requirement-type`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-roles`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
   }),
 
   endpoints: (builder) => ({
-    createMedicalReqType: builder.mutation<
-      MedicalReqType,
-      Partial<MedicalReqType>
-    >({
-      query: (newMedicalReqType) => ({
+    createUserRole: builder.mutation<UserRole, Partial<UserRole>>({
+      query: (newUserRole) => ({
         url: `create`,
         method: "POST",
-        body: newMedicalReqType,
+        body: newUserRole,
       }),
     }),
 
-    getAllMedicalReqTypes: builder.query<MedicalReqType[], null>({
+    getAllUserRoles: builder.query<UserRole[], null>({
       query: () => "getAll",
     }),
 
-    getMedicalReqTypeById: builder.query<MedicalReqType, number>({
-      query: (id) => `getReqType/${id}`,
-    }),
-
-    updateMedicalReqTypeById: builder.mutation<
-      any,
-      { id: number; newName: string }
-    >({
+    updateUserRole: builder.mutation<any, { id: number; newName: string }>({
       query: ({ id, newName }) => ({
         url: `update/${id}`,
         method: "PATCH",
@@ -55,8 +45,7 @@ export const typesMedicalReqApi = createApi({
 });
 
 export const {
-  useCreateMedicalReqTypeMutation,
-  useGetAllMedicalReqTypesQuery,
-  useGetMedicalReqTypeByIdQuery,
-  useUpdateMedicalReqTypeByIdMutation,
-} = typesMedicalReqApi;
+  useCreateUserRoleMutation,
+  useGetAllUserRolesQuery,
+  useUpdateUserRoleMutation,
+} = userRolesApi;

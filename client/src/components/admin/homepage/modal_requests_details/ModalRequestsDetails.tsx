@@ -6,7 +6,7 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const AdminRequestDetailsModalContent: React.FC<{
+const ModalRequestsDetails: React.FC<{
   titleDescription: string;
   labelFilingNumber: string;
   selectedRequestFilingNumber: string;
@@ -14,8 +14,6 @@ const AdminRequestDetailsModalContent: React.FC<{
   selectedRequestType: ReactNode;
   labelRequestStatus: string;
   selectedRequestStatus: ReactNode;
-  labelAnswerDate: string;
-  selectedAnswerDate: string | undefined;
   labelResponseDocuments: string;
   selectedRequestResponseDocuments: ReactNode;
   labelDocumentExpirationDate: string;
@@ -36,6 +34,8 @@ const AdminRequestDetailsModalContent: React.FC<{
   selectedRegistrationDates: string | undefined;
   labelRelationShipWithPatient: string;
   selectedRelationShipWithPatient: ReactNode;
+  labelAplicantType: string;
+  selectedAplicantType: ReactNode;
   labelAplicantName: string;
   selectedAplicantName: string | undefined;
   labelAplicantIdType: string;
@@ -44,10 +44,32 @@ const AdminRequestDetailsModalContent: React.FC<{
   selectedAplicantIdNumber: number | undefined;
   labelAplicantEmail: string;
   selectedAplicantEmail: string | undefined;
+  labelCopyAplicantIdDocument: string;
+  selectedCopyAplicantIdDocument: ReactNode;
+  labelCopyPatientCitizenshipCard: string;
+  selectedCopyPatientCitizenshipCard: ReactNode;
+  labelCopyPatientCivilRegistration: string;
+  selectedCopyPatientCivilRegistration: ReactNode;
+  labelCopyParentsCitizenshipCard: string;
+  selectedCopyParentsCitizenshipCard: ReactNode;
+  labelCopyMarriageCertificate: string;
+  selectedCopyMarriageCertificate: ReactNode;
+  labelCopyCohabitationCertificate: string;
+  selectedCopyCohabitationCertificate: ReactNode;
+  labelDateOfAdmission: string;
+  selectedDateOfAdmission: ReactNode;
+  labelAnswerDate: string;
+  selectedAnswerDate: ReactNode;
+  labelResponseTime: string;
+  selectedResponseTime: ReactNode;
+  labelCurrentlyInArea: string;
+  selectedCurrentlyInArea: ReactNode;
   labelRequestResponse: string;
   selectedRequestResponse: ReactNode;
   labelReasonsForRejection: string;
   selectedRequestReasonsForRejection: ReactNode;
+  labelAreaRedirectionMessage: string;
+  selectedAreaRedirectionMessage: ReactNode;
 }> = ({
   titleDescription,
   labelFilingNumber,
@@ -56,8 +78,8 @@ const AdminRequestDetailsModalContent: React.FC<{
   selectedRequestType,
   labelRequestStatus,
   selectedRequestStatus,
-  labelAnswerDate,
-  selectedAnswerDate,
+  labelDateOfAdmission,
+  selectedDateOfAdmission,
   labelResponseDocuments,
   selectedRequestResponseDocuments,
   labelDocumentExpirationDate,
@@ -78,6 +100,8 @@ const AdminRequestDetailsModalContent: React.FC<{
   selectedRegistrationDates,
   labelRelationShipWithPatient,
   selectedRelationShipWithPatient,
+  labelAplicantType,
+  selectedAplicantType,
   labelAplicantName,
   selectedAplicantName,
   labelAplicantIdType,
@@ -86,10 +110,30 @@ const AdminRequestDetailsModalContent: React.FC<{
   selectedAplicantIdNumber,
   labelAplicantEmail,
   selectedAplicantEmail,
+  labelCopyAplicantIdDocument,
+  selectedCopyAplicantIdDocument,
+  labelCopyPatientCitizenshipCard,
+  selectedCopyPatientCitizenshipCard,
+  labelCopyPatientCivilRegistration,
+  selectedCopyPatientCivilRegistration,
+  labelCopyParentsCitizenshipCard,
+  selectedCopyParentsCitizenshipCard,
+  labelCopyMarriageCertificate,
+  selectedCopyMarriageCertificate,
+  labelCopyCohabitationCertificate,
+  selectedCopyCohabitationCertificate,
+  labelAnswerDate,
+  selectedAnswerDate,
+  labelResponseTime,
+  selectedResponseTime,
+  labelCurrentlyInArea,
+  selectedCurrentlyInArea,
   labelRequestResponse,
   selectedRequestResponse,
   labelReasonsForRejection,
   selectedRequestReasonsForRejection,
+  labelAreaRedirectionMessage,
+  selectedAreaRedirectionMessage,
 }) => {
   return (
     <Col
@@ -105,9 +149,20 @@ const AdminRequestDetailsModalContent: React.FC<{
         margin: "0px",
       }}
     >
+      <h2
+        style={{
+          width: "100%",
+          ...titleStyleCss,
+          margin: "0px",
+          paddingBottom: "13px",
+          fontSize: "22px",
+        }}
+      >
+        {titleDescription}
+      </h2>
+
       <Descriptions
-        className="description1-request-details-admin"
-        title={titleDescription}
+        className="description-request-details-admin"
         layout="vertical"
         size="middle"
         style={{ paddingBlock: "7px" }}
@@ -160,6 +215,8 @@ const AdminRequestDetailsModalContent: React.FC<{
           {selectedRequestUserComments}
         </Descriptions.Item>
 
+        {/* FILA 1 */}
+
         <Descriptions.Item
           label={labelPatientClassStatus}
           style={{ textAlign: "center" }}
@@ -200,12 +257,14 @@ const AdminRequestDetailsModalContent: React.FC<{
           {selectedRegistrationDates}
         </Descriptions.Item>
 
-        {/* <Descriptions.Item
-          label={labelRelationShipWithPatient}
+        {/* FILA 2 */}
+
+        <Descriptions.Item
+          label={labelAplicantType}
           style={{ textAlign: "center" }}
           span={1}
         >
-          {selectedRelationShipWithPatient}
+          {selectedAplicantType}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -233,59 +292,105 @@ const AdminRequestDetailsModalContent: React.FC<{
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAplicantEmail}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedAplicantEmail}
-        </Descriptions.Item> */}
-
-        <Descriptions.Item
           label={labelRelationShipWithPatient}
           style={{ textAlign: "center" }}
-          span={1}
+          span={7}
         >
           {selectedRelationShipWithPatient}
         </Descriptions.Item>
 
-        <Descriptions.Item
-          label={labelAplicantName}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAplicantName}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelAplicantIdType}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAplicantIdType}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelAplicantIdNumber}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAplicantIdNumber}
-        </Descriptions.Item>
+        {/* FILA 3 */}
 
         <Descriptions.Item
           label={labelAplicantEmail}
           style={{ textAlign: "center" }}
-          span={7}
+          span={1}
         >
           {selectedAplicantEmail}
         </Descriptions.Item>
 
-        {/* <Descriptions.Item
+        <Descriptions.Item
+          label={labelCopyAplicantIdDocument}
+          style={{ textAlign: "center" }}
+          span={2}
+        >
+          {selectedCopyAplicantIdDocument}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelCopyPatientCitizenshipCard}
+          style={{ textAlign: "center" }}
+          span={2}
+        >
+          {selectedCopyPatientCitizenshipCard}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelCopyPatientCivilRegistration}
+          style={{ textAlign: "center" }}
+          span={2}
+        >
+          {selectedCopyPatientCivilRegistration}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelCopyParentsCitizenshipCard}
+          style={{ textAlign: "center" }}
+          span={7}
+        >
+          {selectedCopyParentsCitizenshipCard}
+        </Descriptions.Item>
+
+        {/* FILA 4 */}
+
+        <Descriptions.Item
+          label={labelCopyMarriageCertificate}
+          style={{ textAlign: "center" }}
+          span={1}
+        >
+          {selectedCopyMarriageCertificate}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelCopyCohabitationCertificate}
+          style={{ textAlign: "center" }}
+          span={2}
+        >
+          {selectedCopyCohabitationCertificate}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelDateOfAdmission}
+          style={{ textAlign: "center" }}
+          span={2}
+        >
+          {selectedDateOfAdmission}
+        </Descriptions.Item>
+
+        <Descriptions.Item
           label={labelAnswerDate}
           style={{ textAlign: "center" }}
-          span={1}
+          span={2}
         >
           {selectedAnswerDate}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelResponseTime}
+          style={{ textAlign: "center" }}
+          span={7}
+        >
+          {selectedResponseTime}
+        </Descriptions.Item>
+
+        {/* FILA 5 */}
+
+        <Descriptions.Item
+          label={labelCurrentlyInArea}
+          style={{ textAlign: "center" }}
+          span={1}
+        >
+          {selectedCurrentlyInArea}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -307,9 +412,18 @@ const AdminRequestDetailsModalContent: React.FC<{
         <Descriptions.Item
           label={labelRequestResponse}
           style={{ textAlign: "center" }}
-          span={2}
+          span={9}
         >
           {selectedRequestResponse}
+        </Descriptions.Item>
+
+        {/* FILA 6 */}
+        <Descriptions.Item
+          label={labelAreaRedirectionMessage}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedAreaRedirectionMessage}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -318,10 +432,12 @@ const AdminRequestDetailsModalContent: React.FC<{
           span={7}
         >
           {selectedRequestReasonsForRejection}
-        </Descriptions.Item> */}
+        </Descriptions.Item>
+
+        {/* FILA 7 */}
       </Descriptions>
     </Col>
   );
 };
 
-export default AdminRequestDetailsModalContent;
+export default ModalRequestsDetails;

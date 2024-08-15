@@ -15,10 +15,14 @@ const CustomUpload: React.FC<{
   titleCustomUpload: string;
   fileStatusSetterCustomUpload: React.SetStateAction<any>;
   removeFileStatusSetterCustomUpload: React.SetStateAction<any>;
+  maximumNumberOfFiles: number;
+  maximumSizeFilesInMegaBytes: number;
 }> = ({
   titleCustomUpload,
   fileStatusSetterCustomUpload,
   removeFileStatusSetterCustomUpload,
+  maximumNumberOfFiles,
+  maximumSizeFilesInMegaBytes,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -53,7 +57,7 @@ const CustomUpload: React.FC<{
   const props: UploadProps = {
     name: "files",
     multiple: true,
-    maxCount: Number(process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES),
+    maxCount: maximumNumberOfFiles,
     accept: process.env.NEXT_PUBLIC_FILE_TYPES_ALLOWED,
     listType: "picture-card",
     beforeUpload: (file: RcFile) => {
@@ -65,15 +69,11 @@ const CustomUpload: React.FC<{
         return Upload.LIST_IGNORE;
       }
 
-      const isLt2M =
-        file.size / 1024 / 1024 <
-        Number(process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES);
+      const isLt2M = file.size / 1024 / 1024 < maximumSizeFilesInMegaBytes;
 
       if (!isLt2M) {
         message.error(
-          `¡El peso del archivo debe ser menor a ${Number(
-            process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES
-          )}MB!`
+          `¡El peso del archivo debe ser menor a ${maximumSizeFilesInMegaBytes}MB!`
         );
 
         return Upload.LIST_IGNORE;

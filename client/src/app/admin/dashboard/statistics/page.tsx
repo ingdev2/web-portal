@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
 
-import PatientRequestsLayout from "@/components/admin/request_list/patient_requests/PatientRequestsLayout";
+import StatisticsContent from "@/components/admin/statistics/StatisticsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -19,7 +19,7 @@ import {
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 
-const PatientRequestsPage = () => {
+const StatisticsPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -83,12 +83,12 @@ const PatientRequestsPage = () => {
       {!idNumberAdminLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-patient-requests-admin-content">
-          <PatientRequestsLayout />
+        <div className="dashboard-statistics-admin-content">
+          <StatisticsContent />
         </div>
       )}
     </div>
   );
 };
 
-export default PatientRequestsPage;
+export default StatisticsPage;

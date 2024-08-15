@@ -16,7 +16,7 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 
 @ApiTags('user-roles')
 @ApiBearerAuth()
-@Auth(AdminRolType.SUPER_ADMIN)
+@Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
 @Controller('user-roles')
 export class UserRolesController {
   constructor(private readonly userRolesService: UserRolesService) {}

@@ -316,6 +316,12 @@ const FamiliarCreateRequestFormData: React.FC<{
               removeFileStatusSetterCustomUpload={
                 copyRightPetitionRemoverDataform
               }
+              maximumNumberOfFiles={Number(
+                process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+              )}
+              maximumSizeFilesInMegaBytes={Number(
+                process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+              )}
             />
           </Form.Item>
         )}
@@ -373,6 +379,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                 removeFileStatusSetterCustomUpload={
                   copyPatientCitizenshipCardRemoverDataform
                 }
+                maximumNumberOfFiles={Number(
+                  process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                )}
+                maximumSizeFilesInMegaBytes={Number(
+                  process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                )}
               />
             </Form.Item>
           )}
@@ -427,6 +439,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCitizenshipCardRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
 
@@ -454,6 +472,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCivilRegistryRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
             </>
@@ -487,6 +511,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCitizenshipCardRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
 
@@ -514,6 +544,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCivilRegistryRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
             </>
@@ -547,6 +583,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCitizenshipCardRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
 
@@ -574,6 +616,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyMarriageCertificateRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
             </>
@@ -607,6 +655,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCitizenshipCardRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
 
@@ -634,6 +688,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyCohabitationCertificateRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
             </>
@@ -665,6 +725,12 @@ const FamiliarCreateRequestFormData: React.FC<{
               removeFileStatusSetterCustomUpload={
                 copyAplicantIdentificationDocumentRemoverDataform
               }
+              maximumNumberOfFiles={Number(
+                process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+              )}
+              maximumSizeFilesInMegaBytes={Number(
+                process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+              )}
             />
           </Form.Item>
         )}
@@ -695,6 +761,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                 removeFileStatusSetterCustomUpload={
                   copyPatientCitizenshipCardRemoverDataform
                 }
+                maximumNumberOfFiles={Number(
+                  process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                )}
+                maximumSizeFilesInMegaBytes={Number(
+                  process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                )}
               />
             </Form.Item>
           )}
@@ -728,6 +800,13 @@ const FamiliarCreateRequestFormData: React.FC<{
                     removeFileStatusSetterCustomUpload={
                       copyParentCitizenshipCardRemoverDataform
                     }
+                    maximumNumberOfFiles={Number(
+                      process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                    )}
+                    maximumSizeFilesInMegaBytes={Number(
+                      process.env
+                        .NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                    )}
                   />
                 </Form.Item>
               )}
@@ -756,6 +835,12 @@ const FamiliarCreateRequestFormData: React.FC<{
                   removeFileStatusSetterCustomUpload={
                     copyPatientCivilRegistryRemoverDataform
                   }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
                 />
               </Form.Item>
             </>
@@ -811,6 +896,12 @@ const FamiliarCreateRequestFormData: React.FC<{
               removeFileStatusSetterCustomUpload={
                 copyReferenceDocumentsRequestRemoverDataform
               }
+              maximumNumberOfFiles={Number(
+                process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+              )}
+              maximumSizeFilesInMegaBytes={Number(
+                process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+              )}
             />
           </Form.Item>
         )}

@@ -20,6 +20,15 @@ const themeConfig: ThemeConfig = {
       itemSelectedBg: "#EFF7F8",
       colorBgElevated: "#013B5A",
     },
+    Descriptions: {
+      labelBg: "#015E9017",
+      lineWidth: 2,
+    },
+    Table: {
+      rowHoverBg: "#DFEBF2",
+      headerBg: "#DFEBF2",
+      lineWidth: 1.3,
+    },
   },
 };
 

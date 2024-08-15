@@ -227,6 +227,12 @@ const EpsCreateRequestFormData: React.FC<{
             titleCustomUpload="Cargar Documento(s)"
             fileStatusSetterCustomUpload={fileStatusSetterDataform}
             removeFileStatusSetterCustomUpload={fileStatusRemoverDataform}
+            maximumNumberOfFiles={Number(
+              process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+            )}
+            maximumSizeFilesInMegaBytes={Number(
+              process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+            )}
           />
         </Form.Item>
       )}

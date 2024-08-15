@@ -14,6 +14,7 @@ import { FaSort } from "react-icons/fa";
 import { LuListRestart } from "react-icons/lu";
 import { VscDebugRestart } from "react-icons/vsc";
 import { FaSearch } from "react-icons/fa";
+import { MdRefresh } from "react-icons/md";
 import Highlighter from "react-highlight-words";
 
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -37,7 +38,8 @@ interface ColumnConfig<T> {
 const CustomTableFiltersAndSorting: React.FC<{
   dataCustomTable: MedicalReq[];
   columnsCustomTable: ColumnConfig<any>[];
-}> = ({ dataCustomTable, columnsCustomTable }) => {
+  onClickUpdateCustomTable: () => void;
+}> = ({ dataCustomTable, columnsCustomTable, onClickUpdateCustomTable }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
@@ -337,6 +339,29 @@ const CustomTableFiltersAndSorting: React.FC<{
           >
             Quitar todo
           </Button>
+
+          <Button
+            style={{
+              display: "flex",
+              flexFlow: "row wrap",
+              color: "#137A2B",
+              borderColor: "#1D8348",
+              fontWeight: "bold",
+              borderRadius: 22,
+              borderWidth: 1.3,
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+              paddingInline: 13,
+              paddingBlock: 7,
+              marginLeft: 31,
+            }}
+            size="small"
+            icon={<MdRefresh size={20} />}
+            onClick={onClickUpdateCustomTable}
+          >
+            Actualizar
+          </Button>
         </Space>
       </div>
 
@@ -349,9 +374,9 @@ const CustomTableFiltersAndSorting: React.FC<{
           alignContent: "center",
           alignItems: "center",
           padding: "0px",
-          margin: "0px",
           marginBlock: "13px",
           // overflowX: "auto",
+          // overflowY: "auto",
         }}
         scroll={{
           x: "min-content",

@@ -43,6 +43,7 @@ const initialState: MedicalReq = {
   download_expiration_date: "",
   is_deleted: false,
   currently_in_area: 0,
+  area_redirection_message: "",
   requirement_status: 0,
   user_message: "",
   have_user_message_documents: false,
@@ -52,6 +53,7 @@ const initialState: MedicalReq = {
   motive_for_rejection: [],
   documents_delivered: [],
   files_documents_delivered: [],
+  response_time: "",
   delegate_id: "",
   typesMedicalReq: [],
   createdAt: "",
@@ -273,6 +275,9 @@ export const medicalReqSlice = createSlice({
     setCurrentlyInAreaMedicalReq: (state, action) => {
       state.currently_in_area = action.payload;
     },
+    setAreaRedirectionMessageMedicalReq: (state, action) => {
+      state.area_redirection_message = action.payload;
+    },
     setRequirementStatusMedicalReq: (state, action) => {
       state.requirement_status = action.payload;
     },
@@ -322,6 +327,9 @@ export const medicalReqSlice = createSlice({
       state.files_documents_delivered = state.files_documents_delivered.filter(
         (file) => file.originalname !== action.payload
       );
+    },
+    setResponseTimeMedicalReq: (state, action) => {
+      state.response_time = action.payload;
     },
     setDelegateIdMedicalReq: (state, action) => {
       state.delegate_id = action.payload;
@@ -447,6 +455,7 @@ export const {
   setDownloadExpirationDateMedicalReq,
   setIsDeletedMedicalReq,
   setCurrentlyInAreaMedicalReq,
+  setAreaRedirectionMessageMedicalReq,
   setRequirementStatusMedicalReq,
   setUserMessageMedicalReq,
   setHaveUserMessageMedicalReq,
@@ -458,6 +467,7 @@ export const {
   setDocumentsDeliveredMedicalReq,
   setFileDocumentsDeliveredMedicalReq,
   removeFileDocumentsDeliveredMedicalReq,
+  setResponseTimeMedicalReq,
   setDelegateIdMedicalReq,
   setTypesMedicalReq,
   setCreatedAtMedicalReq,

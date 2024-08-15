@@ -265,12 +265,13 @@ const ValidatePatientExistEps: React.FC = () => {
 
           <Form.Item
             name="patient-user-id-type-validate"
-            label="Tipo de identificación"
+            label="Tipo de identificación de paciente"
             style={{ marginBottom: 7 }}
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingresa tu tipo de identificación!",
+                message:
+                  "¡Por favor ingresa tipo de identificación de paciente!",
               },
             ]}
           >
@@ -289,7 +290,7 @@ const ValidatePatientExistEps: React.FC = () => {
 
           <Form.Item
             name="patient-user-id-number-validate"
-            label="Número de identificación"
+            label="Número de identificación de paciente"
             style={{ marginBottom: 7 }}
             normalize={(value) => {
               if (!value) return "";
@@ -299,7 +300,8 @@ const ValidatePatientExistEps: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingresa tu número de identificación!",
+                message:
+                  "¡Por favor ingresa número de identificación de paciente!",
               },
               {
                 pattern: /^[0-9]+$/,

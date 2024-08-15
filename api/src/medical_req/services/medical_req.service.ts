@@ -1113,6 +1113,28 @@ export class MedicalReqService {
     }
   }
 
+  async getMedicalReqById(id: string) {
+    const medicalByIdFound = await this.medicalReqRepository.findOne({
+      where: {
+        id: id,
+        is_deleted: false,
+        is_it_reviewed: false,
+      },
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    if (!medicalByIdFound) {
+      return new HttpException(
+        `El requerimiento médico con número de ID: ${id} no está registrado o no esta por revisar.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return medicalByIdFound;
+    }
+  }
+
   async getMedicalReqPatientById(id: string) {
     const userRolePatient = await this.userRoleRepository.findOne({
       where: {
@@ -1487,6 +1509,13 @@ export class MedicalReqService {
       deliveredStatus.answer_date = currentDate;
       deliveredStatus.download_expiration_date = sevenDaysLater;
 
+      const dateOfAdmission = new Date(requirementFound.date_of_admission);
+      const answerDate = new Date(deliveredStatus.answer_date);
+      const diffMs = answerDate.getTime() - dateOfAdmission.getTime();
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+      const responseTime = `${diffHours.toString().padStart(2, '0')} Horas y ${diffMinutes.toString().padStart(2, '0')} Minutos`;
+
       if (
         deliveredStatus.answer_date &&
         deliveredStatus.download_expiration_date
@@ -1499,6 +1528,7 @@ export class MedicalReqService {
           download_expiration_date: deliveredStatus.download_expiration_date,
           response_comments: deliveredStatus.response_comments,
           documents_delivered: deliveredStatus.documents_delivered,
+          response_time: responseTime,
         });
 
         if (!createNewRecord) {
@@ -1616,7 +1646,10 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
-      return updatedMedicalReqDelivered;
+      return new HttpException(
+        `¡La solicitud con número de radicado: ${updatedMedicalReqDelivered.filing_number} ha sido respondida satisfactoriamente!`,
+        HttpStatus.ACCEPTED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -1700,6 +1733,13 @@ export class MedicalReqService {
 
       rejectedStatus.answer_date = currentDate;
 
+      const dateOfAdmission = new Date(requirementFound.date_of_admission);
+      const answerDate = new Date(rejectedStatus.answer_date);
+      const diffMs = answerDate.getTime() - dateOfAdmission.getTime();
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+      const responseTime = `${diffHours.toString().padStart(2, '0')} Horas y ${diffMinutes.toString().padStart(2, '0')} Minutos`;
+
       if (rejectedStatus.answer_date && rejectedStatus.motive_for_rejection) {
         const createNewRecord = await queryRunner.manager.insert(MedicalReq, {
           ...requirementFound,
@@ -1708,6 +1748,7 @@ export class MedicalReqService {
           answer_date: rejectedStatus.answer_date,
           response_comments: rejectedStatus.response_comments,
           motive_for_rejection: rejectedStatus.motive_for_rejection,
+          response_time: responseTime,
         });
 
         if (!createNewRecord) {
@@ -1808,7 +1849,10 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
-      return updatedMedicalReqRejected;
+      return new HttpException(
+        `¡La solicitud con número de radicado: ${updatedMedicalReqRejected.filing_number} ha sido rechazada satisfactoriamente!`,
+        HttpStatus.ACCEPTED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
