@@ -1,52 +1,46 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Form, Select } from "antd";
-import { GrSend } from "react-icons/gr";
+import { Button, Form } from "antd";
+import { FaCheck } from "react-icons/fa";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
+import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { FcInfo } from "react-icons/fc";
 import { titleStyleCss } from "@/theme/text_styles";
 
 import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
 import {
-  setAreaRedirectionMessageMedicalReq,
-  setCurrentlyInAreaMedicalReq,
+  setResponseCommentsMedicalReq,
+  setFileDocumentsDeliveredMedicalReq,
+  removeFileDocumentsDeliveredMedicalReq,
+  setDefaultValuesMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 
-import { useForwardToAnotherAreaMutation } from "@/redux/apis/medical_req/medicalReqApi";
-import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
+import { useChangeStatusToDeliveredMutation } from "@/redux/apis/medical_req/medicalReqApi";
 
-const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
+import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { validateRequiredFiles } from "@/helpers/validate_required_values/validate_required_files";
+
+const DeliverDocumentsButton: React.FC<{}> = ({}) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { uploadFiles } = processAndUploadFiles();
 
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
 
-  const [
-    companyAreaNumberAdminLocalState,
-    setCompanyAreaNumberAdminLocalState,
-  ] = useState(0);
-  const [
-    adminCompanyAreasListLocalState,
-    setAdminCompanyAreasListLocalState,
-  ]: any = useState([]);
-  const [
-    areaRedirectionMessageLocalState,
-    setAreaRedirectionMessageLocalState,
-  ] = useState("");
+  const [responseCommentsLocalState, setResponseCommentsLocalState] =
+    useState("");
 
-  const [
-    isSubmittingSendMedicalReqToAnotherArea,
-    setIsSubmittingSendMedicalReqToAnotherArea,
-  ] = useState(false);
+  const [isSubmittingDeliverDocuments, setIsSubmittingDeliverDocuments] =
+    useState(false);
   const [successMessageAdmin, setSuccessMessageAdmin] = useState("");
   const [showSuccessMessageAdmin, setShowSuccessMessageAdmin] = useState(false);
   const [showErrorMessageAdmin, setShowErrorMessageAdmin] = useState(false);
@@ -57,56 +51,73 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
 
   const adminErrorsState = useAppSelector((state) => state.admin.errors);
 
+  const copyDocumentsDeliveredFilesState = useAppSelector(
+    (state) => state.medicalReq.files_documents_delivered
+  );
+
   const [
-    sendToAnotherArea,
+    changeStatusToDelivered,
     {
-      data: sendToAnotherAreaData,
-      isLoading: sendToAnotherAreaLoading,
-      isSuccess: sendToAnotherAreaFetching,
-      isError: sendToAnotherAreaError,
+      data: changeStatusToDeliveredData,
+      isLoading: changeStatusToDeliveredLoading,
+      isSuccess: changeStatusToDeliveredFetching,
+      isError: changeStatusToDeliveredError,
     },
-  ] = useForwardToAnotherAreaMutation({
-    fixedCacheKey: "sendToAnotherAreaData",
+  ] = useChangeStatusToDeliveredMutation({
+    fixedCacheKey: "changeStatusToDeliveredData",
   });
-
-  const {
-    data: companyAreasData,
-    isLoading: companyAreasLoading,
-    isFetching: companyAreasFetching,
-    error: companyAreasError,
-  } = useGetAllCompanyAreaQuery(null);
-
-  useEffect(() => {
-    if (companyAreasData && !companyAreasLoading && !companyAreasFetching) {
-      setAdminCompanyAreasListLocalState(companyAreasData);
-    }
-    if (companyAreasError) {
-      dispatch(setErrorsAdmin("¡No se pudo obtener las áreas de empresas!"));
-      setShowErrorMessageAdmin(true);
-      setAdminCompanyAreasListLocalState(companyAreasData);
-    }
-  }, [companyAreasData, companyAreasError]);
 
   const handleConfirmDataModal = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     try {
-      setIsSubmittingSendMedicalReqToAnotherArea(true);
+      setIsSubmittingDeliverDocuments(true);
 
-      const response: any = await sendToAnotherArea({
+      const statesToUpload = [
+        {
+          state: copyDocumentsDeliveredFilesState,
+          paramName: "documents_delivered",
+        },
+      ];
+
+      const responses: Record<string, string[]> = {};
+
+      let errors: string[] = [];
+
+      if (statesToUpload.some(({ state }) => state && state.length > 0)) {
+        for (const { state, paramName } of statesToUpload) {
+          if (state && state.length > 0) {
+            const { success, error } = await uploadFiles(state);
+            if (error) {
+              errors.push(error);
+            } else {
+              responses[paramName] = success;
+            }
+          }
+        }
+      }
+
+      if (errors.length > 0) {
+        dispatch(setErrorsAdmin(errors[0]));
+        setShowErrorMessageAdmin(true);
+
+        return;
+      }
+
+      const response: any = await changeStatusToDelivered({
         reqId: tableRowIdState,
-        sendToAnotherArea: {
-          currently_in_area: companyAreaNumberAdminLocalState,
-          area_redirection_message: areaRedirectionMessageLocalState,
+        updateStatus: {
+          response_comments: responseCommentsLocalState,
+          ...responses,
         },
       });
 
-      var sendToAnotherAreaSuccess = response.data;
+      var deliverDocumentsSuccess = response.data;
 
-      var sendToAnotherAreaError = response.error;
+      var deliverDocumentsError = response.error;
 
-      if (sendToAnotherAreaError?.status !== 202) {
-        const errorMessage = sendToAnotherAreaError?.data.message;
+      if (deliverDocumentsError?.status !== 202) {
+        const errorMessage = deliverDocumentsError?.data.message;
 
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsAdmin(errorMessage[0]));
@@ -121,8 +132,8 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
         }
       }
 
-      if (sendToAnotherAreaSuccess?.status === 202 && !sendToAnotherAreaError) {
-        const successMessage = sendToAnotherAreaSuccess?.message;
+      if (deliverDocumentsSuccess?.status === 202 && !deliverDocumentsError) {
+        const successMessage = deliverDocumentsSuccess?.message;
 
         setSuccessMessageAdmin(successMessage);
         setShowSuccessMessageAdmin(true);
@@ -131,39 +142,25 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
 
         setIsModalVisibleLocalState(false);
 
-        dispatch(
-          setCurrentlyInAreaMedicalReq(companyAreaNumberAdminLocalState)
-        );
-        dispatch(
-          setAreaRedirectionMessageMedicalReq(areaRedirectionMessageLocalState)
-        );
+        dispatch(setResponseCommentsMedicalReq(responseCommentsLocalState));
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingSendMedicalReqToAnotherArea(false);
+      setIsSubmittingDeliverDocuments(false);
     }
   };
 
   const handleCorrectData = () => {
     try {
-      dispatch(setCurrentlyInAreaMedicalReq(0));
-      dispatch(setAreaRedirectionMessageMedicalReq(""));
+      dispatch(setResponseCommentsMedicalReq(""));
 
       setShowCustomConfirmModal(true);
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingSendMedicalReqToAnotherArea(false);
+      setIsSubmittingDeliverDocuments(false);
     }
-  };
-
-  const handleOnChangeSelectCompanyArea = (value: number) => {
-    setCompanyAreaNumberAdminLocalState(value);
-
-    const selectedCompanyArea: any = adminCompanyAreasListLocalState?.find(
-      (type: any) => type.id === value
-    );
   };
 
   const handleButtonClick = () => {
@@ -185,35 +182,37 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
           typeMessage="success"
           message={
             successMessageAdmin?.toString() ||
-            `¡Solicitud enviada correctamente!`
+            `¡Documentos enviados correctamente!`
           }
         />
       )}
 
       {showCustomConfirmModal && (
         <CustomModalTwoOptions
-          key={"custom-confirm-modal-send-to-another-area"}
+          key={"custom-confirm-modal-deliver-documents"}
           iconCustomModal={<FcInfo size={77} />}
           openCustomModalState={showCustomConfirmModal}
-          titleCustomModal="¿Deseas enviar esta solicitud a otra área?"
-          subtitleCustomModal="Esta solicitud se enviará al área que seleccionaste en la pantalla anterior."
+          titleCustomModal="¿Deseas dar respuesta a la solicitud y enviar los documentos?"
+          subtitleCustomModal="Se enviarán los documentos solicitados por el usuario en esta solicitud, puede confirmar los detalles de la solicitud en la pantalla anterior."
           handleCancelCustomModal={() => {
             setShowCustomConfirmModal(false);
           }}
           handleConfirmCustomModal={handleConfirmDataModal}
           handleClickCustomModal={handleButtonClick}
-          isSubmittingConfirm={isSubmittingSendMedicalReqToAnotherArea}
+          isSubmittingConfirm={isSubmittingDeliverDocuments}
         ></CustomModalTwoOptions>
       )}
 
       {isModalVisibleLocalState && (
         <CustomModalNoContent
-          key={"custom-modal-send-to-another-area-action"}
+          key={"custom-modal-deliver-documents"}
           widthCustomModalNoContent={"45%"}
           openCustomModalState={isModalVisibleLocalState}
           closableCustomModal={true}
           maskClosableCustomModal={false}
           handleCancelCustomModal={() => {
+            dispatch(setDefaultValuesMedicalReq());
+
             setIsModalVisibleLocalState(false);
           }}
           contentCustomModal={
@@ -237,69 +236,70 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
                   marginBottom: "22px",
                 }}
               >
-                Enviar solicitud a otra área
+                Responder solicitud y enviar documentos
               </h2>
 
               <Form.Item
-                name="areas-company-send-to-another-area"
-                label="Área a la que desea enviar la solicitud:"
-                tooltip="Aquí debes seleccionar el área de la empresa en la que se debe enviar esta solicitud para que ellos la gestionen."
+                name="upload-files-documents-delivered"
+                label="Documento(s) de respuesta a solicitud"
                 style={{ marginBottom: "13px" }}
+                tooltip="Aquí debe anexar los documentos que el usuario requiere en la solicitud."
                 rules={[
                   {
-                    required: true,
-                    message:
-                      "¡Por favor selecciona el área de empresa a la que deseas enviar la solicitud!",
+                    validator: validateRequiredFiles(
+                      copyDocumentsDeliveredFilesState,
+                      "¡Por favor adjunte documento(s) de respuesta a solicitud!"
+                    ),
                   },
                 ]}
               >
-                {companyAreasLoading ? (
-                  <CustomSpin />
-                ) : (
-                  <Select
-                    value={companyAreaNumberAdminLocalState}
-                    placeholder="Seleccionar área"
-                    onChange={handleOnChangeSelectCompanyArea}
-                  >
-                    {adminCompanyAreasListLocalState?.map((option: any) => (
-                      <Select.Option key={option.id} value={option.id}>
-                        {option.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                )}
+                <CustomUpload
+                  titleCustomUpload="Cargar Documento(s)"
+                  fileStatusSetterCustomUpload={
+                    setFileDocumentsDeliveredMedicalReq
+                  }
+                  removeFileStatusSetterCustomUpload={
+                    removeFileDocumentsDeliveredMedicalReq
+                  }
+                  maximumNumberOfFiles={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                  )}
+                  maximumSizeFilesInMegaBytes={Number(
+                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                  )}
+                />
               </Form.Item>
 
               <Form.Item
-                name="especifications-for-another-area"
-                label="Observaciones y/o detalles"
-                tooltip="Aquí debes ingresar observaciones o detalles adicionales que debe tener en cuenta la otra área."
+                name="response-comments"
+                label="Mensaje de respuesta o comentarios"
+                tooltip="Aquí debes ingresar comentarios o algún mensaje que desees enviarle al usuario."
                 style={{ marginBottom: "31px" }}
                 rules={[
                   {
                     required: true,
                     message:
-                      "¡Por favor, especifique detalles a tener en cuenta por la otra área en esta solicitud!",
+                      "¡Por favor, ingrese mensaje de respuesta a esta solicitud!",
                   },
                 ]}
               >
                 <TextArea
                   autoSize={{ minRows: 2, maxRows: 10 }}
                   maxLength={301}
-                  value={areaRedirectionMessageLocalState}
-                  placeholder="Especifique detalles adicionales a tener en cuenta por la otra área."
+                  value={responseCommentsLocalState}
+                  placeholder="Mensaje de respuesta para enviar al usuario."
                   onChange={(e) =>
-                    setAreaRedirectionMessageLocalState(e.target.value)
+                    setResponseCommentsLocalState(e.target.value)
                   }
                 />
               </Form.Item>
 
               <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
-                {isSubmittingSendMedicalReqToAnotherArea ? (
+                {isSubmittingDeliverDocuments ? (
                   <CustomSpin />
                 ) : (
                   <Button
-                    className="confirm-send-to-another-area-form-button"
+                    className="confirm-deliver-documents-button"
                     size="large"
                     style={{
                       paddingInline: 62,
@@ -310,7 +310,7 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
                     htmlType="submit"
                     onClick={handleButtonClick}
                   >
-                    Enviar al área seleccionada
+                    Enviar documentos anexados
                   </Button>
                 )}
               </Form.Item>
@@ -320,10 +320,10 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
       )}
 
       <Button
-        className="send-to-another-area-button"
+        className="deliver-documents-button"
         size="large"
         style={{
-          backgroundColor: "#013B5A",
+          backgroundColor: "#1D8348",
           color: "#F7F7F7",
           borderRadius: "31px",
           paddingInline: "31px",
@@ -343,12 +343,12 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
             justifyContent: "center",
           }}
         >
-          <GrSend size={17} />
-          &nbsp; Enviar solicitud a otra área
+          <FaCheck size={17} />
+          &nbsp; Entregar documentos
         </div>
       </Button>
     </>
   );
 };
 
-export default SendToAnotherAreaButton;
+export default DeliverDocumentsButton;

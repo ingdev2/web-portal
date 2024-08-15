@@ -1646,7 +1646,10 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
-      return updatedMedicalReqDelivered;
+      return new HttpException(
+        `¡La solicitud con número de radicado: ${updatedMedicalReqDelivered.filing_number} ha sido respondida satisfactoriamente!`,
+        HttpStatus.ACCEPTED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -1846,7 +1849,10 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
-      return updatedMedicalReqRejected;
+      return new HttpException(
+        `¡La solicitud con número de radicado: ${updatedMedicalReqRejected.filing_number} ha sido rechazada satisfactoriamente!`,
+        HttpStatus.ACCEPTED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;

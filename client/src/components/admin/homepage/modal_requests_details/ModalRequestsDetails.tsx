@@ -155,6 +155,7 @@ const ModalRequestsDetails: React.FC<{
           ...titleStyleCss,
           margin: "0px",
           paddingBottom: "13px",
+          fontSize: "22px",
         }}
       >
         {titleDescription}

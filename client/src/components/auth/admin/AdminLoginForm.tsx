@@ -237,7 +237,7 @@ const AdminLoginForm: React.FC = () => {
               src="/logos/LOGO-BONNADONA.png"
               alt="Logo de Bonnadona"
               style={{
-                width: "173px",
+                width: "183px",
                 paddingBlock: "22px",
               }}
             />

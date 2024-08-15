@@ -5,7 +5,6 @@ import { useAppSelector } from "@/redux/hooks";
 
 import { Button, Col, Row } from "antd";
 import { LuInspect } from "react-icons/lu";
-import { FaCheck } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
 
 import {
@@ -16,6 +15,7 @@ import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_
 
 import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 import SendToAnotherAreaButton from "./action_buttons/SendToAnotherAreaButton";
+import DeliverDocumentsButton from "./action_buttons/DeliverDocumentsButton";
 
 const ModalActionButtons: React.FC<{}> = ({}) => {
   const [
@@ -126,7 +126,7 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
                 }}
               >
                 <LuInspect size={17} />
-                &nbsp;Gestionar solicitud
+                &nbsp; Gestionar solicitud
               </div>
             </Button>
           )}
@@ -135,36 +135,11 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
           <Row
             justify={"center"}
             align={"middle"}
-            style={{ marginBlock: "13px" }}
+            style={{ marginBlock: "22px" }}
           >
             <SendToAnotherAreaButton />
 
-            <Button
-              className="deliver-documents-button"
-              size="large"
-              style={{
-                backgroundColor: "#1D8348",
-                color: "#F7F7F7",
-                borderRadius: "31px",
-                paddingInline: "31px",
-                marginInline: "22px",
-              }}
-              onClick={() => {}}
-            >
-              <div
-                style={{
-                  minWidth: "137px",
-                  display: "flex",
-                  flexFlow: "row wrap",
-                  alignItems: "center",
-                  alignContent: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <FaCheck size={17} />
-                &nbsp;Entregar documentos
-              </div>
-            </Button>
+            <DeliverDocumentsButton />
 
             <Button
               className="reject-request-button"

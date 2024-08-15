@@ -59,6 +59,10 @@ const AllRequestContent: React.FC = () => {
     (state) => state.medicalReq.area_redirection_message
   );
 
+  const responseCommentsState = useAppSelector(
+    (state) => state.medicalReq.response_comments
+  );
+
   const {
     data: allMedicalReqUsersData,
     isLoading: allMedicalReqUsersLoading,
@@ -143,13 +147,17 @@ const AllRequestContent: React.FC = () => {
   } = useViewFileQuery(selectedDocumentId, { skip: !selectedDocumentId });
 
   useEffect(() => {
-    if (currentlyInAreaState && areaRedirectionMessageState) {
+    if (
+      (currentlyInAreaState && areaRedirectionMessageState) ||
+      responseCommentsState
+    ) {
       refecthAllMedicalReqUsers();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
       }, 4000);
     }
+
     if (
       documentUrls &&
       documentUrls.length > 0 &&
@@ -168,6 +176,7 @@ const AllRequestContent: React.FC = () => {
     documentUrlsError,
     currentlyInAreaState,
     areaRedirectionMessageState,
+    responseCommentsState,
   ]);
 
   const idTypeGetName = transformIdToNameMap(idTypesData);
@@ -240,6 +249,8 @@ const AllRequestContent: React.FC = () => {
     dispatch(setTableRowId(record.id));
 
     setIsModalVisibleLocalState(true);
+
+    refecthAllMedicalReqUsers();
   };
 
   const handleButtonClick = (documentId: string[] | undefined) => {
@@ -257,7 +268,7 @@ const AllRequestContent: React.FC = () => {
           {isModalVisibleLocalState && (
             <CustomModalNoContent
               key={"custom-modal-request-details-admin"}
-              widthCustomModalNoContent={"100%"}
+              widthCustomModalNoContent={"96%"}
               minWidthCustomModalNoContent="960px"
               openCustomModalState={isModalVisibleLocalState}
               closableCustomModal={true}
@@ -317,9 +328,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelHaveRightPetition={"¿Tiene derecho de petición?:"}
@@ -352,9 +363,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelRelationShipWithPatient="Parentesco con paciente:"
@@ -364,7 +375,7 @@ const AllRequestContent: React.FC = () => {
                           selectedRowDataLocalState?.relationship_with_patient.toString()
                         )
                       ) : (
-                        <b style={{ color: "#960202" }}>No aplica</b>
+                        <p style={{ color: "#960202" }}>No aplica</p>
                       )
                     }
                     labelAplicantName="Nombre de solicitante:"
@@ -411,9 +422,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelCopyPatientCitizenshipCard="Copia de cédula del paciente"
@@ -446,9 +457,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelCopyPatientCivilRegistration="Copia de registro civil del paciente"
@@ -481,9 +492,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelCopyParentsCitizenshipCard="Copia de cédula de padre o madre"
@@ -516,9 +527,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelCopyMarriageCertificate="Copia de partida de matrimonio o certificado de unión libre"
@@ -551,9 +562,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelCopyCohabitationCertificate="Certificado de convivencia"
@@ -586,9 +597,9 @@ const AllRequestContent: React.FC = () => {
                           </div>
                         </Button>
                       ) : (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           No hay documentos anexados
-                        </b>
+                        </p>
                       )
                     }
                     labelDateOfAdmission="Fecha de creación de solicitud:"
@@ -598,13 +609,13 @@ const AllRequestContent: React.FC = () => {
                     labelAnswerDate="Fecha de respuesta de solicitud:"
                     selectedAnswerDate={
                       selectedRowDataLocalState?.answer_date || (
-                        <b style={{ color: "#960202" }}>En Revisión</b>
+                        <p style={{ color: "#960202" }}>En Revisión</p>
                       )
                     }
                     labelResponseTime="Tiempo de respuesta a solicitud"
                     selectedResponseTime={
                       selectedRowDataLocalState?.response_time || (
-                        <b style={{ color: "#960202" }}>En Revisión</b>
+                        <p style={{ color: "#960202" }}>En Revisión</p>
                       )
                     }
                     labelCurrentlyInArea="Área actual"
@@ -614,7 +625,7 @@ const AllRequestContent: React.FC = () => {
                     labelDocumentExpirationDate="Fecha de expiración de documentos:"
                     selectedRequestDocumentExpirationDate={
                       selectedRowDataLocalState?.download_expiration_date || (
-                        <b style={{ color: "#960202" }}>No aplica</b>
+                        <p style={{ color: "#960202" }}>No aplica</p>
                       )
                     }
                     labelReasonsForRejection="Motivos de rechazo a solicitud:"
@@ -626,7 +637,7 @@ const AllRequestContent: React.FC = () => {
                           ))}
                         </ul>
                       ) : (
-                        <b style={{ color: "#960202" }}>No aplica</b>
+                        <p style={{ color: "#960202" }}>No aplica</p>
                       )
                     }
                     labelUserComments={"Detalles del usuario para solicitud:"}
@@ -648,13 +659,13 @@ const AllRequestContent: React.FC = () => {
                     labelAplicantType="Tipo de solicitante"
                     selectedAplicantType={
                       selectedRowDataLocalState?.medicalReqUserType || (
-                        <b style={{ color: "#960202" }}>No aplica</b>
+                        <p style={{ color: "#960202" }}>No aplica</p>
                       )
                     }
                     labelPatientClassStatus="Tipo de paciente"
                     selectedPatientClassStatus={
                       selectedRowDataLocalState?.patient_class_status || (
-                        <b style={{ color: "#960202" }}>No aplica</b>
+                        <p style={{ color: "#960202" }}>No aplica</p>
                       )
                     }
                     labelRegistrationDates="Lapso de tiempo registros"
@@ -664,15 +675,15 @@ const AllRequestContent: React.FC = () => {
                     labelRequestResponse={"Mensaje de respuesta a solicitud:"}
                     selectedRequestResponse={
                       selectedRowDataLocalState?.response_comments || (
-                        <b style={{ color: "#960202" }}>
+                        <p style={{ color: "#960202" }}>
                           En espera de respuesta
-                        </b>
+                        </p>
                       )
                     }
                     labelAreaRedirectionMessage="Mensaje de envio de solicitud:"
                     selectedAreaRedirectionMessage={
                       selectedRowDataLocalState?.area_redirection_message || (
-                        <b style={{ color: "#960202" }}>No aplica</b>
+                        <p style={{ color: "#960202" }}>No aplica</p>
                       )
                     }
                   />
