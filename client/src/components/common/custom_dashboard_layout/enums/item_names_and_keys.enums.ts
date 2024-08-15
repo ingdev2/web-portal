@@ -1,9 +1,8 @@
 export enum ItemNames {
   ITEM_REQUESTS = "Solicitudes",
-  SUB_ALL_REQUESTS = "Todas",
-  SUB_PATIENTS_REQ = "Pacientes",
-  SUB_EPS_REQ = "EPS",
-  SUB_RELATIVES_REQ = "Familiares",
+  SUB_ALL_REQUESTS = "Gestionar",
+  SUB_STATISTICS_REQ = "Estadísticas",
+
   ITEM_USERS = "Usuarios",
   SUB_ADMIN_USERS = "Administradores",
   SUB_PATIENT_USERS = "Pacientes",
@@ -13,9 +12,8 @@ export enum ItemNames {
 export enum ItemKeys {
   ITEM_REQUESTS_KEY = "",
   SUB_ALL_REQUESTS_REQ_KEY = "/",
-  SUB_PATIENTS_REQ_KEY = "patient_requests",
-  SUB_EPS_REQ_KEY = "eps_requests",
-  SUB_RELATIVES_REQ_KEY = "relatives_requests",
+  SUB_STATISTICS_REQ_KEY = "statistics",
+
   ITEM_USERS_KEY = "all_users",
   SUB_ADMIN_USERS_KEY = "all_admins",
   SUB_PATIENT_USERS_KEY = "all_patients",

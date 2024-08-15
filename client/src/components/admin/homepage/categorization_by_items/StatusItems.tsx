@@ -120,7 +120,7 @@ const StatusItems: React.FC = () => {
           ...subtitleStyleCss,
           textAlign: "center",
           marginBlock: "7px",
-          color: "#F4D03F",
+          color: "#D4AC0D",
         }}
       >
         En Revisión:&nbsp;

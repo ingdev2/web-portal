@@ -63,6 +63,10 @@ const AllRequestContent: React.FC = () => {
     (state) => state.medicalReq.response_comments
   );
 
+  const motivesForRejectionState = useAppSelector(
+    (state) => state.medicalReq.motive_for_rejection
+  );
+
   const {
     data: allMedicalReqUsersData,
     isLoading: allMedicalReqUsersLoading,
@@ -149,7 +153,8 @@ const AllRequestContent: React.FC = () => {
   useEffect(() => {
     if (
       (currentlyInAreaState && areaRedirectionMessageState) ||
-      responseCommentsState
+      responseCommentsState ||
+      (responseCommentsState && motivesForRejectionState)
     ) {
       refecthAllMedicalReqUsers();
 

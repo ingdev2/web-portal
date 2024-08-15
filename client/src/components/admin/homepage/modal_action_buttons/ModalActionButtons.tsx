@@ -5,7 +5,6 @@ import { useAppSelector } from "@/redux/hooks";
 
 import { Button, Col, Row } from "antd";
 import { LuInspect } from "react-icons/lu";
-import { FaTimes } from "react-icons/fa";
 
 import {
   useChangeStatusToUnderReviewMutation,
@@ -16,6 +15,7 @@ import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_
 import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 import SendToAnotherAreaButton from "./action_buttons/SendToAnotherAreaButton";
 import DeliverDocumentsButton from "./action_buttons/DeliverDocumentsButton";
+import RejectedMedicalReqButton from "./action_buttons/RejectedMedicalReqButton";
 
 const ModalActionButtons: React.FC<{}> = ({}) => {
   const [
@@ -141,32 +141,7 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
 
             <DeliverDocumentsButton />
 
-            <Button
-              className="reject-request-button"
-              size="large"
-              style={{
-                backgroundColor: "#8C1111",
-                color: "#F7F7F7",
-                borderRadius: "31px",
-                paddingInline: "31px",
-                marginInline: "22px",
-              }}
-              onClick={() => {}}
-            >
-              <div
-                style={{
-                  minWidth: "137px",
-                  display: "flex",
-                  flexFlow: "row wrap",
-                  alignItems: "center",
-                  alignContent: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <FaTimes size={17} />
-                &nbsp;Rechazar solicitud
-              </div>
-            </Button>
+            <RejectedMedicalReqButton />
           </Row>
         )}
       </Col>

@@ -64,18 +64,8 @@ export const useMenuItems = () => {
           allMedicalReqStatusCreatedData?.length
         ),
         getItem(
-          ItemNames.SUB_PATIENTS_REQ,
-          ItemKeys.SUB_PATIENTS_REQ_KEY,
-          <RiFileList3Line />
-        ),
-        getItem(
-          ItemNames.SUB_EPS_REQ,
-          ItemKeys.SUB_EPS_REQ_KEY,
-          <RiFileList3Line />
-        ),
-        getItem(
-          ItemNames.SUB_RELATIVES_REQ,
-          ItemKeys.SUB_RELATIVES_REQ_KEY,
+          ItemNames.SUB_STATISTICS_REQ,
+          ItemKeys.SUB_STATISTICS_REQ_KEY,
           <RiFileList3Line />
         ),
       ]

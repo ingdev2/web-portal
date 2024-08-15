@@ -1,45 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Form } from "antd";
-import { FaCheck } from "react-icons/fa";
+import { Button, Form, Select } from "antd";
+import { GrSend } from "react-icons/gr";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
-import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { FcInfo } from "react-icons/fc";
 import { titleStyleCss } from "@/theme/text_styles";
 
 import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
 import {
+  setMotiveForRejectionMedicalReq,
   setResponseCommentsMedicalReq,
-  setFileDocumentsDeliveredMedicalReq,
-  removeFileDocumentsDeliveredMedicalReq,
-  setDefaultValuesMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 
-import { useChangeStatusToDeliveredMutation } from "@/redux/apis/medical_req/medicalReqApi";
+import { useChangeStatusToRejectedMutation } from "@/redux/apis/medical_req/medicalReqApi";
+import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
 
-import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
-import { validateRequiredFiles } from "@/helpers/validate_required_values/validate_required_files";
-
-const DeliverDocumentsButton: React.FC<{}> = ({}) => {
+const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { uploadFiles } = processAndUploadFiles();
 
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
 
+  const [
+    reasonForRejectionNumberAdminLocalState,
+    setReasonForRejectionNumberAdminLocalState,
+  ] = useState<number[]>([]);
+  const [
+    reasonsForRejectionListLocalState,
+    setReasonsForRejectionListLocalState,
+  ]: any = useState([]);
   const [responseCommentsLocalState, setResponseCommentsLocalState] =
     useState("");
 
-  const [isSubmittingDeliverDocuments, setIsSubmittingDeliverDocuments] =
+  const [isSubmittingRejectedMedicalReq, setIsSubmittingRejectedMedicalReq] =
     useState(false);
   const [successMessageAdmin, setSuccessMessageAdmin] = useState("");
   const [showSuccessMessageAdmin, setShowSuccessMessageAdmin] = useState(false);
@@ -51,73 +53,68 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
 
   const adminErrorsState = useAppSelector((state) => state.admin.errors);
 
-  const copyDocumentsDeliveredFilesState = useAppSelector(
-    (state) => state.medicalReq.files_documents_delivered
-  );
-
   const [
-    changeStatusToDelivered,
+    rejectedMedicalReq,
     {
-      data: changeStatusToDeliveredData,
-      isLoading: changeStatusToDeliveredLoading,
-      isSuccess: changeStatusToDeliveredFetching,
-      isError: changeStatusToDeliveredError,
+      data: rejectedMedicalReqData,
+      isLoading: rejectedMedicalReqLoading,
+      isSuccess: rejectedMedicalReqFetching,
+      isError: rejectedMedicalReqError,
     },
-  ] = useChangeStatusToDeliveredMutation({
-    fixedCacheKey: "changeStatusToDeliveredData",
+  ] = useChangeStatusToRejectedMutation({
+    fixedCacheKey: "rejectedMedicalReqData",
   });
+
+  const {
+    data: reasonsForRejectionData,
+    isLoading: reasonsForRejectionLoading,
+    isFetching: reasonsForRejectionFetching,
+    error: reasonsForRejectionError,
+  } = useGetAllMedicalReqReasonsForRejectionQuery(null);
+
+  const reasonsForRejectionSelectoptions =
+    reasonsForRejectionListLocalState.map(
+      (reason: MedicalReqReasonForRejection) => ({
+        label: reason.rejection_title,
+        value: reason.id,
+      })
+    );
+
+  useEffect(() => {
+    if (
+      reasonsForRejectionData &&
+      !reasonsForRejectionLoading &&
+      !reasonsForRejectionFetching
+    ) {
+      setReasonsForRejectionListLocalState(reasonsForRejectionData);
+    }
+    if (reasonsForRejectionError) {
+      dispatch(setErrorsAdmin("¡No se pudo obtener las razones de rechazo!"));
+      setShowErrorMessageAdmin(true);
+      setReasonsForRejectionListLocalState(reasonsForRejectionData);
+    }
+  }, [reasonsForRejectionData, reasonsForRejectionError]);
 
   const handleConfirmDataModal = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
     try {
-      setIsSubmittingDeliverDocuments(true);
+      setIsSubmittingRejectedMedicalReq(true);
 
-      const statesToUpload = [
-        {
-          state: copyDocumentsDeliveredFilesState,
-          paramName: "documents_delivered",
-        },
-      ];
-
-      const responses: Record<string, string[]> = {};
-
-      let errors: string[] = [];
-
-      if (statesToUpload.some(({ state }) => state && state.length > 0)) {
-        for (const { state, paramName } of statesToUpload) {
-          if (state && state.length > 0) {
-            const { success, error } = await uploadFiles(state);
-            if (error) {
-              errors.push(error);
-            } else {
-              responses[paramName] = success;
-            }
-          }
-        }
-      }
-
-      if (errors.length > 0) {
-        dispatch(setErrorsAdmin(errors[0]));
-        setShowErrorMessageAdmin(true);
-
-        return;
-      }
-
-      const response: any = await changeStatusToDelivered({
+      const response: any = await rejectedMedicalReq({
         reqId: tableRowIdState,
         updateStatus: {
           response_comments: responseCommentsLocalState,
-          ...responses,
+          motive_for_rejection: reasonForRejectionNumberAdminLocalState,
         },
       });
 
-      var deliverDocumentsSuccess = response.data;
+      var rejectedMedicalReqSuccess = response.data;
 
-      var deliverDocumentsError = response.error;
+      var rejectedMedicalReqError = response.error;
 
-      if (deliverDocumentsError?.status !== 202) {
-        const errorMessage = deliverDocumentsError?.data.message;
+      if (rejectedMedicalReqError?.status !== 202) {
+        const errorMessage = rejectedMedicalReqError?.data.message;
 
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsAdmin(errorMessage[0]));
@@ -132,8 +129,11 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
         }
       }
 
-      if (deliverDocumentsSuccess?.status === 202 && !deliverDocumentsError) {
-        const successMessage = deliverDocumentsSuccess?.message;
+      if (
+        rejectedMedicalReqSuccess?.status === 202 &&
+        !rejectedMedicalReqError
+      ) {
+        const successMessage = rejectedMedicalReqSuccess?.message;
 
         setSuccessMessageAdmin(successMessage);
         setShowSuccessMessageAdmin(true);
@@ -143,24 +143,34 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
         setIsModalVisibleLocalState(false);
 
         dispatch(setResponseCommentsMedicalReq(responseCommentsLocalState));
+        dispatch(
+          setMotiveForRejectionMedicalReq(
+            reasonForRejectionNumberAdminLocalState
+          )
+        );
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingDeliverDocuments(false);
+      setIsSubmittingRejectedMedicalReq(false);
     }
   };
 
   const handleCorrectData = () => {
     try {
       dispatch(setResponseCommentsMedicalReq(""));
+      dispatch(setMotiveForRejectionMedicalReq([]));
 
       setShowCustomConfirmModal(true);
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingDeliverDocuments(false);
+      setIsSubmittingRejectedMedicalReq(false);
     }
+  };
+
+  const handleReasonsSelectionChange = (selectedReasons: number[]) => {
+    setReasonForRejectionNumberAdminLocalState(selectedReasons);
   };
 
   const handleButtonClick = () => {
@@ -182,44 +192,42 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
           typeMessage="success"
           message={
             successMessageAdmin?.toString() ||
-            `¡Documentos enviados correctamente!`
+            `¡Solicitud rechazada correctamente!`
           }
         />
       )}
 
       {showCustomConfirmModal && (
         <CustomModalTwoOptions
-          key={"custom-confirm-modal-deliver-documents"}
+          key={"custom-confirm-modal-rejected-medical-req"}
           iconCustomModal={<FcInfo size={77} />}
           openCustomModalState={showCustomConfirmModal}
-          titleCustomModal="¿Deseas dar respuesta a la solicitud y enviar los documentos?"
-          subtitleCustomModal="Se enviarán los documentos solicitados por el usuario en esta solicitud, puede confirmar los detalles de la solicitud en la pantalla anterior."
+          titleCustomModal="¿Deseas rechazar esta solicitud?"
+          subtitleCustomModal="Esta solicitud se rechazará y el usuario podrá ver los motivos por los cuales fue denegada."
           handleCancelCustomModal={() => {
             setShowCustomConfirmModal(false);
           }}
           handleConfirmCustomModal={handleConfirmDataModal}
           handleClickCustomModal={handleButtonClick}
-          isSubmittingConfirm={isSubmittingDeliverDocuments}
+          isSubmittingConfirm={isSubmittingRejectedMedicalReq}
         ></CustomModalTwoOptions>
       )}
 
       {isModalVisibleLocalState && (
         <CustomModalNoContent
-          key={"custom-modal-deliver-documents"}
+          key={"custom-modal-rejected-medical-req"}
           widthCustomModalNoContent={"45%"}
           openCustomModalState={isModalVisibleLocalState}
           closableCustomModal={true}
           maskClosableCustomModal={false}
           handleCancelCustomModal={() => {
-            dispatch(setDefaultValuesMedicalReq());
-
             setIsModalVisibleLocalState(false);
           }}
           contentCustomModal={
             <Form
-              id="deliver-documents-form"
-              name="deliver-documents-form"
-              className="deliver-documents-form"
+              id="rejected-medical-req-form"
+              name="rejected-medical-req-form"
+              className="rejected-medical-req-form"
               onFinish={handleCorrectData}
               initialValues={{ remember: false }}
               autoComplete="false"
@@ -229,50 +237,51 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
               }}
             >
               <h2
-                className="title-deliver-documents-form"
+                className="title-rejected-medical-req-form"
                 style={{
                   ...titleStyleCss,
                   textAlign: "center",
                   marginBottom: "22px",
                 }}
               >
-                Responder solicitud y enviar documentos
+                Rechazar solicitud
               </h2>
 
               <Form.Item
-                name="upload-files-documents-delivered"
-                label="Documento(s) de respuesta a solicitud"
+                name="motives-for-rejection-rejected-medical-req"
+                label="Motivos por los cuales se rechaza la solicitud:"
+                tooltip="Aquí debes seleccionar las razones por las cuales se rechazó la solicitud."
                 style={{ marginBottom: "13px" }}
-                tooltip="Aquí debe anexar los documentos que el usuario requiere en la solicitud."
                 rules={[
                   {
-                    validator: validateRequiredFiles(
-                      copyDocumentsDeliveredFilesState,
-                      "¡Por favor adjunte documento(s) de respuesta a solicitud!"
-                    ),
+                    required: true,
+                    message:
+                      "¡Por favor, selecciona mínimo un motivo de rechazo!",
                   },
                 ]}
               >
-                <CustomUpload
-                  titleCustomUpload="Cargar Documento(s)"
-                  fileStatusSetterCustomUpload={
-                    setFileDocumentsDeliveredMedicalReq
-                  }
-                  removeFileStatusSetterCustomUpload={
-                    removeFileDocumentsDeliveredMedicalReq
-                  }
-                  maximumNumberOfFiles={Number(
-                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
-                  )}
-                  maximumSizeFilesInMegaBytes={Number(
-                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
-                  )}
-                />
+                {reasonsForRejectionLoading ? (
+                  <CustomSpin />
+                ) : (
+                  <Select
+                    mode="multiple"
+                    placeholder={"Seleccionar razones de rechazo:"}
+                    options={reasonsForRejectionSelectoptions}
+                    defaultValue={[]}
+                    onChange={handleReasonsSelectionChange}
+                    style={{
+                      width: "100%",
+                      paddingInline: "7px",
+                      paddingBlock: "7px",
+                    }}
+                    allowClear
+                  />
+                )}
               </Form.Item>
 
               <Form.Item
-                name="response-comments"
-                label="Mensaje de respuesta o comentarios"
+                name="response-comments-rejected-medical-req"
+                label="Observaciones y/o detalles"
                 tooltip="Aquí debes ingresar comentarios o algún mensaje que desees enviarle al usuario."
                 style={{ marginBottom: "31px" }}
                 rules={[
@@ -295,11 +304,11 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
               </Form.Item>
 
               <Form.Item style={{ textAlign: "center", marginBottom: "7px" }}>
-                {isSubmittingDeliverDocuments ? (
+                {isSubmittingRejectedMedicalReq ? (
                   <CustomSpin />
                 ) : (
                   <Button
-                    className="confirm-deliver-documents-button"
+                    className="confirm-rejected-medical-req-form-button"
                     size="large"
                     style={{
                       paddingInline: 62,
@@ -310,7 +319,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
                     htmlType="submit"
                     onClick={handleButtonClick}
                   >
-                    Enviar documentos anexados
+                    Enviar Rechazo de solicitud
                   </Button>
                 )}
               </Form.Item>
@@ -320,10 +329,10 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
       )}
 
       <Button
-        className="deliver-documents-button"
+        className="rejected-medical-req-button"
         size="large"
         style={{
-          backgroundColor: "#1D8348",
+          backgroundColor: "#8C1111",
           color: "#F7F7F7",
           borderRadius: "31px",
           paddingInline: "31px",
@@ -343,12 +352,12 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
             justifyContent: "center",
           }}
         >
-          <FaCheck size={17} />
-          &nbsp; Entregar documentos
+          <GrSend size={17} />
+          &nbsp; Rechazar solicitud
         </div>
       </Button>
     </>
   );
 };
 
-export default DeliverDocumentsButton;
+export default RejectedMedicalReqButton;

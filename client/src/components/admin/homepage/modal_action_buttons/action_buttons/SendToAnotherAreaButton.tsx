@@ -218,9 +218,9 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
           }}
           contentCustomModal={
             <Form
-              id="create-admin-form"
-              name="create-admin-form"
-              className="create-admin-form"
+              id="send-to-another-area-medical-req-form"
+              name="send-to-another-area-medical-req-form"
+              className="send-to-another-area-medical-req-form"
               onFinish={handleCorrectData}
               initialValues={{ remember: false }}
               autoComplete="false"
@@ -230,7 +230,7 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
               }}
             >
               <h2
-                className="title-create-admin-form"
+                className="title-send-to-another-area-medical-req-form"
                 style={{
                   ...titleStyleCss,
                   textAlign: "center",
