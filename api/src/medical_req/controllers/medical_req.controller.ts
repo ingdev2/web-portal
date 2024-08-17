@@ -80,8 +80,17 @@ export class MedicalReqController {
   async getAllMedicalReqUsers(
     @Query('status') status?: RequirementStatusEnum,
     @Query('type') type?: RequirementTypeEnum,
+    @Query('aplicantType') aplicantType?: UserRolType,
+    @Query('year') year?: number,
+    @Query('month') month?: number,
   ) {
-    return await this.medicalReqService.getAllMedicalReqUsers(status, type);
+    return await this.medicalReqService.getAllMedicalReqUsers(
+      status,
+      type,
+      aplicantType,
+      year,
+      month,
+    );
   }
 
   @Auth(UserRolType.PATIENT, UserRolType.EPS)

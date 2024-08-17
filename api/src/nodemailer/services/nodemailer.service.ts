@@ -16,6 +16,7 @@ export class NodemailerService {
       recipients,
       subject,
       userNameToEmail,
+      familiarNameToEmail,
       patientNameToEmail,
       patientIdNumberToEmail,
       emailOfFamiliar,
@@ -41,6 +42,7 @@ export class NodemailerService {
       template: emailTemplate,
       context: {
         userNameToEmail,
+        familiarNameToEmail,
         patientNameToEmail,
         patientIdNumberToEmail,
         emailOfFamiliar,

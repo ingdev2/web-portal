@@ -24,6 +24,10 @@ export class SendEmailDto {
 
   @IsOptional()
   @IsString()
+  familiarNameToEmail: string;
+
+  @IsOptional()
+  @IsString()
   patientNameToEmail: string;
 
   @IsOptional()

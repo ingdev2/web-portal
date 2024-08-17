@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, Repository, EntityManager } from 'typeorm';
+import { DataSource, In, Repository, EntityManager, Between } from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
@@ -32,7 +32,9 @@ import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reason
 import { generateFilingNumber } from '../helpers/generate_filing_number.helper';
 import {
   MEDICAL_REQ_CREATED,
+  MEDICAL_REQ_CREATED_BY_FAMILIAR,
   MEDICAL_REQ_UPDATE,
+  SUBJECT_CREATION_FAMILIAR_MEDICAL_REQ,
   SUBJECT_EMAIL_CONFIRM_CREATION,
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
@@ -445,6 +447,26 @@ export class MedicalReqService {
       process.env.PERSONAL_DATA_PROCESSING_POLICY;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    const emailDetailsToSendToPatient = new SendEmailDto();
+
+    emailDetailsToSendToPatient.recipients = [userPatientFound.email];
+    emailDetailsToSendToPatient.userNameToEmail = userPatientFound.name;
+    emailDetailsToSendToPatient.familiarNameToEmail =
+      medicalReqCompleted.aplicant_name;
+    emailDetailsToSendToPatient.patientNameToEmail = userPatientFound.name;
+    emailDetailsToSendToPatient.patientIdNumberToEmail =
+      userPatientFound.id_number;
+    emailDetailsToSendToPatient.medicalReqFilingNumber =
+      medicalReqCompleted.filing_number;
+    emailDetailsToSendToPatient.requirementType = sendReqTypeName.name;
+    emailDetailsToSendToPatient.subject = SUBJECT_CREATION_FAMILIAR_MEDICAL_REQ;
+    emailDetailsToSendToPatient.emailTemplate = MEDICAL_REQ_CREATED_BY_FAMILIAR;
+    emailDetailsToSendToPatient.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSendToPatient.personalDataProcessingPolicy =
+      process.env.PERSONAL_DATA_PROCESSING_POLICY;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSendToPatient);
 
     return medicalReqCompleted;
   }
@@ -871,6 +893,9 @@ export class MedicalReqService {
   async getAllMedicalReqUsers(
     status?: RequirementStatusEnum,
     type?: RequirementTypeEnum,
+    aplicantType?: UserRolType,
+    year?: number,
+    month?: number,
   ) {
     const whereCondition: any = {
       is_deleted: false,
@@ -905,6 +930,39 @@ export class MedicalReqService {
       }
 
       whereCondition.requirement_type = reqType.id;
+    }
+
+    if (aplicantType) {
+      const reqByUserType = await this.userRoleRepository.findOne({
+        where: { name: aplicantType },
+      });
+
+      if (!reqByUserType) {
+        throw new HttpException(
+          `El tipo "${status}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.medicalReqUserType = reqByUserType.id;
+    }
+
+    if (year && month) {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0);
+
+      whereCondition.createdAt = Between(
+        startDate.toISOString().split('T')[0],
+        endDate.toISOString().split('T')[0],
+      );
+    } else if (year) {
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year + 1, 0, 0);
+
+      whereCondition.createdAt = Between(
+        startDate.toISOString().split('T')[0],
+        endDate.toISOString().split('T')[0],
+      );
     }
 
     const allMedicalReqUsers = await this.medicalReqRepository.find({
