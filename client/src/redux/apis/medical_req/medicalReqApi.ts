@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react";
 
 import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 import { RequirementTypeEnum } from "@/../../api/src/medical_req/enums/requirement_type.enum";
+import { UserRolType } from "../../../../../api/src/utils/enums/user_roles.enum";
 
 const addTokenToRequest = async (headers: any, { getState }: any) => {
   const session: any = await getSession();
@@ -80,12 +81,24 @@ export const medicalReqApi = createApi({
       {
         status?: RequirementStatusEnum | null;
         type?: RequirementTypeEnum | null;
+        aplicantType?: UserRolType | null;
+        year?: number | null;
+        month?: number | null;
       }
     >({
-      query: ({ status = null, type = null }) => {
+      query: ({
+        status = null,
+        type = null,
+        aplicantType = null,
+        year = null,
+        month = null,
+      }) => {
         const params: any = {};
         if (status !== null) params.status = status;
         if (type !== null) params.type = type;
+        if (aplicantType !== null) params.aplicantType = aplicantType;
+        if (year !== null) params.year = year;
+        if (month !== null) params.month = month;
 
         return {
           url: "getAllMedicalReqUsers",

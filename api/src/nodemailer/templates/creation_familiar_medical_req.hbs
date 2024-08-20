@@ -1,0 +1,77 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Notificación de Nuevo Requerimiento Médico </title>
+    <style>
+      body { font-family: Arial, Helvetica, sans-serif; line-height: 2.0;
+      margin: 0; padding: 0; } .container { max-width: 609px; margin: 0 auto;
+      padding: 20px; border: 2px solid #ccc; border-radius: 13px;
+      background-color: #f7f7f7; } h1 { text-align: center; color:#015E90;
+      font-weight: bold; line-height: 1.3;} p { margin: 10px 0; size: 22px; }
+      .highlight { font-weight: bold; color: #015E90; } .important{ font-weight:
+      bold; } .important-center { text-align: center; font-weight: bold;
+      }.logoProced { display: block; margin: 0 auto; height: 69px;}.logoBonna {
+      display: block; margin: 0 auto; height: 88px;} .button-container {
+      text-align: center; } .button { padding: 10px 20px; background-color:
+      #004d77; color: #fff; text-decoration: none; border-radius: 7px; }
+      .button:hover { background-color: #017DC0; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <br />
+      <img
+        src='https://i.ibb.co/3R5LYzk/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png'
+        alt='LogoProced'
+        class='logoProced'
+      />
+      <br />
+      <h1>REQUERIMIENTO MÉDICO CREADO POR FAMILIAR</h1>
+      <p>Cordial saludo,</p>
+      <p>Señor(a) <span class='highlight'>{{userNameToEmail}}</span>,</p>
+      <p>Se ha creado correctamente un nuevo requerimiento médico tipo:
+        <span class='highlight'>{{requirementType}}</span>, de parte del
+        familiar:
+        <span class='highlight'>{{familiarNameToEmail}}</span>
+        con sus datos personales con nombre:
+        <span class='highlight'>{{patientNameToEmail}}</span>
+        identificado con el número de identificación
+        <span class='highlight'>{{patientIdNumberToEmail}}</span>
+        esta solicitud se crea con número de radicado:
+        <span class='highlight'>{{medicalReqFilingNumber}}</span>.</p>
+      <br />
+      <p class='important-center'>Lo invitamos a revisar nuestra política de
+        protección y tratamiento de datos personales a tener en cuenta durante
+        este proceso en el siguiente link:
+        <br />
+        <p class='button-container'>
+          <a href={{personalDataProcessingPolicy}} class='button'>Términos y
+            condiciones</a>
+        </p>
+      </p>
+      <br />
+      <p class='important-center'>Puede ingresar a nuestro portal web y revisar
+        su núcleo familiar activo:
+        <br />
+        <p class='button-container'>
+          <a href={{portalWebUrl}} class='button'>Ingresar al Portal Web</a>
+        </p>
+      </p>
+      <br />
+      <p>A partir de la fecha, el tiempo de respuesta máximo estipulado por la
+        ley es de:
+        <span class='important'>15 días</span>; intentaremos darle respuesta a
+        su solicitud lo mas pronto posible.</p>
+      <p>Agradecemos su paciencia.</p>
+      <p><span class='important'>Horario de atención (08:00 a.m.-06:00 p.m.)</span></p>
+      <p>Att: Departamento de archivos de Clínica Bonnadona Prevenir</p>
+      <img
+        src='https://iili.io/dHfDgig.png'
+        alt='LogoBonna'
+        class='logoBonna'
+      />
+      <br />
+    </div>
+  </body>
+</html>

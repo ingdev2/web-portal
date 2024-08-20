@@ -10,6 +10,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@antv/g2plot": "^2.4.32",
     "@reduxjs/toolkit": "^2.2.1",
     "@types/antd": "^1.0.0",
     "antd": "^5.14.2",
