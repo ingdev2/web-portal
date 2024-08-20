@@ -1,38 +1,35 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomDonutPlot from "@/components/common/custom_donut_plot/CustomDonutPlot";
+import FilterOptions from "./filter_options/FilterOptions";
+import { Col, DatePicker } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
 
 import dayjs from "dayjs";
 
 import {
   useMedicalReqData,
-  useMedicalReqByDate,
   useMedicalReqDataByApplicantType,
   useMedicalReqDataByStatus,
   useMedicalReqDataByType,
 } from "./users_medical_req/users_medical_req_data";
-import FilterOptions from "./filter_options/FilterOptions";
-import { Button, DatePicker } from "antd";
 
 const StatisticsContent: React.FC<{}> = ({}) => {
   const DATE_FORMAT = "YYYY-MM";
 
   const [filterOption, setFilterOption] = useState<FilterOption | "">("");
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
 
-  const [year, setYear] = useState<number | null>(null);
-  const [month, setMonth] = useState<number | null>(null);
+  var year = selectedDate?.year();
+  var month = selectedDate?.month() ? selectedDate?.month() + 1 : undefined;
 
-  const { filterMedicalReqByDate, refetchFilterMedicalReqByDate } =
-    useMedicalReqByDate(year, month);
-
-  const { allMedicalReqData } = useMedicalReqData();
+  const { allMedicalReqData } = useMedicalReqData(year, month);
 
   const { clinicHistoryData, medicalDisabilityData, medicalOrderData } =
-    useMedicalReqDataByType();
+    useMedicalReqDataByType(year, month);
 
   const {
     createdData,
@@ -41,10 +38,10 @@ const StatisticsContent: React.FC<{}> = ({}) => {
     deliveredData,
     rejectedData,
     expiredData,
-  } = useMedicalReqDataByStatus();
+  } = useMedicalReqDataByStatus(year, month);
 
   const { patientData, epsData, familiarData } =
-    useMedicalReqDataByApplicantType();
+    useMedicalReqDataByApplicantType(year, month);
 
   const dataToShow: DataCustomDonutPlot[] = useMemo(() => {
     switch (filterOption) {
@@ -82,6 +79,7 @@ const StatisticsContent: React.FC<{}> = ({}) => {
     }
   }, [
     filterOption,
+    selectedDate,
     clinicHistoryData,
     medicalDisabilityData,
     medicalOrderData,
@@ -97,35 +95,31 @@ const StatisticsContent: React.FC<{}> = ({}) => {
     allMedicalReqData,
   ]);
 
-  const handleMonthChange = useCallback((date: any) => {
-    if (date) {
-      setYear(date.year());
-      setMonth(date.month() + 1);
-    } else {
-      setYear(null);
-      setMonth(null);
-    }
-  }, []);
-
-  const handleFilter = useCallback(() => {
-    refetchFilterMedicalReqByDate();
-    console.log(filterMedicalReqByDate);
-    console.log({ year, month });
-  }, [refetchFilterMedicalReqByDate, filterMedicalReqByDate, year, month]);
+  const handleFilterByDateChange = (date: dayjs.Dayjs | null) => {
+    setSelectedDate(date);
+  };
 
   return (
     <>
       <CustomDashboardLayout
         customLayoutContent={
-          <>
-            <div
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexFlow: "row wrap",
+            }}
+          >
+            <Col
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
               style={{
                 width: "100%",
-                display: "flex",
-                flexFlow: "column wrap",
               }}
             >
-              <h2
+              <h3
                 style={{
                   width: "100%",
                   ...titleStyleCss,
@@ -134,75 +128,85 @@ const StatisticsContent: React.FC<{}> = ({}) => {
                 }}
               >
                 Seleccione una opción de filtrado:
-              </h2>
-            </div>
+              </h3>
 
-            <div
-              style={{
-                width: "50%",
-                display: "flex",
-                flexFlow: "column wrap",
-                marginBlock: "7px",
-              }}
-            >
-              <FilterOptions
-                filterOption={filterOption}
-                setFilterOption={setFilterOption}
-              />
-            </div>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexFlow: "column wrap",
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                  marginBlock: "7px",
+                }}
+              >
+                <FilterOptions
+                  widthFilterOptions="72%"
+                  filterOption={filterOption}
+                  setFilterOption={setFilterOption}
+                />
+              </div>
+            </Col>
 
-            <div
+            <Col
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
               style={{
                 width: "100%",
-                display: "flex",
-                flexFlow: "row wrap",
-                gap: "13px",
-                marginBlock: "7px",
-                justifyContent: "center",
-                alignContent: "center",
-                alignItems: "center",
               }}
             >
-              <DatePicker
-                className="custom-date-picker-data-filter"
-                placeholder="Seleccionar fecha"
-                onChange={handleMonthChange}
-                picker="month"
-                format={{
-                  format: DATE_FORMAT,
-                  // type: "mask",
-                }}
-                minDate={dayjs().subtract(1, "year")}
-                disabledDate={(current) =>
-                  current && current > dayjs().endOf("day")
-                }
+              <h3
                 style={{
-                  width: "31%",
-                  display: "flex",
-                  flexFlow: "row wrap",
+                  width: "100%",
+                  ...titleStyleCss,
+                  textAlign: "center",
+                  marginBlock: "7px",
                 }}
-                popupStyle={{
-                  alignItems: "center",
-                  alignContent: "center",
-                  justifyContent: "center",
-                }}
-                allowClear
-              />
-
-              <Button
-                className="update-date-filter-button"
-                size="middle"
-                style={{
-                  backgroundColor: "#015E90",
-                  color: "#F7F7F7",
-                  borderRadius: "31px",
-                  paddingInline: "31px",
-                }}
-                onClick={handleFilter}
               >
-                Aplicar filtros
-              </Button>
-            </div>
+                Seleccione una fecha:
+              </h3>
+
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexFlow: "column wrap",
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                  marginBlock: "7px",
+                }}
+              >
+                <DatePicker
+                  className="custom-date-picker-data-filter"
+                  placeholder="Seleccionar fecha"
+                  onChange={handleFilterByDateChange}
+                  picker="month"
+                  format={{
+                    format: DATE_FORMAT,
+                    // type: "mask",
+                  }}
+                  minDate={dayjs().subtract(1, "year")}
+                  disabledDate={(current) =>
+                    current && current > dayjs().endOf("day")
+                  }
+                  style={{
+                    width: "50%",
+                    display: "flex",
+                    flexFlow: "row wrap",
+                  }}
+                  popupStyle={{
+                    alignItems: "center",
+                    alignContent: "center",
+                    justifyContent: "center",
+                  }}
+                  allowClear
+                />
+              </div>
+            </Col>
 
             <div
               style={{
@@ -215,7 +219,7 @@ const StatisticsContent: React.FC<{}> = ({}) => {
             >
               <CustomDonutPlot dataCustomDonutPlot={dataToShow} />
             </div>
-          </>
+          </div>
         }
       />
     </>

@@ -924,7 +924,7 @@ export class MedicalReqService {
 
       if (!reqType) {
         throw new HttpException(
-          `El tipo "${status}" de requerimiento no existe`,
+          `El tipo "${type}" de requerimiento no existe`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -939,7 +939,7 @@ export class MedicalReqService {
 
       if (!reqByUserType) {
         throw new HttpException(
-          `El tipo "${status}" de requerimiento no existe`,
+          `El tipo "${aplicantType}" de requerimiento no existe`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -947,17 +947,17 @@ export class MedicalReqService {
       whereCondition.medicalReqUserType = reqByUserType.id;
     }
 
-    if (year && month) {
-      const startDate = new Date(year, month - 1, 1);
-      const endDate = new Date(year, month, 0);
+    if (year) {
+      let startDate: Date;
+      let endDate: Date;
 
-      whereCondition.createdAt = Between(
-        startDate.toISOString().split('T')[0],
-        endDate.toISOString().split('T')[0],
-      );
-    } else if (year) {
-      const startDate = new Date(year, 0, 1);
-      const endDate = new Date(year + 1, 0, 0);
+      if (month) {
+        startDate = new Date(year, month - 1, 1);
+        endDate = new Date(year, month, 0);
+      } else {
+        startDate = new Date(year, 0, 1);
+        endDate = new Date(year + 1, 0, 0);
+      }
 
       whereCondition.createdAt = Between(
         startDate.toISOString().split('T')[0],
@@ -973,13 +973,14 @@ export class MedicalReqService {
     });
 
     if (allMedicalReqUsers.length === 0) {
-      return new HttpException(
-        `No hay requerimientos creados actualmente.`,
-        HttpStatus.CONFLICT,
-      );
+      // throw new HttpException(
+      //   `No hay requerimientos creados actualmente.`,
+      //   HttpStatus.NOT_FOUND,
+      // );
+      return [];
     }
 
-    return allMedicalReqUsers;
+    return allMedicalReqUsers || [];
   }
 
   async getAllMedicalReqOfAUsers(userId: string) {
