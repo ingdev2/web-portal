@@ -55,11 +55,17 @@ const CustomDonutPlot: React.FC<{
           },
         },
         legend: {
-          layout: "vertical",
-          position: "right",
-          offsetX: -88,
+          layout: "horizontal",
+          position: "top",
+          offsetX: 0,
           offsetY: 0,
-          itemMarginBottom: 17,
+          itemSpacing: 7,
+          itemName: {
+            style: {
+              fontSize: 17,
+              height: 77,
+            },
+          },
         },
         label: {
           type: "inner",
@@ -67,7 +73,7 @@ const CustomDonutPlot: React.FC<{
           content: "{value}",
           autoRotate: false,
           style: {
-            fontSize: 27,
+            fontSize: 22,
             textAlign: "center",
           },
         },

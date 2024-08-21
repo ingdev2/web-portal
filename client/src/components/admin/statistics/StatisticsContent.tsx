@@ -5,7 +5,9 @@ import React, { useMemo, useState } from "react";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomDonutPlot from "@/components/common/custom_donut_plot/CustomDonutPlot";
 import FilterOptions from "./filter_options/FilterOptions";
-import { Col, DatePicker } from "antd";
+import FilterOptionsByDate from "./filter_options/FilterOptionsByDate";
+import CustomDatePickerOneDate from "@/components/common/custom_date_picker/CustomDatePickerOneDate";
+import { Col } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
 
 import dayjs from "dayjs";
@@ -17,14 +19,22 @@ import {
   useMedicalReqDataByType,
 } from "./users_medical_req/users_medical_req_data";
 
-const StatisticsContent: React.FC<{}> = ({}) => {
-  const DATE_FORMAT = "YYYY-MM";
+const StatisticsContent: React.FC = () => {
+  const DATE_FORMAT_MONTH = "YYYY-MM";
+  const DATE_FORMAT_YEAR = "YYYY";
 
   const [filterOption, setFilterOption] = useState<FilterOption | "">("");
-  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+  const [filterByDateOption, setFilterByDateOption] = useState<
+    FilterOptionByDate | ""
+  >("");
+  const [selectedMonthYear, setSelectedMonthYear] =
+    useState<dayjs.Dayjs | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(
+    undefined
+  );
 
-  var year = selectedDate?.year();
-  var month = selectedDate?.month() ? selectedDate?.month() + 1 : undefined;
+  var year = selectedMonthYear?.year() || selectedYear;
+  var month = selectedMonthYear ? selectedMonthYear.month() + 1 : undefined;
 
   const { allMedicalReqData } = useMedicalReqData(year, month);
 
@@ -56,12 +66,12 @@ const StatisticsContent: React.FC<{}> = ({}) => {
         ];
       case "ESTADO":
         return [
-          { type: "Creado", value: createdData?.length || 0 },
-          { type: "Visualizado", value: visualizedData?.length || 0 },
+          { type: "Creadas", value: createdData?.length || 0 },
+          { type: "Visualizadas", value: visualizedData?.length || 0 },
           { type: "En Revisión", value: underReviewData?.length || 0 },
-          { type: "Entregado", value: deliveredData?.length || 0 },
-          { type: "Rechazado", value: rejectedData?.length || 0 },
-          { type: "Expirado", value: expiredData?.length || 0 },
+          { type: "Docs. Entregados", value: deliveredData?.length || 0 },
+          { type: "Rechazadas", value: rejectedData?.length || 0 },
+          { type: "Docs. Expirados", value: expiredData?.length || 0 },
         ];
       case "SOLICITANTE":
         return [
@@ -79,7 +89,6 @@ const StatisticsContent: React.FC<{}> = ({}) => {
     }
   }, [
     filterOption,
-    selectedDate,
     clinicHistoryData,
     medicalDisabilityData,
     medicalOrderData,
@@ -95,8 +104,16 @@ const StatisticsContent: React.FC<{}> = ({}) => {
     allMedicalReqData,
   ]);
 
-  const handleFilterByDateChange = (date: dayjs.Dayjs | null) => {
-    setSelectedDate(date);
+  const handleMonthYearChange = (date: dayjs.Dayjs | null) => {
+    setSelectedMonthYear(date);
+
+    setSelectedYear(undefined);
+  };
+
+  const handleYearChange = (date: dayjs.Dayjs | null) => {
+    setSelectedYear(date ? date.year() : undefined);
+
+    setSelectedMonthYear(null);
   };
 
   return (
@@ -166,7 +183,7 @@ const StatisticsContent: React.FC<{}> = ({}) => {
                   marginBlock: "7px",
                 }}
               >
-                Seleccione una fecha:
+                Filtrado por fecha:
               </h3>
 
               <div
@@ -180,31 +197,31 @@ const StatisticsContent: React.FC<{}> = ({}) => {
                   marginBlock: "7px",
                 }}
               >
-                <DatePicker
-                  className="custom-date-picker-data-filter"
-                  placeholder="Seleccionar fecha"
-                  onChange={handleFilterByDateChange}
-                  picker="month"
-                  format={{
-                    format: DATE_FORMAT,
-                    // type: "mask",
-                  }}
-                  minDate={dayjs().subtract(1, "year")}
-                  disabledDate={(current) =>
-                    current && current > dayjs().endOf("day")
-                  }
-                  style={{
-                    width: "50%",
-                    display: "flex",
-                    flexFlow: "row wrap",
-                  }}
-                  popupStyle={{
-                    alignItems: "center",
-                    alignContent: "center",
-                    justifyContent: "center",
-                  }}
-                  allowClear
+                <FilterOptionsByDate
+                  widthFilterOptions="72%"
+                  filterOption={filterByDateOption}
+                  setFilterOption={setFilterByDateOption}
                 />
+
+                {filterByDateOption === "AÑO" && (
+                  <CustomDatePickerOneDate
+                    placeholderCustomDatePicker="Seleccionar año"
+                    onChangeDateCustomDatePicker={handleYearChange}
+                    dateFormatCustomDatePicker={DATE_FORMAT_YEAR}
+                    pickerFormatCustomDatePicker="year"
+                    marginBlockCustomDatePicker={"13px"}
+                  />
+                )}
+
+                {filterByDateOption === "MES" && (
+                  <CustomDatePickerOneDate
+                    placeholderCustomDatePicker="Seleccionar mes"
+                    onChangeDateCustomDatePicker={handleMonthYearChange}
+                    dateFormatCustomDatePicker={DATE_FORMAT_MONTH}
+                    pickerFormatCustomDatePicker="month"
+                    marginBlockCustomDatePicker={"13px"}
+                  />
+                )}
               </div>
             </Col>
 

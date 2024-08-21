@@ -62,7 +62,7 @@ const CustomDashboardLayout: React.FC<{
         className="custom--dashboard-layout-sider"
         breakpoint="md"
         collapsedWidth={54}
-        width={173}
+        width={207}
         onBreakpoint={(broken) => {}}
         onCollapse={(collapsed, type) => {}}
         collapsed={collapsed}

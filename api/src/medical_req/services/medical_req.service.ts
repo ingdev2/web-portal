@@ -952,14 +952,16 @@ export class MedicalReqService {
       let endDate: Date;
 
       if (month) {
-        startDate = new Date(year, month - 1, 1);
+        const formattedMonth = month.toString().padStart(2, '0');
+
+        startDate = new Date(`${year}-${formattedMonth}-01`);
         endDate = new Date(year, month, 0);
       } else {
-        startDate = new Date(year, 0, 1);
-        endDate = new Date(year + 1, 0, 0);
+        startDate = new Date(`${year}-01-01`);
+        endDate = new Date(`${year}-12-31`);
       }
 
-      whereCondition.createdAt = Between(
+      whereCondition.date_of_admission = Between(
         startDate.toISOString().split('T')[0],
         endDate.toISOString().split('T')[0],
       );
@@ -973,10 +975,6 @@ export class MedicalReqService {
     });
 
     if (allMedicalReqUsers.length === 0) {
-      // throw new HttpException(
-      //   `No hay requerimientos creados actualmente.`,
-      //   HttpStatus.NOT_FOUND,
-      // );
       return [];
     }
 
