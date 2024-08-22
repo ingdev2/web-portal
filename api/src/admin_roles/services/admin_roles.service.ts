@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateAdminRoleDto } from '../dto/create-admin_role.dto';
 import { UpdateAdminRoleDto } from '../dto/update-admin_role.dto';
 import { AdminRole } from '../entities/admin_role.entity';
+import { AdminRolType } from 'src/utils/enums/admin_roles.enum';
 
 @Injectable()
 export class AdminRolesService {
@@ -49,6 +50,23 @@ export class AdminRolesService {
       );
     } else {
       return allAdminRoles;
+    }
+  }
+
+  async getAdminRoleByName(name?: AdminRolType) {
+    if (name) {
+      const adminRoleName = await this.adminRoleRepository.findOne({
+        where: { name: name },
+      });
+
+      if (!adminRoleName) {
+        throw new HttpException(
+          `El role "${name}" de administradores no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return adminRoleName;
     }
   }
 

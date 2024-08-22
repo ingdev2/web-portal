@@ -94,6 +94,7 @@ export const medicalReqApi = createApi({
         month = null,
       }) => {
         const params: any = {};
+
         if (status !== null) params.status = status;
         if (type !== null) params.type = type;
         if (aplicantType !== null) params.aplicantType = aplicantType;
@@ -107,8 +108,36 @@ export const medicalReqApi = createApi({
       },
     }),
 
-    getAllMedicalReqUsersToLegalArea: builder.query<MedicalReq[], null>({
-      query: () => "getAllMedicalReqUsersToLegalArea",
+    getAllMedicalReqUsersToLegalArea: builder.query<
+      MedicalReq[],
+      {
+        status?: RequirementStatusEnum | null;
+        type?: RequirementTypeEnum | null;
+        aplicantType?: UserRolType | null;
+        year?: number | null;
+        month?: number | null;
+      }
+    >({
+      query: ({
+        status = null,
+        type = null,
+        aplicantType = null,
+        year = null,
+        month = null,
+      }) => {
+        const params: any = {};
+
+        if (status !== null) params.status = status;
+        if (type !== null) params.type = type;
+        if (aplicantType !== null) params.aplicantType = aplicantType;
+        if (year !== null) params.year = year;
+        if (month !== null) params.month = month;
+
+        return {
+          url: "getAllMedicalReqUsersToLegalArea",
+          params,
+        };
+      },
     }),
 
     getAllMedicalReqPatient: builder.query<MedicalReq[], null>({

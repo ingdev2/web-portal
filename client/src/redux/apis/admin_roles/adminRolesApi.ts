@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
-import { CompanyAreaEnum } from "../../../../../api/src/utils/enums/company_area.enum";
+import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
 const addTokenToRequest = async (headers: any, { getState }: any) => {
   const session: any = await getSession();
@@ -11,36 +11,32 @@ const addTokenToRequest = async (headers: any, { getState }: any) => {
   return headers;
 };
 
-export const companyAreaApi = createApi({
-  reducerPath: "companyAreaApi",
+export const adminRolesApi = createApi({
+  reducerPath: "adminRolesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/company-area`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin-roles`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
   }),
 
   endpoints: (builder) => ({
-    createCompanyArea: builder.mutation<CompanyArea, Partial<CompanyArea>>({
-      query: (newCompanyArea) => ({
+    createAdminRole: builder.mutation<AdminRole, Partial<AdminRole>>({
+      query: (newAdminRole) => ({
         url: `create`,
         method: "POST",
-        body: newCompanyArea,
+        body: newAdminRole,
       }),
     }),
 
-    getAllCompanyArea: builder.query<CompanyArea[], null>({
+    getAllAdminRoles: builder.query<AdminRole[], null>({
       query: () => "getAll",
     }),
 
-    getCompanyAreaById: builder.query<CompanyArea, number>({
-      query: (id) => `getCompanyArea/${id}`,
-    }),
-
-    getCompanyAreaByName: builder.query<
-      CompanyArea,
-      { name?: CompanyAreaEnum | null }
+    getAdminRoleByName: builder.query<
+      AdminRole,
+      { name?: AdminRolType | null }
     >({
       query: ({ name = null }) => {
         const params: any = {};
@@ -54,10 +50,7 @@ export const companyAreaApi = createApi({
       },
     }),
 
-    updateCompanyAreaById: builder.mutation<
-      any,
-      { id: number; newName: string }
-    >({
+    updateAdminRole: builder.mutation<any, { id: number; newName: string }>({
       query: ({ id, newName }) => ({
         url: `update/${id}`,
         method: "PATCH",
@@ -69,9 +62,8 @@ export const companyAreaApi = createApi({
 });
 
 export const {
-  useCreateCompanyAreaMutation,
-  useGetAllCompanyAreaQuery,
-  useGetCompanyAreaByIdQuery,
-  useGetCompanyAreaByNameQuery,
-  useUpdateCompanyAreaByIdMutation,
-} = companyAreaApi;
+  useCreateAdminRoleMutation,
+  useGetAllAdminRolesQuery,
+  useGetAdminRoleByNameQuery,
+  useUpdateAdminRoleMutation,
+} = adminRolesApi;

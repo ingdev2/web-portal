@@ -9,7 +9,7 @@ import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/C
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
 import ModalRequestsDetails from "./modal_requests_details/ModalRequestsDetails";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
-import { tableColumnsAllRequests } from "./table_columns_all_requests/TableColumnsAllRequests";
+import { tableColumnsAllLegalRequests } from "./table_columns_all_legal_requests/TableColumnsAllLegalRequests";
 import { TbEye } from "react-icons/tb";
 
 import ModalActionButtons from "./modal_action_buttons/ModalActionButtons";
@@ -23,7 +23,7 @@ import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
 
 import {
   useChangeStatusToVisualizedMutation,
-  useGetAllMedicalReqUsersQuery,
+  useGetAllMedicalReqUsersToLegalAreaQuery,
 } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
@@ -41,7 +41,7 @@ import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejectio
 
 import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 
-const AllRequestContent: React.FC = () => {
+const AllLegalRequestContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
@@ -68,12 +68,12 @@ const AllRequestContent: React.FC = () => {
   );
 
   const {
-    data: allMedicalReqUsersData,
-    isLoading: allMedicalReqUsersLoading,
-    isFetching: allMedicalReqUsersFetching,
-    error: allMedicalReqUsersError,
-    refetch: refecthAllMedicalReqUsers,
-  } = useGetAllMedicalReqUsersQuery({});
+    data: allMedicalReqLegalAreaData,
+    isLoading: allMedicalReqLegalAreaLoading,
+    isFetching: allMedicalReqLegalAreaFetching,
+    error: allMedicalReqLegalAreaError,
+    refetch: refecthAllMedicalReqLegalArea,
+  } = useGetAllMedicalReqUsersToLegalAreaQuery({});
 
   const {
     data: userMedicalReqTypeData,
@@ -156,7 +156,7 @@ const AllRequestContent: React.FC = () => {
       responseCommentsState ||
       (responseCommentsState && motivesForRejectionState)
     ) {
-      refecthAllMedicalReqUsers();
+      refecthAllMedicalReqLegalArea();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
@@ -198,8 +198,8 @@ const AllRequestContent: React.FC = () => {
   );
   const companyAreaGetName = transformIdToNameMap(allCompanyAreasData);
 
-  const transformedData = Array.isArray(allMedicalReqUsersData)
-    ? allMedicalReqUsersData.map((req: any) => ({
+  const transformedData = Array.isArray(allMedicalReqLegalAreaData)
+    ? allMedicalReqLegalAreaData.map((req: any) => ({
         ...req,
         requirement_type:
           requirementTypeGetName?.[req.requirement_type] ||
@@ -242,7 +242,7 @@ const AllRequestContent: React.FC = () => {
   const handleClickSeeMore = (record: MedicalReq) => {
     dispatch(setTableRowId(""));
     setSelectedRowDataLocalState(record);
-    refecthAllMedicalReqUsers();
+    refecthAllMedicalReqLegalArea();
 
     if (
       record &&
@@ -256,7 +256,7 @@ const AllRequestContent: React.FC = () => {
 
     setIsModalVisibleLocalState(true);
 
-    refecthAllMedicalReqUsers();
+    refecthAllMedicalReqLegalArea();
   };
 
   const handleButtonClick = (documentId: string[] | undefined) => {
@@ -264,7 +264,7 @@ const AllRequestContent: React.FC = () => {
   };
 
   const handleButtonUpdate = () => {
-    refecthAllMedicalReqUsers();
+    refecthAllMedicalReqLegalArea();
   };
 
   return (
@@ -281,7 +281,7 @@ const AllRequestContent: React.FC = () => {
                 closableCustomModal={true}
                 maskClosableCustomModal={false}
                 handleCancelCustomModal={() => {
-                  refecthAllMedicalReqUsers();
+                  refecthAllMedicalReqLegalArea();
 
                   setIsModalVisibleLocalState(false);
 
@@ -710,7 +710,7 @@ const AllRequestContent: React.FC = () => {
 
                 <CustomTableFiltersAndSorting
                   dataCustomTable={transformedData || []}
-                  columnsCustomTable={tableColumnsAllRequests({
+                  columnsCustomTable={tableColumnsAllLegalRequests({
                     handleClickSeeMore: handleClickSeeMore,
                     idTypesData: idTypesData,
                     userMedicalReqTypeData: userMedicalReqTypeData,
@@ -728,4 +728,4 @@ const AllRequestContent: React.FC = () => {
   );
 };
 
-export default AllRequestContent;
+export default AllLegalRequestContent;

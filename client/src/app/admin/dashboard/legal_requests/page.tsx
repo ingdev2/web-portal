@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
-import StatisticsContent from "@/components/admin/statistics/StatisticsContent";
+import AllLegalRequestContent from "@/components/admin/legal_requests/AllLegalRequestContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -18,13 +18,38 @@ import {
 } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
+import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 
-const StatisticsPage = () => {
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
+
+const LegalRequestsAdminPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
+  const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+    });
+  const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+    });
+
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
+  const allowedAreas = [
+    systemsCompanyAreaData?.id,
+    archivesCompanyAreaData?.id,
+  ];
+
   useRoleValidation(allowedRoles);
+  userCompanyAreaValidation(allowedAreas);
+
+  const waitAdminData =
+    systemsCompanyAreaData &&
+    !systemsCompanyAreaError &&
+    archivesCompanyAreaData &&
+    !archivesCompanyAreaError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
@@ -69,7 +94,13 @@ const StatisticsPage = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
+  }, [
+    status,
+    idNumberAdminLoginState,
+    idNumberAdminState,
+    adminModalState,
+    isPageLoadingState,
+  ]);
 
   return (
     <div>
@@ -80,15 +111,17 @@ const StatisticsPage = () => {
         />
       )}
 
-      {!idNumberAdminLoginState || status === "unauthenticated" ? (
+      {!idNumberAdminLoginState ||
+      status === "unauthenticated" ||
+      !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-statistics-admin-content">
-          <StatisticsContent />
+        <div className="dashboard-all-legal-requests-admin-content">
+          <AllLegalRequestContent />
         </div>
       )}
     </div>
   );
 };
 
-export default StatisticsPage;
+export default LegalRequestsAdminPage;

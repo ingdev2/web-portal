@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
 import AllAdminsContent from "@/components/admin/all_admins/AllAdminsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -18,13 +18,27 @@ import {
 } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
+import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
+
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
 
 const AllAdminsPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
+  const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+    });
+
+  const allowedRoles = [AdminRolType.SUPER_ADMIN];
+  const allowedAreas = [systemsCompanyAreaData?.id];
+
   useRoleValidation(allowedRoles);
+  userCompanyAreaValidation(allowedAreas);
+
+  const waitAdminData = systemsCompanyAreaData && !systemsCompanyAreaError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
@@ -69,7 +83,13 @@ const AllAdminsPage = () => {
     if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
     }
-  }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
+  }, [
+    status,
+    idNumberAdminLoginState,
+    idNumberAdminState,
+    adminModalState,
+    isPageLoadingState,
+  ]);
 
   return (
     <div>
@@ -80,7 +100,9 @@ const AllAdminsPage = () => {
         />
       )}
 
-      {!idNumberAdminLoginState || status === "unauthenticated" ? (
+      {!idNumberAdminLoginState ||
+      status === "unauthenticated" ||
+      !waitAdminData ? (
         <CustomSpin />
       ) : (
         <div className="dashboard-all-admins-content">

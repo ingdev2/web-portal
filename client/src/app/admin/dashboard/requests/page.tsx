@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
+import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
-import StatisticsContent from "@/components/admin/statistics/StatisticsContent";
+import AllRequestContent from "@/components/admin/homepage/AllRequestContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -15,19 +15,41 @@ import { setIdNumberAdmin } from "@/redux/features/admin/adminSlice";
 import {
   setIsPageLoading,
   setAdminModalIsOpen,
-  setSelectedKey,
 } from "@/redux/features/common/modal/modalSlice";
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
+import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 
-import { ItemKeys } from "@/components/common/custom_dashboard_layout/enums/item_names_and_keys.enums";
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
 
-const StatisticsPage = () => {
+const RequestsAdminPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
+  const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+    });
+  const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+    });
+
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
+  const allowedAreas = [
+    systemsCompanyAreaData?.id,
+    archivesCompanyAreaData?.id,
+  ];
+
   useRoleValidation(allowedRoles);
+  userCompanyAreaValidation(allowedAreas);
+
+  const waitAdminData =
+    systemsCompanyAreaData &&
+    !systemsCompanyAreaError &&
+    archivesCompanyAreaData &&
+    !archivesCompanyAreaError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
@@ -39,9 +61,8 @@ const StatisticsPage = () => {
   const idNumberAdminLoginState = useAppSelector(
     (state) => state.adminLogin.id_number
   );
-  const idNumberAdminState = useAppSelector((state) => state.admin.id_number);
 
-  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
+  const idNumberAdminState = useAppSelector((state) => state.admin.id_number);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -70,14 +91,16 @@ const StatisticsPage = () => {
     if (adminModalState) {
       dispatch(setAdminModalIsOpen(false));
     }
-    if (
-      isPageLoadingState &&
-      selectedKeyState !== ItemKeys.SUB_STATISTICS_REQ_KEY
-    ) {
+    if (isPageLoadingState) {
       dispatch(setIsPageLoading(false));
-      dispatch(setSelectedKey(ItemKeys.SUB_STATISTICS_REQ_KEY));
     }
-  }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
+  }, [
+    status,
+    idNumberAdminLoginState,
+    idNumberAdminState,
+    adminModalState,
+    isPageLoadingState,
+  ]);
 
   return (
     <div>
@@ -88,15 +111,17 @@ const StatisticsPage = () => {
         />
       )}
 
-      {!idNumberAdminLoginState || status === "unauthenticated" ? (
+      {!idNumberAdminLoginState ||
+      status === "unauthenticated" ||
+      !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-statistics-admin-content">
-          <StatisticsContent />
+        <div className="dashboard-all-requests-admin-content">
+          <AllRequestContent />
         </div>
       )}
     </div>
   );
 };
 
-export default StatisticsPage;
+export default RequestsAdminPage;

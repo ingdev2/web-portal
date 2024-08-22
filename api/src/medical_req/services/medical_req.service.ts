@@ -1051,7 +1051,13 @@ export class MedicalReqService {
     }
   }
 
-  async getAllMedReqUsersToLegalArea() {
+  async getAllMedReqUsersToLegalArea(
+    status?: RequirementStatusEnum,
+    type?: RequirementTypeEnum,
+    aplicantType?: UserRolType,
+    year?: number,
+    month?: number,
+  ) {
     const legalArea = await this.companyAreaRepository.findOne({
       where: {
         name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
@@ -1065,25 +1071,89 @@ export class MedicalReqService {
       );
     }
 
+    const whereCondition: any = {
+      is_deleted: false,
+      is_it_reviewed: false,
+      currently_in_area: legalArea.id,
+    };
+
+    if (status) {
+      const reqStatus = await this.requerimentStatusRepository.findOne({
+        where: { name: status },
+      });
+
+      if (!reqStatus) {
+        throw new HttpException(
+          `El estado "${status}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_status = reqStatus.id;
+    }
+
+    if (type) {
+      const reqType = await this.requerimentTypeRepository.findOne({
+        where: { name: type },
+      });
+
+      if (!reqType) {
+        throw new HttpException(
+          `El tipo "${type}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_type = reqType.id;
+    }
+
+    if (aplicantType) {
+      const reqByUserType = await this.userRoleRepository.findOne({
+        where: { name: aplicantType },
+      });
+
+      if (!reqByUserType) {
+        throw new HttpException(
+          `El tipo "${aplicantType}" de requerimiento no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.medicalReqUserType = reqByUserType.id;
+    }
+
+    if (year) {
+      let startDate: Date;
+      let endDate: Date;
+
+      if (month) {
+        const formattedMonth = month.toString().padStart(2, '0');
+
+        startDate = new Date(`${year}-${formattedMonth}-01`);
+        endDate = new Date(year, month, 0);
+      } else {
+        startDate = new Date(`${year}-01-01`);
+        endDate = new Date(`${year}-12-31`);
+      }
+
+      whereCondition.date_of_admission = Between(
+        startDate.toISOString().split('T')[0],
+        endDate.toISOString().split('T')[0],
+      );
+    }
+
     const allMedicalReqUsersToLegalArea = await this.medicalReqRepository.find({
-      where: {
-        currently_in_area: legalArea.id,
-        is_deleted: false,
-        is_it_reviewed: false,
-      },
+      where: whereCondition,
       order: {
-        createdAt: 'ASC',
+        createdAt: 'DESC',
       },
     });
 
     if (allMedicalReqUsersToLegalArea.length === 0) {
-      return new HttpException(
-        `No hay requerimientos creados actualmente.`,
-        HttpStatus.CONFLICT,
-      );
-    } else {
-      return allMedicalReqUsersToLegalArea;
+      return [];
     }
+
+    return allMedicalReqUsersToLegalArea || [];
   }
 
   async getAllMedicalReqPatient() {

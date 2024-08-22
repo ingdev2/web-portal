@@ -71,8 +71,20 @@ export class MedicalReqController {
 
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedicalReqUsersToLegalArea')
-  async getAllMedReqUsersToLegalArea() {
-    return await this.medicalReqService.getAllMedReqUsersToLegalArea();
+  async getAllMedReqUsersToLegalArea(
+    @Query('status') status?: RequirementStatusEnum,
+    @Query('type') type?: RequirementTypeEnum,
+    @Query('aplicantType') aplicantType?: UserRolType,
+    @Query('year') year?: number,
+    @Query('month') month?: number,
+  ) {
+    return await this.medicalReqService.getAllMedReqUsersToLegalArea(
+      status,
+      type,
+      aplicantType,
+      year,
+      month,
+    );
   }
 
   @Auth(AdminRolType.ADMIN)
