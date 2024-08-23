@@ -32,7 +32,7 @@ const AllAdminsPage = () => {
       name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
     });
 
-  const allowedRoles = [AdminRolType.SUPER_ADMIN];
+  const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   const allowedAreas = [systemsCompanyAreaData?.id];
 
   useRoleValidation(allowedRoles);

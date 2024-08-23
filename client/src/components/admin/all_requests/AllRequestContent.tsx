@@ -90,6 +90,13 @@ const AllRequestContent: React.FC = () => {
   } = useGetAllMedicalReqStatusQuery(null);
 
   const {
+    data: allCompanyAreasData,
+    isLoading: allCompanyAreasDataLoading,
+    isFetching: allCompanyAreasDataFetching,
+    error: allCompanyAreasDataError,
+  } = useGetAllCompanyAreaQuery(null);
+
+  const {
     data: idTypesData,
     isLoading: idTypesLoading,
     isFetching: idTypesFetching,
@@ -116,13 +123,6 @@ const AllRequestContent: React.FC = () => {
     isFetching: allRelationshipWithPatientFetching,
     error: allRelationshipWithPatientError,
   } = useGetAllRelationshipTypesQuery(null);
-
-  const {
-    data: allCompanyAreasData,
-    isLoading: allCompanyAreasLoading,
-    isFetching: allCompanyAreasFetching,
-    error: allCompanyAreasError,
-  } = useGetAllCompanyAreaQuery(null);
 
   const {
     data: userMedicalReqReasonsForRejectionData,
@@ -715,6 +715,7 @@ const AllRequestContent: React.FC = () => {
                     idTypesData: idTypesData,
                     userMedicalReqTypeData: userMedicalReqTypeData,
                     userMedicalReqStatusData: userMedicalReqStatusData,
+                    currentlyAreaMedicalReqData: allCompanyAreasData,
                     aplicantTypeData: allUserRolesData,
                   })}
                   onClickUpdateCustomTable={handleButtonUpdate}

@@ -64,6 +64,16 @@ export const useMenuItems = () => {
       name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
     });
 
+  const { data: legalCompanyAreaData, error: legalCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
+    });
+
+  const { data: admissionsCompanyAreaData, error: admissionsCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.ADMISSIONS_DEPARTMENT,
+    });
+
   const { data: allMedicalReqStatusCreatedData } =
     useGetAllMedicalReqUsersQuery({ status: RequirementStatusEnum.CREATED });
 
@@ -104,7 +114,10 @@ export const useMenuItems = () => {
     systemsCompanyAreaData &&
     !systemsCompanyAreaError &&
     archivesCompanyAreaData &&
-    !archivesCompanyAreaError;
+    !archivesCompanyAreaError &&
+    legalCompanyAreaData &&
+    !legalCompanyAreaError;
+  admissionsCompanyAreaData && !admissionsCompanyAreaError;
 
   if (waitAdminData) {
     const items: MenuItem[] = [
@@ -134,13 +147,18 @@ export const useMenuItems = () => {
                 allMedicalReqStatusCreatedData?.length
               )
             : null,
-          getItem(
-            ItemNames.SUB_ALL_LEGAL_REQUESTS,
-            ItemKeys.SUB_ALL_LEGAL_REQUESTS_REQ_KEY,
-            <RiFileList3Line />,
-            undefined,
-            allMedicalReqLegalAreaStatusUnderReviewData?.length
-          ),
+          isAdminWithRoles(roleIdAdminState, [adminRoleData.id]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            legalCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_ALL_LEGAL_REQUESTS,
+                ItemKeys.SUB_ALL_LEGAL_REQUESTS_REQ_KEY,
+                <RiFileList3Line />,
+                undefined,
+                allMedicalReqLegalAreaStatusUnderReviewData?.length
+              )
+            : null,
         ].filter(Boolean)
       ),
 
@@ -149,7 +167,10 @@ export const useMenuItems = () => {
         ItemKeys.ITEM_USERS_KEY,
         <MenuFoldOutlined />,
         [
-          isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
+          isAdminWithRoles(roleIdAdminState, [
+            superAdminRoleData.id,
+            adminRoleData.id,
+          ]) &&
           isAdminInCompanyAreas(companyAreaIdAdminState, [
             systemsCompanyAreaData.id,
           ])

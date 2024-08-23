@@ -8,6 +8,7 @@ const dateOfAdmissionKey: keyof MedicalReq = "date_of_admission";
 const answerDateKey: keyof MedicalReq = "answer_date";
 const requirementTypeKey: keyof MedicalReq = "requirement_type";
 const requirementStatusKey: keyof MedicalReq = "requirement_status";
+const currentlyInAreaKey: keyof MedicalReq = "currently_in_area";
 const patientNameKey: keyof MedicalReq = "patient_name";
 const patientIdTypeKey: keyof MedicalReq = "patient_id_type";
 const patientIdNumberKey: keyof MedicalReq = "patient_id_number";
@@ -17,6 +18,7 @@ interface TableColumnProps {
   handleClickSeeMore: (record: MedicalReq) => void;
   userMedicalReqTypeData: MedicalReqType[] | undefined;
   userMedicalReqStatusData: MedicalReqStatus[] | undefined;
+  currentlyAreaMedicalReqData: CompanyArea[] | undefined;
   aplicantTypeData: UserRole[] | undefined;
   idTypesData: IdType[] | undefined;
 }
@@ -25,6 +27,7 @@ export const tableColumnsAllRequests = ({
   handleClickSeeMore,
   userMedicalReqTypeData,
   userMedicalReqStatusData,
+  currentlyAreaMedicalReqData,
   aplicantTypeData,
   idTypesData,
 }: TableColumnProps) => [
@@ -32,7 +35,7 @@ export const tableColumnsAllRequests = ({
     title: "NOMBRE DE SOLICITANTE",
     key: aplicantNameKey,
     dataIndex: aplicantNameKey,
-    width: 173,
+    width: 270,
     ellipsis: true,
     searchable: true,
     fixed: "left" as "left",
@@ -124,10 +127,26 @@ export const tableColumnsAllRequests = ({
     render: (status: string) => status,
   },
   {
+    title: "ÁREA QUE ESTA REVISANDO",
+    key: currentlyInAreaKey,
+    dataIndex: currentlyInAreaKey,
+    width: 231,
+    filters:
+      currentlyAreaMedicalReqData?.map((type) => ({
+        value: type.name,
+        text: type.name,
+      })) || [],
+    onFilter: (value: any, record: any) => {
+      return String(record.currently_in_area) === String(value);
+    },
+    ellipsis: true,
+    render: (status: string) => status,
+  },
+  {
     title: "NOMBRE DE PACIENTE",
     key: patientNameKey,
     dataIndex: patientNameKey,
-    width: 173,
+    width: 270,
     ellipsis: true,
     searchable: true,
   },
@@ -135,7 +154,7 @@ export const tableColumnsAllRequests = ({
     title: "TIPO DE ID PACIENTE",
     key: patientIdTypeKey,
     dataIndex: patientIdTypeKey,
-    width: 270,
+    width: 207,
     filters:
       idTypesData?.map((type) => ({
         value: type.name,

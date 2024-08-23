@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
-import AllRequestContent from "@/components/admin/homepage/AllRequestContent";
+import AllRequestContent from "@/components/admin/all_requests/AllRequestContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 

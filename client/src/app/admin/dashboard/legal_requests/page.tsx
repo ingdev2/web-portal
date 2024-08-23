@@ -27,29 +27,18 @@ const LegalRequestsAdminPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
+  const { data: legalCompanyAreaData, error: legalCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
-    });
-  const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
-    useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
     });
 
-  const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
-  const allowedAreas = [
-    systemsCompanyAreaData?.id,
-    archivesCompanyAreaData?.id,
-  ];
+  const allowedRoles = [AdminRolType.ADMIN];
+  const allowedAreas = [legalCompanyAreaData?.id];
 
   useRoleValidation(allowedRoles);
   userCompanyAreaValidation(allowedAreas);
 
-  const waitAdminData =
-    systemsCompanyAreaData &&
-    !systemsCompanyAreaError &&
-    archivesCompanyAreaData &&
-    !archivesCompanyAreaError;
+  const waitAdminData = legalCompanyAreaData && !legalCompanyAreaError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
