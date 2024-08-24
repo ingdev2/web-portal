@@ -3,21 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useRouter } from "next/navigation";
 import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
 import { titleStyleCss } from "@/theme/text_styles";
-import {
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Image,
-  Input,
-  Row,
-  Select,
-} from "antd";
+import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";
 import { LockOutlined, IdcardOutlined } from "@ant-design/icons";
 import AdminModalVerificationCode from "./AdminModalVerificationCode";
 import AdminForgotPasswordForm from "./admin_forgot_password_form/AdminForgotPasswordForm";
@@ -42,7 +31,6 @@ import { useLoginAdminsMutation } from "@/redux/apis/auth/loginAdminApi";
 const AdminLoginForm: React.FC = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const idTypeOptionsAdmin = useAppSelector(
     (state) => state.adminLogin.idTypeOptions
@@ -66,8 +54,6 @@ const AdminLoginForm: React.FC = () => {
   const [passwordAdminLocalState, setPasswordAdminLocalState] = useState("");
 
   const [modalForgotMyPasswordIsOpen, setModalForgotMyPasswordIsOpen] =
-    useState(false);
-  const [isSubmittingRegisterPageAdmin, setIsSubmittingRegisterPageAdmin] =
     useState(false);
 
   const [isSubmittingAdmin, setIsSubmittingAdmin] = useState(false);
@@ -446,39 +432,6 @@ const AdminLoginForm: React.FC = () => {
                 >
                   ¿No tienes cuenta?
                 </Divider>
-
-                {isSubmittingRegisterPageAdmin ? (
-                  <CustomSpin />
-                ) : (
-                  <Button
-                    style={{
-                      paddingInline: 22,
-                      color: "#015E90",
-                      borderColor: "#015E90",
-                      fontWeight: "bold",
-                      borderRadius: 7,
-                      borderWidth: 1.3,
-                      marginTop: 2,
-                    }}
-                    htmlType="button"
-                    className="admin-register-button"
-                    onClick={async () => {
-                      try {
-                        setIsSubmittingRegisterPageAdmin(true);
-
-                        await router.push("/admin/register", {
-                          scroll: true,
-                        });
-                      } catch (error) {
-                        console.error(error);
-                      } finally {
-                        setIsSubmittingRegisterPageAdmin(false);
-                      }
-                    }}
-                  >
-                    Registrarse
-                  </Button>
-                )}
               </Form.Item>
               {/* <Form.ErrorList
           errors={errors?.map((error) => (
