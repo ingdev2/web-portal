@@ -19,7 +19,10 @@ import { getTagComponentType } from "@/components/common/custom_tags_medical_req
 import { getTagComponentRelationshipType } from "@/components/common/custom_tags_relationship_types/CustomTagsRelationshipTypes";
 import StatusItems from "./categorization_by_items/StatusItems";
 
-import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
+import {
+  setTableRowFilingNumber,
+  setTableRowId,
+} from "@/redux/features/common/modal/modalSlice";
 
 import {
   useChangeStatusToVisualizedMutation,
@@ -241,8 +244,8 @@ const AllLegalRequestContent: React.FC = () => {
 
   const handleClickSeeMore = (record: MedicalReq) => {
     dispatch(setTableRowId(""));
-    setSelectedRowDataLocalState(record);
-    refecthAllMedicalReqLegalArea();
+    dispatch(setTableRowFilingNumber(""));
+    setSelectedRowDataLocalState(null);
 
     if (
       record &&
@@ -252,7 +255,9 @@ const AllLegalRequestContent: React.FC = () => {
       changeStatusToVisualized(record.id);
     }
 
+    setSelectedRowDataLocalState(record);
     dispatch(setTableRowId(record.id));
+    dispatch(setTableRowFilingNumber(record.filing_number));
 
     setIsModalVisibleLocalState(true);
 
@@ -278,11 +283,13 @@ const AllLegalRequestContent: React.FC = () => {
           closableCustomModal={true}
           maskClosableCustomModal={false}
           handleCancelCustomModal={() => {
+            dispatch(setTableRowId(""));
+            dispatch(setTableRowFilingNumber(""));
+            setSelectedRowDataLocalState(null);
+
             refecthAllMedicalReqLegalArea();
 
             setIsModalVisibleLocalState(false);
-
-            setSelectedRowDataLocalState(null);
           }}
           contentCustomModal={
             <>

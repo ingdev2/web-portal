@@ -54,6 +54,9 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
   const tableRowIdState = useAppSelector((state) => state.modal.tableRowId);
+  const tableRowFilingNumberState = useAppSelector(
+    (state) => state.modal.tableRowFilingNumber
+  );
 
   const adminErrorsState = useAppSelector((state) => state.admin.errors);
 
@@ -94,7 +97,7 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
       setIsSubmittingSendMedicalReqToAnotherArea(true);
 
       const response: any = await sendToAnotherArea({
-        reqId: tableRowIdState,
+        filingNumber: tableRowFilingNumberState,
         sendToAnotherArea: {
           currently_in_area: companyAreaNumberAdminLocalState,
           area_redirection_message: areaRedirectionMessageLocalState,

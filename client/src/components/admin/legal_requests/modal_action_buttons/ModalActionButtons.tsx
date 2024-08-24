@@ -24,6 +24,9 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
   ] = useState(false);
 
   const tableRowIdState = useAppSelector((state) => state.modal.tableRowId);
+  const tableRowFilingNumberState = useAppSelector(
+    (state) => state.modal.tableRowFilingNumber
+  );
 
   const {
     data: medicalReqByIdData,
@@ -111,7 +114,7 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
                 if (!isManagementOptionsVisibleLocalState) {
                   setIsManagementOptionsVisibleLocalState(true);
 
-                  changeStatusToUnderReview(tableRowIdState);
+                  changeStatusToUnderReview(tableRowFilingNumberState);
                 }
               }}
             >

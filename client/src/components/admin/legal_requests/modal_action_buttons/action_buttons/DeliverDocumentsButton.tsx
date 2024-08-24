@@ -48,6 +48,9 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
   const tableRowIdState = useAppSelector((state) => state.modal.tableRowId);
+  const tableRowFilingNumberState = useAppSelector(
+    (state) => state.modal.tableRowFilingNumber
+  );
 
   const adminErrorsState = useAppSelector((state) => state.admin.errors);
 
@@ -105,7 +108,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
       }
 
       const response: any = await changeStatusToDelivered({
-        reqId: tableRowIdState,
+        filingNumber: tableRowFilingNumberState,
         updateStatus: {
           response_comments: responseCommentsLocalState,
           ...responses,

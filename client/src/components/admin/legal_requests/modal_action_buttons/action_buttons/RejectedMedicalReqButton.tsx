@@ -50,6 +50,9 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
   const tableRowIdState = useAppSelector((state) => state.modal.tableRowId);
+  const tableRowFilingNumberState = useAppSelector(
+    (state) => state.modal.tableRowFilingNumber
+  );
 
   const adminErrorsState = useAppSelector((state) => state.admin.errors);
 
@@ -102,7 +105,7 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
       setIsSubmittingRejectedMedicalReq(true);
 
       const response: any = await rejectedMedicalReq({
-        reqId: tableRowIdState,
+        filingNumber: tableRowFilingNumberState,
         updateStatus: {
           response_comments: responseCommentsLocalState,
           motive_for_rejection: reasonForRejectionNumberAdminLocalState,
