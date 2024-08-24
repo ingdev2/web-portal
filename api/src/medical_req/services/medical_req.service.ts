@@ -1474,7 +1474,7 @@ export class MedicalReqService {
     }
   }
 
-  async changeStatusToUnderReview(reqId: string) {
+  async changeStatusToUnderReview(filingNumber: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -1498,7 +1498,7 @@ export class MedicalReqService {
 
       const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
         where: {
-          id: reqId,
+          filing_number: filingNumber,
           is_it_reviewed: false,
           requirement_status: statusVisualizedFound.id,
         },
@@ -1542,7 +1542,7 @@ export class MedicalReqService {
 
       const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
         where: {
-          id: requirementFound.id,
+          filing_number: requirementFound.filing_number,
           requirement_status: statusVisualizedFound.id,
           answer_date: null,
           download_expiration_date: null,
@@ -1579,7 +1579,7 @@ export class MedicalReqService {
   }
 
   async changeStatusToDelivered(
-    reqId: string,
+    filingNumber: string,
     deliveredStatus: UpdateStatusMedicalReqDto,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -1588,7 +1588,7 @@ export class MedicalReqService {
 
     try {
       const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
-        where: { id: reqId, is_it_reviewed: false },
+        where: { filing_number: filingNumber, is_it_reviewed: false },
       });
 
       if (!requirementFound) {
@@ -1786,7 +1786,7 @@ export class MedicalReqService {
   }
 
   async changeStatusToRejected(
-    reqId: string,
+    filingNumber: string,
     rejectedStatus: UpdateStatusMedicalReqDto,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -1795,7 +1795,7 @@ export class MedicalReqService {
 
     try {
       const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
-        where: { id: reqId, is_it_reviewed: false },
+        where: { filing_number: filingNumber, is_it_reviewed: false },
       });
 
       if (!requirementFound) {
@@ -1989,7 +1989,7 @@ export class MedicalReqService {
   }
 
   async sendToAnotherArea(
-    reqId: string,
+    filingNumber: string,
     sendToOtherArea: UpdateStatusMedicalReqDto,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -1998,7 +1998,7 @@ export class MedicalReqService {
 
     try {
       const requirementFound = await queryRunner.manager.findOne(MedicalReq, {
-        where: { id: reqId, is_it_reviewed: false },
+        where: { filing_number: filingNumber, is_it_reviewed: false },
       });
 
       if (!requirementFound) {
@@ -2067,7 +2067,7 @@ export class MedicalReqService {
 
       const lastMedicalReq = await queryRunner.manager.findOne(MedicalReq, {
         where: {
-          id: requirementFound.id,
+          filing_number: requirementFound.filing_number,
           requirement_status: statusUnderReviewFound.id,
           currently_in_area: requirementFound.currently_in_area,
           area_redirection_message: null,

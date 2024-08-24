@@ -314,7 +314,6 @@ export class AuthorizedFamiliarService {
       const allUsersFamiliar = await this.familiarRepository.find({
         where: {
           role: userRoleFamiliar,
-          is_active: true,
         },
         order: {
           name: 'ASC',

@@ -562,7 +562,6 @@ export class UsersService {
       const allUsersPerson = await this.userRepository.find({
         where: {
           role: userRolePatient,
-          is_active: true,
         },
         order: {
           name: 'ASC',
@@ -596,7 +595,6 @@ export class UsersService {
       const allUsersEps = await this.userRepository.find({
         where: {
           role: userRoleEps,
-          is_active: true,
         },
         order: {
           name: 'ASC',

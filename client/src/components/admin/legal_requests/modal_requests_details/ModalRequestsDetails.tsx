@@ -145,6 +145,9 @@ const ModalRequestsDetails: React.FC<{
         width: "100%",
         display: "flex",
         flexFlow: "row wrap",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
         padding: "2px",
         margin: "0px",
       }}

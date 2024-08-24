@@ -70,7 +70,7 @@ export const adminsApi = createApi({
       }),
     }),
 
-    banAdmin: builder.mutation<any, { id: string }>({
+    banAdmin: builder.mutation<any, { id: number }>({
       query: ({ id }) => ({
         url: `banAdmin/${id}`,
         method: "PATCH",

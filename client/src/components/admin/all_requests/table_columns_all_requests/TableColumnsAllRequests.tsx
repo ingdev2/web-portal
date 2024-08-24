@@ -140,7 +140,7 @@ export const tableColumnsAllRequests = ({
       return String(record.currently_in_area) === String(value);
     },
     ellipsis: true,
-    render: (status: string) => status,
+    render: (area: string) => area,
   },
   {
     title: "NOMBRE DE PACIENTE",

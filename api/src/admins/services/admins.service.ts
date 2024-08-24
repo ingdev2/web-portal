@@ -250,7 +250,6 @@ export class AdminsService {
       const allAdmins = await this.adminRepository.find({
         where: {
           role: adminRoleAdmin,
-          is_active: true,
         },
         order: {
           name: 'ASC',
@@ -601,9 +600,10 @@ export class AdminsService {
 
     await this.adminRepository.save(adminFound);
 
-    return new HttpException(
-      `El admin con número de identidad: ${adminFound.id_number} está con estado activo: ${adminFound.is_active}`,
-      HttpStatus.CONFLICT,
-    );
+    const statusMessage = adminFound.is_active
+      ? `El admin con número de ID: ${adminFound.id_number} se ha ACTIVADO.`
+      : `El admin con número de ID: ${adminFound.id_number} se ha INACTIVADO.`;
+
+    throw new HttpException(statusMessage, HttpStatus.ACCEPTED);
   }
 }

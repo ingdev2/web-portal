@@ -178,43 +178,43 @@ export class MedicalReqController {
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/underReviewStatus/:reqId')
-  async changeStatusToUnderReview(@Param('reqId') reqId: string) {
-    return await this.medicalReqService.changeStatusToUnderReview(reqId);
+  @Patch('/underReviewStatus/:filingNumber')
+  async changeStatusToUnderReview(@Param('filingNumber') filingNumber: string) {
+    return await this.medicalReqService.changeStatusToUnderReview(filingNumber);
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/deliveredStatus/:reqId')
+  @Patch('/deliveredStatus/:filingNumber')
   async changeStatusToDelivered(
-    @Param('reqId') reqId: string,
+    @Param('filingNumber') filingNumber: string,
     @Body() deliveredStatus: UpdateStatusMedicalReqDto,
   ) {
     return await this.medicalReqService.changeStatusToDelivered(
-      reqId,
+      filingNumber,
       deliveredStatus,
     );
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/rejectedStatus/:reqId')
+  @Patch('/rejectedStatus/:filingNumber')
   async changeStatusToRejected(
-    @Param('reqId') reqId: string,
+    @Param('filingNumber') filingNumber: string,
     @Body() rejectedStatus: UpdateStatusMedicalReqDto,
   ) {
     return await this.medicalReqService.changeStatusToRejected(
-      reqId,
+      filingNumber,
       rejectedStatus,
     );
   }
 
   @Auth(AdminRolType.ADMIN)
-  @Patch('/sendToAnotherArea/:reqId')
+  @Patch('/sendToAnotherArea/:filingNumber')
   async forwardToAnotherArea(
-    @Param('reqId') reqId: string,
+    @Param('filingNumber') filingNumber: string,
     @Body() sendToLegalArea: UpdateStatusMedicalReqDto,
   ) {
     return await this.medicalReqService.sendToAnotherArea(
-      reqId,
+      filingNumber,
       sendToLegalArea,
     );
   }
