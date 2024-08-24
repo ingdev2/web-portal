@@ -1203,9 +1203,10 @@ export class UsersService {
 
     await this.userRepository.save(userFound);
 
-    return new HttpException(
-      `El usuario con número de identidad: ${userFound.id_number} está con estado activo: ${userFound.is_active}`,
-      HttpStatus.CONFLICT,
-    );
+    const statusMessage = userFound.is_active
+      ? `El usuario con número de ID: ${userFound.id_number} se ha ACTIVADO.`
+      : `El usuario con número de ID: ${userFound.id_number} se ha INACTIVADO.`;
+
+    throw new HttpException(statusMessage, HttpStatus.ACCEPTED);
   }
 }

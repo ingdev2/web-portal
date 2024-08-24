@@ -590,9 +590,10 @@ export class AuthorizedFamiliarService {
 
     await this.familiarRepository.save(familiarFound);
 
-    return new HttpException(
-      `El familiar con número de identidad: ${familiarFound.id_number} está con estado activo: ${familiarFound.is_active}`,
-      HttpStatus.CONFLICT,
-    );
+    const statusMessage = familiarFound.is_active
+      ? `El familiar con número de ID: ${familiarFound.id_number} se ha ACTIVADO.`
+      : `El familiar con número de ID: ${familiarFound.id_number} se ha INACTIVADO.`;
+
+    throw new HttpException(statusMessage, HttpStatus.ACCEPTED);
   }
 }
