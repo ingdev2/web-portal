@@ -123,6 +123,7 @@ const StatisticsContent: React.FC = () => {
           <div
             style={{
               width: "100%",
+              height: "100%",
               display: "flex",
               flexFlow: "row wrap",
             }}
@@ -228,10 +229,10 @@ const StatisticsContent: React.FC = () => {
             <div
               style={{
                 width: "100%",
-                height: "270px",
+                height: "301px",
                 display: "flex",
                 flexFlow: "column wrap",
-                marginBlock: "7px",
+                marginBlock: "22px",
               }}
             >
               <CustomDonutPlot dataCustomDonutPlot={dataToShow} />
