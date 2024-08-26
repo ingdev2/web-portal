@@ -2,18 +2,15 @@
 
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useRouter } from "next/navigation";
 
-import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
 import { tableColumnsAllAdmins } from "./table_columns_all_admins/TableColumnsAllAdmins";
 import ModalAdminDetails from "./modal_admin_details/ModalAdminDetails";
+import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
-import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
-import { TiUserAdd } from "react-icons/ti";
 
 import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
 import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
@@ -31,7 +28,6 @@ import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_i
 
 const AllAdminsContent: React.FC = () => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
@@ -245,54 +241,10 @@ const AllAdminsContent: React.FC = () => {
               flexFlow: "column wrap",
             }}
           >
-            {isSubmittingRegisterPageAdmin ? (
-              <CustomSpin />
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  flexFlow: "column wrap",
-                  justifyContent: "center",
-                  alignContent: "flex-end",
-                  alignItems: "center",
-                  marginBlock: "13px",
-                  marginInline: "31px",
-                }}
-              >
-                <Button
-                  type="primary"
-                  size="middle"
-                  icon={<TiUserAdd size={17} />}
-                  style={{
-                    backgroundColor: "#1D8348",
-                    color: "#f2f2f2",
-                    fontWeight: "bold",
-                    display: "flex",
-                    flexFlow: "row wrap",
-                    alignContent: "center",
-                    alignItems: "center",
-                    paddingInline: "13px",
-                  }}
-                  htmlType="button"
-                  className="admin-register-button"
-                  onClick={async () => {
-                    try {
-                      setIsSubmittingRegisterPageAdmin(true);
-
-                      await router.push("all_admins/register", {
-                        scroll: true,
-                      });
-                    } catch (error) {
-                      console.error(error);
-                    } finally {
-                      setIsSubmittingRegisterPageAdmin(false);
-                    }
-                  }}
-                >
-                  Crear nuevo
-                </Button>
-              </div>
-            )}
+            <CreateButton
+              isSubmittingCreateButton={isSubmittingRegisterPageAdmin}
+              setIsSubmittingCreateButton={setIsSubmittingRegisterPageAdmin}
+            />
 
             <CustomTableFiltersAndSorting
               dataCustomTable={transformedData || []}

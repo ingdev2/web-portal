@@ -111,7 +111,7 @@ const CustomDonutPlot: React.FC<{
         },
         statistic: {
           title: {
-            offsetY: -13,
+            offsetY: -8,
 
             customHtml: (container, view, datum) => {
               const { width, height } = container.getBoundingClientRect();
@@ -123,17 +123,17 @@ const CustomDonutPlot: React.FC<{
               const text = datum ? datum.type : "Total";
 
               return renderStatistic(d, text, {
-                fontSize: 14,
+                fontSize: 12,
                 textAlign: "center",
               });
             },
           },
           content: {
-            offsetY: -7,
+            offsetY: -4,
 
             style: {
+              fontSize: "22px",
               textAlign: "center",
-              fontSize: "31px",
             },
 
             customHtml: (container, view, datum, data: any) => {

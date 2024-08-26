@@ -68,7 +68,8 @@ const AdminRegistrationForm: React.FC = () => {
   const [isSubmittingConfirmModal, setIsSubmittingConfirmModal] =
     useState(false);
   const [isSubmittingNewAdmin, setIsSubmittingNewAdmin] = useState(false);
-  const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
+  const [isSubmittingGoToAllAdmins, setIsSubmittingGoToAllAdmins] =
+    useState(false);
   const [showErrorMessageAdmin, setShowErrorMessageAdmin] = useState(false);
 
   const {
@@ -262,17 +263,17 @@ const AdminRegistrationForm: React.FC = () => {
     setPositionLevelNameAdminLocalState(selectedPositionLevel?.name);
   };
 
-  const handleGoToLogin = async () => {
+  const handleGoToAllAdmins = async () => {
     try {
-      setIsSubmittingGoToLogin(true);
+      setIsSubmittingGoToAllAdmins(true);
 
-      await router.replace("/login_admin", {
+      await router.replace("/admin/dashboard/all_admins", {
         scroll: false,
       });
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingGoToLogin(false);
+      setIsSubmittingGoToAllAdmins(false);
       setModalIsOpenSuccess(false);
     }
   };
@@ -339,9 +340,9 @@ const AdminRegistrationForm: React.FC = () => {
               statusTypeResult={"success"}
               titleCustomResult="¡Administrador creado correctamente!"
               subtitleCustomResult="El administrador ha sido agregado satisfactoriamente a la lista."
-              handleClickCustomResult={handleGoToLogin}
-              isSubmittingButton={isSubmittingGoToLogin}
-              textButtonCustomResult="Ingresar al portal"
+              handleClickCustomResult={handleGoToAllAdmins}
+              isSubmittingButton={isSubmittingGoToAllAdmins}
+              textButtonCustomResult="Regresar a lista de administradores"
             />
           }
         ></CustomModalNoContent>

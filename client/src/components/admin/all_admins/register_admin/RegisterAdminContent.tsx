@@ -34,7 +34,7 @@ const RegisterAdminContent: React.FC = () => {
                 justifyContent: "center",
                 alignContent: "flex-start",
                 alignItems: "center",
-                marginBlock: "13px",
+                marginBlock: "7px",
                 marginInline: "31px",
               }}
             >
