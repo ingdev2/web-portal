@@ -3,17 +3,32 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
+import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
+import EditAdminForm from "./edit_admin/EditAdminForm";
 import { tableColumnsAllAdmins } from "./table_columns_all_admins/TableColumnsAllAdmins";
 import ModalAdminDetails from "./modal_admin_details/ModalAdminDetails";
 import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
+import { TbUserEdit } from "react-icons/tb";
 
 import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
-import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
+import {
+  setIdSelectedAdmin,
+  setNameSelectedAdmin,
+  setLastNameSelectedAdmin,
+  setIdTypeSelectedAdmin,
+  setIdNumberSelectedAdmin,
+  setGenderSelectedAdmin,
+  setCorporateEmailSelectedAdmin,
+  setCompanyAreaSelectedAdmin,
+  setPositionLevelSelectedAdmin,
+  setErrorsSelectedAdmin,
+  setDefaultValuesSelectedAdmin,
+} from "@/redux/features/admin/selectedAdminSlice";
 
 import {
   useGetAllAdminsQuery,
@@ -29,6 +44,8 @@ import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_i
 const AllAdminsContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const [isEditAdminVisibleLocalState, setIsEditAdminVisibleLocalState] =
+    useState(false);
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
   const [selectedRowDataLocalState, setSelectedRowDataLocalState] =
@@ -118,6 +135,16 @@ const AllAdminsContent: React.FC = () => {
     setIsModalVisibleLocalState(true);
 
     refecthAllAdmins();
+
+    dispatch(setIdSelectedAdmin(record?.id));
+    dispatch(setNameSelectedAdmin(record?.name));
+    dispatch(setLastNameSelectedAdmin(record?.last_name));
+    dispatch(setIdTypeSelectedAdmin(record?.admin_id_type));
+    dispatch(setIdNumberSelectedAdmin(record?.id_number));
+    dispatch(setGenderSelectedAdmin(record?.admin_gender));
+    dispatch(setCorporateEmailSelectedAdmin(record?.corporate_email));
+    dispatch(setCompanyAreaSelectedAdmin(record?.company_area));
+    dispatch(setPositionLevelSelectedAdmin(record?.position_level));
   };
 
   const handleOnChangeSwitch = async (record: Admin) => {
@@ -141,13 +168,13 @@ const AllAdminsContent: React.FC = () => {
         const errorMessage = banAdminError?.data.message;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsAdmin(errorMessage[0]));
+          dispatch(setErrorsSelectedAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
         }
 
         if (typeof errorMessage === "string") {
-          dispatch(setErrorsAdmin(errorMessage));
+          dispatch(setErrorsSelectedAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);
         }
@@ -169,7 +196,7 @@ const AllAdminsContent: React.FC = () => {
     setSuccessMessageAdmin("");
     setShowSuccessMessageAdmin(false);
 
-    dispatch(setErrorsAdmin([]));
+    dispatch(setErrorsSelectedAdmin([]));
     setShowErrorMessageAdmin(false);
   };
 
@@ -203,31 +230,72 @@ const AllAdminsContent: React.FC = () => {
             refecthAllAdmins();
 
             setIsModalVisibleLocalState(false);
+            setIsEditAdminVisibleLocalState(false);
 
             setSelectedRowDataLocalState(null);
+            dispatch(setDefaultValuesSelectedAdmin());
           }}
           contentCustomModal={
-            <ModalAdminDetails
-              titleDescription="Detalles completos de Administrador"
-              labelAdminName="Nombre(s)"
-              selectedAdminName={selectedRowDataLocalState?.name}
-              labelAdminLastName="Apellido(s)"
-              selectedAdminLastName={selectedRowDataLocalState?.last_name}
-              labelAdminIdType="Tipo de identificación"
-              selectedAdminIdType={getTagComponentIdTypes(
-                selectedRowDataLocalState?.admin_id_type.toString()
+            <>
+              {!isEditAdminVisibleLocalState ? (
+                <>
+                  <ModalAdminDetails
+                    titleDescription="Detalles completos de Administrador"
+                    labelAdminName="Nombre(s)"
+                    selectedAdminName={selectedRowDataLocalState?.name}
+                    labelAdminLastName="Apellido(s)"
+                    selectedAdminLastName={selectedRowDataLocalState?.last_name}
+                    labelAdminIdType="Tipo de identificación"
+                    selectedAdminIdType={getTagComponentIdTypes(
+                      selectedRowDataLocalState?.admin_id_type.toString()
+                    )}
+                    labelAdminIdNumber="Número de identificación"
+                    selectedAdminIdNumber={selectedRowDataLocalState?.id_number}
+                    labelAdminGender="Género"
+                    selectedAdminGender={selectedRowDataLocalState?.admin_gender.toString()}
+                    labelAdminLevelPosition="Nivel de cargo"
+                    selectedAdminLevelPosition={selectedRowDataLocalState?.position_level.toString()}
+                    labelAdminCompanyArea="Área de la empresa"
+                    selectedAdminCompanyArea={selectedRowDataLocalState?.company_area.toString()}
+                    labelAdminEmail="Email corporativo"
+                    selectedAdminEmail={
+                      selectedRowDataLocalState?.corporate_email
+                    }
+                  />
+
+                  <Button
+                    className="edit-admin-button"
+                    size="large"
+                    style={{
+                      backgroundColor: "#015E90",
+                      color: "#F7F7F7",
+                      borderRadius: "31px",
+                      paddingInline: "31px",
+                      marginBlock: "13px",
+                    }}
+                    onClick={() => {
+                      setIsEditAdminVisibleLocalState(true);
+                    }}
+                  >
+                    <div
+                      style={{
+                        minWidth: "137px",
+                        display: "flex",
+                        flexFlow: "row wrap",
+                        alignItems: "center",
+                        alignContent: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <TbUserEdit size={17} />
+                      &nbsp; Editar administrador
+                    </div>
+                  </Button>
+                </>
+              ) : (
+                <EditAdminForm />
               )}
-              labelAdminIdNumber="Número de identificación"
-              selectedAdminIdNumber={selectedRowDataLocalState?.id_number}
-              labelAdminGender="Género"
-              selectedAdminGender={selectedRowDataLocalState?.admin_gender.toString()}
-              labelAdminLevelPosition="Nivel de cargo"
-              selectedAdminLevelPosition={selectedRowDataLocalState?.position_level.toString()}
-              labelAdminCompanyArea="Área de la empresa"
-              selectedAdminCompanyArea={selectedRowDataLocalState?.company_area.toString()}
-              labelAdminEmail="Email corporativo"
-              selectedAdminEmail={selectedRowDataLocalState?.corporate_email}
-            />
+            </>
           }
         />
       )}
@@ -254,7 +322,7 @@ const AllAdminsContent: React.FC = () => {
                 onClickSwitch: handleButtonClick,
                 isLoadingSwitch: isSubmittingBanAdmin,
                 idTypesData: idTypesData,
-                currentlyAreaMedicalReqData: allCompanyAreasData,
+                companyAreaMedicalReqData: allCompanyAreasData,
                 positionLevelData: allPositionsLevelData,
               })}
               onClickUpdateCustomTable={handleButtonUpdate}

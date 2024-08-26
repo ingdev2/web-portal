@@ -4,6 +4,7 @@ import { persistReducer } from "redux-persist";
 import storage from "./storage/storage";
 
 import adminReducer from "./features/admin/adminSlice";
+import selectedAdminReducer from "./features/admin/selectedAdminSlice";
 import patientReducer from "./features/patient/patientSlice";
 import epsReducer from "./features/eps/epsSlice";
 import familiarReducer from "./features/familiar/familiarSlice";
@@ -66,6 +67,7 @@ const rootReducer = combineReducers({
   familiarLogin: familiarLoginReducer,
   medicalReq: medicalReqReducer,
   admin: adminReducer,
+  selectedAdmin: selectedAdminReducer,
   patient: patientReducer,
   eps: epsReducer,
   familiar: familiarReducer,

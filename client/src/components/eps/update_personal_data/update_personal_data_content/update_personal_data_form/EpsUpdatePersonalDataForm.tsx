@@ -14,17 +14,19 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { TbPasswordUser } from "react-icons/tb";
 
 import {
+  setIdUserEps,
   setAuthMethodUserEps,
   setCellphoneUserEps,
   setEmailUserEps,
   setErrorsUserEps,
   setCompanyAreaUserEps,
 } from "@/redux/features/eps/epsSlice";
-import { setIdUserEps } from "@/redux/features/eps/epsSlice";
 import { setEpsModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetUserByIdNumberEpsQuery } from "@/redux/apis/users/usersApi";
-import { useUpdateUserEpsMutation } from "@/redux/apis/users/usersApi";
+import {
+  useGetUserByIdNumberEpsQuery,
+  useUpdateUserEpsMutation,
+} from "@/redux/apis/users/usersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 

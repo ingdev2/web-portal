@@ -40,7 +40,7 @@ export const adminsApi = createApi({
 
     updateAdmin: builder.mutation<
       any,
-      { id: string; updateAdmin: Partial<Admin> }
+      { id: number; updateAdmin: Partial<Admin> }
     >({
       query: ({ id, updateAdmin }) => ({
         url: `updateAdmin/${id}`,

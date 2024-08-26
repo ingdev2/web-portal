@@ -19,8 +19,10 @@ import {
   setErrorsUserFamiliar,
 } from "@/redux/features/familiar/familiarSlice";
 
-import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
-import { useUpdateFamiliarMutation } from "@/redux/apis/relatives/relativesApi";
+import {
+  useGetFamiliarByIdQuery,
+  useUpdateFamiliarMutation,
+} from "@/redux/apis/relatives/relativesApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 const FamiliarUpdatePersonalDataForm: React.FC = () => {

@@ -13,6 +13,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { TbPasswordUser } from "react-icons/tb";
 
 import {
+  setIdUserPatient,
   setAuthMethodUserPatient,
   setCellphoneUserPatient,
   setEmailUserPatient,
@@ -20,11 +21,12 @@ import {
   setResidenceAddressUserPatient,
   setWhatsappUserPatient,
 } from "@/redux/features/patient/patientSlice";
-import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
-import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
-import { useUpdateUserPatientMutation } from "@/redux/apis/users/usersApi";
+import {
+  useGetUserByIdNumberPatientQuery,
+  useUpdateUserPatientMutation,
+} from "@/redux/apis/users/usersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 const PatientUpdatePersonalDataForm: React.FC = () => {
@@ -142,6 +144,8 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
     userPatientLoading,
     userPatientFetching,
     idUserPatientState,
+    authMethodData,
+    authMethodError,
   ]);
 
   const handleConfirmUpdatePersonalData = async (

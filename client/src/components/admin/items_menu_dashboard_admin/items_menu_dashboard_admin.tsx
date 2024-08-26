@@ -180,11 +180,20 @@ export const useMenuItems = () => {
                 <MenuUnfoldOutlined />
               )
             : null,
-          getItem(
-            ItemNames.SUB_EPS_AUDITORS,
-            ItemKeys.SUB_EPS_AUDITORS_KEY,
-            <MenuUnfoldOutlined />
-          ),
+          isAdminWithRoles(roleIdAdminState, [
+            superAdminRoleData.id,
+            adminRoleData.id,
+          ]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            systemsCompanyAreaData.id,
+            archivesCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_EPS_AUDITORS,
+                ItemKeys.SUB_EPS_AUDITORS_KEY,
+                <MenuUnfoldOutlined />
+              )
+            : null,
           getItem(
             ItemNames.SUB_PATIENT_USERS,
             ItemKeys.SUB_PATIENT_USERS_KEY,

@@ -20,7 +20,7 @@ interface TableColumnProps {
   onClickSwitch: () => void;
   isLoadingSwitch: boolean;
   idTypesData: IdType[] | undefined;
-  currentlyAreaMedicalReqData: CompanyArea[] | undefined;
+  companyAreaMedicalReqData: CompanyArea[] | undefined;
   positionLevelData: PositionLevel[] | undefined;
 }
 
@@ -30,7 +30,7 @@ export const tableColumnsAllAdmins = ({
   onClickSwitch,
   isLoadingSwitch,
   idTypesData,
-  currentlyAreaMedicalReqData,
+  companyAreaMedicalReqData,
   positionLevelData,
 }: TableColumnProps) => [
   {
@@ -80,7 +80,7 @@ export const tableColumnsAllAdmins = ({
     onFilter: (value: any, record: any) => {
       return String(record.position_level) === String(value);
     },
-    render: (area: string) => area,
+    render: (position: string) => position,
   },
   {
     title: "ÁREA DE LA EMPRESA",
@@ -89,12 +89,12 @@ export const tableColumnsAllAdmins = ({
     width: 231,
     ellipsis: true,
     filters:
-      currentlyAreaMedicalReqData?.map((area) => ({
+      companyAreaMedicalReqData?.map((area) => ({
         value: area.name,
         text: area.name,
       })) || [],
     onFilter: (value: any, record: any) => {
-      return String(record.currently_in_area) === String(value);
+      return String(record.company_area) === String(value);
     },
     render: (area: string) => area,
   },
