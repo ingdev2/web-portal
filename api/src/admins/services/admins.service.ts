@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
@@ -250,7 +250,6 @@ export class AdminsService {
       const allAdmins = await this.adminRepository.find({
         where: {
           role: adminRoleAdmin,
-          is_active: true,
         },
         order: {
           name: 'ASC',
@@ -408,19 +407,32 @@ export class AdminsService {
       );
     }
 
-    if (admin.id_number) {
-      const duplicateAdmin = await this.adminRepository.findOne({
-        where: {
-          id_number: admin.id_number,
-        },
-      });
+    const idNumberAdminValidate = await this.adminRepository.findOne({
+      where: {
+        id: Not(adminFound.id),
+        id_number: admin.id_number,
+      },
+    });
 
-      if (duplicateAdmin) {
-        return new HttpException(
-          `Número de identificación duplicado.`,
-          HttpStatus.CONFLICT,
-        );
-      }
+    if (idNumberAdminValidate) {
+      return new HttpException(
+        `Número de identificación duplicado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const emailAdminValidate = await this.adminRepository.findOne({
+      where: {
+        id: Not(adminFound.id),
+        corporate_email: admin.corporate_email,
+      },
+    });
+
+    if (emailAdminValidate) {
+      return new HttpException(
+        `El correo electrónico ${admin.corporate_email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
     }
 
     const updateAdmin = await this.adminRepository.update(id, admin);
@@ -601,9 +613,10 @@ export class AdminsService {
 
     await this.adminRepository.save(adminFound);
 
-    return new HttpException(
-      `El admin con número de identidad: ${adminFound.id_number} está con estado activo: ${adminFound.is_active}`,
-      HttpStatus.CONFLICT,
-    );
+    const statusMessage = adminFound.is_active
+      ? `El admin con número de ID: ${adminFound.id_number} se ha ACTIVADO.`
+      : `El admin con número de ID: ${adminFound.id_number} se ha INACTIVADO.`;
+
+    throw new HttpException(statusMessage, HttpStatus.ACCEPTED);
   }
 }

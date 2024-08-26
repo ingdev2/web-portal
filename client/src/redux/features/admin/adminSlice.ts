@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: Admin = {
-  id: "",
+  id: 0,
   name: "",
   last_name: "",
   admin_gender: 0,
@@ -83,7 +83,7 @@ export const adminSlice = createSlice({
       state.errors = action.payload;
     },
     setDefaultValuesAdmin: (state) => {
-      state.id = "";
+      state.id = 0;
       state.name = "";
       state.last_name = "";
       state.admin_gender = 0;

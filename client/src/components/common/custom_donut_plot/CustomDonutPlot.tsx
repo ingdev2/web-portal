@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Pie, measureTextWidth } from "@antv/g2plot";
+import { Pie, G2, measureTextWidth } from "@antv/g2plot";
+
+const G = G2.getEngine("canvas");
 
 const CustomDonutPlot: React.FC<{
   dataCustomDonutPlot: DataCustomDonutPlot[];
@@ -43,7 +45,7 @@ const CustomDonutPlot: React.FC<{
   useEffect(() => {
     if (chartContainerRef.current) {
       const piePlot = new Pie(chartContainerRef.current, {
-        appendPadding: 13,
+        appendPadding: 20,
         data: dataCustomDonutPlot,
         angleField: "value",
         colorField: "type",
@@ -55,25 +57,61 @@ const CustomDonutPlot: React.FC<{
           },
         },
         legend: {
-          layout: "vertical",
-          position: "right",
-          offsetX: -88,
-          offsetY: 0,
-          itemMarginBottom: 17,
+          layout: "horizontal",
+          position: "top",
+          offsetX: 0,
+          offsetY: -8,
+          itemSpacing: 7,
+          itemName: {
+            style: {
+              fontSize: 17,
+              height: 77,
+            },
+          },
         },
         label: {
-          type: "inner",
-          offset: "-54%",
-          content: "{value}",
-          autoRotate: false,
-          style: {
-            fontSize: 27,
-            textAlign: "center",
+          type: "spider",
+          labelHeight: 31,
+          formatter: (data, mappingData) => {
+            const group = new G.Group({});
+            group.addShape({
+              type: "circle",
+              attrs: {
+                x: 0,
+                y: 0,
+                width: 31,
+                height: 31,
+                r: 4,
+                fill: mappingData.color,
+              },
+            });
+            group.addShape({
+              type: "text",
+              attrs: {
+                x: 8,
+                y: 7,
+                text: `${data.type}`,
+                fill: mappingData.color,
+                fontSize: 13,
+              },
+            });
+            group.addShape({
+              type: "text",
+              attrs: {
+                x: 0,
+                y: 22,
+                text: `${data.value} = ${data.percent * 100}%`,
+                fill: "rgba(0, 0, 0, 0.65)",
+                fontWeight: 700,
+                fontSize: 14,
+              },
+            });
+            return group;
           },
         },
         statistic: {
           title: {
-            offsetY: -13,
+            offsetY: -8,
 
             customHtml: (container, view, datum) => {
               const { width, height } = container.getBoundingClientRect();
@@ -85,17 +123,17 @@ const CustomDonutPlot: React.FC<{
               const text = datum ? datum.type : "Total";
 
               return renderStatistic(d, text, {
-                fontSize: 16,
+                fontSize: 12,
                 textAlign: "center",
               });
             },
           },
           content: {
-            offsetY: -7,
+            offsetY: -4,
 
             style: {
+              fontSize: "22px",
               textAlign: "center",
-              fontSize: "31px",
             },
 
             customHtml: (container, view, datum, data: any) => {

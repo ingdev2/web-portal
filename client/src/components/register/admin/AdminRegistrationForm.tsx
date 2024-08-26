@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, CheckboxProps, Col, Divider } from "antd";
+import { CheckboxProps, Col } from "antd";
 import AdminRegistrationFormData from "./AdminRegistrationFormData";
-import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
@@ -69,7 +68,8 @@ const AdminRegistrationForm: React.FC = () => {
   const [isSubmittingConfirmModal, setIsSubmittingConfirmModal] =
     useState(false);
   const [isSubmittingNewAdmin, setIsSubmittingNewAdmin] = useState(false);
-  const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
+  const [isSubmittingGoToAllAdmins, setIsSubmittingGoToAllAdmins] =
+    useState(false);
   const [showErrorMessageAdmin, setShowErrorMessageAdmin] = useState(false);
 
   const {
@@ -263,17 +263,17 @@ const AdminRegistrationForm: React.FC = () => {
     setPositionLevelNameAdminLocalState(selectedPositionLevel?.name);
   };
 
-  const handleGoToLogin = async () => {
+  const handleGoToAllAdmins = async () => {
     try {
-      setIsSubmittingGoToLogin(true);
+      setIsSubmittingGoToAllAdmins(true);
 
-      await router.replace("/login_admin", {
+      await router.replace("/admin/dashboard/all_admins", {
         scroll: false,
       });
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingGoToLogin(false);
+      setIsSubmittingGoToAllAdmins(false);
       setModalIsOpenSuccess(false);
     }
   };
@@ -297,221 +297,163 @@ const AdminRegistrationForm: React.FC = () => {
         width: "100%",
         display: "flex",
         flexFlow: "column wrap",
-        alignContent: "center",
         paddingInline: "13px",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
       }}
     >
-      <Card
-        key={"card-create-admin-form"}
-        style={{
-          width: "100%",
-          maxWidth: "450px",
-          minWidth: "321px",
-          display: "flex",
-          flexFlow: "column wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          alignContent: "center",
-          backgroundColor: "#fcfcfc",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-          marginBottom: "54px",
-        }}
-      >
-        {modalIsOpenConfirm && (
-          <CustomModalTwoOptions
-            key={"custom-confirm-modal-create-admin"}
-            openCustomModalState={modalIsOpenConfirm}
-            iconCustomModal={<FcInfo size={77} />}
-            titleCustomModal="¿Deseas crear un nuevo administrador?"
-            subtitleCustomModal={
-              <p>
-                Se creará el administrador con nombre&nbsp;
-                <b>{adminNameLocalState},</b> con tipo de identificación&nbsp;
-                <b>{adminIdTypeNameLocalState},</b>&nbsp;número de
-                identificación&nbsp;
-                <b>{adminIdNumberLocalState},</b>&nbsp;con el nivel de
-                cargo:&nbsp;
-                <b>{positionLevelNameAdminLocalState}</b>
-              </p>
-            }
-            handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
-            handleConfirmCustomModal={handleConfirmDataModal}
-            isSubmittingConfirm={isSubmittingNewAdmin}
-            handleClickCustomModal={handleButtonClick}
-          ></CustomModalTwoOptions>
-        )}
-
-        {modalIsOpenSuccess && (
-          <CustomModalNoContent
-            key={"custom-success-modal-create-admin"}
-            widthCustomModalNoContent={"54%"}
-            openCustomModalState={modalIsOpenSuccess}
-            closableCustomModal={false}
-            maskClosableCustomModal={false}
-            contentCustomModal={
-              <CustomResultOneButton
-                key={"admin-created-custom-result"}
-                statusTypeResult={"success"}
-                titleCustomResult="¡Administrador creado correctamente!"
-                subtitleCustomResult="El administrador ha sido agregado satisfactoriamente a la lista."
-                handleClickCustomResult={handleGoToLogin}
-                isSubmittingButton={isSubmittingGoToLogin}
-                textButtonCustomResult="Ingresar al portal"
-              />
-            }
-          ></CustomModalNoContent>
-        )}
-
-        {showErrorMessageAdmin && (
-          <CustomMessage
-            typeMessage="error"
-            message={adminErrorsState?.toString() || "¡Error en la petición!"}
-          />
-        )}
-
-        <AdminRegistrationFormData
-          handleCreateAdminDataForm={handleCreateAdmin}
-          positionLevelLoadingDataForm={positionLevelLoading}
-          positionLevelListDataForm={positionLevelListLocalState}
-          positionLevelValueDataForm={positionLevelNumberAdminLocalState}
-          handleOnChangePositionLevelDataForm={
-            handleOnChangeSelectPositionLevel
+      {modalIsOpenConfirm && (
+        <CustomModalTwoOptions
+          key={"custom-confirm-modal-create-admin"}
+          openCustomModalState={modalIsOpenConfirm}
+          iconCustomModal={<FcInfo size={77} />}
+          titleCustomModal="¿Deseas crear un nuevo administrador?"
+          subtitleCustomModal={
+            <p>
+              Se creará el administrador con nombre&nbsp;
+              <b>{adminNameLocalState},</b> con tipo de identificación&nbsp;
+              <b>{adminIdTypeNameLocalState},</b>&nbsp;número de
+              identificación&nbsp;
+              <b>{adminIdNumberLocalState},</b>&nbsp;con el nivel de
+              cargo:&nbsp;
+              <b>{positionLevelNameAdminLocalState}</b>
+            </p>
           }
-          adminNameDataForm={adminNameLocalState}
-          handleOnChangeAdminNameDataForm={(e) => {
-            setAdminNameLocalState(e.target.value.toUpperCase());
-          }}
-          adminLastNameDataForm={adminLastNameLocalState}
-          handleOnChangeAdminLastNameDataForm={(e) => {
-            setAdminLastNameLocalState(e.target.value.toUpperCase());
-          }}
-          idTypeSelectorLoadingDataForm={
-            idTypesLoading && idTypesFetching && !idTypesData
+          handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
+          handleConfirmCustomModal={handleConfirmDataModal}
+          isSubmittingConfirm={isSubmittingNewAdmin}
+          handleClickCustomModal={handleButtonClick}
+        ></CustomModalTwoOptions>
+      )}
+
+      {modalIsOpenSuccess && (
+        <CustomModalNoContent
+          key={"custom-success-modal-create-admin"}
+          widthCustomModalNoContent={"54%"}
+          openCustomModalState={modalIsOpenSuccess}
+          closableCustomModal={false}
+          maskClosableCustomModal={false}
+          contentCustomModal={
+            <CustomResultOneButton
+              key={"admin-created-custom-result"}
+              statusTypeResult={"success"}
+              titleCustomResult="¡Administrador creado correctamente!"
+              subtitleCustomResult="El administrador ha sido agregado satisfactoriamente a la lista."
+              handleClickCustomResult={handleGoToAllAdmins}
+              isSubmittingButton={isSubmittingGoToAllAdmins}
+              textButtonCustomResult="Regresar a lista de administradores"
+            />
           }
-          adminIdTypeValueDataForm={adminIdTypeLocalState}
-          handleOnChangeSelectIdTypeDataForm={handleOnChangeSelectIdType}
-          adminIdTypeListDataForm={adminIdTypesListLocalState}
-          adminIdNumberDataForm={adminIdNumberLocalState}
-          handleOnChangeAdminIdNumberDataForm={(e) => {
-            setAdminIdNumberLocalState(parseInt(e.target.value, 10));
-          }}
-          genderSelectorLoadingDataForm={
-            gendersLoading && gendersFetching && !gendersData
-          }
-          adminGenderValueDataForm={adminGenderLocalState}
-          companyAreasLoadingDataForm={companyAreaLoading}
-          companyAreaValueDataForm={companyAreaNumberAdminLocalState}
-          handleOnChangeCompanyAreaDataForm={handleOnChangeSelectCompanyArea}
-          adminCompanyAreasListDataForm={adminCompanyAreasListLocalState}
-          handleOnChangeSelectGenderDataForm={(e) => {
-            setAdminGenderLocalState(e);
-          }}
-          adminGenderListDataForm={adminGenderListLocalState}
-          adminEmailDataForm={adminCorporateEmailLocalState}
-          handleOnChangeAdminEmailDataForm={(e) => {
-            setAdminCorporateEmailLocalState(e.target.value.toLowerCase());
-          }}
-          passwordAdminValueDataForm={passwordAdminLocalState}
-          handleOnChangePasswordAdminValueDataForm={(e) =>
-            setPasswordAdminLocalState(e.target.value.trim())
-          }
-          checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
-          isCheckboxCheckedDataForm={isCheckboxChecked}
-          handleCheckboxChangeDataForm={handleCheckboxChange}
-          buttonSubmitFormLoadingDataForm={
-            isSubmittingConfirmModal && !modalIsOpenConfirm
-          }
-          handleButtonSubmitFormDataForm={handleButtonClick}
-          handleOnChangeValidatorPasswordDataForm={(_, value) => {
-            if (
-              !adminNameLocalState ||
-              !adminLastNameLocalState ||
-              !adminIdNumberLocalState
-            ) {
-              return Promise.resolve();
-            }
+        ></CustomModalNoContent>
+      )}
 
-            const passwordUpperCase = value?.toUpperCase();
-
-            const nameWords = adminNameLocalState?.toUpperCase().split(" ");
-
-            const lastNameWords = adminLastNameLocalState
-              ?.toUpperCase()
-              .split(" ");
-
-            const idNumber = String(adminIdNumberLocalState);
-
-            if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del nombre del usuario!"
-                )
-              );
-            }
-
-            if (
-              lastNameWords?.some((word) => passwordUpperCase?.includes(word))
-            ) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del apellido del usuario!"
-                )
-              );
-            }
-
-            if (passwordUpperCase?.includes(idNumber)) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del número de cédula del usuario!"
-                )
-              );
-            }
-
-            return Promise.resolve();
-          }}
+      {showErrorMessageAdmin && (
+        <CustomMessage
+          typeMessage="error"
+          message={adminErrorsState?.toString() || "¡Error en la petición!"}
         />
+      )}
 
-        <Divider
-          style={{
-            fontSize: 13,
-            fontWeight: "normal",
-            marginBlock: 4,
-            borderWidth: 1.3,
-          }}
-        >
-          ¿Ya tienes cuenta?
-        </Divider>
+      <AdminRegistrationFormData
+        handleCreateAdminDataForm={handleCreateAdmin}
+        positionLevelLoadingDataForm={positionLevelLoading}
+        positionLevelListDataForm={positionLevelListLocalState}
+        positionLevelValueDataForm={positionLevelNumberAdminLocalState}
+        handleOnChangePositionLevelDataForm={handleOnChangeSelectPositionLevel}
+        adminNameDataForm={adminNameLocalState}
+        handleOnChangeAdminNameDataForm={(e) => {
+          setAdminNameLocalState(e.target.value.toUpperCase());
+        }}
+        adminLastNameDataForm={adminLastNameLocalState}
+        handleOnChangeAdminLastNameDataForm={(e) => {
+          setAdminLastNameLocalState(e.target.value.toUpperCase());
+        }}
+        idTypeSelectorLoadingDataForm={
+          idTypesLoading && idTypesFetching && !idTypesData
+        }
+        adminIdTypeValueDataForm={adminIdTypeLocalState}
+        handleOnChangeSelectIdTypeDataForm={handleOnChangeSelectIdType}
+        adminIdTypeListDataForm={adminIdTypesListLocalState}
+        adminIdNumberDataForm={adminIdNumberLocalState}
+        handleOnChangeAdminIdNumberDataForm={(e) => {
+          setAdminIdNumberLocalState(parseInt(e.target.value, 10));
+        }}
+        genderSelectorLoadingDataForm={
+          gendersLoading && gendersFetching && !gendersData
+        }
+        adminGenderValueDataForm={adminGenderLocalState}
+        companyAreasLoadingDataForm={companyAreaLoading}
+        companyAreaValueDataForm={companyAreaNumberAdminLocalState}
+        handleOnChangeCompanyAreaDataForm={handleOnChangeSelectCompanyArea}
+        adminCompanyAreasListDataForm={adminCompanyAreasListLocalState}
+        handleOnChangeSelectGenderDataForm={(e) => {
+          setAdminGenderLocalState(e);
+        }}
+        adminGenderListDataForm={adminGenderListLocalState}
+        adminEmailDataForm={adminCorporateEmailLocalState}
+        handleOnChangeAdminEmailDataForm={(e) => {
+          setAdminCorporateEmailLocalState(e.target.value.toLowerCase());
+        }}
+        passwordAdminValueDataForm={passwordAdminLocalState}
+        handleOnChangePasswordAdminValueDataForm={(e) =>
+          setPasswordAdminLocalState(e.target.value.trim())
+        }
+        checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
+        isCheckboxCheckedDataForm={isCheckboxChecked}
+        handleCheckboxChangeDataForm={handleCheckboxChange}
+        buttonSubmitFormLoadingDataForm={
+          isSubmittingConfirmModal && !modalIsOpenConfirm
+        }
+        handleButtonSubmitFormDataForm={handleButtonClick}
+        handleOnChangeValidatorPasswordDataForm={(_, value) => {
+          if (
+            !adminNameLocalState ||
+            !adminLastNameLocalState ||
+            !adminIdNumberLocalState
+          ) {
+            return Promise.resolve();
+          }
 
-        {isSubmittingGoToLogin ? (
-          <CustomSpin />
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              flexFlow: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              style={{
-                paddingInline: 22,
-                color: "#015E90",
-                borderColor: "#015E90",
-                fontWeight: "bold",
-                borderRadius: 7,
-                borderWidth: 1.3,
-                marginBlock: 13,
-              }}
-              htmlType="button"
-              className="go-to-login-button"
-              onClick={handleGoToLogin}
-              onMouseDown={handleButtonClick}
-            >
-              Ingresar con mi cuenta
-            </Button>
-          </div>
-        )}
-      </Card>
+          const passwordUpperCase = value?.toUpperCase();
+
+          const nameWords = adminNameLocalState?.toUpperCase().split(" ");
+
+          const lastNameWords = adminLastNameLocalState
+            ?.toUpperCase()
+            .split(" ");
+
+          const idNumber = String(adminIdNumberLocalState);
+
+          if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del nombre del usuario!"
+              )
+            );
+          }
+
+          if (
+            lastNameWords?.some((word) => passwordUpperCase?.includes(word))
+          ) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del apellido del usuario!"
+              )
+            );
+          }
+
+          if (passwordUpperCase?.includes(idNumber)) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del número de cédula del usuario!"
+              )
+            );
+          }
+
+          return Promise.resolve();
+        }}
+      />
     </Col>
   );
 };

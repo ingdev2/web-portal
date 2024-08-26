@@ -1,5 +1,5 @@
 interface Admin {
-  id: string;
+  id: number;
   name: string;
   last_name: string;
   admin_gender: number;

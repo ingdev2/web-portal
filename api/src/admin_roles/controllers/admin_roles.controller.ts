@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AdminRolesService } from '../services/admin_roles.service';
 import { CreateAdminRoleDto } from '../dto/create-admin_role.dto';
@@ -22,6 +23,7 @@ export class AdminRolesController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createAdminRole(@Body() createAdminRole: CreateAdminRoleDto) {
     return this.adminRolesService.createAdminRole(createAdminRole);
@@ -29,10 +31,14 @@ export class AdminRolesController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
   @Get('/getAll')
   getAllAdminRoles() {
     return this.adminRolesService.getAllAdminRoles();
+  }
+
+  @Get('/getByName')
+  getAdminRoleByName(@Query('name') name?: AdminRolType) {
+    return this.adminRolesService.getAdminRoleByName(name);
   }
 
   // PATCH METHODS //

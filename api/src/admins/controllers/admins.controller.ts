@@ -24,13 +24,13 @@ export class AdminsController {
 
   // GET METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAllAdmins')
   async getAllAdmins() {
     return this.adminsService.getAllAdmins();
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAdmin/:id')
   async getAdminById(@Param('id') id: number) {
     return await this.adminsService.getAdminById(id);
@@ -41,6 +41,7 @@ export class AdminsController {
     return await this.adminsService.getAdminByIdNumber(idNumber);
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAdminByIdTypeAndNumber/:idType/:idNumber')
   async getAdminFoundByIdNumber(
     @Param('idType') idType: number,
@@ -93,7 +94,7 @@ export class AdminsController {
     return await this.adminsService.resetAdminPassword(token, { newPassword });
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/banAdmin/:id')
   async banAdmins(@Param('id') id: number) {
     return await this.adminsService.banAdmins(id);

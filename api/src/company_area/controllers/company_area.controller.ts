@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CompanyAreaService } from '../services/company_area.service';
 import { CreateCompanyAreaDto } from '../dto/create-company_area.dto';
@@ -13,6 +14,7 @@ import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
 
 @ApiTags('company-area')
 @ApiBearerAuth()
@@ -40,6 +42,10 @@ export class CompanyAreaController {
     return this.companyAreaService.getCompanyAreaById(id);
   }
 
+  @Get('/getByName')
+  getCompanyAreaByName(@Query('name') name?: CompanyAreaEnum) {
+    return this.companyAreaService.getCompanyAreaByName(name);
+  }
   // PATCH METHODS //
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

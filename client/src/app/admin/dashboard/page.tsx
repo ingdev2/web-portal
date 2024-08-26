@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { AdminRolType } from "../../../../../api/src/utils/enums/admin_roles.enum";
 
-import AllRequestContent from "@/components/admin/homepage/AllRequestContent";
+import StatisticsContent from "@/components/admin/statistics/StatisticsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -22,7 +22,7 @@ import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 
 import { ItemKeys } from "@/components/common/custom_dashboard_layout/enums/item_names_and_keys.enums";
 
-const DashboardAdminPage = () => {
+const StatisticsPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -35,13 +35,13 @@ const DashboardAdminPage = () => {
   const isPageLoadingState = useAppSelector(
     (state) => state.modal.isPageLoading
   );
-  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
 
   const idNumberAdminLoginState = useAppSelector(
     (state) => state.adminLogin.id_number
   );
-
   const idNumberAdminState = useAppSelector((state) => state.admin.id_number);
+
+  const selectedKeyState = useAppSelector((state) => state.modal.selectedKey);
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -72,10 +72,10 @@ const DashboardAdminPage = () => {
     }
     if (
       isPageLoadingState &&
-      selectedKeyState !== ItemKeys.SUB_ALL_REQUESTS_REQ_KEY
+      selectedKeyState !== ItemKeys.SUB_STATISTICS_REQ_KEY
     ) {
       dispatch(setIsPageLoading(false));
-      dispatch(setSelectedKey(ItemKeys.SUB_ALL_REQUESTS_REQ_KEY));
+      dispatch(setSelectedKey(ItemKeys.SUB_STATISTICS_REQ_KEY));
     }
   }, [status, idNumberAdminLoginState, idNumberAdminState, adminModalState]);
 
@@ -91,12 +91,12 @@ const DashboardAdminPage = () => {
       {!idNumberAdminLoginState || status === "unauthenticated" ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-all-requests-admin-content">
-          <AllRequestContent />
+        <div className="dashboard-statistics-admin-content">
+          <StatisticsContent />
         </div>
       )}
     </div>
   );
 };
 
-export default DashboardAdminPage;
+export default StatisticsPage;

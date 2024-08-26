@@ -94,6 +94,7 @@ export const medicalReqApi = createApi({
         month = null,
       }) => {
         const params: any = {};
+
         if (status !== null) params.status = status;
         if (type !== null) params.type = type;
         if (aplicantType !== null) params.aplicantType = aplicantType;
@@ -107,8 +108,36 @@ export const medicalReqApi = createApi({
       },
     }),
 
-    getAllMedicalReqUsersToLegalArea: builder.query<MedicalReq[], null>({
-      query: () => "getAllMedicalReqUsersToLegalArea",
+    getAllMedicalReqUsersToLegalArea: builder.query<
+      MedicalReq[],
+      {
+        status?: RequirementStatusEnum | null;
+        type?: RequirementTypeEnum | null;
+        aplicantType?: UserRolType | null;
+        year?: number | null;
+        month?: number | null;
+      }
+    >({
+      query: ({
+        status = null,
+        type = null,
+        aplicantType = null,
+        year = null,
+        month = null,
+      }) => {
+        const params: any = {};
+
+        if (status !== null) params.status = status;
+        if (type !== null) params.type = type;
+        if (aplicantType !== null) params.aplicantType = aplicantType;
+        if (year !== null) params.year = year;
+        if (month !== null) params.month = month;
+
+        return {
+          url: "getAllMedicalReqUsersToLegalArea",
+          params,
+        };
+      },
     }),
 
     getAllMedicalReqPatient: builder.query<MedicalReq[], null>({
@@ -156,45 +185,48 @@ export const medicalReqApi = createApi({
     }),
 
     changeStatusToUnderReview: builder.mutation<any, string>({
-      query: (reqId) => ({
-        url: `underReviewStatus/${reqId}`,
+      query: (filingNumber) => ({
+        url: `underReviewStatus/${filingNumber}`,
         method: "PATCH",
-        params: { reqId },
+        params: { filingNumber },
       }),
     }),
 
     changeStatusToDelivered: builder.mutation<
       any,
-      { reqId: string; updateStatus: Partial<UpdateStatusMedicalReq> }
+      { filingNumber: string; updateStatus: Partial<UpdateStatusMedicalReq> }
     >({
-      query: ({ reqId, updateStatus }) => ({
-        url: `deliveredStatus/${reqId}`,
+      query: ({ filingNumber, updateStatus }) => ({
+        url: `deliveredStatus/${filingNumber}`,
         method: "PATCH",
-        params: { reqId },
+        params: { filingNumber },
         body: updateStatus,
       }),
     }),
 
     changeStatusToRejected: builder.mutation<
       any,
-      { reqId: string; updateStatus: Partial<UpdateStatusMedicalReq> }
+      { filingNumber: string; updateStatus: Partial<UpdateStatusMedicalReq> }
     >({
-      query: ({ reqId, updateStatus }) => ({
-        url: `rejectedStatus/${reqId}`,
+      query: ({ filingNumber, updateStatus }) => ({
+        url: `rejectedStatus/${filingNumber}`,
         method: "PATCH",
-        params: { reqId },
+        params: { filingNumber },
         body: updateStatus,
       }),
     }),
 
     forwardToAnotherArea: builder.mutation<
       any,
-      { reqId: string; sendToAnotherArea: Partial<UpdateStatusMedicalReq> }
+      {
+        filingNumber: string;
+        sendToAnotherArea: Partial<UpdateStatusMedicalReq>;
+      }
     >({
-      query: ({ reqId, sendToAnotherArea }) => ({
-        url: `sendToAnotherArea/${reqId}`,
+      query: ({ filingNumber, sendToAnotherArea }) => ({
+        url: `sendToAnotherArea/${filingNumber}`,
         method: "PATCH",
-        params: { reqId },
+        params: { filingNumber },
         body: sendToAnotherArea,
       }),
     }),

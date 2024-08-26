@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateCompanyAreaDto } from '../dto/create-company_area.dto';
 import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { CompanyArea } from '../entities/company_area.entity';
+import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
 
 @Injectable()
 export class CompanyAreaService {
@@ -66,6 +67,23 @@ export class CompanyAreaService {
       );
     } else {
       return companyAreaFound;
+    }
+  }
+
+  async getCompanyAreaByName(name?: CompanyAreaEnum) {
+    if (name) {
+      const companyAreaName = await this.companyAreaRepository.findOne({
+        where: { name: name },
+      });
+
+      if (!companyAreaName) {
+        throw new HttpException(
+          `El área "${name}" de la compañia no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return companyAreaName;
     }
   }
 

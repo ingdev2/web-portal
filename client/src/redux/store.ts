@@ -4,6 +4,7 @@ import { persistReducer } from "redux-persist";
 import storage from "./storage/storage";
 
 import adminReducer from "./features/admin/adminSlice";
+import selectedAdminReducer from "./features/admin/selectedAdminSlice";
 import patientReducer from "./features/patient/patientSlice";
 import epsReducer from "./features/eps/epsSlice";
 import familiarReducer from "./features/familiar/familiarSlice";
@@ -15,6 +16,7 @@ import medicalReqReducer from "./features/medical_req/medicalReqSlice";
 import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
+import { adminRolesApi } from "./apis/admin_roles/adminRolesApi";
 import { usersApi } from "./apis/users/usersApi";
 import { userRolesApi } from "./apis/user_roles/userRolesApi";
 import { patientClassStatusApi } from "./apis/patient_class_status/patientClassStatusApi";
@@ -65,11 +67,13 @@ const rootReducer = combineReducers({
   familiarLogin: familiarLoginReducer,
   medicalReq: medicalReqReducer,
   admin: adminReducer,
+  selectedAdmin: selectedAdminReducer,
   patient: patientReducer,
   eps: epsReducer,
   familiar: familiarReducer,
   modal: modalReducer,
   [adminsApi.reducerPath]: adminsApi.reducer,
+  [adminRolesApi.reducerPath]: adminRolesApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [userRolesApi.reducerPath]: userRolesApi.reducer,
   [patientClassStatusApi.reducerPath]: patientClassStatusApi.reducer,
@@ -107,6 +111,7 @@ export const store = configureStore({
       immutableCheck: false,
     }).concat([
       adminsApi.middleware,
+      adminRolesApi.middleware,
       usersApi.middleware,
       userRolesApi.middleware,
       patientClassStatusApi.middleware,

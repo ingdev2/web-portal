@@ -29,6 +29,13 @@ const themeConfig: ThemeConfig = {
       headerBg: "#DFEBF2",
       lineWidth: 1.3,
     },
+    Switch: {
+      colorPrimary: "#1D8348",
+      colorTextLightSolid: "#F7F7F7",
+      colorTextQuaternary: "#8C1111",
+      colorTextTertiary: "#A7BAB7",
+      colorPrimaryHover: "#3F97AF",
+    },
   },
 };
 

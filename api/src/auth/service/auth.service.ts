@@ -359,6 +359,7 @@ export class AuthService {
       where: {
         id_number: id_number,
         admin_role: In(adminRoleFound.map((role) => role.id)),
+        is_active: true,
       },
     });
 
@@ -533,6 +534,7 @@ export class AuthService {
       where: {
         id_number: id_number,
         user_role: patientUserRoleFound.id,
+        is_active: true,
       },
     });
 
@@ -641,6 +643,7 @@ export class AuthService {
       where: {
         id_number: id_number,
         user_role: epsUserRoleFound.id,
+        is_active: true,
       },
     });
 
@@ -766,6 +769,7 @@ export class AuthService {
         email: email_familiar,
         patient_id: patientOfFamiliar.id,
         user_role: familiarUserRoleFound.id,
+        is_active: true,
       },
       select: [
         'id',

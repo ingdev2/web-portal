@@ -12,6 +12,7 @@ const initialState = {
   selectedKey: ItemKeys.SUB_ALL_REQUESTS_REQ_KEY,
   selectedOpenKeys: [""],
   tableRowId: "",
+  tableRowFilingNumber: "",
 };
 
 export const modalSlice = createSlice({
@@ -48,6 +49,9 @@ export const modalSlice = createSlice({
     setTableRowId: (state, action) => {
       state.tableRowId = action.payload;
     },
+    setTableRowFilingNumber: (state, action) => {
+      state.tableRowFilingNumber = action.payload;
+    },
     setResetModalAdmin: (state) => {
       state.selectedKey = ItemKeys.SUB_ALL_REQUESTS_REQ_KEY;
       state.selectedOpenKeys = [""];
@@ -66,6 +70,7 @@ export const {
   setSelectedKey,
   setSelectedOpenKeys,
   setTableRowId,
+  setTableRowFilingNumber,
   setResetModalAdmin,
 } = modalSlice.actions;
 

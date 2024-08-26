@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
+import { CompanyAreaEnum } from "../../../../../api/src/utils/enums/company_area.enum";
 
 const addTokenToRequest = async (headers: any, { getState }: any) => {
   const session: any = await getSession();
@@ -37,6 +38,22 @@ export const companyAreaApi = createApi({
       query: (id) => `getCompanyArea/${id}`,
     }),
 
+    getCompanyAreaByName: builder.query<
+      CompanyArea,
+      { name?: CompanyAreaEnum | null }
+    >({
+      query: ({ name = null }) => {
+        const params: any = {};
+
+        if (name !== null) params.name = name;
+
+        return {
+          url: "getByName",
+          params,
+        };
+      },
+    }),
+
     updateCompanyAreaById: builder.mutation<
       any,
       { id: number; newName: string }
@@ -55,5 +72,6 @@ export const {
   useCreateCompanyAreaMutation,
   useGetAllCompanyAreaQuery,
   useGetCompanyAreaByIdQuery,
+  useGetCompanyAreaByNameQuery,
   useUpdateCompanyAreaByIdMutation,
 } = companyAreaApi;

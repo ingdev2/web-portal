@@ -13,3 +13,14 @@ export function transformIdToNameMap<T>(
     }, {} as Record<number, string>) || {}
   );
 }
+
+export function transformNameToIdMap<T>(
+  data: MappableItem<T>[] | undefined
+): Record<string, number> {
+  return (
+    data?.reduce((acc, item) => {
+      acc[item.name] = item.id;
+      return acc;
+    }, {} as Record<string, number>) || {}
+  );
+}
