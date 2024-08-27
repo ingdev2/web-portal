@@ -488,6 +488,7 @@ const AdminRegistrationFormData: React.FC<{
             />
           </Form.Item>
         </Col>
+
         <Col span={12}>
           <Form.Item
             name="admin-password-verify-create"
