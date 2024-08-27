@@ -140,6 +140,10 @@ export const medicalReqApi = createApi({
       },
     }),
 
+    getAverageResponseTime: builder.query<string[], null>({
+      query: () => "averageResponseTime",
+    }),
+
     getAllMedicalReqPatient: builder.query<MedicalReq[], null>({
       query: () => "getAllMedicalReqPatient",
     }),
@@ -252,6 +256,7 @@ export const {
   useGetAllMedicalReqOfAFamiliarQuery,
   useLazyGetAllMedicalReqOfAFamiliarQuery,
   useGetAllMedicalReqUsersToLegalAreaQuery,
+  useGetAverageResponseTimeQuery,
   useGetAllMedicalReqPatientQuery,
   useGetAllMedicalReqFamiliarQuery,
   useGetAllMedicalReqEpsQuery,

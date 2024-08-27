@@ -1,4 +1,7 @@
-import { useGetAllMedicalReqUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
+import {
+  useGetAllMedicalReqUsersQuery,
+  useGetAverageResponseTimeQuery,
+} from "@/redux/apis/medical_req/medicalReqApi";
 import { RequirementTypeEnum } from "@/../../api/src/medical_req/enums/requirement_type.enum";
 import { RequirementStatusEnum } from "@/../../api/src/medical_req/enums/requirement_status.enum";
 import { UserRolType } from "../../../../../../api/src/utils/enums/user_roles.enum";
@@ -95,4 +98,10 @@ export const useMedicalReqDataByApplicantType = (
   });
 
   return { patientData, epsData, familiarData };
+};
+
+export const useGetAverageResponseTimeData = () => {
+  const { data: averageResponseTime } = useGetAverageResponseTimeQuery(null);
+
+  return { averageResponseTime };
 };
