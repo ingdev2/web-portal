@@ -147,8 +147,8 @@ export const usersApi = createApi({
       }),
     }),
 
-    banUser: builder.mutation<any, string>({
-      query: (id) => ({
+    banUser: builder.mutation<any, { id: string }>({
+      query: ({ id }) => ({
         url: `ban/${id}`,
         method: "PATCH",
         params: { id },

@@ -105,6 +105,12 @@ export class MedicalReqController {
     );
   }
 
+  @Auth(AdminRolType.ADMIN)
+  @Get('/averageResponseTime')
+  async getAverageResponseTime() {
+    return await this.medicalReqService.getAverageResponseTime();
+  }
+
   @Auth(UserRolType.PATIENT, UserRolType.EPS)
   @Get('/getAllMedicalReqOfAUsers/:userId')
   async getAllMedicalReqOfAUsers(@Param('userId') userId: string) {

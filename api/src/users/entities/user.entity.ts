@@ -40,7 +40,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'bigint', unique: true, nullable: true })
+  @Column({ type: 'bigint', nullable: true })
   cellphone: number;
 
   @Column({ type: 'bigint', nullable: true })

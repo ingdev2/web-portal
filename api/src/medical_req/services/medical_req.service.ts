@@ -1,6 +1,14 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, Repository, EntityManager, Between } from 'typeorm';
+import {
+  DataSource,
+  In,
+  Repository,
+  EntityManager,
+  Between,
+  Not,
+  IsNull,
+} from 'typeorm';
 import { MedicalReq } from '../entities/medical_req.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
@@ -979,6 +987,35 @@ export class MedicalReqService {
     }
 
     return allMedicalReqUsers || [];
+  }
+
+  async getAverageResponseTime() {
+    const allMedicalReqUsers = await this.medicalReqRepository.find({
+      where: {
+        is_deleted: false,
+        response_time: Not(IsNull()),
+      },
+    });
+
+    if (allMedicalReqUsers.length === 0) {
+      return '00 Horas - 00 Minutos';
+    }
+
+    const totalMinutes = allMedicalReqUsers.reduce((total, record) => {
+      const [hoursPart, minutesPart] = record.response_time
+        .split(' y ')
+        .map((part) => parseInt(part.match(/\d+/)[0], 10));
+      const minutes = hoursPart * 60 + minutesPart;
+      return total + minutes;
+    }, 0);
+
+    const averageMinutes = Math.floor(totalMinutes / allMedicalReqUsers.length);
+
+    const averageHours = Math.floor(averageMinutes / 60);
+    const averageRemainingMinutes = averageMinutes % 60;
+    const averageResponseTime = `${averageHours.toString().padStart(2, '0')} Horas y ${averageRemainingMinutes.toString().padStart(2, '0')} Minutos`;
+
+    return [averageResponseTime];
   }
 
   async getAllMedicalReqOfAUsers(userId: string) {

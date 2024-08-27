@@ -29,7 +29,7 @@ export class CreateUserEpsDto {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty({ message: '¡Por favor ingresa un número de celular!' })
+  @IsOptional({ message: '¡Por favor ingresa un número de celular!' })
   cellphone: number;
 
   @Transform(({ value }) => value.trim())

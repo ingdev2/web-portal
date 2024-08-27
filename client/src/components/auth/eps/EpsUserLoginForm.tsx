@@ -437,50 +437,6 @@ const EpsUserLoginForm: React.FC = () => {
                 Ingresar
               </Button>
             )}
-
-            <Divider
-              style={{
-                fontSize: 13,
-                fontWeight: "normal",
-                marginBlock: 13,
-                borderWidth: 1.3,
-              }}
-            >
-              ¿No tienes cuenta?
-            </Divider>
-
-            {isSubmittingRegisterPageEps ? (
-              <CustomSpin />
-            ) : (
-              <Button
-                style={{
-                  paddingInline: 22,
-                  color: "#015E90",
-                  borderColor: "#015E90",
-                  fontWeight: "bold",
-                  borderRadius: 7,
-                  borderWidth: 1.3,
-                  marginTop: 7,
-                }}
-                htmlType="button"
-                className="eps-register-button"
-                onClick={async () => {
-                  try {
-                    setIsSubmittingRegisterPageEps(true);
-
-                    await router.push("/eps/register", {
-                      scroll: true,
-                    });
-                  } catch (error) {
-                    console.error(error);
-                  } finally {
-                    setIsSubmittingRegisterPageEps(false);
-                  }
-                }}
-              >
-                Crear cuenta
-              </Button>
-            )}
           </Form.Item>
           {/* <Form.ErrorList
           errors={errors?.map((error) => (

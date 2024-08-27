@@ -345,7 +345,7 @@ const AdminRegistrationForm: React.FC = () => {
               textButtonCustomResult="Regresar a lista de administradores"
             />
           }
-        ></CustomModalNoContent>
+        />
       )}
 
       {showErrorMessageAdmin && (

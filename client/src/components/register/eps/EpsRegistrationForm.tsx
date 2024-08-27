@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
-import { Button, Card, CheckboxProps, Col, Divider } from "antd";
+import { Col } from "antd";
 import EpsRegistrationFormData from "./EpsRegistrationFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
@@ -24,11 +24,6 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import {
-  checkboxProcessingPersonalDataValidator,
-  checkboxMessagesValidator,
-} from "@/helpers/checkbox_validator/checkbox_validator";
-import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { AuthenticationMethodEnum } from "@/../../api/src/utils/enums/authentication_method.enum";
 
 const EpsRegistrationForm: React.FC = () => {
@@ -57,7 +52,7 @@ const EpsRegistrationForm: React.FC = () => {
   const [areaCode, setAreaCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const fullCellphoneNumber = `${countryCode}${areaCode}${phoneNumber}`;
+  var fullCellphoneNumber = `${countryCode}${areaCode}${phoneNumber}`;
 
   const [
     companyAreaNumberUserEpsLocalState,
@@ -88,7 +83,7 @@ const EpsRegistrationForm: React.FC = () => {
   const [isSubmittingConfirmModal, setIsSubmittingConfirmModal] =
     useState(false);
   const [isSubmittingNewUserEps, setIsSubmittingNewUserEps] = useState(false);
-  const [isSubmittingGoToLogin, setIsSubmittingGoToLogin] = useState(false);
+  const [isSubmittingGoToAllEps, setIsSubmittingGoToLogin] = useState(false);
   const [showErrorMessageUserEps, setShowErrorMessageUserEps] = useState(false);
 
   const {
@@ -315,11 +310,11 @@ const EpsRegistrationForm: React.FC = () => {
     );
   };
 
-  const handleGoToLogin = async () => {
+  const handleGoToAllEps = async () => {
     try {
       setIsSubmittingGoToLogin(true);
 
-      await router.replace("/login", {
+      await router.replace("/admin/dashboard/all_eps", {
         scroll: false,
       });
     } catch (error) {
@@ -362,14 +357,6 @@ const EpsRegistrationForm: React.FC = () => {
     return Promise.reject("Número de teléfono inválido");
   };
 
-  const handleCheckboxChange: CheckboxProps["onChange"] = (e) => {
-    setIsCheckboxChecked(e.target.checked);
-  };
-
-  const handleCheckboxMessageChange: CheckboxProps["onChange"] = (e) => {
-    setIsCheckboxMessagesChecked(e.target.checked);
-  };
-
   const handleButtonClick = () => {
     dispatch(setErrorsUserEps([]));
     setShowErrorMessageUserEps(false);
@@ -389,234 +376,168 @@ const EpsRegistrationForm: React.FC = () => {
         paddingInline: "13px",
       }}
     >
-      <Card
-        key={"card-create-user-eps-form"}
-        style={{
-          width: "100%",
-          maxWidth: "450px",
-          minWidth: "321px",
-          display: "flex",
-          flexFlow: "column wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          alignContent: "center",
-          backgroundColor: "#fcfcfc",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-          marginBottom: "54px",
-        }}
-      >
-        {modalIsOpenConfirm && (
-          <CustomModalTwoOptions
-            key={"custom-confirm-modal-create-user-eps"}
-            openCustomModalState={modalIsOpenConfirm}
-            iconCustomModal={<FcInfo size={77} />}
-            titleCustomModal="¿Deseas crear un nuevo colaborador de EPS?"
-            subtitleCustomModal={
-              <p>
-                Se creará el colaborador con nombre <b>{epsNameLocalState},</b>
-                &nbsp; con tipo de identificación&nbsp;
-                <b>{epsIdTypeNameLocalState},</b>&nbsp;número de
-                identificación&nbsp;
-                <b>{epsIdNumberLocalState},</b>&nbsp;para la empresa:&nbsp;
-                <b>{epsCompanyNameUserEpsLocalState}</b>
-              </p>
-            }
-            handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
-            handleConfirmCustomModal={handleConfirmDataModal}
-            isSubmittingConfirm={isSubmittingNewUserEps}
-            handleClickCustomModal={handleButtonClick}
-          ></CustomModalTwoOptions>
-        )}
-
-        {modalIsOpenSuccess && (
-          <CustomModalNoContent
-            key={"custom-success-modal-create-user-eps"}
-            widthCustomModalNoContent={"54%"}
-            openCustomModalState={modalIsOpenSuccess}
-            closableCustomModal={false}
-            maskClosableCustomModal={false}
-            contentCustomModal={
-              <CustomResultOneButton
-                key={"user-eps-created-custom-result"}
-                statusTypeResult={"success"}
-                titleCustomResult="¡Colaborador de EPS creado correctamente!"
-                subtitleCustomResult="El colaborar ha sido agregado a la lista de usuarios de EPS."
-                handleClickCustomResult={handleGoToLogin}
-                isSubmittingButton={isSubmittingGoToLogin}
-                textButtonCustomResult="Ingresar al portal"
-              />
-            }
-          ></CustomModalNoContent>
-        )}
-
-        {showErrorMessageUserEps && (
-          <CustomMessage
-            typeMessage="error"
-            message={userEpsErrorsState?.toString() || "¡Error en la petición!"}
-          />
-        )}
-
-        <EpsRegistrationFormData
-          handleCreateUserEpsDataForm={handleCreateUserEps}
-          epsCompanyLoadingDataForm={epsCompanyLoading}
-          epsCompanyListDataForm={epsCompanyListLocalState}
-          epsCompanyValueDataForm={epsCompanyNumberUserEpsLocalState}
-          handleOnChangeEpsCompanyDataForm={handleOnChangeSelectEpsCompany}
-          epsNameDataForm={epsNameLocalState}
-          handleOnChangeEpsNameDataForm={(e) => {
-            setEpsNameLocalState(e.target.value.toUpperCase());
-          }}
-          epsLastNameDataForm={epsLastNameLocalState}
-          handleOnChangeEpsLastNameDataForm={(e) => {
-            setEpsLastNameLocalState(e.target.value.toUpperCase());
-          }}
-          idTypeSelectorLoadingDataForm={
-            idTypesLoading && idTypesFetching && !idTypesData
+      {modalIsOpenConfirm && (
+        <CustomModalTwoOptions
+          key={"custom-confirm-modal-create-user-eps"}
+          openCustomModalState={modalIsOpenConfirm}
+          iconCustomModal={<FcInfo size={77} />}
+          titleCustomModal="¿Deseas crear un nuevo colaborador de EPS?"
+          subtitleCustomModal={
+            <p>
+              Se creará el colaborador con nombre <b>{epsNameLocalState},</b>
+              &nbsp; con tipo de identificación&nbsp;
+              <b>{epsIdTypeNameLocalState},</b>&nbsp;número de
+              identificación&nbsp;
+              <b>{epsIdNumberLocalState},</b>&nbsp;para la empresa:&nbsp;
+              <b>{epsCompanyNameUserEpsLocalState}</b>
+            </p>
           }
-          epsIdTypeValueDataForm={epsIdTypeLocalState}
-          handleOnChangeSelectIdTypeDataForm={handleOnChangeSelectIdType}
-          epsIdTypeListDataForm={epsIdTypesListLocalState}
-          epsIdNumberDataForm={epsIdNumberLocalState}
-          handleOnChangeEpsIdNumberDataForm={(e) => {
-            setEpsIdNumberLocalState(parseInt(e.target.value, 10));
-          }}
-          genderSelectorLoadingDataForm={
-            gendersLoading && gendersFetching && !gendersData
+          handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
+          handleConfirmCustomModal={handleConfirmDataModal}
+          isSubmittingConfirm={isSubmittingNewUserEps}
+          handleClickCustomModal={handleButtonClick}
+        ></CustomModalTwoOptions>
+      )}
+
+      {modalIsOpenSuccess && (
+        <CustomModalNoContent
+          key={"custom-success-modal-create-user-eps"}
+          widthCustomModalNoContent={"54%"}
+          openCustomModalState={modalIsOpenSuccess}
+          closableCustomModal={false}
+          maskClosableCustomModal={false}
+          contentCustomModal={
+            <CustomResultOneButton
+              key={"user-eps-created-custom-result"}
+              statusTypeResult={"success"}
+              titleCustomResult="¡Colaborador de EPS creado correctamente!"
+              subtitleCustomResult="El colaborar ha sido agregado a la lista de usuarios de EPS."
+              handleClickCustomResult={handleGoToAllEps}
+              isSubmittingButton={isSubmittingGoToAllEps}
+              textButtonCustomResult="Regresar a lista de auditores EPS"
+            />
           }
-          epsGenderValueDataForm={epsGenderLocalState}
-          companyAreasLoadingDataForm={companyAreaLoading}
-          companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
-          handleOnChangeCompanyAreaDataForm={handleOnChangeSelectCompanyArea}
-          epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
-          handleOnChangeSelectGenderDataForm={(e) => {
-            setEpsGenderLocalState(e);
-          }}
-          epsGenderListDataForm={epsGenderListLocalState}
-          epsEmailDataForm={epsEmailLocalState}
-          handleOnChangeEpsEmailDataForm={(e) => {
-            setEpsEmailLocalState(e.target.value.toLowerCase());
-          }}
-          epsCellphoneDataForm={parseInt(fullCellphoneNumber, 10)}
-          validatorCellphoneInputFormData={validatorCellphoneInput}
-          handleOnChangeEpsCellphoneDataForm={handlePhoneInputChange}
-          epsAuthMethodValueDataForm={epsAuthMethodState}
-          epsAuthMethodListDataForm={epsAuthMethodsListLocalState}
-          passwordUserEpsValueDataForm={passwordUserEpsLocalState}
-          handleOnChangePasswordUserEpsValueDataForm={(e) =>
-            setPasswordUserEpsLocalState(e.target.value.trim())
-          }
-          checkboxValidatorDataForm={checkboxProcessingPersonalDataValidator}
-          isCheckboxCheckedDataForm={isCheckboxChecked}
-          handleCheckboxChangeDataForm={handleCheckboxChange}
-          checkboxValidatorMessagesDataForm={checkboxMessagesValidator}
-          isCheckboxCheckedMessagesDataForm={isCheckboxMessagesChecked}
-          handleCheckboxMessagesChangeDataForm={handleCheckboxMessageChange}
-          buttonSubmitFormLoadingDataForm={
-            isSubmittingConfirmModal && !modalIsOpenConfirm
-          }
-          handleButtonSubmitFormDataForm={handleButtonClick}
-          handleOnChangeValidatorPasswordDataForm={(_, value) => {
-            if (
-              !passwordUserEpsLocalState ||
-              !epsNameLocalState ||
-              !epsLastNameLocalState ||
-              !epsIdNumberLocalState ||
-              !`${areaCode}${phoneNumber}`
-            ) {
-              return Promise.resolve();
-            }
-
-            const passwordUpperCase = value?.toUpperCase();
-
-            const nameWords = epsNameLocalState?.toUpperCase().split(" ");
-
-            const lastNameWords = epsLastNameLocalState
-              ?.toUpperCase()
-              .split(" ");
-
-            const idNumber = String(epsIdNumberLocalState);
-
-            const cellphoneNumber = `${areaCode}${phoneNumber}`;
-
-            if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del nombre del usuario!"
-                )
-              );
-            }
-
-            if (
-              lastNameWords?.some((word) => passwordUpperCase?.includes(word))
-            ) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del apellido del usuario!"
-                )
-              );
-            }
-
-            if (passwordUpperCase?.includes(idNumber)) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del número de cédula del usuario!"
-                )
-              );
-            }
-
-            if (passwordUpperCase?.includes(cellphoneNumber)) {
-              return Promise.reject(
-                new Error(
-                  "¡La contraseña no puede contener datos del número de celular del usuario!"
-                )
-              );
-            }
-
-            return Promise.resolve();
-          }}
         />
+      )}
 
-        <Divider
-          style={{
-            fontSize: 13,
-            fontWeight: "normal",
-            marginBlock: 4,
-            borderWidth: 1.3,
-          }}
-        >
-          ¿Ya tienes cuenta?
-        </Divider>
+      {showErrorMessageUserEps && (
+        <CustomMessage
+          typeMessage="error"
+          message={userEpsErrorsState?.toString() || "¡Error en la petición!"}
+        />
+      )}
 
-        {isSubmittingGoToLogin ? (
-          <CustomSpin />
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              flexFlow: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              style={{
-                paddingInline: 22,
-                color: "#015E90",
-                borderColor: "#015E90",
-                fontWeight: "bold",
-                borderRadius: 7,
-                borderWidth: 1.3,
-                marginTop: 7,
-              }}
-              htmlType="button"
-              className="go-to-login-button"
-              onClick={handleGoToLogin}
-              onMouseDown={handleButtonClick}
-            >
-              Ingresar con mi cuenta
-            </Button>
-          </div>
-        )}
-      </Card>
+      <EpsRegistrationFormData
+        handleCreateUserEpsDataForm={handleCreateUserEps}
+        epsCompanyLoadingDataForm={epsCompanyLoading}
+        epsCompanyListDataForm={epsCompanyListLocalState}
+        epsCompanyValueDataForm={epsCompanyNumberUserEpsLocalState}
+        handleOnChangeEpsCompanyDataForm={handleOnChangeSelectEpsCompany}
+        epsNameDataForm={epsNameLocalState}
+        handleOnChangeEpsNameDataForm={(e) => {
+          setEpsNameLocalState(e.target.value.toUpperCase());
+        }}
+        epsLastNameDataForm={epsLastNameLocalState}
+        handleOnChangeEpsLastNameDataForm={(e) => {
+          setEpsLastNameLocalState(e.target.value.toUpperCase());
+        }}
+        idTypeSelectorLoadingDataForm={
+          idTypesLoading && idTypesFetching && !idTypesData
+        }
+        epsIdTypeValueDataForm={epsIdTypeLocalState}
+        handleOnChangeSelectIdTypeDataForm={handleOnChangeSelectIdType}
+        epsIdTypeListDataForm={epsIdTypesListLocalState}
+        epsIdNumberDataForm={epsIdNumberLocalState}
+        handleOnChangeEpsIdNumberDataForm={(e) => {
+          setEpsIdNumberLocalState(parseInt(e.target.value, 10));
+        }}
+        genderSelectorLoadingDataForm={
+          gendersLoading && gendersFetching && !gendersData
+        }
+        epsGenderValueDataForm={epsGenderLocalState}
+        companyAreasLoadingDataForm={companyAreaLoading}
+        companyAreaValueDataForm={companyAreaNumberUserEpsLocalState}
+        handleOnChangeCompanyAreaDataForm={handleOnChangeSelectCompanyArea}
+        epsCompanyAreasListDataForm={epsCompanyAreasListLocalState}
+        handleOnChangeSelectGenderDataForm={(e) => {
+          setEpsGenderLocalState(e);
+        }}
+        epsGenderListDataForm={epsGenderListLocalState}
+        epsEmailDataForm={epsEmailLocalState}
+        handleOnChangeEpsEmailDataForm={(e) => {
+          setEpsEmailLocalState(e.target.value.toLowerCase());
+        }}
+        epsCellphoneDataForm={parseInt(fullCellphoneNumber, 10)}
+        validatorCellphoneInputFormData={validatorCellphoneInput}
+        handleOnChangeEpsCellphoneDataForm={handlePhoneInputChange}
+        epsAuthMethodValueDataForm={epsAuthMethodState}
+        epsAuthMethodListDataForm={epsAuthMethodsListLocalState}
+        passwordUserEpsValueDataForm={passwordUserEpsLocalState}
+        handleOnChangePasswordUserEpsValueDataForm={(e) =>
+          setPasswordUserEpsLocalState(e.target.value.trim())
+        }
+        buttonSubmitFormLoadingDataForm={
+          isSubmittingConfirmModal && !modalIsOpenConfirm
+        }
+        handleButtonSubmitFormDataForm={handleButtonClick}
+        handleOnChangeValidatorPasswordDataForm={(_, value) => {
+          if (
+            !passwordUserEpsLocalState ||
+            !epsNameLocalState ||
+            !epsLastNameLocalState ||
+            !epsIdNumberLocalState ||
+            !`${areaCode}${phoneNumber}`
+          ) {
+            return Promise.resolve();
+          }
+
+          const passwordUpperCase = value?.toUpperCase();
+
+          const nameWords = epsNameLocalState?.toUpperCase().split(" ");
+
+          const lastNameWords = epsLastNameLocalState?.toUpperCase().split(" ");
+
+          const idNumber = String(epsIdNumberLocalState);
+
+          const cellphoneNumber = `${areaCode}${phoneNumber}`;
+
+          if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del nombre del usuario!"
+              )
+            );
+          }
+
+          if (
+            lastNameWords?.some((word) => passwordUpperCase?.includes(word))
+          ) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del apellido del usuario!"
+              )
+            );
+          }
+
+          if (passwordUpperCase?.includes(idNumber)) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del número de cédula del usuario!"
+              )
+            );
+          }
+
+          if (passwordUpperCase?.includes(cellphoneNumber)) {
+            return Promise.reject(
+              new Error(
+                "¡La contraseña no puede contener datos del número de celular del usuario!"
+              )
+            );
+          }
+
+          return Promise.resolve();
+        }}
+      />
     </Col>
   );
 };

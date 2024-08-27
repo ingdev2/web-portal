@@ -74,7 +74,7 @@ const EditAdminForm: React.FC = () => {
     useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [showErrorMessagePatient, setShowErrorMessagePatient] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const {
     data: adminData,
@@ -100,10 +100,10 @@ const EditAdminForm: React.FC = () => {
   const [
     updateAdminData,
     {
-      data: createMedicalReqPatientData,
-      isLoading: createMedicalReqPatientLoading,
-      isSuccess: createMedicalReqPatientSuccess,
-      isError: createMedicalReqPatientError,
+      data: updateAdmintData,
+      isLoading: updateAdminLoading,
+      isSuccess: updateAdminSuccess,
+      isError: updateAdminError,
     },
   ] = useUpdateAdminMutation({
     fixedCacheKey: "updateAdminData",
@@ -127,7 +127,7 @@ const EditAdminForm: React.FC = () => {
       dispatch(
         setErrorsSelectedAdmin("¡No se pudo obtener las áreas de la empresa!")
       );
-      setShowErrorMessagePatient(true);
+      setShowErrorMessage(true);
       setCompanyAreasListLocalState(allCompanyAreaData);
     }
     if (
@@ -141,7 +141,7 @@ const EditAdminForm: React.FC = () => {
       dispatch(
         setErrorsSelectedAdmin("¡No se pudo obtener los niveles del cargo!")
       );
-      setShowErrorMessagePatient(true);
+      setShowErrorMessage(true);
       setPositionLevelsListLocalState(allPositionLevelsData);
     }
   }, [
@@ -190,12 +190,12 @@ const EditAdminForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsSelectedAdmin(errorMessage[0]));
 
-          setShowErrorMessagePatient(true);
+          setShowErrorMessage(true);
         }
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsSelectedAdmin(validationDataMessage[0]));
 
-          setShowErrorMessagePatient(true);
+          setShowErrorMessage(true);
         }
         if (
           typeof errorMessage === "string" ||
@@ -203,7 +203,7 @@ const EditAdminForm: React.FC = () => {
         ) {
           dispatch(setErrorsSelectedAdmin(errorMessage));
           dispatch(setErrorsSelectedAdmin(validationDataMessage));
-          setShowErrorMessagePatient(true);
+          setShowErrorMessage(true);
         }
       }
 
@@ -279,12 +279,12 @@ const EditAdminForm: React.FC = () => {
     setSuccessMessage("");
     setShowSuccessMessage(false);
     dispatch(setErrorsSelectedAdmin([]));
-    setShowErrorMessagePatient(false);
+    setShowErrorMessage(false);
   };
 
   return (
     <>
-      {showErrorMessagePatient && (
+      {showErrorMessage && (
         <CustomMessage
           typeMessage="error"
           message={adminErrorsState?.toString() || "¡Error en la petición!"}
@@ -339,7 +339,6 @@ const EditAdminForm: React.FC = () => {
           "edit-admin-name": nameAdminState || NOT_REGISTER,
           "edit-admin-lastname": lastNameAdminState || NOT_REGISTER,
           "edit-admin-id-types": idTypeNameAdminState || NOT_REGISTER,
-          "email-patient-hosvital": emailAdminState || NOT_REGISTER,
           "edit-admin-id-number": idNumberAdminState || NOT_REGISTER,
           "edit-admin-position-level": positionLevelAdminState || NOT_REGISTER,
           "edit-admin-areas-company": companyAreaAdminState || NOT_REGISTER,

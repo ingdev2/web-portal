@@ -8,16 +8,18 @@ import FilterOptions from "./filter_options/FilterOptions";
 import FilterOptionsByDate from "./filter_options/FilterOptionsByDate";
 import CustomDatePickerOneDate from "@/components/common/custom_date_picker/CustomDatePickerOneDate";
 import { Col } from "antd";
-import { titleStyleCss } from "@/theme/text_styles";
+import { subtitleStyleCss, titleStyleCss } from "@/theme/text_styles";
 
 import dayjs from "dayjs";
 
 import {
+  useGetAverageResponseTimeData,
   useMedicalReqData,
   useMedicalReqDataByApplicantType,
   useMedicalReqDataByStatus,
   useMedicalReqDataByType,
 } from "./users_medical_req/users_medical_req_data";
+import { useGetAverageResponseTimeQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
 const StatisticsContent: React.FC = () => {
   const DATE_FORMAT_MONTH = "YYYY-MM";
@@ -52,6 +54,8 @@ const StatisticsContent: React.FC = () => {
 
   const { patientData, epsData, familiarData } =
     useMedicalReqDataByApplicantType(year, month);
+
+  const { averageResponseTime } = useGetAverageResponseTimeData();
 
   const dataToShow: DataCustomDonutPlot[] = useMemo(() => {
     switch (filterOption) {
@@ -229,7 +233,30 @@ const StatisticsContent: React.FC = () => {
             <div
               style={{
                 width: "100%",
-                height: "301px",
+                display: "flex",
+                flexFlow: "column wrap",
+                marginTop: "17px",
+                marginBottom: "2px",
+                padding: "0px",
+              }}
+            >
+              <h3
+                style={{
+                  ...subtitleStyleCss,
+                  textAlign: "center",
+                  padding: "0px",
+                  margin: "0px",
+                }}
+              >
+                Tiempo de respuesta promedio:&nbsp;
+                <b style={{ color: "#137A2B" }}>{averageResponseTime}</b>
+              </h3>
+            </div>
+
+            <div
+              style={{
+                width: "100%",
+                height: "270px",
                 display: "flex",
                 flexFlow: "column wrap",
                 marginBlock: "22px",

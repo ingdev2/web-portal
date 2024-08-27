@@ -4,39 +4,39 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
 
-const adminIdKey: keyof Admin = "id";
-const adminNameKey: keyof Admin = "name";
-const adminLastNameKey: keyof Admin = "last_name";
-const idTypeAdminKey: keyof Admin = "admin_id_type";
-const numberIdTypeKey: keyof Admin = "id_number";
-const emailKey: keyof Admin = "corporate_email";
-const companyAreaKey: keyof Admin = "company_area";
-const positionLevelKey: keyof Admin = "position_level";
-const adminIsActiveKey: keyof Admin = "is_active";
+const epsIdKey: keyof User = "id";
+const epsNameKey: keyof User = "name";
+const epsLastNameKey: keyof User = "last_name";
+const idTypeEpsKey: keyof User = "user_id_type";
+const numberIdTypeKey: keyof User = "id_number";
+const emailKey: keyof User = "email";
+const epsCompanyKey: keyof User = "eps_company";
+const companyAreaKey: keyof User = "company_area";
+const epsIsActiveKey: keyof User = "is_active";
 
 interface TableColumnProps {
-  handleClickSeeMore: (record: Admin) => void;
-  handleOnChangeSwitch: (record: Admin) => void;
+  handleClickSeeMore: (record: User) => void;
+  handleOnChangeSwitch: (record: User) => void;
   onClickSwitch: () => void;
   isLoadingSwitch: boolean;
   idTypesData: IdType[] | undefined;
+  epsCompanyData: EpsCompany[] | undefined;
   companyAreaMedicalReqData: CompanyArea[] | undefined;
-  positionLevelData: PositionLevel[] | undefined;
 }
 
-export const tableColumnsAllAdmins = ({
+export const tableColumnsAllEps = ({
   handleClickSeeMore,
   handleOnChangeSwitch,
   onClickSwitch,
   isLoadingSwitch,
   idTypesData,
+  epsCompanyData,
   companyAreaMedicalReqData,
-  positionLevelData,
 }: TableColumnProps) => [
   {
     title: "NOMBRE",
-    key: adminNameKey,
-    dataIndex: adminNameKey,
+    key: epsNameKey,
+    dataIndex: epsNameKey,
     width: 207,
     ellipsis: true,
     searchable: true,
@@ -44,8 +44,8 @@ export const tableColumnsAllAdmins = ({
   },
   {
     title: "TIPO DE ID",
-    key: idTypeAdminKey,
-    dataIndex: idTypeAdminKey,
+    key: idTypeEpsKey,
+    dataIndex: idTypeEpsKey,
     width: 183,
     filters:
       idTypesData?.map((type) => ({
@@ -53,7 +53,7 @@ export const tableColumnsAllAdmins = ({
         text: type.name,
       })) || [],
     onFilter: (value: any, record: any) => {
-      return String(record.admin_id_type) === String(value);
+      return String(record.user_id_type) === String(value);
     },
     ellipsis: true,
     render: (type: string) => type,
@@ -67,20 +67,20 @@ export const tableColumnsAllAdmins = ({
     searchable: true,
   },
   {
-    title: "NIVEL DE CARGO",
-    key: positionLevelKey,
-    dataIndex: positionLevelKey,
+    title: "EMPRESA DONDE LABORA",
+    key: epsCompanyKey,
+    dataIndex: epsCompanyKey,
     width: 231,
     ellipsis: true,
     filters:
-      positionLevelData?.map((position) => ({
-        value: position.name,
-        text: position.name,
+      epsCompanyData?.map((epsCompany) => ({
+        value: epsCompany.name,
+        text: epsCompany.name,
       })) || [],
     onFilter: (value: any, record: any) => {
-      return String(record.position_level) === String(value);
+      return String(record.eps_company) === String(value);
     },
-    render: (position: string) => position,
+    render: (epsCompany: string) => epsCompany,
   },
   {
     title: "ÁREA DE LA EMPRESA",
@@ -108,12 +108,12 @@ export const tableColumnsAllAdmins = ({
   },
   {
     title: "ADMINISTRAR",
-    key: adminIdKey,
-    dataIndex: adminIdKey,
+    key: epsIdKey,
+    dataIndex: epsIdKey,
     width: 103,
     ellipsis: true,
     fixed: "right" as "right",
-    render: (_: any, record: Admin) => (
+    render: (_: any, record: User) => (
       <div
         style={{
           width: "100%",
@@ -152,7 +152,7 @@ export const tableColumnsAllAdmins = ({
               handleOnChangeSwitch(record);
             }}
             onClickCustomSwitch={onClickSwitch}
-            isActiveCustomSwitch={record[adminIsActiveKey]}
+            isActiveCustomSwitch={record[epsIsActiveKey]}
             isLoadingCustomSwitch={isLoadingSwitch}
           />
         </Space>
