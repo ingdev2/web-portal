@@ -128,6 +128,7 @@ const EditAdminFormData: React.FC<{
               placeholder="Nombre(s) completos"
               onChange={onChangeNameAdminFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </Col>
@@ -174,6 +175,7 @@ const EditAdminFormData: React.FC<{
               placeholder="Apellido(s) completos"
               onChange={onChangeLastNameAdminFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </Col>
@@ -241,6 +243,7 @@ const EditAdminFormData: React.FC<{
               onChange={onChangeIdNumberAdminFormData}
               autoComplete="off"
               min={0}
+              disabled
             />
           </Form.Item>
         </Col>

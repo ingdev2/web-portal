@@ -32,7 +32,7 @@ export const tableColumnsAllPatients = ({
     title: "NOMBRE COMPLETO",
     key: patientNameKey,
     dataIndex: patientNameKey,
-    width: 270,
+    width: 301,
     sorter: (a: User, b: User) => {
       return a[patientNameKey].localeCompare(b[patientNameKey]);
     },
@@ -68,7 +68,7 @@ export const tableColumnsAllPatients = ({
     title: "EMAIL",
     key: patientEmailKey,
     dataIndex: patientEmailKey,
-    width: 321,
+    width: 504,
     ellipsis: true,
     searchable: true,
   },
@@ -76,7 +76,7 @@ export const tableColumnsAllPatients = ({
     title: "EPS DE AFILIACIÓN",
     key: patientAffiliationEpsKey,
     dataIndex: patientAffiliationEpsKey,
-    width: 207,
+    width: 270,
     ellipsis: true,
     searchable: true,
   },
