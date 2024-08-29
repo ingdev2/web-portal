@@ -537,7 +537,7 @@ export class UsersService {
         is_active: true,
       },
       order: {
-        name: 'ASC',
+        createdAt: 'ASC',
       },
     });
 
@@ -564,7 +564,7 @@ export class UsersService {
           role: userRolePatient,
         },
         order: {
-          name: 'ASC',
+          createdAt: 'DESC',
         },
       });
 
@@ -597,7 +597,7 @@ export class UsersService {
           role: userRoleEps,
         },
         order: {
-          name: 'ASC',
+          createdAt: 'DESC',
         },
       });
 

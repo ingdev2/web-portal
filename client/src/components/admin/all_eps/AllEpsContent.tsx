@@ -7,7 +7,7 @@ import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
 import EditEpsForm from "./edit_eps/EditEpsForm";
-import { tableColumnsAllEps } from "./table_columns_all_admins/TableColumnsAllEps";
+import { tableColumnsAllEps } from "./table_columns_all_eps/TableColumnsAllEps";
 import ModalEpsDetails from "./modal_eps_details/ModalEpsDetails";
 import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
@@ -243,7 +243,7 @@ const AllEpsContent: React.FC = () => {
               {!isEditEpsVisibleLocalState ? (
                 <>
                   <ModalEpsDetails
-                    titleDescription="Detalles completos de usuario Eps"
+                    titleDescription="Detalle completo de usuario Eps"
                     labelAdminName="Nombre(s)"
                     selectedAdminName={selectedRowDataLocalState?.name}
                     labelAdminLastName="Apellido(s)"

@@ -29,6 +29,9 @@ const themeConfig: ThemeConfig = {
       headerBg: "#DFEBF2",
       lineWidth: 1.3,
     },
+    Card: {
+      headerBg: "#013B5A22",
+    },
     Switch: {
       colorPrimary: "#1D8348",
       colorTextLightSolid: "#F7F7F7",

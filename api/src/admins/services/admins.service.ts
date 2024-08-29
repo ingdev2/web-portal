@@ -252,7 +252,7 @@ export class AdminsService {
           role: adminRoleAdmin,
         },
         order: {
-          name: 'ASC',
+          createdAt: 'DESC',
         },
       });
 

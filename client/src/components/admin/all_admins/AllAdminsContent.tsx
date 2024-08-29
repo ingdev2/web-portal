@@ -240,7 +240,7 @@ const AllAdminsContent: React.FC = () => {
               {!isEditAdminVisibleLocalState ? (
                 <>
                   <ModalAdminDetails
-                    titleDescription="Detalles completos de Administrador"
+                    titleDescription="Detalle completo de Administrador"
                     labelAdminName="Nombre(s)"
                     selectedAdminName={selectedRowDataLocalState?.name}
                     labelAdminLastName="Apellido(s)"

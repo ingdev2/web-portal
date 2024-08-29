@@ -8,8 +8,10 @@ import { titleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
 import { IdcardOutlined } from "@ant-design/icons";
+import { FiPhone } from "react-icons/fi";
+import PhoneInput from "antd-phone-input";
 
-const EditAdminFormData: React.FC<{
+const EditPatientsFormData: React.FC<{
   nameAdminFormData: string;
   onChangeNameAdminFormData: (e: any) => void;
   lastNameAdminFormData: string;
@@ -29,6 +31,9 @@ const EditAdminFormData: React.FC<{
     e: React.FormEvent<HTMLFormElement>
   ) => Promise<void>;
   initialValuesEditAdminFormData: Store | undefined;
+  cellphoneEpsFormData: number | string;
+  onChangeCellphoneEpsFormData: (e: any) => void;
+  validatorCellphoneInputFormData: (_: any, value: any) => Promise<void>;
   emailEditAdminFormData: string;
   onChangeEmailEditAdminFormData: (e: any) => void;
   isSubmittingEditAdminFormData: boolean;
@@ -52,6 +57,9 @@ const EditAdminFormData: React.FC<{
   onChangeCompanyAreaAdminDataForm,
   handleConfirmEditAdminFormData,
   initialValuesEditAdminFormData,
+  cellphoneEpsFormData,
+  onChangeCellphoneEpsFormData,
+  validatorCellphoneInputFormData,
   emailEditAdminFormData,
   onChangeEmailEditAdminFormData,
   isSubmittingEditAdminFormData,
@@ -60,9 +68,9 @@ const EditAdminFormData: React.FC<{
 }) => {
   return (
     <Form
-      id="edit-admin-form"
-      name="edit-admin-form"
-      className="edit-admin-form"
+      id="edit-eps-form"
+      name="edit-eps-form"
+      className="edit-eps-form"
       onFinish={handleConfirmEditAdminFormData}
       initialValues={initialValuesEditAdminFormData}
       autoComplete="false"
@@ -74,7 +82,7 @@ const EditAdminFormData: React.FC<{
       }}
     >
       <h2
-        className="title-edit-admin-form"
+        className="title-edit-eps-form"
         style={{
           ...titleStyleCss,
           textAlign: "center",
@@ -82,14 +90,14 @@ const EditAdminFormData: React.FC<{
           marginBottom: "22px",
         }}
       >
-        Editar Administrador
+        Editar Usuario de EPS
       </h2>
 
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item
-            name="edit-admin-name"
-            label="Nombre(s) del administrador"
+            name="edit-eps-name"
+            label="Nombre(s) del colaborador"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -101,7 +109,7 @@ const EditAdminFormData: React.FC<{
             rules={[
               {
                 required: false,
-                message: "¡Por favor ingrese el nombre del administrador!",
+                message: "¡Por favor ingrese el nombre del colaborador!",
               },
               {
                 min: 3,
@@ -119,7 +127,7 @@ const EditAdminFormData: React.FC<{
             ]}
           >
             <Input
-              id="name-admin"
+              id="name-eps"
               prefix={
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
@@ -135,8 +143,8 @@ const EditAdminFormData: React.FC<{
 
         <Col span={12}>
           <Form.Item
-            name="edit-admin-lastname"
-            label="Apellido(s) del administrador"
+            name="edit-eps-lastname"
+            label="Apellido(s) del colaborador"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -148,7 +156,7 @@ const EditAdminFormData: React.FC<{
             rules={[
               {
                 required: false,
-                message: "¡Por favor ingrese el apellido del administrador!",
+                message: "¡Por favor ingrese el apellido del colaborador!",
               },
               {
                 min: 4,
@@ -166,7 +174,7 @@ const EditAdminFormData: React.FC<{
             ]}
           >
             <Input
-              id="lastname-admin"
+              id="lastname-eps"
               prefix={
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
@@ -184,19 +192,19 @@ const EditAdminFormData: React.FC<{
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item
-            name="edit-admin-id-types"
-            label="Tipo de identificación del administrador"
+            name="edit-eps-id-types"
+            label="Tipo de identificación del colaborador"
             style={{ marginBottom: "13px" }}
             rules={[
               {
                 required: false,
                 message:
-                  "¡Por favor selecciona el tipo de identificación del administrador!",
+                  "¡Por favor selecciona el tipo de identificación del colaborador!",
               },
             ]}
           >
             <Input
-              id="id-type-admin"
+              id="id-type-eps"
               value={idTypeNameAdminFormData}
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
@@ -207,8 +215,8 @@ const EditAdminFormData: React.FC<{
 
         <Col span={12}>
           <Form.Item
-            name="edit-admin-id-number"
-            label="Número de identificación del administrador"
+            name="edit-eps-id-number"
+            label="Número de identificación del colaborador"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -218,7 +226,7 @@ const EditAdminFormData: React.FC<{
               {
                 required: false,
                 message:
-                  "¡Por favor ingresa el número de identificación del administrador!",
+                  "¡Por favor ingresa el número de identificación del colaborador!",
               },
               {
                 pattern: /^[0-9]+$/,
@@ -236,7 +244,7 @@ const EditAdminFormData: React.FC<{
             ]}
           >
             <Input
-              id="id-number-admin"
+              id="id-number-eps"
               prefix={<IdcardOutlined className="site-form-item-icon" />}
               value={idNumberAdminFormData}
               placeholder="Número de identificación"
@@ -252,15 +260,49 @@ const EditAdminFormData: React.FC<{
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item
-            name="edit-admin-areas-company"
-            label="Área en la que se desempeña:"
-            tooltip="Aquí debes seleccionar el área de la empresa en la que desempeña el administrador."
+            name="edit-eps-company-user-eps"
+            label="Empresa donde labora:"
+            tooltip="Aquí debes seleccionar la empresa donde labora el colaborador."
             style={{ marginBottom: "13px" }}
             rules={[
               {
                 required: false,
                 message:
-                  "¡Por favor selecciona el área de empresa en la que se desempeña el administrador!",
+                  "¡Por favor selecciona empresa donde labora el colaborador!",
+              },
+            ]}
+          >
+            {positionLevelLoadingDataForm ? (
+              <CustomSpin />
+            ) : (
+              <Select
+                id="eps-companies-eps"
+                value={positionLevelAdminValueFormData}
+                placeholder="Seleccionar empresa"
+                onChange={onChangePositionLevelAdminDataForm}
+                disabled
+              >
+                {positionLevelsAdminListDataForm?.map((option: any) => (
+                  <Select.Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+
+        <Col span={12}>
+          <Form.Item
+            name="edit-eps-areas-company"
+            label="Área en la que se desempeña:"
+            tooltip="Aquí debes seleccionar el área de la empresa en la que desempeña el colaborador."
+            style={{ marginBottom: "13px" }}
+            rules={[
+              {
+                required: false,
+                message:
+                  "¡Por favor selecciona el área de empresa en la que se desempeña el colaborador!",
               },
             ]}
           >
@@ -282,45 +324,46 @@ const EditAdminFormData: React.FC<{
             )}
           </Form.Item>
         </Col>
+      </Row>
 
-        <Col span={12}>
+      <Row gutter={24}>
+        <Col span={10}>
           <Form.Item
-            name="edit-admin-position-level"
-            label="Nivel de cargo:"
-            tooltip="Aquí debes seleccionar el nivel del cargo que desempeña el administrador dentro de la empresa."
+            name="edit-eps-cellphone"
+            label="Celular corporativo "
             style={{ marginBottom: "13px" }}
+            normalize={(value) => {
+              if (!value || typeof value !== "string") return "";
+
+              return value.replace(/[^\d+]/g, "");
+            }}
             rules={[
               {
                 required: false,
                 message:
-                  "¡Por favor selecciona el nivel de cargo del administrador!",
+                  "¡Por favor ingresa el número de celular corporativo del colaborador!",
+              },
+              {
+                validator: validatorCellphoneInputFormData,
               },
             ]}
           >
-            {positionLevelLoadingDataForm ? (
-              <CustomSpin />
-            ) : (
-              <Select
-                id="position-level-admin"
-                value={positionLevelAdminValueFormData}
-                placeholder="Seleccionar nivel de cargo"
-                onChange={onChangePositionLevelAdminDataForm}
-              >
-                {positionLevelsAdminListDataForm?.map((option: any) => (
-                  <Select.Option key={option.id} value={option.id}>
-                    {option.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
+            <PhoneInput
+              prefix={<FiPhone className="site-form-item-icon" />}
+              type="tel"
+              value={cellphoneEpsFormData.toString()}
+              placeholder="Número de celular"
+              onChange={onChangeCellphoneEpsFormData}
+              autoComplete="off"
+              min={0}
+              enableSearch
+            />
           </Form.Item>
         </Col>
-      </Row>
 
-      <Row gutter={24}>
-        <Col span={24}>
+        <Col span={14}>
           <Form.Item
-            name="edit-admin-email"
+            name="edit-eps-email"
             label="Correo electrónico corporativo"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
@@ -331,7 +374,7 @@ const EditAdminFormData: React.FC<{
               {
                 required: false,
                 message:
-                  "¡Por favor ingresa el correo electrónico corporativo del administrador!",
+                  "¡Por favor ingresa el correo electrónico corporativo del colaborador!",
               },
               {
                 type: "email",
@@ -348,7 +391,7 @@ const EditAdminFormData: React.FC<{
             ]}
           >
             <Input
-              id="email-admin"
+              id="email-eps"
               prefix={<MdOutlineEmail className="site-form-item-icon" />}
               type="email"
               value={emailEditAdminFormData}
@@ -387,7 +430,7 @@ const EditAdminFormData: React.FC<{
                 borderRadius: 31,
               }}
               htmlType="submit"
-              className="edit-admin-form-button"
+              className="edit-eps-form-button"
               onClick={handleButtonClickFormData}
               disabled={!hasChangesFormData}
             >
@@ -400,4 +443,4 @@ const EditAdminFormData: React.FC<{
   );
 };
 
-export default EditAdminFormData;
+export default EditPatientsFormData;

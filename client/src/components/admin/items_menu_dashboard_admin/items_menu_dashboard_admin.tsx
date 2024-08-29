@@ -44,6 +44,11 @@ export const useMenuItems = () => {
     (state) => state.admin.company_area
   );
 
+  const tableRowIdState = useAppSelector((state) => state.modal.tableRowId);
+  const tableRowFilingNumberState = useAppSelector(
+    (state) => state.modal.tableRowFilingNumber
+  );
+
   const { data: superAdminRoleData, error: superAdminRoleError } =
     useGetAdminRoleByNameQuery({
       name: AdminRolType.SUPER_ADMIN,
@@ -74,13 +79,17 @@ export const useMenuItems = () => {
       name: CompanyAreaEnum.ADMISSIONS_DEPARTMENT,
     });
 
-  const { data: allMedicalReqStatusCreatedData } =
-    useGetAllMedicalReqUsersQuery({ status: RequirementStatusEnum.CREATED });
+  const {
+    data: allMedicalReqStatusCreatedData,
+    refetch: refetchAllMedicalReqStatusCreated,
+  } = useGetAllMedicalReqUsersQuery({ status: RequirementStatusEnum.CREATED });
 
-  const { data: allMedicalReqLegalAreaStatusUnderReviewData } =
-    useGetAllMedicalReqUsersToLegalAreaQuery({
-      status: RequirementStatusEnum.UNDER_REVIEW,
-    });
+  const {
+    data: allMedicalReqLegalAreaStatusUnderReviewData,
+    refetch: refetchAllMedicalReqStatusUnderReview,
+  } = useGetAllMedicalReqUsersToLegalAreaQuery({
+    status: RequirementStatusEnum.UNDER_REVIEW,
+  });
 
   const {
     data: adminData,
@@ -99,11 +108,17 @@ export const useMenuItems = () => {
     if (!companyAreaIdAdminState) {
       dispatch(setCompanyAreaAdmin(adminData?.company_area));
     }
+    if (tableRowIdState || tableRowFilingNumberState) {
+      refetchAllMedicalReqStatusCreated();
+      refetchAllMedicalReqStatusUnderReview();
+    }
   }, [
     idNumberAdminState,
     idNumberAdminLoginState,
     roleIdAdminState,
     companyAreaIdAdminState,
+    tableRowIdState,
+    tableRowFilingNumberState,
   ]);
 
   const waitAdminData =
@@ -116,8 +131,9 @@ export const useMenuItems = () => {
     archivesCompanyAreaData &&
     !archivesCompanyAreaError &&
     legalCompanyAreaData &&
-    !legalCompanyAreaError;
-  admissionsCompanyAreaData && !admissionsCompanyAreaError;
+    !legalCompanyAreaError &&
+    admissionsCompanyAreaData &&
+    !admissionsCompanyAreaError;
 
   if (waitAdminData) {
     const items: MenuItem[] = [
@@ -194,11 +210,21 @@ export const useMenuItems = () => {
                 <MenuUnfoldOutlined />
               )
             : null,
-          getItem(
-            ItemNames.SUB_PATIENT_USERS,
-            ItemKeys.SUB_PATIENT_USERS_KEY,
-            <MenuUnfoldOutlined />
-          ),
+          isAdminWithRoles(roleIdAdminState, [
+            superAdminRoleData.id,
+            adminRoleData.id,
+          ]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            systemsCompanyAreaData.id,
+            archivesCompanyAreaData.id,
+            admissionsCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_PATIENT_USERS,
+                ItemKeys.SUB_PATIENT_USERS_KEY,
+                <MenuUnfoldOutlined />
+              )
+            : null,
           getItem(
             ItemNames.SUB_RELATIVES_USERS,
             ItemKeys.SUB_RELATIVES_USERS_KEY,

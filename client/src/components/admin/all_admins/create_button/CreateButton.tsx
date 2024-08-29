@@ -26,7 +26,6 @@ const CreateButton: React.FC<{
 
   return (
     <Row
-      gutter={24}
       align="middle"
       justify={"center"}
       style={{
@@ -42,17 +41,18 @@ const CreateButton: React.FC<{
           width: "100%",
           display: "flex",
           flexFlow: "row wrap",
-          justifyContent: "flex-end",
+          justifyContent: "center",
           alignContent: "center",
           alignItems: "center",
-          padding: "0px 88px",
+          padding: "0px",
+          margin: "0px",
         }}
       >
         <h2
           style={{
             ...subtitleStyleCss,
             textAlign: "center",
-            paddingInline: "22px",
+            marginLeft: "45px",
           }}
         >
           Total de&nbsp;
@@ -69,10 +69,11 @@ const CreateButton: React.FC<{
           width: "100%",
           display: "flex",
           flexFlow: "row wrap",
-          justifyContent: "flex-end",
+          justifyContent: "center",
           alignContent: "center",
           alignItems: "center",
           padding: "0px",
+          margin: "0px",
         }}
       >
         {isSubmittingCreateButton ? (
@@ -91,6 +92,7 @@ const CreateButton: React.FC<{
               alignContent: "center",
               alignItems: "center",
               paddingInline: "13px",
+              margin: "0px",
             }}
             htmlType="button"
             className="admin-register-button"

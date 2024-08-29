@@ -9,7 +9,7 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
 import { IdcardOutlined } from "@ant-design/icons";
 import { FiPhone } from "react-icons/fi";
-import PhoneInput from "antd-phone-input";
+import PhoneInput, { PhoneNumber } from "antd-phone-input";
 
 const EditEpsFormData: React.FC<{
   nameAdminFormData: string;
@@ -31,7 +31,7 @@ const EditEpsFormData: React.FC<{
     e: React.FormEvent<HTMLFormElement>
   ) => Promise<void>;
   initialValuesEditAdminFormData: Store | undefined;
-  cellphoneEpsFormData: number | string;
+  cellphoneEpsFormData: string | PhoneNumber | undefined;
   onChangeCellphoneEpsFormData: (e: any) => void;
   validatorCellphoneInputFormData: (_: any, value: any) => Promise<void>;
   emailEditAdminFormData: string;
@@ -351,7 +351,7 @@ const EditEpsFormData: React.FC<{
             <PhoneInput
               prefix={<FiPhone className="site-form-item-icon" />}
               type="tel"
-              value={cellphoneEpsFormData.toString()}
+              value={cellphoneEpsFormData}
               placeholder="Número de celular"
               onChange={onChangeCellphoneEpsFormData}
               autoComplete="off"

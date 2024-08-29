@@ -316,7 +316,7 @@ export class AuthorizedFamiliarService {
           role: userRoleFamiliar,
         },
         order: {
-          name: 'ASC',
+          createdAt: 'DESC',
         },
       });
 
