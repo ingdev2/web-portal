@@ -74,6 +74,7 @@ const CustomDonutPlot: React.FC<{
           labelHeight: 31,
           formatter: (data, mappingData) => {
             const group = new G.Group({});
+
             group.addShape({
               type: "circle",
               attrs: {
@@ -85,6 +86,7 @@ const CustomDonutPlot: React.FC<{
                 fill: mappingData.color,
               },
             });
+
             group.addShape({
               type: "text",
               attrs: {
@@ -95,12 +97,15 @@ const CustomDonutPlot: React.FC<{
                 fontSize: 13,
               },
             });
+
+            const roundedPercent = Math.round(data.percent * 100);
+
             group.addShape({
               type: "text",
               attrs: {
                 x: 0,
                 y: 22,
-                text: `${data.value} = ${data.percent * 100}%`,
+                text: `${data.value} = ${roundedPercent}%`,
                 fill: "rgba(0, 0, 0, 0.65)",
                 fontWeight: 700,
                 fontSize: 14,

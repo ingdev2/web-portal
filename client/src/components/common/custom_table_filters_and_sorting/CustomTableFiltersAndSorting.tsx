@@ -47,6 +47,8 @@ const CustomTableFiltersAndSorting: React.FC<{
   const [filteredInfo, setFilteredInfo] = useState<Filters>({});
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
+  const [pageSize, setPageSize] = useState(7);
+
   const handleChange: OnChange = (pagination, filters, sorter) => {
     setFilteredInfo(filters);
     setSortedInfo(sorter as Sorts);
@@ -79,6 +81,10 @@ const CustomTableFiltersAndSorting: React.FC<{
     setFilteredInfo({});
     setSortedInfo({});
     handleReset(clearFilters);
+  };
+
+  const handlePageSizeChange = (current: number, size: number) => {
+    setPageSize(size);
   };
 
   const getColumnSearchProps = (dataIndex: string): TableColumnType<any> => ({
@@ -389,10 +395,13 @@ const CustomTableFiltersAndSorting: React.FC<{
         onChange={handleChange}
         footer={undefined}
         pagination={{
-          pageSize: 6,
+          pageSize: pageSize,
           size: "default",
           position: ["bottomCenter"],
           showQuickJumper: true,
+          showSizeChanger: true,
+          onShowSizeChange: handlePageSizeChange,
+          pageSizeOptions: [7, 10, 20, 30, 50, 100, 200, 300],
           style: {
             margin: "0px",
             paddingTop: "13px",

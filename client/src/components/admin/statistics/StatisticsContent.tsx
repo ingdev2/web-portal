@@ -2,12 +2,13 @@
 
 import React, { useMemo, useState } from "react";
 
+import { Col } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomDonutPlot from "@/components/common/custom_donut_plot/CustomDonutPlot";
 import FilterOptions from "./filter_options/FilterOptions";
 import FilterOptionsByDate from "./filter_options/FilterOptionsByDate";
 import CustomDatePickerOneDate from "@/components/common/custom_date_picker/CustomDatePickerOneDate";
-import { Col } from "antd";
+import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { subtitleStyleCss, titleStyleCss } from "@/theme/text_styles";
 
 import dayjs from "dayjs";
@@ -19,7 +20,6 @@ import {
   useMedicalReqDataByStatus,
   useMedicalReqDataByType,
 } from "./users_medical_req/users_medical_req_data";
-import { useGetAverageResponseTimeQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
 const StatisticsContent: React.FC = () => {
   const DATE_FORMAT_MONTH = "YYYY-MM";
@@ -38,32 +38,93 @@ const StatisticsContent: React.FC = () => {
   var year = selectedMonthYear?.year() || selectedYear;
   var month = selectedMonthYear ? selectedMonthYear.month() + 1 : undefined;
 
-  const { allMedicalReqData } = useMedicalReqData(year, month);
+  const { allMedicalReqData, isLoadingAllByDate, isFetchingAllByDate } =
+    useMedicalReqData(year, month);
 
-  const { clinicHistoryData, medicalDisabilityData, medicalOrderData } =
-    useMedicalReqDataByType(year, month);
+  const {
+    clinicHistoryData,
+    isLoadingClinicHistory,
+    isFetchingClinicHistory,
+    medicalDisabilityData,
+    isLoadingMedicalDisability,
+    isFetchingMedicalDisability,
+    medicalOrderData,
+    isLoadingMedicalOrder,
+    isFetchingMedicalOrder,
+  } = useMedicalReqDataByType(year, month);
 
   const {
     createdData,
+    isLoadingCreatedRequests,
+    isFetchingCreatedRequests,
     visualizedData,
+    isLoadingVisualizedRequests,
+    isFetchingVisualizedRequests,
     underReviewData,
+    isLoadingUnderReviewRequests,
+    isFetchingUnderReviewRequests,
     deliveredData,
+    isLoadingDeliveredRequests,
+    isFetchingDeliveredRequests,
     rejectedData,
+    isLoadingRejectedRequests,
+    isFetchingRejectedRequests,
     expiredData,
+    isLoadingExpiredRequests,
+    isFetchingExpiredRequests,
   } = useMedicalReqDataByStatus(year, month);
 
-  const { patientData, epsData, familiarData } =
-    useMedicalReqDataByApplicantType(year, month);
+  const {
+    patientData,
+    isLoadingPatientTypeRequests,
+    isFetchingPatientTypeRequests,
+    epsData,
+    isLoadingEpsTypeRequests,
+    isFetchingEpsTypeRequests,
+    familiarData,
+    isLoadingFamiliarTypeRequests,
+    isFetchingFamiliarTypeRequests,
+  } = useMedicalReqDataByApplicantType(year, month);
+
+  const isLoadingData =
+    isLoadingAllByDate ||
+    isFetchingAllByDate ||
+    isLoadingClinicHistory ||
+    isFetchingClinicHistory ||
+    isLoadingMedicalDisability ||
+    isFetchingMedicalDisability ||
+    isLoadingMedicalOrder ||
+    isFetchingMedicalOrder ||
+    isLoadingCreatedRequests ||
+    isFetchingCreatedRequests ||
+    isLoadingVisualizedRequests ||
+    isFetchingVisualizedRequests ||
+    isLoadingUnderReviewRequests ||
+    isFetchingUnderReviewRequests ||
+    isLoadingDeliveredRequests ||
+    isFetchingDeliveredRequests ||
+    isLoadingRejectedRequests ||
+    isFetchingRejectedRequests ||
+    isLoadingExpiredRequests ||
+    isFetchingExpiredRequests ||
+    isLoadingPatientTypeRequests ||
+    isFetchingPatientTypeRequests ||
+    isLoadingEpsTypeRequests ||
+    isFetchingEpsTypeRequests ||
+    isLoadingFamiliarTypeRequests ||
+    isFetchingFamiliarTypeRequests;
 
   const { averageResponseTime } = useGetAverageResponseTimeData();
 
   const dataToShow: DataCustomDonutPlot[] = useMemo(() => {
+    if (isLoadingData) return [];
+
     switch (filterOption) {
       case "TIPO":
         return [
           { type: "Historia Clínica", value: clinicHistoryData?.length || 0 },
           {
-            type: "Discapacidad Médica",
+            type: "Incapacidad Médica",
             value: medicalDisabilityData?.length || 0,
           },
           { type: "Orden Médica", value: medicalOrderData?.length || 0 },
@@ -81,7 +142,7 @@ const StatisticsContent: React.FC = () => {
         return [
           { type: "Paciente", value: patientData?.length || 0 },
           { type: "EPS", value: epsData?.length || 0 },
-          { type: "Familiar Autorizado", value: familiarData?.length || 0 },
+          { type: "Familiar", value: familiarData?.length || 0 },
         ];
       default:
         return [
@@ -262,7 +323,11 @@ const StatisticsContent: React.FC = () => {
                 marginBlock: "22px",
               }}
             >
-              <CustomDonutPlot dataCustomDonutPlot={dataToShow} />
+              {isLoadingData ? (
+                <CustomSpin />
+              ) : (
+                <CustomDonutPlot dataCustomDonutPlot={dataToShow} />
+              )}
             </div>
           </div>
         }

@@ -32,18 +32,6 @@ export const tableColumnsAllRequests = ({
   idTypesData,
 }: TableColumnProps) => [
   {
-    title: "NOMBRE DE SOLICITANTE",
-    key: aplicantNameKey,
-    dataIndex: aplicantNameKey,
-    width: 270,
-    sorter: (a: MedicalReq, b: MedicalReq) => {
-      return a[aplicantNameKey].localeCompare(b[aplicantNameKey]);
-    },
-    ellipsis: true,
-    searchable: true,
-    fixed: "left" as "left",
-  },
-  {
     title: "# RADICADO",
     key: filingNumberKey,
     dataIndex: filingNumberKey,
@@ -53,6 +41,18 @@ export const tableColumnsAllRequests = ({
       const numB = parseInt(b.filing_number.split("-")[1], 10);
 
       return numA - numB;
+    },
+    ellipsis: true,
+    searchable: true,
+    fixed: "left" as "left",
+  },
+  {
+    title: "NOMBRE DE SOLICITANTE",
+    key: aplicantNameKey,
+    dataIndex: aplicantNameKey,
+    width: 270,
+    sorter: (a: MedicalReq, b: MedicalReq) => {
+      return a[aplicantNameKey].localeCompare(b[aplicantNameKey]);
     },
     ellipsis: true,
     searchable: true,
@@ -72,6 +72,38 @@ export const tableColumnsAllRequests = ({
     onFilter: (value: any, record: any) => {
       return String(record.medicalReqUserType) === String(value);
     },
+  },
+  {
+    title: "NOMBRE DE PACIENTE",
+    key: patientNameKey,
+    dataIndex: patientNameKey,
+    width: 270,
+    ellipsis: true,
+    searchable: true,
+  },
+  {
+    title: "NÚMERO DE ID PACIENTE",
+    key: patientIdNumberKey,
+    dataIndex: patientIdNumberKey,
+    width: 100,
+    ellipsis: true,
+    searchable: true,
+  },
+  {
+    title: "TIPO DE ID PACIENTE",
+    key: patientIdTypeKey,
+    dataIndex: patientIdTypeKey,
+    width: 207,
+    filters:
+      idTypesData?.map((type) => ({
+        value: type.name,
+        text: type.name,
+      })) || [],
+    onFilter: (value: any, record: any) => {
+      return String(record.patient_id_type) === String(value);
+    },
+    ellipsis: true,
+    render: (type: string) => type,
   },
   {
     title: "FECHA DE CREACIÓN",
@@ -145,39 +177,7 @@ export const tableColumnsAllRequests = ({
     ellipsis: true,
     render: (area: string) => area,
   },
-  {
-    title: "NOMBRE DE PACIENTE",
-    key: patientNameKey,
-    dataIndex: patientNameKey,
-    width: 270,
-    ellipsis: true,
-    searchable: true,
-  },
-  {
-    title: "TIPO DE ID PACIENTE",
-    key: patientIdTypeKey,
-    dataIndex: patientIdTypeKey,
-    width: 207,
-    filters:
-      idTypesData?.map((type) => ({
-        value: type.name,
-        text: type.name,
-      })) || [],
-    onFilter: (value: any, record: any) => {
-      return String(record.patient_id_type) === String(value);
-    },
-    ellipsis: true,
-    render: (type: string) => type,
-  },
-  {
-    title: "NÚMERO DE ID PACIENTE",
-    key: patientIdNumberKey,
-    dataIndex: patientIdNumberKey,
-    width: 100,
-    ellipsis: true,
-    searchable: true,
-    fixed: "right" as "right",
-  },
+
   {
     title: "VER SOLICITUD COMPLETA",
     key: filingNumberKey,
