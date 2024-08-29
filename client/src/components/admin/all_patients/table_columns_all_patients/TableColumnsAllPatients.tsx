@@ -4,42 +4,37 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
 
-const adminIdKey: keyof Admin = "id";
-const adminNameKey: keyof Admin = "name";
-const adminLastNameKey: keyof Admin = "last_name";
-const adminIdTypeKey: keyof Admin = "admin_id_type";
-const adminIdNumberKey: keyof Admin = "id_number";
-const adminEmailKey: keyof Admin = "corporate_email";
-const companyAreaKey: keyof Admin = "company_area";
-const positionLevelKey: keyof Admin = "position_level";
-const adminIsActiveKey: keyof Admin = "is_active";
+const patientIdKey: keyof User = "id";
+const patientNameKey: keyof User = "name";
+const patientLastNameKey: keyof User = "last_name";
+const idTypePatientKey: keyof User = "user_id_type";
+const idNumberPatientKey: keyof User = "id_number";
+const patientEmailKey: keyof User = "email";
+const patientAffiliationEpsKey: keyof User = "affiliation_eps";
+const patientIsActiveKey: keyof User = "is_active";
 
 interface TableColumnProps {
-  handleClickSeeMore: (record: Admin) => void;
-  handleOnChangeSwitch: (record: Admin) => void;
+  handleClickSeeMore: (record: User) => void;
+  handleOnChangeSwitch: (record: User) => void;
   onClickSwitch: () => void;
   isLoadingSwitch: boolean;
   idTypesData: IdType[] | undefined;
-  companyAreaMedicalReqData: CompanyArea[] | undefined;
-  positionLevelData: PositionLevel[] | undefined;
 }
 
-export const tableColumnsAllAdmins = ({
+export const tableColumnsAllPatients = ({
   handleClickSeeMore,
   handleOnChangeSwitch,
   onClickSwitch,
   isLoadingSwitch,
   idTypesData,
-  companyAreaMedicalReqData,
-  positionLevelData,
 }: TableColumnProps) => [
   {
-    title: "NOMBRE",
-    key: adminNameKey,
-    dataIndex: adminNameKey,
-    width: 207,
-    sorter: (a: Admin, b: Admin) => {
-      return a[adminNameKey].localeCompare(b[adminNameKey]);
+    title: "NOMBRE COMPLETO",
+    key: patientNameKey,
+    dataIndex: patientNameKey,
+    width: 270,
+    sorter: (a: User, b: User) => {
+      return a[patientNameKey].localeCompare(b[patientNameKey]);
     },
     ellipsis: true,
     searchable: true,
@@ -47,8 +42,8 @@ export const tableColumnsAllAdmins = ({
   },
   {
     title: "TIPO DE ID",
-    key: adminIdTypeKey,
-    dataIndex: adminIdTypeKey,
+    key: idTypePatientKey,
+    dataIndex: idTypePatientKey,
     width: 183,
     filters:
       idTypesData?.map((type) => ({
@@ -56,67 +51,43 @@ export const tableColumnsAllAdmins = ({
         text: type.name,
       })) || [],
     onFilter: (value: any, record: any) => {
-      return String(record.admin_id_type) === String(value);
+      return String(record.user_id_type) === String(value);
     },
     ellipsis: true,
     render: (type: string) => type,
   },
   {
     title: "NÚMERO DE ID",
-    key: adminIdNumberKey,
-    dataIndex: adminIdNumberKey,
+    key: idNumberPatientKey,
+    dataIndex: idNumberPatientKey,
     width: 103,
     ellipsis: true,
     searchable: true,
   },
   {
-    title: "NIVEL DE CARGO",
-    key: positionLevelKey,
-    dataIndex: positionLevelKey,
-    width: 231,
+    title: "EMAIL",
+    key: patientEmailKey,
+    dataIndex: patientEmailKey,
+    width: 321,
     ellipsis: true,
-    filters:
-      positionLevelData?.map((position) => ({
-        value: position.name,
-        text: position.name,
-      })) || [],
-    onFilter: (value: any, record: any) => {
-      return String(record.position_level) === String(value);
-    },
-    render: (position: string) => position,
+    searchable: true,
   },
   {
-    title: "ÁREA DE LA EMPRESA",
-    key: companyAreaKey,
-    dataIndex: companyAreaKey,
-    width: 231,
-    ellipsis: true,
-    filters:
-      companyAreaMedicalReqData?.map((area) => ({
-        value: area.name,
-        text: area.name,
-      })) || [],
-    onFilter: (value: any, record: any) => {
-      return String(record.company_area) === String(value);
-    },
-    render: (area: string) => area,
-  },
-  {
-    title: "EMAIL CORPORATIVO",
-    key: adminEmailKey,
-    dataIndex: adminEmailKey,
-    width: 301,
+    title: "EPS DE AFILIACIÓN",
+    key: patientAffiliationEpsKey,
+    dataIndex: patientAffiliationEpsKey,
+    width: 207,
     ellipsis: true,
     searchable: true,
   },
   {
     title: "ADMINISTRAR",
-    key: adminIdKey,
-    dataIndex: adminIdKey,
+    key: patientIdKey,
+    dataIndex: patientIdKey,
     width: 103,
     ellipsis: true,
     fixed: "right" as "right",
-    render: (_: any, record: Admin) => (
+    render: (_: any, record: User) => (
       <div
         style={{
           width: "100%",
@@ -155,7 +126,7 @@ export const tableColumnsAllAdmins = ({
               handleOnChangeSwitch(record);
             }}
             onClickCustomSwitch={onClickSwitch}
-            isActiveCustomSwitch={record[adminIsActiveKey]}
+            isActiveCustomSwitch={record[patientIsActiveKey]}
             isLoadingCustomSwitch={isLoadingSwitch}
           />
         </Space>

@@ -255,9 +255,9 @@ const AllRequestContent: React.FC = () => {
       changeStatusToVisualized(record.id);
     }
 
-    setSelectedRowDataLocalState(record);
     dispatch(setTableRowId(record.id));
     dispatch(setTableRowFilingNumber(record.filing_number));
+    setSelectedRowDataLocalState(record);
 
     setIsModalVisibleLocalState(true);
 

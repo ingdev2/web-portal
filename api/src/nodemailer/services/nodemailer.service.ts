@@ -5,6 +5,7 @@ import {
   DEFAULT_EMAIL_FROM,
   NAME_EMAIL_FROM,
 } from '../../nodemailer/constants/email_config.constant';
+import { join } from 'path';
 
 @Injectable()
 export class NodemailerService {
@@ -56,6 +57,24 @@ export class NodemailerService {
         resetPasswordUrl,
         contactPbx,
       },
+      attachments: [
+        {
+          filename: 'LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
+          path: join(
+            __dirname,
+            '../../../../client/public/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
+          ),
+          cid: 'logo_proced@bonnadona.co',
+        },
+        {
+          filename: 'LOGO-BONNADONA.png',
+          path: join(
+            __dirname,
+            '../../../../client/public/logos/LOGO-BONNADONA.png',
+          ),
+          cid: 'logo_bonnadona@bonnadona.co',
+        },
+      ],
     });
 
     try {

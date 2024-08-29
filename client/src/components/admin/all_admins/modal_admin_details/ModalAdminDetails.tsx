@@ -76,7 +76,7 @@ const ModalAdminDetails: React.FC<{
         className="description-admin-details-admin"
         layout="vertical"
         size="middle"
-        style={{ paddingBlock: "7px" }}
+        style={{ width: "100%", paddingBlock: "7px" }}
         labelStyle={{
           ...titleStyleCss,
         }}
@@ -84,12 +84,12 @@ const ModalAdminDetails: React.FC<{
           ...subtitleStyleCss,
         }}
         bordered
-        column={14}
+        column={12}
       >
         <Descriptions.Item
           label={labelAdminName}
           style={{ textAlign: "center" }}
-          span={7}
+          span={6}
         >
           {selectedAdminName}
         </Descriptions.Item>
@@ -97,7 +97,7 @@ const ModalAdminDetails: React.FC<{
         <Descriptions.Item
           label={labelAdminLastName}
           style={{ textAlign: "center" }}
-          span={7}
+          span={6}
         >
           {selectedAdminLastName}
         </Descriptions.Item>
@@ -105,25 +105,25 @@ const ModalAdminDetails: React.FC<{
         {/* FILA 1 */}
 
         <Descriptions.Item
-          label={labelAdminIdNumber}
-          style={{ textAlign: "center" }}
-          span={3}
-        >
-          {selectedAdminIdNumber}
-        </Descriptions.Item>
-
-        <Descriptions.Item
           label={labelAdminIdType}
           style={{ textAlign: "center" }}
-          span={8}
+          span={5}
         >
           {selectedAdminIdType}
         </Descriptions.Item>
 
         <Descriptions.Item
+          label={labelAdminIdNumber}
+          style={{ textAlign: "center" }}
+          span={5}
+        >
+          {selectedAdminIdNumber}
+        </Descriptions.Item>
+
+        <Descriptions.Item
           label={labelAdminGender}
           style={{ textAlign: "center" }}
-          span={3}
+          span={2}
         >
           {selectedAdminGender}
         </Descriptions.Item>
@@ -133,7 +133,7 @@ const ModalAdminDetails: React.FC<{
         <Descriptions.Item
           label={labelAdminLevelPosition}
           style={{ textAlign: "center" }}
-          span={7}
+          span={6}
         >
           {selectedAdminLevelPosition}
         </Descriptions.Item>
@@ -141,7 +141,7 @@ const ModalAdminDetails: React.FC<{
         <Descriptions.Item
           label={labelAdminCompanyArea}
           style={{ textAlign: "center" }}
-          span={7}
+          span={6}
         >
           {selectedAdminCompanyArea}
         </Descriptions.Item>
@@ -151,7 +151,7 @@ const ModalAdminDetails: React.FC<{
         <Descriptions.Item
           label={labelAdminEmail}
           style={{ textAlign: "center" }}
-          span={14}
+          span={12}
         >
           {selectedAdminEmail}
         </Descriptions.Item>

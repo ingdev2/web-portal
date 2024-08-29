@@ -25,6 +25,7 @@ const initialState: User = {
   eps_company: 0,
   eps_company_abbrev: "",
   company_area: 0,
+  familiar: [],
   user_role: 0,
   verification_code: 0,
   createdAt: "",
@@ -88,6 +89,9 @@ export const patientSlice = createSlice({
     setResidenceAddressUserPatient: (state, action) => {
       state.residence_address = action.payload;
     },
+    setRelativesUserPatient: (state, action) => {
+      state.familiar = action.payload;
+    },
     setIsActiveUserPatient: (state, action) => {
       state.is_active = action.payload;
     },
@@ -114,6 +118,7 @@ export const patientSlice = createSlice({
       state.email = "";
       state.cellphone = 0;
       state.whatsapp = 0;
+      state.familiar = [];
       state.authentication_method = 0;
       state.password = "";
       state.residence_address = "";
@@ -139,6 +144,7 @@ export const {
   setAuthMethodUserPatient,
   setPasswordUserPatient,
   setResidenceAddressUserPatient,
+  setRelativesUserPatient,
   setIsActiveUserPatient,
   setRoleUserPatient,
   setMedicalReqUserPatient,

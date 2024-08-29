@@ -7,9 +7,9 @@ import { FaBan } from "react-icons/fa";
 const epsIdKey: keyof User = "id";
 const epsNameKey: keyof User = "name";
 const epsLastNameKey: keyof User = "last_name";
-const idTypeEpsKey: keyof User = "user_id_type";
-const numberIdTypeKey: keyof User = "id_number";
-const emailKey: keyof User = "email";
+const epsIdTypeKey: keyof User = "user_id_type";
+const epsIdNumberKey: keyof User = "id_number";
+const epsEmailKey: keyof User = "email";
 const epsCompanyKey: keyof User = "eps_company";
 const companyAreaKey: keyof User = "company_area";
 const epsIsActiveKey: keyof User = "is_active";
@@ -38,14 +38,17 @@ export const tableColumnsAllEps = ({
     key: epsNameKey,
     dataIndex: epsNameKey,
     width: 207,
+    sorter: (a: User, b: User) => {
+      return a[epsNameKey].localeCompare(b[epsNameKey]);
+    },
     ellipsis: true,
     searchable: true,
     fixed: "left" as "left",
   },
   {
     title: "TIPO DE ID",
-    key: idTypeEpsKey,
-    dataIndex: idTypeEpsKey,
+    key: epsIdTypeKey,
+    dataIndex: epsIdTypeKey,
     width: 183,
     filters:
       idTypesData?.map((type) => ({
@@ -60,8 +63,8 @@ export const tableColumnsAllEps = ({
   },
   {
     title: "NÚMERO DE ID",
-    key: numberIdTypeKey,
-    dataIndex: numberIdTypeKey,
+    key: epsIdNumberKey,
+    dataIndex: epsIdNumberKey,
     width: 103,
     ellipsis: true,
     searchable: true,
@@ -100,8 +103,8 @@ export const tableColumnsAllEps = ({
   },
   {
     title: "EMAIL CORPORATIVO",
-    key: emailKey,
-    dataIndex: emailKey,
+    key: epsEmailKey,
+    dataIndex: epsEmailKey,
     width: 301,
     ellipsis: true,
     searchable: true,

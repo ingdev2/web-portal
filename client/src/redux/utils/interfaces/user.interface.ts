@@ -23,6 +23,7 @@ interface User {
   eps_company: number;
   eps_company_abbrev: string;
   company_area: number;
+  familiar: Familiar[];
   user_role: number;
   verification_code: number;
   createdAt: string;

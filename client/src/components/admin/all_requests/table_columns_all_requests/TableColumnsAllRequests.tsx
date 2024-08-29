@@ -36,6 +36,9 @@ export const tableColumnsAllRequests = ({
     key: aplicantNameKey,
     dataIndex: aplicantNameKey,
     width: 270,
+    sorter: (a: MedicalReq, b: MedicalReq) => {
+      return a[aplicantNameKey].localeCompare(b[aplicantNameKey]);
+    },
     ellipsis: true,
     searchable: true,
     fixed: "left" as "left",

@@ -6,7 +6,7 @@ export enum ItemNames {
 
   ITEM_USERS = "Usuarios",
   SUB_ADMIN_USERS = "Administradores",
-  SUB_EPS_AUDITORS = "Auditores EPS",
+  SUB_EPS_AUDITORS = "Usuarios EPS",
   SUB_PATIENT_USERS = "Pacientes",
   SUB_RELATIVES_USERS = "Familiares",
 }
