@@ -8,43 +8,48 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
   setIdUserPatient,
-  setNameUserPatient,
-  setLastNameUserPatient,
-  setIdNumberUserPatient,
+  setCellphoneUserPatient,
+  setWhatsappUserPatient,
   setEmailUserPatient,
+  setResidenceAddressUserPatient,
   setErrorsUserPatient,
 } from "@/redux/features/patient/patientSlice";
 
 import {
-  useGetUserByIdNumberEpsQuery,
-  useUpdateUserEpsMutation,
+  useGetUserByIdNumberPatientQuery,
+  useUpdateUserPatientMutation,
 } from "@/redux/apis/users/usersApi";
-import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
-import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
-import { transformNameToIdMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 
 const EditPatientsForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
 
-  const idEpsState = useAppSelector((state) => state.eps.id);
-  const nameEpsState = useAppSelector((state) => state.eps.name);
-  const lastNameEpsState = useAppSelector((state) => state.eps.last_name);
-  const idTypeNameEpsState = useAppSelector((state) => state.eps.user_id_type);
-  const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
-  const cellphoneEpsState = useAppSelector((state) => state.eps.cellphone);
-  const emailEpsState = useAppSelector((state) => state.eps.email);
-  const companyAreaEpsState = useAppSelector((state) => state.eps.company_area);
-  const epsCompanyEpsState = useAppSelector((state) => state.eps.eps_company);
+  const idPatientState = useAppSelector((state) => state.patient.id);
+  const namePatientState = useAppSelector((state) => state.patient.name);
+  const idTypeNamePatientState = useAppSelector(
+    (state) => state.patient.user_id_type
+  );
+  const idNumberPatientState = useAppSelector(
+    (state) => state.patient.id_number
+  );
+  const cellphonePatientState = useAppSelector(
+    (state) => state.patient.cellphone
+  );
+  const whatsappPatientState = useAppSelector(
+    (state) => state.patient.whatsapp
+  );
+  const emailPatientState = useAppSelector((state) => state.patient.email);
+  const affiliationEpsPatientState = useAppSelector(
+    (state) => state.patient.affiliation_eps
+  );
+  const residenceAddressPatientState = useAppSelector(
+    (state) => state.patient.residence_address
+  );
 
-  const epsErrorsState = useAppSelector((state) => state.eps.errors);
+  const patientErrorsState = useAppSelector((state) => state.patient.errors);
 
   const [hasChanges, setHasChanges] = useState(false);
-
-  const [nameEpsLocalState, setNameEpsLocalState] = useState("");
-  const [lastNameEpsLocalState, setLastNameEpsLocalState] = useState("");
-  const [idNumberEpsLocalState, setIdNumberEpsLocalState] = useState(0);
 
   const [countryCode, setCountryCode] = useState(0);
   const [areaCode, setAreaCode] = useState("");
@@ -52,14 +57,17 @@ const EditPatientsForm: React.FC = () => {
 
   var fullCellphoneNumber = `${countryCode}${areaCode}${phoneNumber}`;
 
-  const [emailEpsLocalState, setEmailEpsLocalState] = useState("");
-  const [companyAreaEpsLocalState, setCompanyAreaEpsLocalState] = useState(0);
-  const [companyAreasListLocalState, setCompanyAreasListLocalState]: any =
-    useState([]);
-  const [epsCompanyUserEpsLocalState, setEpsCompanyUserEpsLocalState] =
-    useState(0);
-  const [epsCompaniesListLocalState, setEpsCompaniesListLocalState]: any =
-    useState([]);
+  const [countryCodeWhatsApp, setCountryCodeWhatsApp] = useState(0);
+  const [areaCodeWhatsApp, setAreaCodeWhatsApp] = useState("");
+  const [phoneNumberWhatsApp, setPhoneNumberWhatsApp] = useState("");
+
+  var fullWhatsAppNumber = `${countryCodeWhatsApp}${areaCodeWhatsApp}${phoneNumberWhatsApp}`;
+
+  const [emailPatientLocalState, setEmailPatientLocalState] = useState("");
+  const [
+    residenceAddressPatientLocalState,
+    setResidenceAddressPatientLocalState,
+  ] = useState("");
 
   const [isSubmittingUpdatePersonalData, setIsSubmittingUpdatePersonalData] =
     useState(false);
@@ -68,83 +76,29 @@ const EditPatientsForm: React.FC = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const {
-    data: epsData,
-    isLoading: epsLoading,
-    isFetching: epsFetching,
-    error: epsError,
-  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
-
-  const {
-    data: allCompanyAreaData,
-    isLoading: allCompanyAreasLoading,
-    isFetching: allCompanyAreasFetching,
-    error: allCompanyAreasError,
-  } = useGetAllCompanyAreaQuery(null);
-
-  const {
-    data: allEpsCompaniesData,
-    isLoading: allEpsCompaniesLoading,
-    isFetching: allEpsCompaniesFetching,
-    error: allEpsCompaniesError,
-  } = useGetAllEpsCompanyQuery(null);
+    data: patientData,
+    isLoading: patientLoading,
+    isFetching: patientFetching,
+    error: patientError,
+  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
 
   const [
-    updateEpsData,
+    updatePatientData,
     {
-      data: updateEpstData,
-      isLoading: updateEpsLoading,
-      isSuccess: updateEpsSuccess,
-      isError: updateEpsError,
+      data: updatePatientPersonalData,
+      isLoading: updatePatientLoading,
+      isSuccess: updatePatientSuccess,
+      isError: updatePatientError,
     },
-  ] = useUpdateUserEpsMutation({
-    fixedCacheKey: "updateEpsData",
+  ] = useUpdateUserPatientMutation({
+    fixedCacheKey: "updatePatientData",
   });
 
-  const companyAreaGetId = transformNameToIdMap(allCompanyAreaData);
-
   useEffect(() => {
-    if (epsData && !idEpsState && !epsLoading && !epsFetching) {
-      dispatch(setIdUserPatient(epsData.id));
+    if (patientData && !idPatientState && !patientLoading && !patientFetching) {
+      dispatch(setIdUserPatient(patientData.id));
     }
-    if (
-      allCompanyAreaData &&
-      !allCompanyAreasLoading &&
-      !allCompanyAreasFetching
-    ) {
-      setCompanyAreasListLocalState(allCompanyAreaData);
-    }
-    if (allCompanyAreasError) {
-      dispatch(
-        setErrorsUserPatient("¡No se pudo obtener las áreas de la empresa!")
-      );
-      setShowErrorMessage(true);
-      setCompanyAreasListLocalState(allCompanyAreaData);
-    }
-    if (
-      allEpsCompaniesData &&
-      !allEpsCompaniesLoading &&
-      !allEpsCompaniesFetching
-    ) {
-      setEpsCompaniesListLocalState(allEpsCompaniesData);
-    }
-    if (allEpsCompaniesError) {
-      dispatch(
-        setErrorsUserPatient(
-          "¡No se pudo obtener las entidades prestadoras de salud!"
-        )
-      );
-      setShowErrorMessage(true);
-      setEpsCompaniesListLocalState(allEpsCompaniesData);
-    }
-  }, [
-    epsData,
-    idEpsState,
-    allCompanyAreaData,
-    allCompanyAreasError,
-    allEpsCompaniesData,
-    allEpsCompaniesError,
-    fullCellphoneNumber,
-  ]);
+  }, [patientData, idPatientState, fullCellphoneNumber, fullWhatsAppNumber]);
 
   const handleConfirmUpdatePersonalData = async (
     e: React.FormEvent<HTMLFormElement>
@@ -152,27 +106,28 @@ const EditPatientsForm: React.FC = () => {
     try {
       setIsSubmittingUpdatePersonalData(true);
 
-      const response: any = await updateEpsData({
-        id: idEpsState,
+      const response: any = await updatePatientData({
+        id: idPatientState,
         updateUser: {
-          cellphone: parseInt(fullCellphoneNumber, 10) || cellphoneEpsState,
-          email: emailEpsLocalState || emailEpsState,
-          company_area:
-            companyAreaEpsLocalState || companyAreaGetId[companyAreaEpsState],
+          cellphone: parseInt(fullCellphoneNumber, 10) || cellphonePatientState,
+          whatsapp: parseInt(fullWhatsAppNumber, 10) || whatsappPatientState,
+          email: emailPatientLocalState || emailPatientState,
+          residence_address:
+            residenceAddressPatientLocalState || residenceAddressPatientState,
         },
       });
 
-      var editEpsDataError = response.error;
+      var editPatientDataError = response.error;
 
-      var editEpsDataStatus = response.data.status;
+      var editPatientDataStatus = response.data.status;
 
-      var editEpsDataValidationData = response.data?.message;
+      var editPatientDataValidationData = response.data?.message;
 
-      if (editEpsDataError || editEpsDataStatus !== 202) {
+      if (editPatientDataError || editPatientDataStatus !== 202) {
         setHasChanges(false);
 
-        const errorMessage = editEpsDataError?.data.message;
-        const validationDataMessage = editEpsDataValidationData;
+        const errorMessage = editPatientDataError?.data.message;
+        const validationDataMessage = editPatientDataValidationData;
 
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsUserPatient(errorMessage[0]));
@@ -194,50 +149,37 @@ const EditPatientsForm: React.FC = () => {
         }
       }
 
-      if (editEpsDataStatus === 202 && !editEpsDataError) {
+      if (editPatientDataStatus === 202 && !editPatientDataError) {
         setHasChanges(false);
 
-        dispatch(setNameUserPatient(nameEpsLocalState || nameEpsState));
         dispatch(
-          setLastNameUserPatient(lastNameEpsLocalState || lastNameEpsState)
+          setCellphoneUserPatient(
+            parseInt(fullCellphoneNumber, 10) || cellphonePatientState
+          )
         );
         dispatch(
-          setIdNumberUserPatient(idNumberEpsLocalState || idNumberEpsState)
+          setWhatsappUserPatient(
+            parseInt(fullWhatsAppNumber, 10) || whatsappPatientState
+          )
         );
-        dispatch(setEmailUserPatient(emailEpsLocalState || emailEpsState));
+        dispatch(
+          setEmailUserPatient(emailPatientLocalState || emailPatientState)
+        );
+        dispatch(
+          setResidenceAddressUserPatient(
+            residenceAddressPatientLocalState || residenceAddressPatientState
+          )
+        );
 
-        setSuccessMessage(
-          "¡Datos del usuario de EPS actualizados correctamente!"
-        );
+        setSuccessMessage("¡Datos del Paciente actualizados correctamente!");
         setShowSuccessMessage(true);
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmittingUpdatePersonalData(false);
-      setEmailEpsLocalState("");
-      setCompanyAreaEpsLocalState(0);
+      setEmailPatientLocalState("");
     }
-  };
-
-  const handleOnChangeCompanyArea = (value: number) => {
-    setHasChanges(true);
-
-    setCompanyAreaEpsLocalState(value);
-
-    const selectedCompanyArea: any = companyAreasListLocalState?.find(
-      (type: any) => type.id === value
-    );
-  };
-
-  const handleOnChangeEpsCompany = (value: number) => {
-    setHasChanges(true);
-
-    setEpsCompanyUserEpsLocalState(value);
-
-    const selectedPositionLevel: any = epsCompaniesListLocalState?.find(
-      (type: any) => type.id === value
-    );
   };
 
   const handlePhoneInputChange = (value: any) => {
@@ -274,6 +216,40 @@ const EditPatientsForm: React.FC = () => {
     return Promise.reject("Número de teléfono inválido");
   };
 
+  const handleWhatsappInputChange = (value: any) => {
+    setHasChanges(true);
+
+    if (value) {
+      setCountryCodeWhatsApp(value.countryCode || 0);
+      setAreaCodeWhatsApp(value.areaCode || "");
+      setPhoneNumberWhatsApp(value.phoneNumber || "");
+    }
+  };
+
+  const combineWhatsappDetails = () => {
+    return `${areaCodeWhatsApp}${phoneNumberWhatsApp}`;
+  };
+
+  const validatorWhatsappInput = (_: any, value: any) => {
+    const combinedWhatsapp = combineWhatsappDetails();
+
+    if (!combinedWhatsapp) {
+      return Promise.resolve();
+    }
+
+    const whatsappPattern = /^[0-9]+$/;
+
+    if (
+      whatsappPattern.test(combinedWhatsapp) &&
+      combinedWhatsapp.length >= 7 &&
+      combinedWhatsapp.length <= 17
+    ) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject("Número de WhatsApp inválido");
+  };
+
   const handleButtonClick = () => {
     setSuccessMessage("");
     setShowSuccessMessage(false);
@@ -286,7 +262,7 @@ const EditPatientsForm: React.FC = () => {
       {showErrorMessage && (
         <CustomMessage
           typeMessage="error"
-          message={epsErrorsState?.toString() || "¡Error en la petición!"}
+          message={patientErrorsState?.toString() || "¡Error en la petición!"}
         />
       )}
 
@@ -298,52 +274,43 @@ const EditPatientsForm: React.FC = () => {
       )}
 
       <EditPatientsFormData
-        nameAdminFormData={nameEpsState || NOT_REGISTER}
-        onChangeNameAdminFormData={(e) => {
-          setHasChanges(true);
-
-          setNameEpsLocalState(e.target.value.toUpperCase());
-        }}
-        lastNameAdminFormData={lastNameEpsState || NOT_REGISTER}
-        onChangeLastNameAdminFormData={(e) => {
-          setHasChanges(true);
-
-          setLastNameEpsLocalState(e.target.value.toUpperCase());
-        }}
-        idTypeNameAdminFormData={idTypeNameEpsState.toString() || NOT_REGISTER}
-        idNumberAdminFormData={idNumberEpsState || NOT_REGISTER}
-        onChangeIdNumberAdminFormData={(e) => {
-          setHasChanges(true);
-
-          setIdNumberEpsLocalState(e.target.value);
-        }}
-        companyAreaAdminValueFormData={companyAreaEpsLocalState}
-        companyAreasAdminListDataForm={companyAreasListLocalState}
-        companyAreasLoadingDataForm={allCompanyAreasLoading}
-        onChangeCompanyAreaAdminDataForm={handleOnChangeCompanyArea}
-        positionLevelAdminValueFormData={epsCompanyUserEpsLocalState}
-        positionLevelsAdminListDataForm={epsCompaniesListLocalState}
-        positionLevelLoadingDataForm={allEpsCompaniesLoading}
-        onChangePositionLevelAdminDataForm={handleOnChangeEpsCompany}
-        cellphoneEpsFormData={cellphoneEpsState}
-        onChangeCellphoneEpsFormData={handlePhoneInputChange}
+        nameAdminFormData={namePatientState || NOT_REGISTER}
+        idTypeNameAdminFormData={
+          idTypeNamePatientState.toString() || NOT_REGISTER
+        }
+        idNumberAdminFormData={idNumberPatientState || NOT_REGISTER}
+        cellphonePatientFormData={cellphonePatientState.toString()}
+        onChangeCellphonePatientFormData={handlePhoneInputChange}
         validatorCellphoneInputFormData={validatorCellphoneInput}
-        emailEditAdminFormData={emailEpsState || NOT_REGISTER}
+        whatsappPatientFormData={
+          (whatsappPatientState && whatsappPatientState.toString()) || undefined
+        }
+        onChangeWhatsappPatientFormData={handleWhatsappInputChange}
+        validatorWhatsappInputFormData={validatorWhatsappInput}
+        emailEditAdminFormData={emailPatientState || NOT_REGISTER}
         onChangeEmailEditAdminFormData={(e) => {
           setHasChanges(true);
 
-          setEmailEpsLocalState(e.target.value.toLowerCase());
+          setEmailPatientLocalState(e.target.value.toLowerCase());
+        }}
+        residenceAddressEditAdminFormData={
+          residenceAddressPatientState || NOT_REGISTER
+        }
+        onChangeResidenceAddressEditAdminFormData={(e) => {
+          setHasChanges(true);
+
+          setResidenceAddressPatientLocalState(e.target.value.toUpperCase());
         }}
         handleConfirmEditAdminFormData={handleConfirmUpdatePersonalData}
         initialValuesEditAdminFormData={{
-          "edit-eps-name": nameEpsState || NOT_REGISTER,
-          "edit-eps-lastname": lastNameEpsState || NOT_REGISTER,
-          "edit-eps-id-types": idTypeNameEpsState || NOT_REGISTER,
-          "edit-eps-id-number": idNumberEpsState || NOT_REGISTER,
-          "edit-eps-company-user-eps": epsCompanyEpsState || NOT_REGISTER,
-          "edit-eps-areas-company": companyAreaEpsState || NOT_REGISTER,
-          "edit-eps-cellphone": cellphoneEpsState || NOT_REGISTER,
-          "edit-eps-email": emailEpsState || NOT_REGISTER,
+          "edit-patient-name": namePatientState || NOT_REGISTER,
+          "edit-patient-id-types": idTypeNamePatientState || NOT_REGISTER,
+          "edit-patient-id-number": idNumberPatientState || NOT_REGISTER,
+          "edit-patient-cellphone": cellphonePatientState || NOT_REGISTER,
+          "edit-patient-whatsapp": whatsappPatientState || NOT_REGISTER,
+          "edit-patient-email": emailPatientState || NOT_REGISTER,
+          "edit-patient-residence-address":
+            residenceAddressPatientState || NOT_REGISTER,
         }}
         isSubmittingEditAdminFormData={isSubmittingUpdatePersonalData}
         hasChangesFormData={hasChanges}

@@ -108,7 +108,8 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
                 color: "#F7F7F7",
                 borderRadius: "31px",
                 paddingInline: "31px",
-                marginBlock: "13px",
+                marginTop: "31px",
+                marginBottom: "13px",
               }}
               onClick={() => {
                 if (!isManagementOptionsVisibleLocalState) {
@@ -138,7 +139,7 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
           <Row
             justify={"center"}
             align={"middle"}
-            style={{ marginBlock: "22px" }}
+            style={{ marginTop: "31px", marginBottom: "22px" }}
           >
             <SendToAnotherAreaButton />
 

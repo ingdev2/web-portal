@@ -117,8 +117,6 @@ const StatisticsContent: React.FC = () => {
   const { averageResponseTime } = useGetAverageResponseTimeData();
 
   const dataToShow: DataCustomDonutPlot[] = useMemo(() => {
-    if (isLoadingData) return [];
-
     switch (filterOption) {
       case "TIPO":
         return [
