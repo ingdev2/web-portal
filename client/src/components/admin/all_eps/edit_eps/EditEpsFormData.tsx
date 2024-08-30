@@ -97,7 +97,7 @@ const EditEpsFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-eps-name"
-            label="Nombre(s) del colaborador"
+            label="Nombre(s) del colaborador:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -144,7 +144,7 @@ const EditEpsFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-eps-lastname"
-            label="Apellido(s) del colaborador"
+            label="Apellido(s) del colaborador:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -193,7 +193,7 @@ const EditEpsFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-eps-id-types"
-            label="Tipo de identificación del colaborador"
+            label="Tipo de identificación del colaborador:"
             style={{ marginBottom: "13px" }}
             rules={[
               {
@@ -216,7 +216,7 @@ const EditEpsFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-eps-id-number"
-            label="Número de identificación del colaborador"
+            label="Número de identificación del colaborador:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -330,7 +330,7 @@ const EditEpsFormData: React.FC<{
         <Col span={10}>
           <Form.Item
             name="edit-eps-cellphone"
-            label="Celular corporativo "
+            label="Celular corporativo:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value || typeof value !== "string") return "";
@@ -364,7 +364,7 @@ const EditEpsFormData: React.FC<{
         <Col span={14}>
           <Form.Item
             name="edit-eps-email"
-            label="Correo electrónico corporativo"
+            label="Correo electrónico corporativo:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";

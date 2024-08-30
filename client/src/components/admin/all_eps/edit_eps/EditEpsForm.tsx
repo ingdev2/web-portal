@@ -8,11 +8,8 @@ import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
   setIdUserEps,
-  setNameUserEps,
-  setLastNameUserEps,
-  setIdNumberUserEps,
   setEmailUserEps,
-  setEpsCompanyUserEps,
+  setCellphoneUserEps,
   setCompanyAreaUserEps,
   setErrorsUserEps,
 } from "@/redux/features/eps/epsSlice";
@@ -93,7 +90,7 @@ const EditEpsForm: React.FC = () => {
   const [
     updateEpsData,
     {
-      data: updateEpstData,
+      data: updateEpsPersonalData,
       isLoading: updateEpsLoading,
       isSuccess: updateEpsSuccess,
       isError: updateEpsError,
@@ -199,17 +196,14 @@ const EditEpsForm: React.FC = () => {
       if (editEpsDataStatus === 202 && !editEpsDataError) {
         setHasChanges(false);
 
-        dispatch(setNameUserEps(nameEpsLocalState || nameEpsState));
-        dispatch(setLastNameUserEps(lastNameEpsLocalState || lastNameEpsState));
-        dispatch(setIdNumberUserEps(idNumberEpsLocalState || idNumberEpsState));
+        dispatch(
+          setCellphoneUserEps(
+            parseInt(fullCellphoneNumber, 10) || cellphoneEpsState
+          )
+        );
         dispatch(setEmailUserEps(emailEpsLocalState || emailEpsState));
         dispatch(
           setCompanyAreaUserEps(companyAreaEpsLocalState || companyAreaEpsState)
-        );
-        dispatch(
-          setEpsCompanyUserEps(
-            epsCompanyUserEpsLocalState || epsCompanyEpsState
-          )
         );
 
         setSuccessMessage(
@@ -331,7 +325,9 @@ const EditEpsForm: React.FC = () => {
         positionLevelsAdminListDataForm={epsCompaniesListLocalState}
         positionLevelLoadingDataForm={allEpsCompaniesLoading}
         onChangePositionLevelAdminDataForm={handleOnChangeEpsCompany}
-        cellphoneEpsFormData={cellphoneEpsState}
+        cellphoneEpsFormData={
+          (cellphoneEpsState && cellphoneEpsState.toString()) || undefined
+        }
         onChangeCellphoneEpsFormData={handlePhoneInputChange}
         validatorCellphoneInputFormData={validatorCellphoneInput}
         emailEditAdminFormData={emailEpsState || NOT_REGISTER}

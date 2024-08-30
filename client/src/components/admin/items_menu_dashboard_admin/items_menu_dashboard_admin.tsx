@@ -225,11 +225,17 @@ export const useMenuItems = () => {
                 <MenuUnfoldOutlined />
               )
             : null,
-          getItem(
-            ItemNames.SUB_RELATIVES_USERS,
-            ItemKeys.SUB_RELATIVES_USERS_KEY,
-            <MenuUnfoldOutlined />
-          ),
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            systemsCompanyAreaData.id,
+            archivesCompanyAreaData.id,
+            admissionsCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_RELATIVES_USERS,
+                ItemKeys.SUB_RELATIVES_USERS_KEY,
+                <MenuUnfoldOutlined />
+              )
+            : null,
         ].filter(Boolean)
       ),
     ];

@@ -89,7 +89,7 @@ const EditAdminFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-admin-name"
-            label="Nombre(s) del administrador"
+            label="Nombre(s) del administrador:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -136,7 +136,7 @@ const EditAdminFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-admin-lastname"
-            label="Apellido(s) del administrador"
+            label="Apellido(s) del administrador:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -185,7 +185,7 @@ const EditAdminFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-admin-id-types"
-            label="Tipo de identificación del administrador"
+            label="Tipo de identificación del administrador:"
             style={{ marginBottom: "13px" }}
             rules={[
               {
@@ -208,7 +208,7 @@ const EditAdminFormData: React.FC<{
         <Col span={12}>
           <Form.Item
             name="edit-admin-id-number"
-            label="Número de identificación del administrador"
+            label="Número de identificación del administrador:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -321,7 +321,7 @@ const EditAdminFormData: React.FC<{
         <Col span={24}>
           <Form.Item
             name="edit-admin-email"
-            label="Correo electrónico corporativo"
+            label="Correo electrónico corporativo:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";

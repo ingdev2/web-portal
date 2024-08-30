@@ -4,46 +4,60 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
 
-const patientIdKey: keyof User = "id";
-const patientNameKey: keyof User = "name";
-const patientLastNameKey: keyof User = "last_name";
-const idTypePatientKey: keyof User = "user_id_type";
-const idNumberPatientKey: keyof User = "id_number";
-const patientEmailKey: keyof User = "email";
-const patientAffiliationEpsKey: keyof User = "affiliation_eps";
-const patientIsActiveKey: keyof User = "is_active";
+const familiarIdKey: keyof Familiar = "id";
+const familiarNameKey: keyof Familiar = "name";
+const familiarLastNameKey: keyof Familiar = "last_name";
+const idTypeFamiliarKey: keyof Familiar = "user_id_type";
+const idNumberFamiliarKey: keyof Familiar = "id_number";
+const familiarEmailKey: keyof Familiar = "email";
+const relationshipWithPatientKey: keyof Familiar = "rel_with_patient";
+const idNumberOfPatientKey: keyof Familiar = "patient_id_number";
+const familiarIsActiveKey: keyof Familiar = "is_active";
 
 interface TableColumnProps {
-  handleClickSeeMore: (record: User) => void;
-  handleOnChangeSwitch: (record: User) => void;
+  handleClickSeeMore: (record: Familiar) => void;
+  handleOnChangeSwitch: (record: Familiar) => void;
   onClickSwitch: () => void;
   isLoadingSwitch: boolean;
   idTypesData: IdType[] | undefined;
+  relationshipData: RelationshipType[] | undefined;
 }
 
-export const tableColumnsAllPatients = ({
+export const tableColumnsAllRelatives = ({
   handleClickSeeMore,
   handleOnChangeSwitch,
   onClickSwitch,
   isLoadingSwitch,
   idTypesData,
+  relationshipData,
 }: TableColumnProps) => [
   {
-    title: "NOMBRE COMPLETO",
-    key: patientNameKey,
-    dataIndex: patientNameKey,
-    width: 301,
-    sorter: (a: User, b: User) => {
-      return a[patientNameKey].localeCompare(b[patientNameKey]);
+    title: "NOMBRE(S)",
+    key: familiarNameKey,
+    dataIndex: familiarNameKey,
+    width: 207,
+    sorter: (a: Familiar, b: Familiar) => {
+      return a[familiarNameKey].localeCompare(b[familiarNameKey]);
     },
     ellipsis: true,
     searchable: true,
     fixed: "left" as "left",
   },
   {
+    title: "APELLIDO(S)",
+    key: familiarLastNameKey,
+    dataIndex: familiarLastNameKey,
+    width: 207,
+    sorter: (a: Familiar, b: Familiar) => {
+      return a[familiarLastNameKey].localeCompare(b[familiarLastNameKey]);
+    },
+    ellipsis: true,
+    searchable: true,
+  },
+  {
     title: "TIPO DE ID",
-    key: idTypePatientKey,
-    dataIndex: idTypePatientKey,
+    key: idTypeFamiliarKey,
+    dataIndex: idTypeFamiliarKey,
     width: 183,
     filters:
       idTypesData?.map((type) => ({
@@ -58,36 +72,52 @@ export const tableColumnsAllPatients = ({
   },
   {
     title: "NÚMERO DE ID",
-    key: idNumberPatientKey,
-    dataIndex: idNumberPatientKey,
+    key: idNumberFamiliarKey,
+    dataIndex: idNumberFamiliarKey,
     width: 103,
     ellipsis: true,
     searchable: true,
   },
   {
     title: "EMAIL",
-    key: patientEmailKey,
-    dataIndex: patientEmailKey,
+    key: familiarEmailKey,
+    dataIndex: familiarEmailKey,
     width: 371,
     ellipsis: true,
     searchable: true,
   },
   {
-    title: "EPS DE AFILIACIÓN",
-    key: patientAffiliationEpsKey,
-    dataIndex: patientAffiliationEpsKey,
-    width: 270,
+    title: "PARENTESCO CON PACIENTE",
+    key: relationshipWithPatientKey,
+    dataIndex: relationshipWithPatientKey,
+    width: 137,
+    filters:
+      relationshipData?.map((relationship) => ({
+        value: relationship.name,
+        text: relationship.name,
+      })) || [],
+    onFilter: (value: any, record: any) => {
+      return String(record.rel_with_patient) === String(value);
+    },
+    ellipsis: true,
+    render: (relationship: string) => relationship,
+  },
+  {
+    title: "NÚMERO DE ID PACIENTE",
+    key: idNumberOfPatientKey,
+    dataIndex: idNumberOfPatientKey,
+    width: 103,
     ellipsis: true,
     searchable: true,
   },
   {
     title: "ADMINISTRAR",
-    key: patientIdKey,
-    dataIndex: patientIdKey,
+    key: familiarIdKey,
+    dataIndex: familiarIdKey,
     width: 103,
     ellipsis: true,
     fixed: "right" as "right",
-    render: (_: any, record: User) => (
+    render: (_: any, record: Familiar) => (
       <div
         style={{
           width: "100%",
@@ -126,7 +156,7 @@ export const tableColumnsAllPatients = ({
               handleOnChangeSwitch(record);
             }}
             onClickCustomSwitch={onClickSwitch}
-            isActiveCustomSwitch={record[patientIsActiveKey]}
+            isActiveCustomSwitch={record[familiarIsActiveKey]}
             isLoadingCustomSwitch={isLoadingSwitch}
           />
         </Space>
