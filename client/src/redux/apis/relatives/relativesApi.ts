@@ -51,8 +51,8 @@ export const relativesApi = createApi({
       }),
     }),
 
-    banFamiliar: builder.mutation<any, string>({
-      query: (id) => ({
+    banFamiliar: builder.mutation<any, { id: string }>({
+      query: ({ id }) => ({
         url: `ban/${id}`,
         method: "PATCH",
         params: { id },

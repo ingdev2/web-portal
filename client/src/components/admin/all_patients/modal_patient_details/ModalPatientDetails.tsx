@@ -196,7 +196,7 @@ const ModalPatientDetails: React.FC<{
           {selectedPatientRelatives}
         </Descriptions.Item>
 
-        {/* FILA 5 */}
+        {/* FILA 6 */}
       </Descriptions>
     </Col>
   );
