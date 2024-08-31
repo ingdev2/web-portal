@@ -22,6 +22,7 @@ export class IdTypesController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createIdType(@Body() createIdType: CreateIdTypeDto) {
     return this.idTypesService.createIdType(createIdType);

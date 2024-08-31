@@ -6,11 +6,14 @@ export class EpsCompany {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   nit: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
+
+  @Column({ unique: true })
+  main_email: string;
 
   @OneToMany(() => User, (user) => user.eps)
   user: User[];

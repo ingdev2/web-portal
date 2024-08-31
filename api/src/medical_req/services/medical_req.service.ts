@@ -16,6 +16,7 @@ import { CreateMedicalReqPatientDto } from '../dto/create_medical_req_patient.dt
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
 import { User } from '../../users/entities/user.entity';
+import { EpsCompany } from 'src/eps_company/entities/eps_company.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
@@ -58,6 +59,9 @@ export class MedicalReqService {
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(EpsCompany)
+    private epsCompanyRepository: Repository<EpsCompany>,
 
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
@@ -718,6 +722,19 @@ export class MedicalReqService {
       );
     }
 
+    const epsCompanyOfUserFound = await this.epsCompanyRepository.findOne({
+      where: {
+        id: userEpsFound.eps_company,
+      },
+    });
+
+    if (!epsCompanyOfUserFound) {
+      return new HttpException(
+        `La empresa EPS no existe.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const idTypeOfPatient = await this.userIdTypeRepository.findOne({
       where: {
         id: medicalReqEps.patient_id_type,
@@ -879,7 +896,10 @@ export class MedicalReqService {
 
     const emailDetailsToSend = new SendEmailDto();
 
-    emailDetailsToSend.recipients = [medicalReqCompleted.aplicant_email];
+    emailDetailsToSend.recipients = [
+      medicalReqCompleted.aplicant_email,
+      epsCompanyOfUserFound.main_email,
+    ];
     emailDetailsToSend.userNameToEmail = medicalReqCompleted.aplicant_name;
     emailDetailsToSend.patientNameToEmail = patientData[0]?.NOMBRE;
     emailDetailsToSend.patientIdNumberToEmail = medicalReqEps.patient_id_number;

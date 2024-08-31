@@ -1,0 +1,63 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Notificación creación de EPS aliada</title>
+    <style>
+      body { font-family: Arial, Helvetica, sans-serif; line-height: 2.0;
+      margin: 0; padding: 0; } .container { max-width: 609px; margin: 0 auto;
+      padding: 20px; border: 2px solid #ccc; border-radius: 13px;
+      background-color: #f7f7f7; } h1 { text-align: center; color:#015E90;
+      font-weight: bold; line-height: 1.3;} p { margin: 10px 0; size: 22px;}
+      .highlight { font-weight: bold; color: #015E90;} .button-container {
+      text-align: center; } .button { padding: 10px 20px; background-color:
+      #004d77; color: #fff; text-decoration: none; border-radius: 7px; }
+      .button:hover { background-color: #017DC0; } .logoProced { display: block;
+      margin: 0 auto; height: 69px;}.logoBonna { display: block; margin: 0 auto;
+      height: 88px;} .p-center {font-weight: bold; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <br />
+      <div style='text-align: center;'>
+        <img
+          src='cid:logo_proced@bonnadona.co'
+          alt='LogoProced'
+          class='logo-proced'
+          style='width: 301px; height: auto; display: block; margin: 0 auto;'
+        />
+      </div>
+      <br />
+      <h1>¡REGISTRO DE EMAIL CORPORATIVO PRINCIPAL EXITOSO!</h1>
+      <p>Cordial saludo,</p>
+      <p>Señor(es) <span class='highlight'>{{userNameToEmail}}</span>,</p>
+      <p>Le informamos que su compañía ha sido agregada correctamente como
+        EMPRESA AUTORIZADA para tener acceso a nuestro portal web, el correo
+        principal registrado ha sido:
+        <span class='highlight'>{{emailOfEps}},</span>
+        este será el medio autorizado para enviar notificaciones de todas las
+        transacciones o solicitudes realizadas de parte de su equipo con
+        nosotros, para que puedan hacer seguimientos y así evitar filtrado de
+        información confidencial.
+        <p class='button-container'>
+          <a href={{portalWebUrl}} class='button'>Ingresar al Portal Web</a>
+        </p>
+      </p>
+      <p class='p-center'>Si usted desconoce esta acción, lo invitamos a
+        comunicarse a nuestra línea PBX:
+        <span class='highlight'>{{contactPbx}}</span></p>
+      <p>Att: Clínica Bonnadona Prevenir</p>
+      <br />
+      <div style='text-align: center;'>
+        <img
+          src='cid:logo_bonnadona@bonnadona.co'
+          alt='LogoBonnadona'
+          class='logo-bonnadona'
+          style='width: 207px; height: auto; display: block; margin: 0 auto;'
+        />
+      </div>
+      <br />
+    </div>
+  </body>
+</html>

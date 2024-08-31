@@ -11,4 +11,9 @@ export class CreateEpsCompanyDto {
   @IsString()
   @MinLength(4)
   name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(7)
+  main_email: string;
 }

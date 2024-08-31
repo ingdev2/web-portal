@@ -24,7 +24,7 @@ export class CompanyAreaController {
 
   // POST METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createCompanyArea(@Body() createCompanyArea: CreateCompanyAreaDto) {
     return this.companyAreaService.createCompanyArea(createCompanyArea);

@@ -22,6 +22,7 @@ export class GenderTypeController {
 
   // POST METHODS //
 
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createGenderType(@Body() createGenderType: CreateGenderTypeDto) {
     return this.genderTypeService.createGenderType(createGenderType);

@@ -48,7 +48,7 @@ export class AuthController {
     return await this.authService.registerSuperAdmin(registerSuperAdmin);
   }
 
-  // @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('registerAdmin')
   async registerAdmin(@Body() registerAdmin: CreateAdminDto) {
     return await this.authService.registerAdmin(registerAdmin);
@@ -59,7 +59,7 @@ export class AuthController {
     return await this.authService.registerUserPatient(registerUserPatient);
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
+  @Auth(UserRolType.PATIENT)
   @Post(':patientId/registerFamiliar')
   async registerFamiliar(
     @Param('patientId') patientId: string,
@@ -68,7 +68,7 @@ export class AuthController {
     return await this.authService.registerFamiliar(patientId, registerFamiliar);
   }
 
-  // @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('registerUserEps')
   async registerUserEps(@Body() registerUserEps: CreateUserEpsDto) {
     return await this.authService.registerUserEps(registerUserEps);

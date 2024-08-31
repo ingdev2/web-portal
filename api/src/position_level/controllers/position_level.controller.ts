@@ -22,7 +22,7 @@ export class PositionLevelController {
 
   // POST METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createPositionLevel(@Body() createPositionLevel: CreatePositionLevelDto) {
     return this.positionLevelService.createPositionLevel(createPositionLevel);
