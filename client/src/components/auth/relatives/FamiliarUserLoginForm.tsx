@@ -196,8 +196,7 @@ const FamiliarUserLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginFamiliar(errorMessage[0]));
           setShowErrorMessageFamiliar(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginFamiliar(errorMessage));
           setShowErrorMessageFamiliar(true);
         }

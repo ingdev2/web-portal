@@ -145,8 +145,7 @@ const EpsUserLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginEps(errorMessage[0]));
           setShowErrorMessageEps(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginEps(errorMessage));
           setShowErrorMessageEps(true);
         }

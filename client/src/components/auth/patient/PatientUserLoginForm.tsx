@@ -148,8 +148,7 @@ const PatientUserLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginPatient(errorMessage[0]));
           setShowErrorMessagePatient(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }

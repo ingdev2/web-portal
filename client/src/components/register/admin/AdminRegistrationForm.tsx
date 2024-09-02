@@ -189,6 +189,8 @@ const AdminRegistrationForm: React.FC = () => {
         password: passwordAdminLocalState,
       });
 
+      console.log(response);
+
       var createAdminError = response.error;
 
       var createAdminValidationData = response.data?.message;
@@ -203,19 +205,19 @@ const AdminRegistrationForm: React.FC = () => {
           dispatch(setErrorsAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
-        }
-        if (Array.isArray(validationDataMessage)) {
-          dispatch(setErrorsAdmin(validationDataMessage[0]));
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);
         }
 
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsAdmin(errorMessage));
+        if (Array.isArray(validationDataMessage)) {
+          dispatch(setErrorsAdmin(validationDataMessage[0]));
+
+          setShowErrorMessageAdmin(true);
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsAdmin(validationDataMessage));
+
           setShowErrorMessageAdmin(true);
         }
       }

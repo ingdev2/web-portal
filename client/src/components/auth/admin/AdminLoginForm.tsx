@@ -127,8 +127,7 @@ const AdminLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginAdmin(errorMessage[0]));
           setShowErrorMessageAdmin(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginAdmin(errorMessage));
           setShowErrorMessageAdmin(true);
         }

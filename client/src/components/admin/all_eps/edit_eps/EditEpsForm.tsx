@@ -177,18 +177,19 @@ const EditEpsForm: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessage(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserEps(errorMessage));
+
+          setShowErrorMessage(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserEps(validationDataMessage[0]));
 
           setShowErrorMessage(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserEps(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserEps(validationDataMessage));
+
           setShowErrorMessage(true);
         }
       }

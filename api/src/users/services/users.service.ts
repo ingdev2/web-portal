@@ -28,6 +28,7 @@ import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patien
 import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
 import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
+import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import { nanoid } from 'nanoid';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
@@ -465,6 +466,15 @@ export class UsersService {
       return new HttpException(
         `El correo electrónico ${userEps.email} ya está registrado.`,
         HttpStatus.CONFLICT,
+      );
+    }
+
+    const isCorporateEmail = await validateCorporateEmail(userEps.email);
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${userEps.email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

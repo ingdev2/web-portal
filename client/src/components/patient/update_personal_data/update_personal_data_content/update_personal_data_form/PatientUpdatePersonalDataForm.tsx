@@ -185,18 +185,19 @@ const PatientUpdatePersonalDataForm: React.FC = () => {
           dispatch(setErrorsUserPatient(errorMessage[0]));
 
           setShowErrorMessagePatient(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserPatient(errorMessage));
+
+          setShowErrorMessagePatient(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserPatient(validationDataMessage[0]));
 
           setShowErrorMessagePatient(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserPatient(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserPatient(validationDataMessage));
+
           setShowErrorMessagePatient(true);
         }
       }

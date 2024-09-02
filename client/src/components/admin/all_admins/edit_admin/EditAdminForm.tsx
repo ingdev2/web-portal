@@ -191,18 +191,19 @@ const EditAdminForm: React.FC = () => {
           dispatch(setErrorsSelectedAdmin(errorMessage[0]));
 
           setShowErrorMessage(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsSelectedAdmin(errorMessage));
+
+          setShowErrorMessage(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsSelectedAdmin(validationDataMessage[0]));
 
           setShowErrorMessage(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsSelectedAdmin(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsSelectedAdmin(validationDataMessage));
+
           setShowErrorMessage(true);
         }
       }

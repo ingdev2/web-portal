@@ -250,19 +250,19 @@ const EpsRegistrationForm: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessageUserEps(true);
-        }
-        if (Array.isArray(validationDataMessage)) {
-          dispatch(setErrorsUserEps(validationDataMessage[0]));
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserEps(errorMessage));
 
           setShowErrorMessageUserEps(true);
         }
 
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserEps(errorMessage));
+        if (Array.isArray(validationDataMessage)) {
+          dispatch(setErrorsUserEps(validationDataMessage[0]));
+
+          setShowErrorMessageUserEps(true);
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserEps(validationDataMessage));
+
           setShowErrorMessageUserEps(true);
         }
       }

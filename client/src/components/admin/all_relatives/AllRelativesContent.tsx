@@ -161,9 +161,7 @@ const AllRelativesContent: React.FC = () => {
           dispatch(setErrorsUserFamiliar(errorMessage[0]));
 
           setShowErrorMessagePatient(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsUserFamiliar(errorMessage));
 
           setShowErrorMessagePatient(true);

@@ -181,18 +181,19 @@ const FamiliarUpdatePersonalDataForm: React.FC = () => {
           dispatch(setErrorsUserFamiliar(errorMessage[0]));
 
           setShowErrorMessageFamiliar(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserFamiliar(errorMessage));
+
+          setShowErrorMessageFamiliar(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserFamiliar(validationDataMessage[0]));
 
           setShowErrorMessageFamiliar(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserFamiliar(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserFamiliar(validationDataMessage));
+
           setShowErrorMessageFamiliar(true);
         }
       }

@@ -159,9 +159,7 @@ const AllPatientsContent: React.FC = () => {
           dispatch(setErrorsUserPatient(errorMessage[0]));
 
           setShowErrorMessagePatient(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsUserPatient(errorMessage));
 
           setShowErrorMessagePatient(true);

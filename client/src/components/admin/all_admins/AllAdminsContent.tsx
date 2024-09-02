@@ -171,9 +171,7 @@ const AllAdminsContent: React.FC = () => {
           dispatch(setErrorsSelectedAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsSelectedAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);

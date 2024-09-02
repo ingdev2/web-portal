@@ -126,9 +126,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
           dispatch(setErrorsAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);

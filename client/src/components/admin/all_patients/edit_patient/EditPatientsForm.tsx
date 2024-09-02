@@ -133,18 +133,19 @@ const EditPatientsForm: React.FC = () => {
           dispatch(setErrorsUserPatient(errorMessage[0]));
 
           setShowErrorMessage(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserPatient(errorMessage));
+
+          setShowErrorMessage(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserPatient(validationDataMessage[0]));
 
           setShowErrorMessage(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserPatient(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserPatient(validationDataMessage));
+
           setShowErrorMessage(true);
         }
       }

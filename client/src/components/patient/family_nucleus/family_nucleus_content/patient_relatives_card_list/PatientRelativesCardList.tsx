@@ -161,9 +161,9 @@ const PatientRelativesCardList: React.FC<{
     try {
       setIsSubmittingDeletedFamiliar(true);
 
-      const response: any = await deletedFamiliarPatient(
-        selectedFamiliarIdLocalState
-      );
+      const response: any = await deletedFamiliarPatient({
+        id: selectedFamiliarIdLocalState,
+      });
 
       var isDeletedFamiliarError = response.error;
 
@@ -175,8 +175,7 @@ const PatientRelativesCardList: React.FC<{
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsMedicalReq(errorMessage[0]));
           setShowErrorMessageMedicalReq(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsMedicalReq(errorMessage));
           setShowErrorMessageMedicalReq(true);
         }

@@ -174,9 +174,7 @@ const AllEpsContent: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessageEps(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsUserEps(errorMessage));
 
           setShowErrorMessageEps(true);

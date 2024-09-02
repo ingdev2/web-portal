@@ -14,6 +14,7 @@ import { TbEye } from "react-icons/tb";
 
 import ModalActionButtons from "./modal_action_buttons/ModalActionButtons";
 import StatusItems from "./categorization_by_items/StatusItems";
+import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
 
 import {
   setTableRowFilingNumber,
@@ -300,7 +301,9 @@ const AllRequestContent: React.FC = () => {
                 labelRequestType={"Tipo de solicitud:"}
                 selectedRequestType={selectedRowDataLocalState?.requirement_type.toString()}
                 labelRequestStatus={"Estado de solicitud:"}
-                selectedRequestStatus={selectedRowDataLocalState?.requirement_status.toString()}
+                selectedRequestStatus={getTagComponentStatus(
+                  selectedRowDataLocalState?.requirement_status.toString()
+                )}
                 labelResponseDocuments={"Documentos de respuesta a solicitud:"}
                 selectedRequestResponseDocuments={
                   selectedRowDataLocalState?.documents_delivered ? (
