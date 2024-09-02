@@ -28,8 +28,8 @@ import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patien
 import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
 import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
-import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import { nanoid } from 'nanoid';
+import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import {
@@ -815,7 +815,10 @@ export class UsersService {
   // UPDATE FUNTIONS //
 
   async updateUserPatient(id: string, userPatient: UpdateUserPatientDto) {
-    const userFound = await this.userRepository.findOneBy({ id });
+    const userFound = await this.userRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!userFound) {
       return new HttpException(
@@ -927,7 +930,10 @@ export class UsersService {
   }
 
   async updateUserEps(id: string, userEps: UpdateUserEpsDto) {
-    const userFound = await this.userRepository.findOneBy({ id });
+    const userFound = await this.userRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!userFound) {
       return new HttpException(

@@ -3,4 +3,6 @@ interface EpsCompany {
   nit: string;
   name: string;
   main_email: string;
+  is_active: boolean;
+  errors: string[];
 }

@@ -10,6 +10,9 @@ export class RequirementType {
   @Column({ enum: RequirementTypeEnum })
   name: RequirementTypeEnum;
 
+  @Column({ type: 'boolean', default: true })
+  is_active: boolean;
+
   @OneToMany(() => MedicalReq, (medical_req) => medical_req.req_type)
   medical_req: MedicalReq[];
 }

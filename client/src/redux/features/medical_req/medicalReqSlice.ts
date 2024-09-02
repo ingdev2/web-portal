@@ -63,7 +63,7 @@ const initialState: MedicalReq = {
 };
 
 export const medicalReqSlice = createSlice({
-  name: "medical_req",
+  name: "medicalReq",
   initialState,
   reducers: {
     setIdMedicalReq: (state, action) => {

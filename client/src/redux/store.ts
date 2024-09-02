@@ -7,6 +7,7 @@ import adminReducer from "./features/admin/adminSlice";
 import selectedAdminReducer from "./features/admin/selectedAdminSlice";
 import patientReducer from "./features/patient/patientSlice";
 import epsReducer from "./features/eps/epsSlice";
+import epsCompanyReducer from "./features/eps_company/epsCompanySlice";
 import familiarReducer from "./features/familiar/familiarSlice";
 import adminLoginReducer from "./features/login/adminLoginSlice";
 import patientUserLoginReducer from "./features/login/patientUserLoginSlice";
@@ -70,6 +71,7 @@ const rootReducer = combineReducers({
   selectedAdmin: selectedAdminReducer,
   patient: patientReducer,
   eps: epsReducer,
+  epsCompany: epsCompanyReducer,
   familiar: familiarReducer,
   modal: modalReducer,
   [adminsApi.reducerPath]: adminsApi.reducer,

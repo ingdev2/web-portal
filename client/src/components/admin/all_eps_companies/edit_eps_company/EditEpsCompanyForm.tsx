@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import EditAdminFormData from "./EditEpsUserFormData";
+import EditAdminFormData from "./EditEpsCompanyFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
@@ -22,7 +22,7 @@ import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyArea
 import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 import { transformNameToIdMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 
-const EditEpsUserForm: React.FC = () => {
+const EditEpsCompanyForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
@@ -356,4 +356,4 @@ const EditEpsUserForm: React.FC = () => {
   );
 };
 
-export default EditEpsUserForm;
+export default EditEpsCompanyForm;

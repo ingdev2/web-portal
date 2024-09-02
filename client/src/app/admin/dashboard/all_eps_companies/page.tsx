@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
-import RegisterEpsUserContent from "@/components/admin/all_eps_users/register_eps_user/RegisterEpsUserContent";
+import AllEpsCompaniesContent from "@/components/admin/all_eps_companies/AllEpsCompaniesContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -20,10 +20,10 @@ import {
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 
-import { AdminRolType } from "../../../../../../../api/src/utils/enums/admin_roles.enum";
-import { CompanyAreaEnum } from "../../../../../../../api/src/utils/enums/company_area.enum";
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
 
-const RegisterEpsUserPage = () => {
+const AllEpsCompaniesPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -117,12 +117,12 @@ const RegisterEpsUserPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-register-eps-user-content">
-          <RegisterEpsUserContent />
+        <div className="dashboard-all-eps-companies-content">
+          <AllEpsCompaniesContent />
         </div>
       )}
     </div>
   );
 };
 
-export default RegisterEpsUserPage;
+export default AllEpsCompaniesPage;

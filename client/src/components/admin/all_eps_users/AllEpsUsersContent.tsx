@@ -7,8 +7,8 @@ import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
 import EditEpsUserForm from "./edit_eps_user/EditEpsUserForm";
-import { tableColumnsAllEpsUsers } from "./table_columns_all_eps/TableColumnsAllEpsUsers";
-import ModalEpsUserDetails from "./modal_eps_details/ModalEpsUserDetails";
+import { tableColumnsAllEpsUsers } from "./table_columns_all_eps_users/TableColumnsAllEpsUsers";
+import ModalEpsUserDetails from "./modal_eps_user_details/ModalEpsUserDetails";
 import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
@@ -242,28 +242,32 @@ const AllEpsUsersContent: React.FC = () => {
                 <>
                   <ModalEpsUserDetails
                     titleDescription="Detalle completo de usuario Eps"
-                    labelAdminName="Nombre(s)"
-                    selectedAdminName={selectedRowDataLocalState?.name}
-                    labelAdminLastName="Apellido(s)"
-                    selectedAdminLastName={selectedRowDataLocalState?.last_name}
-                    labelAdminIdType="Tipo de identificación"
-                    selectedAdminIdType={getTagComponentIdTypes(
+                    labelEpsUserName="Nombre(s)"
+                    selectedEpsUserName={selectedRowDataLocalState?.name}
+                    labelEpsUserLastName="Apellido(s)"
+                    selectedEpsUserLastName={
+                      selectedRowDataLocalState?.last_name
+                    }
+                    labelEpsUserIdType="Tipo de identificación"
+                    selectedEpsUserIdType={getTagComponentIdTypes(
                       selectedRowDataLocalState?.user_id_type.toString()
                     )}
-                    labelAdminIdNumber="Número de identificación"
-                    selectedAdminIdNumber={selectedRowDataLocalState?.id_number}
-                    labelAdminGender="Género"
-                    selectedAdminGender={selectedRowDataLocalState?.user_gender.toString()}
-                    labelAdminLevelPosition="Empresa donde labora"
-                    selectedAdminLevelPosition={selectedRowDataLocalState?.eps_company.toString()}
-                    labelAdminCompanyArea="Área de la empresa"
-                    selectedAdminCompanyArea={selectedRowDataLocalState?.company_area.toString()}
-                    labelAdminCellphone="Número de celular corporativo"
-                    selectedAdminCellphone={
+                    labelEpsUserIdNumber="Número de identificación"
+                    selectedEpsUserIdNumber={
+                      selectedRowDataLocalState?.id_number
+                    }
+                    labelEpsUserGender="Género"
+                    selectedEpsUserGender={selectedRowDataLocalState?.user_gender.toString()}
+                    labelEpsUserLevelPosition="Empresa donde labora"
+                    selectedEpsUserLevelPosition={selectedRowDataLocalState?.eps_company.toString()}
+                    labelEpsUserCompanyArea="Área de la empresa"
+                    selectedEpsUserCompanyArea={selectedRowDataLocalState?.company_area.toString()}
+                    labelEpsUserCellphone="Número de celular corporativo"
+                    selectedEpsUserCellphone={
                       selectedRowDataLocalState?.cellphone || NOT_REGISTER
                     }
-                    labelAdminEmail="Email corporativo"
-                    selectedAdminEmail={selectedRowDataLocalState?.email}
+                    labelEpsUserEmail="Email corporativo"
+                    selectedEpsUserEmail={selectedRowDataLocalState?.email}
                   />
 
                   <Button
@@ -291,7 +295,7 @@ const AllEpsUsersContent: React.FC = () => {
                       }}
                     >
                       <TbUserEdit size={17} />
-                      &nbsp; Editar eps
+                      &nbsp; Editar usuario de EPS
                     </div>
                   </Button>
                 </>

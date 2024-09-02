@@ -410,7 +410,10 @@ export class AdminsService {
   // UPDATE FUNTIONS //
 
   async updateAdmin(id: number, admin: UpdateAdminDto) {
-    const adminFound = await this.adminRepository.findOneBy({ id });
+    const adminFound = await this.adminRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!adminFound) {
       return new HttpException(

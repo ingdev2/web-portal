@@ -117,7 +117,7 @@ const AllEpsUsersPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-all-eps-content">
+        <div className="dashboard-all-eps-users-content">
           <AllEpsUsersContent />
         </div>
       )}

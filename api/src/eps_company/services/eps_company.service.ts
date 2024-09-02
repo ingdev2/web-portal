@@ -146,6 +146,7 @@ export class EpsCompanyService {
       const duplicateEpsCompany = await this.epsCompanyRepository.findOne({
         where: {
           name: epsCompany.name,
+          is_active: true,
         },
       });
 
@@ -167,5 +168,32 @@ export class EpsCompanyService {
       `¡Datos guardados correctamente!`,
       HttpStatus.ACCEPTED,
     );
+  }
+
+  // DELETED-BAN FUNTIONS //
+
+  async banEpsCompanies(id: number) {
+    const epsCompanyFound = await this.epsCompanyRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!epsCompanyFound) {
+      return new HttpException(
+        `La EPS con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    epsCompanyFound.is_active = !epsCompanyFound.is_active;
+
+    await this.epsCompanyRepository.save(epsCompanyFound);
+
+    const statusMessage = epsCompanyFound.is_active
+      ? `La EPS con número de ID: ${epsCompanyFound.id} se ha ACTIVADO.`
+      : `La EPS con número de ID: ${epsCompanyFound.id} se ha INACTIVADO.`;
+
+    throw new HttpException(statusMessage, HttpStatus.ACCEPTED);
   }
 }

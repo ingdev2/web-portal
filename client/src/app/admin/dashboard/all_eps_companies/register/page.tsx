@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
-import RegisterEpsUserContent from "@/components/admin/all_eps_users/register_eps_user/RegisterEpsUserContent";
+import RegisterEpsCompanyContent from "@/components/admin/all_eps_companies/register_eps_company/RegisterEpsCompanyContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -23,7 +23,7 @@ import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyA
 import { AdminRolType } from "../../../../../../../api/src/utils/enums/admin_roles.enum";
 import { CompanyAreaEnum } from "../../../../../../../api/src/utils/enums/company_area.enum";
 
-const RegisterEpsUserPage = () => {
+const RegisterEpsCompanyPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -117,12 +117,12 @@ const RegisterEpsUserPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-register-eps-user-content">
-          <RegisterEpsUserContent />
+        <div className="dashboard-register-eps-company-content">
+          <RegisterEpsCompanyContent />
         </div>
       )}
     </div>
   );
 };
 
-export default RegisterEpsUserPage;
+export default RegisterEpsCompanyPage;

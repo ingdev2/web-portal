@@ -15,6 +15,9 @@ export class EpsCompany {
   @Column({ unique: true })
   main_email: string;
 
+  @Column({ type: 'boolean', default: true })
+  is_active: boolean;
+
   @OneToMany(() => User, (user) => user.eps)
   user: User[];
 }

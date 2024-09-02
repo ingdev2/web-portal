@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 
 import { Button, Col, Row } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
-import { TiUserAdd } from "react-icons/ti";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import { subtitleStyleCss } from "@/theme/text_styles";
 
-import { useGetAllEpsQuery } from "@/redux/apis/users/usersApi";
+import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 
 const CreateButton: React.FC<{
   isSubmittingCreateButton: boolean;
@@ -17,12 +17,12 @@ const CreateButton: React.FC<{
   const router = useRouter();
 
   const {
-    data: allEpsData,
-    isLoading: allEpsLoading,
-    isFetching: allEpsFetching,
-    error: allEpsError,
-    refetch: refecthAllEps,
-  } = useGetAllEpsQuery(null);
+    data: allEpsCompanyData,
+    isLoading: allEpsCompanyLoading,
+    isFetching: allEpsCompanyFetching,
+    error: allEpsCompanyError,
+    refetch: refecthAllEpsCompany,
+  } = useGetAllEpsCompanyQuery(null);
 
   return (
     <Row
@@ -57,8 +57,8 @@ const CreateButton: React.FC<{
         >
           Total de&nbsp;
           <b>
-            {allEpsData?.length || 0}
-            &nbsp;usuario(s) de EPS
+            {allEpsCompanyData?.length || 0}
+            &nbsp;empresa(s) de EPS
           </b>
         </h2>
       </Col>
@@ -82,7 +82,7 @@ const CreateButton: React.FC<{
           <Button
             type="primary"
             size="middle"
-            icon={<TiUserAdd size={17} />}
+            icon={<IoMdAddCircleOutline size={17} />}
             style={{
               backgroundColor: "#1D8348",
               color: "#f2f2f2",
@@ -95,12 +95,12 @@ const CreateButton: React.FC<{
               margin: "0px",
             }}
             htmlType="button"
-            className="eps-register-button"
+            className="eps-company-register-button"
             onClick={async () => {
               try {
                 setIsSubmittingCreateButton(true);
 
-                await router.push("all_eps_users/register", {
+                await router.push("all_eps_companies/register", {
                   scroll: true,
                 });
               } catch (error) {

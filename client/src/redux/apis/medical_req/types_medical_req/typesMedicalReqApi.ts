@@ -51,6 +51,14 @@ export const typesMedicalReqApi = createApi({
         body: { newName },
       }),
     }),
+
+    banMedicalReqType: builder.mutation<any, { id: number }>({
+      query: ({ id }) => ({
+        url: `ban/${id}`,
+        method: "PATCH",
+        params: { id },
+      }),
+    }),
   }),
 });
 
@@ -59,4 +67,5 @@ export const {
   useGetAllMedicalReqTypesQuery,
   useGetMedicalReqTypeByIdQuery,
   useUpdateMedicalReqTypeByIdMutation,
+  useBanMedicalReqTypeMutation,
 } = typesMedicalReqApi;
