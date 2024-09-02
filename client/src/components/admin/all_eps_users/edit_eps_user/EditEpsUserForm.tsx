@@ -22,7 +22,7 @@ import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyArea
 import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 import { transformNameToIdMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 
-const EditEpsForm: React.FC = () => {
+const EditEpsUserForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
@@ -356,4 +356,4 @@ const EditEpsForm: React.FC = () => {
   );
 };
 
-export default EditEpsForm;
+export default EditEpsUserForm;

@@ -238,6 +238,27 @@ export const useMenuItems = () => {
             : null,
         ].filter(Boolean)
       ),
+
+      getItem(
+        ItemNames.ITEM_PARAMETRIZATION,
+        ItemKeys.ITEM_PARAMETRIZATION_KEY,
+        <MenuFoldOutlined />,
+        [
+          isAdminWithRoles(roleIdAdminState, [
+            superAdminRoleData.id,
+            adminRoleData.id,
+          ]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            systemsCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_EPS_COMPANIES_PARAMS,
+                ItemKeys.SUB_EPS_COMPANIES_PARAMS_KEY,
+                <MenuUnfoldOutlined />
+              )
+            : null,
+        ].filter(Boolean)
+      ),
     ];
 
     return items;

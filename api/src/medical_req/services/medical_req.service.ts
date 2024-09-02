@@ -1693,7 +1693,7 @@ export class MedicalReqService {
       deliveredStatus.answer_date = currentDate;
       deliveredStatus.download_expiration_date = sevenDaysLater;
 
-      const dateOfAdmission = new Date(requirementFound.date_of_admission);
+      const dateOfAdmission = new Date(requirementFound.createdAt);
       const answerDate = new Date(deliveredStatus.answer_date);
       const diffMs = answerDate.getTime() - dateOfAdmission.getTime();
       const diffHours = Math.floor(diffMs / 3600000);
@@ -1917,7 +1917,7 @@ export class MedicalReqService {
 
       rejectedStatus.answer_date = currentDate;
 
-      const dateOfAdmission = new Date(requirementFound.date_of_admission);
+      const dateOfAdmission = new Date(requirementFound.createdAt);
       const answerDate = new Date(rejectedStatus.answer_date);
       const diffMs = answerDate.getTime() - dateOfAdmission.getTime();
       const diffHours = Math.floor(diffMs / 3600000);

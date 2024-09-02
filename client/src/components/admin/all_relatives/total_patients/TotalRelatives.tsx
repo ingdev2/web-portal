@@ -37,7 +37,7 @@ const TotalRelatives: React.FC = () => {
         Total de&nbsp;
         <b>
           {allRelativesData?.length || 0}
-          &nbsp;familiares(s) de pacientes Bonnadona
+          &nbsp;familiar(es) de pacientes Bonnadona
         </b>
       </h2>
     </Row>

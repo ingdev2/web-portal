@@ -247,6 +247,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
                 tooltip="Aquí debe anexar los documentos que el usuario requiere en la solicitud."
                 rules={[
                   {
+                    required: true,
                     validator: validateRequiredFiles(
                       copyDocumentsDeliveredFilesState,
                       "¡Por favor adjunte documento(s) de respuesta a solicitud!"

@@ -24,7 +24,7 @@ interface TableColumnProps {
   companyAreaMedicalReqData: CompanyArea[] | undefined;
 }
 
-export const tableColumnsAllEps = ({
+export const tableColumnsAllEpsUsers = ({
   handleClickSeeMore,
   handleOnChangeSwitch,
   onClickSwitch,

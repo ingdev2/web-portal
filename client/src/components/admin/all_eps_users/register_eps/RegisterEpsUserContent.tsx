@@ -9,7 +9,7 @@ import EpsRegistrationForm from "@/components/register/eps/EpsRegistrationForm";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-const RegisterEpsContent: React.FC = () => {
+const RegisterEpsUserContent: React.FC = () => {
   const router = useRouter();
 
   const [isSubmittingBackPage, setIsSubmittingBackPage] = useState(false);
@@ -77,4 +77,4 @@ const RegisterEpsContent: React.FC = () => {
   );
 };
 
-export default RegisterEpsContent;
+export default RegisterEpsUserContent;

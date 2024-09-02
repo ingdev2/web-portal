@@ -6,7 +6,7 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const ModalEpsDetails: React.FC<{
+const ModalEpsUserDetails: React.FC<{
   titleDescription: string;
   labelAdminName: string;
   selectedAdminName: string | undefined;
@@ -174,4 +174,4 @@ const ModalEpsDetails: React.FC<{
   );
 };
 
-export default ModalEpsDetails;
+export default ModalEpsUserDetails;

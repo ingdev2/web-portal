@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
-import EditEpsForm from "./edit_eps/EditEpsForm";
-import { tableColumnsAllEps } from "./table_columns_all_eps/TableColumnsAllEps";
-import ModalEpsDetails from "./modal_eps_details/ModalEpsDetails";
+import EditEpsUserForm from "./edit_eps_user/EditEpsUserForm";
+import { tableColumnsAllEpsUsers } from "./table_columns_all_eps/TableColumnsAllEpsUsers";
+import ModalEpsUserDetails from "./modal_eps_details/ModalEpsUserDetails";
 import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
@@ -42,7 +42,7 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 
 import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 
-const AllEpsContent: React.FC = () => {
+const AllEpsUsersContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
@@ -240,7 +240,7 @@ const AllEpsContent: React.FC = () => {
             <>
               {!isEditEpsVisibleLocalState ? (
                 <>
-                  <ModalEpsDetails
+                  <ModalEpsUserDetails
                     titleDescription="Detalle completo de usuario Eps"
                     labelAdminName="Nombre(s)"
                     selectedAdminName={selectedRowDataLocalState?.name}
@@ -296,7 +296,7 @@ const AllEpsContent: React.FC = () => {
                   </Button>
                 </>
               ) : (
-                <EditEpsForm />
+                <EditEpsUserForm />
               )}
             </>
           }
@@ -319,7 +319,7 @@ const AllEpsContent: React.FC = () => {
 
             <CustomTableFiltersAndSorting
               dataCustomTable={transformedData || []}
-              columnsCustomTable={tableColumnsAllEps({
+              columnsCustomTable={tableColumnsAllEpsUsers({
                 handleClickSeeMore: handleClickSeeMore,
                 handleOnChangeSwitch: handleOnChangeSwitch,
                 onClickSwitch: handleButtonClick,
@@ -337,4 +337,4 @@ const AllEpsContent: React.FC = () => {
   );
 };
 
-export default AllEpsContent;
+export default AllEpsUsersContent;
