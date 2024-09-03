@@ -211,9 +211,9 @@ const EpsRequestCardList: React.FC<{
         selectedRequestIdLocalState
       );
 
-      var isDeletedMedicalReqError = response.error;
+      let isDeletedMedicalReqError = response.error;
 
-      var isDeletedMedicalReqSuccess = response.data;
+      let isDeletedMedicalReqSuccess = response.data;
 
       if (isDeletedMedicalReqError) {
         const errorMessage = isDeletedMedicalReqError?.data.message;

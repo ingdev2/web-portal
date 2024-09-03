@@ -165,9 +165,9 @@ const PatientRelativesCardList: React.FC<{
         id: selectedFamiliarIdLocalState,
       });
 
-      var isDeletedFamiliarError = response.error;
+      let isDeletedFamiliarError = response.error;
 
-      var isDeletedFamiliarSuccess = response.data;
+      let isDeletedFamiliarSuccess = response.data;
 
       if (isDeletedFamiliarError) {
         const errorMessage = isDeletedFamiliarError?.data.message;

@@ -158,9 +158,9 @@ const AllEpsUsersContent: React.FC = () => {
         id: record.id,
       });
 
-      var banEpsSuccess = response.data;
+      let banEpsSuccess = response.data;
 
-      var banEpsError = response.error;
+      let banEpsError = response.error;
 
       if (banEpsSuccess?.statusCode === 202 && !banEpsError) {
         const successMessage = banEpsSuccess?.message;

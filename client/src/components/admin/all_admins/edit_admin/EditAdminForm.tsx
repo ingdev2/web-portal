@@ -175,11 +175,11 @@ const EditAdminForm: React.FC = () => {
         },
       });
 
-      var editAdminDataError = response.error;
+      let editAdminDataError = response.error;
 
-      var editAdminDataStatus = response.data.status;
+      let editAdminDataStatus = response.data?.status;
 
-      var editAdminDataValidationData = response.data?.message;
+      let editAdminDataValidationData = response.data?.message;
 
       if (editAdminDataError || editAdminDataStatus !== 202) {
         setHasChanges(false);

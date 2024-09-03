@@ -138,9 +138,9 @@ const PatientUserLoginForm: React.FC = () => {
         password: passwordPatientLocalState,
       });
 
-      var isLoginUserError = response.error;
+      let isLoginUserError = response.error;
 
-      var isLoginUserSuccess = response.data;
+      let isLoginUserSuccess = response.data;
 
       if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;

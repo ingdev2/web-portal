@@ -155,9 +155,9 @@ const AllAdminsContent: React.FC = () => {
         id: record.id,
       });
 
-      var banAdminSuccess = response.data;
+      let banAdminSuccess = response?.data;
 
-      var banAdminError = response.error;
+      let banAdminError = response?.error;
 
       if (banAdminSuccess?.statusCode === 202 && !banAdminError) {
         const successMessage = banAdminSuccess?.message;

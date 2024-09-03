@@ -297,11 +297,11 @@ const AddRelativeForm: React.FC = () => {
         },
       });
 
-      var addAuthFamiliarError = response.error;
+      let addAuthFamiliarError = response.error;
 
-      var addAuthFamiliarValidationData = response.data?.message;
+      let addAuthFamiliarValidationData = response.data?.message;
 
-      var addAuthFamiliarSuccess = response.data;
+      let addAuthFamiliarSuccess = response.data;
 
       if (addAuthFamiliarError || addAuthFamiliarValidationData) {
         const errorMessage = addAuthFamiliarError?.data.message;

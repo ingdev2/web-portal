@@ -236,11 +236,11 @@ const EpsRegistrationForm: React.FC = () => {
         authentication_method: epsAuthMethodState,
       });
 
-      var createUserEpsError = response.error;
+      let createUserEpsError = response.error;
 
-      var createUserEpsValidationData = response.data?.message;
+      let createUserEpsValidationData = response.data?.message;
 
-      var createUserEpsSuccess = response.data;
+      let createUserEpsSuccess = response.data;
 
       if (createUserEpsError || createUserEpsValidationData) {
         const errorMessage = createUserEpsError?.data.message;

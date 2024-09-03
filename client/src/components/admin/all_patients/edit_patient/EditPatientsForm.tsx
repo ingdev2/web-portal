@@ -117,11 +117,11 @@ const EditPatientsForm: React.FC = () => {
         },
       });
 
-      var editPatientDataError = response.error;
+      let editPatientDataError = response.error;
 
-      var editPatientDataStatus = response.data.status;
+      let editPatientDataStatus = response.data?.status;
 
-      var editPatientDataValidationData = response.data?.message;
+      let editPatientDataValidationData = response.data?.message;
 
       if (editPatientDataError || editPatientDataStatus !== 202) {
         setHasChanges(false);

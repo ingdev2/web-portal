@@ -158,11 +158,11 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         },
       });
 
-      var updatePersonalDataError = response.error;
+      let updatePersonalDataError = response.error;
 
-      var updatePersonalDataStatus = response.data.status;
+      let updatePersonalDataStatus = response.data?.status;
 
-      var updatePersonalDataValidationData = response.data?.message;
+      let updatePersonalDataValidationData = response.data?.message;
 
       if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
         setHasChanges(false);

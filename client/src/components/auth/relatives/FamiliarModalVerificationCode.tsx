@@ -163,7 +163,7 @@ const FamiliarModalVerificationCode: React.FC = () => {
         id_number: idNumberFamiliarState,
       });
 
-      var isResponseError = response.error;
+      let isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
         dispatch(setErrorsLoginFamiliar(isResponseError?.data.message));

@@ -463,6 +463,17 @@ export class AdminsService {
       );
     }
 
+    const isCorporateEmail = await validateCorporateEmail(
+      admin.corporate_email,
+    );
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${admin.corporate_email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const updateAdmin = await this.adminRepository.update(id, admin);
 
     if (updateAdmin.affected === 0) {

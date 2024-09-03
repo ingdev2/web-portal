@@ -969,6 +969,15 @@ export class UsersService {
       );
     }
 
+    const isCorporateEmail = await validateCorporateEmail(userEps.email);
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${userEps.email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const cellphoneUserEpsValidate = await this.userRepository.findOne({
       where: {
         id: Not(userFound.id),

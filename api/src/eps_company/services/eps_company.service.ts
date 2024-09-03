@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateEpsCompanyDto } from '../dto/create-eps_company.dto';
 import { UpdateEpsCompanyDto } from '../dto/update-eps_company.dto';
 import { EpsCompany } from '../entities/eps_company.entity';
@@ -153,6 +153,31 @@ export class EpsCompanyService {
       if (duplicateEpsCompany) {
         return new HttpException(`Empresa duplicada.`, HttpStatus.CONFLICT);
       }
+    }
+
+    const emailEpsCompanyValidate = await this.epsCompanyRepository.findOne({
+      where: {
+        id: Not(epsCompanyFound.id),
+        main_email: epsCompany.main_email,
+      },
+    });
+
+    if (emailEpsCompanyValidate) {
+      return new HttpException(
+        `El correo electrónico ${epsCompany.main_email} ya está registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const isCorporateEmail = await validateCorporateEmail(
+      epsCompany.main_email,
+    );
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email de empresa: ${epsCompany.main_email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const updateEpsCompany = await this.epsCompanyRepository.update(

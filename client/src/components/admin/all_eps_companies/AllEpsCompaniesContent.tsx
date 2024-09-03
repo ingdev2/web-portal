@@ -103,9 +103,9 @@ const AllEpsCompaniesContent: React.FC = () => {
         id: record.id,
       });
 
-      var banSuccess = response.data;
+      let banSuccess = response.data;
 
-      var banError = response.error;
+      let banError = response.error;
 
       if (banSuccess?.statusCode === 202 && !banError) {
         const successMessage = banSuccess?.message;

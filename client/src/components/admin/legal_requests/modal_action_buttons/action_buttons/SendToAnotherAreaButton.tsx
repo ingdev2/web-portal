@@ -104,9 +104,9 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
         },
       });
 
-      var sendToAnotherAreaSuccess = response.data;
+      let sendToAnotherAreaSuccess = response.data;
 
-      var sendToAnotherAreaError = response.error;
+      let sendToAnotherAreaError = response.error;
 
       if (sendToAnotherAreaError?.status !== 202) {
         const errorMessage = sendToAnotherAreaError?.data.message;

@@ -115,9 +115,9 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
         },
       });
 
-      var deliverDocumentsSuccess = response.data;
+      let deliverDocumentsSuccess = response.data;
 
-      var deliverDocumentsError = response.error;
+      let deliverDocumentsError = response.error;
 
       if (deliverDocumentsError?.status !== 202) {
         const errorMessage = deliverDocumentsError?.data.message;

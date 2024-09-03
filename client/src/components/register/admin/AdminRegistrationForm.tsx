@@ -189,13 +189,11 @@ const AdminRegistrationForm: React.FC = () => {
         password: passwordAdminLocalState,
       });
 
-      console.log(response);
+      let createAdminError = response.error;
 
-      var createAdminError = response.error;
+      let createAdminValidationData = response.data?.message;
 
-      var createAdminValidationData = response.data?.message;
-
-      var createAdminSuccess = response.data;
+      let createAdminSuccess = response.data;
 
       if (createAdminError || createAdminValidationData) {
         const errorMessage = createAdminError?.data.message;

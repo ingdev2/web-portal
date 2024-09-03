@@ -112,9 +112,9 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
         },
       });
 
-      var rejectedMedicalReqSuccess = response.data;
+      let rejectedMedicalReqSuccess = response.data;
 
-      var rejectedMedicalReqError = response.error;
+      let rejectedMedicalReqError = response.error;
 
       if (rejectedMedicalReqError?.status !== 202) {
         const errorMessage = rejectedMedicalReqError?.data.message;

@@ -136,9 +136,9 @@ const PatientForgotPasswordForm: React.FC<{
           birthdate: birthdatePatientLocalState,
         });
 
-        var validationPatientData = response.data?.status;
+        let validationPatientData = response.data?.status;
 
-        var validationPatientError = response.error?.status;
+        let validationPatientError = response.error?.status;
 
         if (validationPatientError !== 200 && !validationPatientData) {
           const errorMessage = response.error?.data?.message;

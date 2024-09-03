@@ -186,9 +186,9 @@ const FamiliarUserLoginForm: React.FC = () => {
         rel_with_patient: relationshipWithPatientLocalState,
       });
 
-      var isLoginUserFamiliarError = response.error;
+      let isLoginUserFamiliarError = response.error;
 
-      var isLoginUserFamiliarSuccess = response.data;
+      let isLoginUserFamiliarSuccess = response.data;
 
       if (isLoginUserFamiliarError) {
         const errorMessage = isLoginUserFamiliarError?.data.message;

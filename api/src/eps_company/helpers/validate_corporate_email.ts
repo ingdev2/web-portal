@@ -8,7 +8,7 @@ async function validateCorporateEmail(email: string): Promise<boolean> {
       `https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${apiKey}`,
     );
 
-    const data = response.data.data;
+    const data = response?.data?.data;
 
     if (
       !data.webmail &&

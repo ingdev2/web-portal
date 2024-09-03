@@ -161,11 +161,11 @@ const EditEpsUserForm: React.FC = () => {
         },
       });
 
-      var editEpsDataError = response.error;
+      let editEpsDataError = response.error;
 
-      var editEpsDataStatus = response.data.status;
+      let editEpsDataStatus = response.data?.status;
 
-      var editEpsDataValidationData = response.data?.message;
+      let editEpsDataValidationData = response.data?.message;
 
       if (editEpsDataError || editEpsDataStatus !== 202) {
         setHasChanges(false);
