@@ -14,7 +14,7 @@ export const gendersApi = createApi({
   reducerPath: "gendersApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/genders`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/genders`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

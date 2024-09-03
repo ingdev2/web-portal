@@ -14,7 +14,7 @@ export const userRolesApi = createApi({
   reducerPath: "userRolesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-roles`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/user-roles`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

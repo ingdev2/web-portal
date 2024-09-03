@@ -14,7 +14,7 @@ export const epsCompanyApi = createApi({
   reducerPath: "epsCompanyApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/eps-company`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/eps-company`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
