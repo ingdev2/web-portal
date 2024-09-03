@@ -3,73 +3,66 @@
 import React from "react";
 
 import { Button, Col, Form, Input, Row } from "antd";
-import { Store } from "antd/es/form/interface";
-import { titleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
+import { titleStyleCss } from "@/theme/text_styles";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
 
-const EditEpsCompanyFormData: React.FC<{
-  nameEpsCompanyFormData: string;
-  onChangeNameEpsCompanyFormData: (e: any) => void;
-  nitEpsCompanyFormData: string;
-  onChangeNitEpsCompanyFormData: (e: any) => void;
-  emailEpsCompanyFormData: string;
-  onChangeEmailEpsCompanyFormData: (e: any) => void;
-  handleConfirmEpsCompanyFormData: (
-    e: React.FormEvent<HTMLFormElement>
-  ) => Promise<void>;
-  initialValuesEditAdminFormData: Store | undefined;
-  isSubmittingEditAdminFormData: boolean;
-  handleButtonClickFormData: () => void;
-  hasChangesFormData: boolean;
+const EpsCompanyRegistrationFormData: React.FC<{
+  handleCreateUserEpsCompanyDataForm: () => void;
+  epsCompanyNameDataForm: string;
+  handleOnChangeEpsCompanyNameDataForm: (e: any) => void;
+  epsCompanyNitDataForm: string;
+  handleOnChangeEpsCompanyNitDataForm: (e: any) => void;
+  epsCompanyEmailDataForm: string;
+  handleOnChangeEpsCompanyEmailDataForm: (e: any) => void;
+  buttonSubmitFormLoadingDataForm: boolean;
+  handleButtonSubmitFormDataForm: () => void;
 }> = ({
-  nameEpsCompanyFormData,
-  onChangeNameEpsCompanyFormData,
-  nitEpsCompanyFormData,
-  onChangeNitEpsCompanyFormData,
-  emailEpsCompanyFormData,
-  onChangeEmailEpsCompanyFormData,
-  handleConfirmEpsCompanyFormData,
-  initialValuesEditAdminFormData,
-  isSubmittingEditAdminFormData,
-  handleButtonClickFormData,
-  hasChangesFormData,
+  handleCreateUserEpsCompanyDataForm,
+  epsCompanyNameDataForm,
+  handleOnChangeEpsCompanyNameDataForm,
+  epsCompanyNitDataForm,
+  handleOnChangeEpsCompanyNitDataForm,
+  epsCompanyEmailDataForm,
+  handleOnChangeEpsCompanyEmailDataForm,
+  buttonSubmitFormLoadingDataForm,
+  handleButtonSubmitFormDataForm,
 }) => {
   return (
     <Form
-      id="edit-eps-company-form"
-      name="edit-eps-company-form"
-      className="edit-eps-company-form"
-      onFinish={handleConfirmEpsCompanyFormData}
-      initialValues={initialValuesEditAdminFormData}
+      id="create-eps-company-form"
+      name="create-eps-company-form"
+      className="create-eps-company-form"
+      onFinish={handleCreateUserEpsCompanyDataForm}
+      initialValues={{ remember: false }}
       autoComplete="false"
       layout="vertical"
       style={{
-        width: "100%",
-        paddingBlock: "7px",
-        paddingInline: "13px",
+        width: "72%",
+        paddingBlock: "13px",
+        paddingInline: "22px",
       }}
     >
       <h2
-        className="title-edit-eps-company-form"
+        className="title-create-eps-company-form"
         style={{
           ...titleStyleCss,
           textAlign: "center",
-          marginTop: "7px",
           marginBottom: "22px",
         }}
       >
-        Editar Empresa de EPS
+        Crear empresa EPS
       </h2>
 
       <Row gutter={24}>
-        <Col span={14}>
+        <Col span={12}>
           <Form.Item
-            name="edit-eps-company-name"
-            label="Nombre(s) de empresa:"
+            name="new-eps-company-name"
+            label="Nombre de empresa:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
+
               const filteredValue = value
                 .toUpperCase()
                 .replace(/[^A-ZÑ\s]/g, "");
@@ -77,7 +70,7 @@ const EditEpsCompanyFormData: React.FC<{
             }}
             rules={[
               {
-                required: false,
+                required: true,
                 message: "¡Por favor ingrese el nombre de la empresa!",
               },
               {
@@ -101,18 +94,17 @@ const EditEpsCompanyFormData: React.FC<{
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
               type="text"
-              value={nameEpsCompanyFormData}
+              value={epsCompanyNameDataForm}
               placeholder="Nombre de empresa"
-              onChange={onChangeNameEpsCompanyFormData}
+              onChange={handleOnChangeEpsCompanyNameDataForm}
               autoComplete="off"
-              disabled
             />
           </Form.Item>
         </Col>
 
-        <Col span={10}>
+        <Col span={12}>
           <Form.Item
-            name="edit-eps-company-nit"
+            name="new-eps-company-nit"
             label="NIT de empresa:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
@@ -122,8 +114,8 @@ const EditEpsCompanyFormData: React.FC<{
             }}
             rules={[
               {
-                required: false,
-                message: "¡Por favor ingresa el NIT de la empresa!",
+                required: true,
+                message: "¡Por favor ingrese el NIT de la empresa!",
               },
               {
                 min: 8,
@@ -141,11 +133,10 @@ const EditEpsCompanyFormData: React.FC<{
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
               type="text"
-              value={nitEpsCompanyFormData}
-              placeholder="Número de NIT"
-              onChange={onChangeNitEpsCompanyFormData}
+              value={epsCompanyNitDataForm}
+              placeholder="Número NIT de empresa"
+              onChange={handleOnChangeEpsCompanyNitDataForm}
               autoComplete="off"
-              disabled
             />
           </Form.Item>
         </Col>
@@ -154,18 +145,19 @@ const EditEpsCompanyFormData: React.FC<{
       <Row gutter={24}>
         <Col span={24}>
           <Form.Item
-            name="edit-eps-company-email"
+            name="new-eps-company-email"
             label="Correo electrónico principal:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
+
               return value.toLowerCase().replace(/[^a-z0-9@._-]/g, "");
             }}
             rules={[
               {
-                required: false,
+                required: true,
                 message:
-                  "¡Por favor ingresa el correo electrónico de la empresa!",
+                  "¡Por favor ingresa el correo electrónico principal de la empresa!",
               },
               {
                 type: "email",
@@ -185,53 +177,37 @@ const EditEpsCompanyFormData: React.FC<{
               id="email-eps-company"
               prefix={<MdOutlineEmail className="site-form-item-icon" />}
               type="email"
-              value={emailEpsCompanyFormData}
-              placeholder="Correo electrónico"
-              onChange={onChangeEmailEpsCompanyFormData}
+              value={epsCompanyEmailDataForm}
+              placeholder="Correo electrónico principal"
+              onChange={handleOnChangeEpsCompanyEmailDataForm}
               autoComplete="off"
             />
           </Form.Item>
         </Col>
       </Row>
 
-      <Form.Item
-        style={{
-          textAlign: "center",
-          marginBlock: "0px",
-          paddingBlock: "13px",
-        }}
-      >
-        {isSubmittingEditAdminFormData ? (
+      <Form.Item style={{ textAlign: "center", marginBlock: "17px" }}>
+        {buttonSubmitFormLoadingDataForm ? (
           <CustomSpin />
         ) : (
-          <div
+          <Button
+            size="large"
             style={{
-              display: "flex",
-              flexFlow: "row",
-              justifyContent: "center",
+              paddingInline: 62,
+              borderRadius: 31,
+              backgroundColor: "#015E90",
+              color: "#f2f2f2",
             }}
+            htmlType="submit"
+            className="create-eps-company-form-button"
+            onClick={handleButtonSubmitFormDataForm}
           >
-            <Button
-              size="large"
-              style={{
-                backgroundColor: !hasChangesFormData ? "#D8D8D8" : "#015E90",
-                color: !hasChangesFormData ? "#A0A0A0" : "#f2f2f2",
-                fontWeight: "bold",
-                paddingInline: 54,
-                borderRadius: 31,
-              }}
-              htmlType="submit"
-              className="edit-eps-company-form-button"
-              onClick={handleButtonClickFormData}
-              disabled={!hasChangesFormData}
-            >
-              Actualizar datos
-            </Button>
-          </div>
+            Crear empresa EPS
+          </Button>
         )}
       </Form.Item>
     </Form>
   );
 };
 
-export default EditEpsCompanyFormData;
+export default EpsCompanyRegistrationFormData;
