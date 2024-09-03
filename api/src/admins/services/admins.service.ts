@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
@@ -22,6 +22,7 @@ import { nanoid } from 'nanoid';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { AuthenticationMethodEnum } from 'src/utils/enums/authentication_method.enum';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
+import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import {
   PASSWORD_RESET,
   RESET_PASSWORD_TEMPLATE,
@@ -75,6 +76,17 @@ export class AdminsService {
       return new HttpException(
         `El correo electrónico ${superAdmin.corporate_email} ya está registrado.`,
         HttpStatus.CONFLICT,
+      );
+    }
+
+    const isCorporateEmail = await validateCorporateEmail(
+      superAdmin.corporate_email,
+    );
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${superAdmin.corporate_email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 
@@ -161,6 +173,17 @@ export class AdminsService {
       return new HttpException(
         `El correo electrónico ${admin.corporate_email} ya está registrado.`,
         HttpStatus.CONFLICT,
+      );
+    }
+
+    const isCorporateEmail = await validateCorporateEmail(
+      admin.corporate_email,
+    );
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${admin.corporate_email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 
@@ -314,7 +337,7 @@ export class AdminsService {
 
     if (!superAdminFound) {
       return new HttpException(
-        `El admin con número de identificación personal: ${idNumber} no esta registrado.`,
+        `El super admin con número de identificación personal: ${idNumber} no esta registrado.`,
         HttpStatus.CONFLICT,
       );
     } else {
@@ -323,16 +346,18 @@ export class AdminsService {
   }
 
   async getAdminByIdNumber(idNumber: number) {
-    const adminRoleAdmin = await this.adminRoleRepository.findOne({
-      where: {
-        name: AdminRolType.ADMIN,
-      },
+    const adminRoleFound = await this.adminRoleRepository.find({
+      where: { name: In([AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN]) },
     });
+
+    if (!adminRoleFound.length) {
+      throw new UnauthorizedException(`¡Role de admin no encontrado!`);
+    }
 
     const adminFound = await this.adminRepository.findOne({
       where: {
         id_number: idNumber,
-        admin_role: adminRoleAdmin.id,
+        admin_role: In(adminRoleFound.map((role) => role.id)),
         is_active: true,
       },
     });
@@ -385,7 +410,10 @@ export class AdminsService {
   // UPDATE FUNTIONS //
 
   async updateAdmin(id: number, admin: UpdateAdminDto) {
-    const adminFound = await this.adminRepository.findOneBy({ id });
+    const adminFound = await this.adminRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!adminFound) {
       return new HttpException(
@@ -432,6 +460,17 @@ export class AdminsService {
       return new HttpException(
         `El correo electrónico ${admin.corporate_email} ya está registrado.`,
         HttpStatus.CONFLICT,
+      );
+    }
+
+    const isCorporateEmail = await validateCorporateEmail(
+      admin.corporate_email,
+    );
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${admin.corporate_email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

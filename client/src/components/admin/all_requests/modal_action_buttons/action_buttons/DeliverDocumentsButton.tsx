@@ -115,9 +115,9 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
         },
       });
 
-      var deliverDocumentsSuccess = response.data;
+      let deliverDocumentsSuccess = response.data;
 
-      var deliverDocumentsError = response.error;
+      let deliverDocumentsError = response.error;
 
       if (deliverDocumentsError?.status !== 202) {
         const errorMessage = deliverDocumentsError?.data.message;
@@ -126,9 +126,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
           dispatch(setErrorsAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);
@@ -249,6 +247,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
                 tooltip="Aquí debe anexar los documentos que el usuario requiere en la solicitud."
                 rules={[
                   {
+                    required: true,
                     validator: validateRequiredFiles(
                       copyDocumentsDeliveredFilesState,
                       "¡Por favor adjunte documento(s) de respuesta a solicitud!"
@@ -265,10 +264,11 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
                     removeFileDocumentsDeliveredMedicalReq
                   }
                   maximumNumberOfFiles={Number(
-                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+                    process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_ADMINS
                   )}
                   maximumSizeFilesInMegaBytes={Number(
-                    process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+                    process.env
+                      .NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_ADMINS
                   )}
                 />
               </Form.Item>

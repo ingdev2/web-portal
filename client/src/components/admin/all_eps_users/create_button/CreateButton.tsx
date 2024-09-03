@@ -100,7 +100,7 @@ const CreateButton: React.FC<{
               try {
                 setIsSubmittingCreateButton(true);
 
-                await router.push("all_eps/register", {
+                await router.push("all_eps_users/register", {
                   scroll: true,
                 });
               } catch (error) {

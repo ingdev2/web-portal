@@ -39,13 +39,21 @@ export const epsCompanyApi = createApi({
 
     updateEpsCompanyById: builder.mutation<
       any,
-      { id: number; newName: string }
+      { id: number; updateData: Partial<EpsCompany> }
     >({
-      query: ({ id, newName }) => ({
+      query: ({ id, updateData }) => ({
         url: `update/${id}`,
         method: "PATCH",
         params: { id },
-        body: { newName },
+        body: updateData,
+      }),
+    }),
+
+    banEpsCompany: builder.mutation<any, { id: number }>({
+      query: ({ id }) => ({
+        url: `ban/${id}`,
+        method: "PATCH",
+        params: { id },
       }),
     }),
   }),
@@ -56,4 +64,5 @@ export const {
   useGetAllEpsCompanyQuery,
   useGetEpsCompanyByIdQuery,
   useUpdateEpsCompanyByIdMutation,
+  useBanEpsCompanyMutation,
 } = epsCompanyApi;

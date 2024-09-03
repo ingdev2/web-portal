@@ -117,9 +117,9 @@ const AdminLoginForm: React.FC = () => {
         password: passwordAdminLocalState,
       });
 
-      var isLoginAdminError = response.error;
+      let isLoginAdminError = response.error;
 
-      var isLoginAdminSuccess = response.data;
+      let isLoginAdminSuccess = response.data;
 
       if (isLoginAdminError) {
         const errorMessage = isLoginAdminError?.data.message;
@@ -127,8 +127,7 @@ const AdminLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginAdmin(errorMessage[0]));
           setShowErrorMessageAdmin(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginAdmin(errorMessage));
           setShowErrorMessageAdmin(true);
         }

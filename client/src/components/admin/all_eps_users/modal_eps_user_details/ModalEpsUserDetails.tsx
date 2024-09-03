@@ -6,46 +6,46 @@ import { Col, Descriptions } from "antd";
 
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
-const ModalEpsDetails: React.FC<{
+const ModalEpsUserDetails: React.FC<{
   titleDescription: string;
-  labelAdminName: string;
-  selectedAdminName: string | undefined;
-  labelAdminLastName: string;
-  selectedAdminLastName: string | undefined;
-  labelAdminIdType: string;
-  selectedAdminIdType: ReactNode;
-  labelAdminIdNumber: string;
-  selectedAdminIdNumber: number | undefined;
-  labelAdminGender: string;
-  selectedAdminGender: string | undefined;
-  labelAdminLevelPosition: string;
-  selectedAdminLevelPosition: string | undefined;
-  labelAdminCompanyArea: string;
-  selectedAdminCompanyArea: string | undefined;
-  labelAdminCellphone: string;
-  selectedAdminCellphone: number | string | undefined;
-  labelAdminEmail: string;
-  selectedAdminEmail: string | undefined;
+  labelEpsUserName: string;
+  selectedEpsUserName: string | undefined;
+  labelEpsUserLastName: string;
+  selectedEpsUserLastName: string | undefined;
+  labelEpsUserIdType: string;
+  selectedEpsUserIdType: ReactNode;
+  labelEpsUserIdNumber: string;
+  selectedEpsUserIdNumber: number | undefined;
+  labelEpsUserGender: string;
+  selectedEpsUserGender: string | undefined;
+  labelEpsUserLevelPosition: string;
+  selectedEpsUserLevelPosition: string | undefined;
+  labelEpsUserCompanyArea: string;
+  selectedEpsUserCompanyArea: string | undefined;
+  labelEpsUserCellphone: string;
+  selectedEpsUserCellphone: number | string | undefined;
+  labelEpsUserEmail: string;
+  selectedEpsUserEmail: string | undefined;
 }> = ({
   titleDescription,
-  labelAdminName,
-  selectedAdminName,
-  labelAdminLastName,
-  selectedAdminLastName,
-  labelAdminIdType,
-  selectedAdminIdType,
-  labelAdminIdNumber,
-  selectedAdminIdNumber,
-  labelAdminGender,
-  selectedAdminGender,
-  labelAdminLevelPosition,
-  selectedAdminLevelPosition,
-  labelAdminCompanyArea,
-  selectedAdminCompanyArea,
-  labelAdminCellphone,
-  selectedAdminCellphone,
-  labelAdminEmail,
-  selectedAdminEmail,
+  labelEpsUserName,
+  selectedEpsUserName,
+  labelEpsUserLastName,
+  selectedEpsUserLastName,
+  labelEpsUserIdType,
+  selectedEpsUserIdType,
+  labelEpsUserIdNumber,
+  selectedEpsUserIdNumber,
+  labelEpsUserGender,
+  selectedEpsUserGender,
+  labelEpsUserLevelPosition,
+  selectedEpsUserLevelPosition,
+  labelEpsUserCompanyArea,
+  selectedEpsUserCompanyArea,
+  labelEpsUserCellphone,
+  selectedEpsUserCellphone,
+  labelEpsUserEmail,
+  selectedEpsUserEmail,
 }) => {
   return (
     <Col
@@ -91,81 +91,81 @@ const ModalEpsDetails: React.FC<{
         column={12}
       >
         <Descriptions.Item
-          label={labelAdminName}
+          label={labelEpsUserName}
           style={{ textAlign: "center" }}
           span={6}
         >
-          {selectedAdminName}
+          {selectedEpsUserName}
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAdminLastName}
+          label={labelEpsUserLastName}
           style={{ textAlign: "center" }}
           span={6}
         >
-          {selectedAdminLastName}
+          {selectedEpsUserLastName}
         </Descriptions.Item>
 
         {/* FILA 1 */}
 
         <Descriptions.Item
-          label={labelAdminIdType}
+          label={labelEpsUserIdType}
           style={{ textAlign: "center" }}
           span={5}
         >
-          {selectedAdminIdType}
+          {selectedEpsUserIdType}
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAdminIdNumber}
+          label={labelEpsUserIdNumber}
           style={{ textAlign: "center" }}
           span={5}
         >
-          {selectedAdminIdNumber}
+          {selectedEpsUserIdNumber}
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAdminGender}
+          label={labelEpsUserGender}
           style={{ textAlign: "center" }}
           span={2}
         >
-          {selectedAdminGender}
+          {selectedEpsUserGender}
         </Descriptions.Item>
 
         {/* FILA 2 */}
 
         <Descriptions.Item
-          label={labelAdminLevelPosition}
+          label={labelEpsUserLevelPosition}
           style={{ textAlign: "center" }}
           span={6}
         >
-          {selectedAdminLevelPosition}
+          {selectedEpsUserLevelPosition}
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAdminCompanyArea}
+          label={labelEpsUserCompanyArea}
           style={{ textAlign: "center" }}
           span={6}
         >
-          {selectedAdminCompanyArea}
+          {selectedEpsUserCompanyArea}
         </Descriptions.Item>
 
         {/* FILA 3 */}
 
         <Descriptions.Item
-          label={labelAdminCellphone}
+          label={labelEpsUserCellphone}
           style={{ textAlign: "center" }}
           span={4}
         >
-          {selectedAdminCellphone}
+          {selectedEpsUserCellphone}
         </Descriptions.Item>
 
         <Descriptions.Item
-          label={labelAdminEmail}
+          label={labelEpsUserEmail}
           style={{ textAlign: "center" }}
           span={8}
         >
-          {selectedAdminEmail}
+          {selectedEpsUserEmail}
         </Descriptions.Item>
 
         {/* FILA 4 */}
@@ -174,4 +174,4 @@ const ModalEpsDetails: React.FC<{
   );
 };
 
-export default ModalEpsDetails;
+export default ModalEpsUserDetails;

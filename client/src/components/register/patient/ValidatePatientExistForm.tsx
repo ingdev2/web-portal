@@ -169,7 +169,7 @@ const ValidatePatientExistForm: React.FC = () => {
           idTypeAbbrev: idTypeAbbrevLocalState,
         });
 
-        var idTypeName = responseIdTypeName?.error?.data;
+        let idTypeName = responseIdTypeName?.error?.data;
 
         dispatch(setIdTypeAbbrevUserPatient(idTypeName));
 
@@ -177,7 +177,7 @@ const ValidatePatientExistForm: React.FC = () => {
           idTypeAbbrev: idTypeAbbrevLocalState,
         });
 
-        var idTypeNumber = responseIdTypeNumber?.data;
+        let idTypeNumber = responseIdTypeNumber?.data;
 
         dispatch(setIdTypeUserPatient(idTypeNumber));
       }
@@ -187,7 +187,7 @@ const ValidatePatientExistForm: React.FC = () => {
           genderAbbrev: genderAbbrevPatientLocalState,
         });
 
-        var genderName = responseGenderName?.error?.data;
+        let genderName = responseGenderName?.error?.data;
 
         dispatch(setGenderAbbrevUserPatient(genderName));
 
@@ -195,7 +195,7 @@ const ValidatePatientExistForm: React.FC = () => {
           genderAbbrev: genderAbbrevPatientLocalState,
         });
 
-        var genderNumber = responseGenderNumber?.data;
+        let genderNumber = responseGenderNumber?.data;
 
         dispatch(setGenderUserPatient(genderNumber));
       }
@@ -228,7 +228,7 @@ const ValidatePatientExistForm: React.FC = () => {
           id_number: idNumberLocalStateNumber,
         });
 
-        var validationPatientRegisterData = searchPatientUser?.data;
+        let validationPatientRegisterData = searchPatientUser?.data;
 
         if (validationPatientRegisterData?.status === 409) {
           const errorMessage = validationPatientRegisterData?.message;
@@ -242,9 +242,9 @@ const ValidatePatientExistForm: React.FC = () => {
             idNumber: idNumberLocalStateNumber,
           });
 
-          var validationPatientData = response.data?.[0].status;
+          let validationPatientData = response.data?.[0].status;
 
-          var validationPatientError = response.error?.status;
+          let validationPatientError = response.error?.status;
 
           if (validationPatientData === 404 || validationPatientError === 404) {
             const errorMessage =
@@ -303,7 +303,7 @@ const ValidatePatientExistForm: React.FC = () => {
 
   const handleIdTypeChange = (value: string | undefined) => {
     if (value) {
-      var idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
+      let idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
       setIdTypeAbbrevLocalState(idTypeAbbrevPatientString);
     }
   };

@@ -11,7 +11,6 @@ import { RequirementStatusService } from '../services/requirement_status.service
 import { CreateRequirementStatusDto } from '../dto/create-requirement_status.dto';
 import { UpdateRequirementStatusDto } from '../dto/update-requirement_status.dto';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
-import { UserRolType } from 'src/utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 
@@ -25,7 +24,7 @@ export class RequirementStatusController {
 
   // POST METHODS //
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('/create')
   createRequirementStatus(
     @Body() createRequirementStatus: CreateRequirementStatusDto,

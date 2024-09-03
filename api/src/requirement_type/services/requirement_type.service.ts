@@ -122,4 +122,29 @@ export class RequirementTypeService {
       HttpStatus.ACCEPTED,
     );
   }
+
+  async banRequirementeType(id: number) {
+    const requirementTypeFound = await this.requirementTypeRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!requirementTypeFound) {
+      return new HttpException(
+        `El tipo de requerimiento con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    requirementTypeFound.is_active = !requirementTypeFound.is_active;
+
+    await this.requirementTypeRepository.save(requirementTypeFound);
+
+    const statusMessage = requirementTypeFound.is_active
+      ? `El tipo de requerimiento con número de ID: ${requirementTypeFound.id} se ha ACTIVADO.`
+      : `El tipo de requerimiento con número de ID: ${requirementTypeFound.id} se ha INACTIVADO.`;
+
+    throw new HttpException(statusMessage, HttpStatus.ACCEPTED);
+  }
 }

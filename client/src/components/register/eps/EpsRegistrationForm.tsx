@@ -74,16 +74,14 @@ const EpsRegistrationForm: React.FC = () => {
   const [passwordUserEpsLocalState, setPasswordUserEpsLocalState] =
     useState("");
 
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-  const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
-    useState(false);
+  useState(false);
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
 
   const [isSubmittingConfirmModal, setIsSubmittingConfirmModal] =
     useState(false);
   const [isSubmittingNewUserEps, setIsSubmittingNewUserEps] = useState(false);
-  const [isSubmittingGoToAllEps, setIsSubmittingGoToLogin] = useState(false);
+  const [isSubmittingGoToAllEps, setIsSubmittingGoToAllEps] = useState(false);
   const [showErrorMessageUserEps, setShowErrorMessageUserEps] = useState(false);
 
   const {
@@ -236,11 +234,11 @@ const EpsRegistrationForm: React.FC = () => {
         authentication_method: epsAuthMethodState,
       });
 
-      var createUserEpsError = response.error;
+      let createUserEpsError = response.error;
 
-      var createUserEpsValidationData = response.data?.message;
+      let createUserEpsValidationData = response.data?.message;
 
-      var createUserEpsSuccess = response.data;
+      let createUserEpsSuccess = response.data;
 
       if (createUserEpsError || createUserEpsValidationData) {
         const errorMessage = createUserEpsError?.data.message;
@@ -250,19 +248,19 @@ const EpsRegistrationForm: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessageUserEps(true);
-        }
-        if (Array.isArray(validationDataMessage)) {
-          dispatch(setErrorsUserEps(validationDataMessage[0]));
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserEps(errorMessage));
 
           setShowErrorMessageUserEps(true);
         }
 
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserEps(errorMessage));
+        if (Array.isArray(validationDataMessage)) {
+          dispatch(setErrorsUserEps(validationDataMessage[0]));
+
+          setShowErrorMessageUserEps(true);
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserEps(validationDataMessage));
+
           setShowErrorMessageUserEps(true);
         }
       }
@@ -312,7 +310,7 @@ const EpsRegistrationForm: React.FC = () => {
 
   const handleGoToAllEps = async () => {
     try {
-      setIsSubmittingGoToLogin(true);
+      setIsSubmittingGoToAllEps(true);
 
       await router.replace("/admin/dashboard/all_eps", {
         scroll: false,
@@ -320,7 +318,7 @@ const EpsRegistrationForm: React.FC = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingGoToLogin(false);
+      setIsSubmittingGoToAllEps(false);
       setModalIsOpenSuccess(false);
     }
   };
@@ -411,10 +409,10 @@ const EpsRegistrationForm: React.FC = () => {
               key={"user-eps-created-custom-result"}
               statusTypeResult={"success"}
               titleCustomResult="¡Colaborador de EPS creado correctamente!"
-              subtitleCustomResult="El colaborar ha sido agregado a la lista de usuarios de EPS."
+              subtitleCustomResult="El colaborador ha sido agregado a la lista de usuarios de EPS."
               handleClickCustomResult={handleGoToAllEps}
               isSubmittingButton={isSubmittingGoToAllEps}
-              textButtonCustomResult="Regresar a lista de auditores EPS"
+              textButtonCustomResult="Regresar a lista de usuarios EPS"
             />
           }
         />

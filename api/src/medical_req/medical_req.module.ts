@@ -4,6 +4,7 @@ import { MedicalReqController } from './controllers/medical_req.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicalReq } from './entities/medical_req.entity';
 import { User } from '../users/entities/user.entity';
+import { EpsCompany } from 'src/eps_company/entities/eps_company.entity';
 import { AuthorizedFamiliar } from '../authorized_familiar/entities/authorized_familiar.entity';
 import { ReasonsForRejection } from '../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import { UsersModule } from '../users/users.module';
@@ -24,6 +25,7 @@ import { S3FileUploaderModule } from 'src/s3_file_uploader/s3_file_uploader.modu
     TypeOrmModule.forFeature([
       MedicalReq,
       User,
+      EpsCompany,
       AuthorizedFamiliar,
       UserRole,
       IdTypeEntity,

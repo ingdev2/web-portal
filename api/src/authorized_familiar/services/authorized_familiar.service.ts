@@ -453,7 +453,10 @@ export class AuthorizedFamiliarService {
     id: string,
     userFamiliar: UpdateAuthorizedFamiliarDto,
   ) {
-    const familiarFound = await this.familiarRepository.findOneBy({ id });
+    const familiarFound = await this.familiarRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!familiarFound) {
       return new HttpException(

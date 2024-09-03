@@ -141,7 +141,7 @@ const EpsModalVerificationCode: React.FC = () => {
         id_number: idNumberEpsState,
       });
 
-      var isResponseError = response.error;
+      let isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
         dispatch(setErrorsLoginEps(isResponseError?.data.message));

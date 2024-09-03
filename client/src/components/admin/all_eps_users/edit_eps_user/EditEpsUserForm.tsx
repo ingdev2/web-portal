@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import EditAdminFormData from "./EditEpsFormData";
+import EditAdminFormData from "./EditEpsUserFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
@@ -22,7 +22,7 @@ import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyArea
 import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 import { transformNameToIdMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 
-const EditEpsForm: React.FC = () => {
+const EditEpsUserForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
@@ -161,11 +161,11 @@ const EditEpsForm: React.FC = () => {
         },
       });
 
-      var editEpsDataError = response.error;
+      let editEpsDataError = response.error;
 
-      var editEpsDataStatus = response.data.status;
+      let editEpsDataStatus = response.data?.status;
 
-      var editEpsDataValidationData = response.data?.message;
+      let editEpsDataValidationData = response.data?.message;
 
       if (editEpsDataError || editEpsDataStatus !== 202) {
         setHasChanges(false);
@@ -177,18 +177,19 @@ const EditEpsForm: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessage(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserEps(errorMessage));
+
+          setShowErrorMessage(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserEps(validationDataMessage[0]));
 
           setShowErrorMessage(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserEps(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserEps(validationDataMessage));
+
           setShowErrorMessage(true);
         }
       }
@@ -355,4 +356,4 @@ const EditEpsForm: React.FC = () => {
   );
 };
 
-export default EditEpsForm;
+export default EditEpsUserForm;

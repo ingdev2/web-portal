@@ -36,6 +36,10 @@ export class SendEmailDto {
 
   @IsOptional()
   @IsString()
+  emailOfEps: string;
+
+  @IsOptional()
+  @IsString()
   emailOfFamiliar: string;
 
   @IsOptional()

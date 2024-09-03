@@ -20,6 +20,7 @@ export class NodemailerService {
       familiarNameToEmail,
       patientNameToEmail,
       patientIdNumberToEmail,
+      emailOfEps,
       emailOfFamiliar,
       relationshipWithPatient,
       medicalReqFilingNumber,
@@ -46,6 +47,7 @@ export class NodemailerService {
         familiarNameToEmail,
         patientNameToEmail,
         patientIdNumberToEmail,
+        emailOfEps,
         emailOfFamiliar,
         relationshipWithPatient,
         medicalReqFilingNumber,
@@ -82,7 +84,7 @@ export class NodemailerService {
 
       return response;
     } catch (error) {
-      console.log('Error: ', error);
+      console.log('Error al enviar correo: ', error);
     }
   }
 }

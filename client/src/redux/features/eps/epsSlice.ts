@@ -27,6 +27,7 @@ const initialState: User = {
   company_area: 0,
   user_role: 0,
   verification_code: 0,
+  familiar: [],
   createdAt: "",
   updateAt: "",
   deletedAt: "",
@@ -34,7 +35,7 @@ const initialState: User = {
   errors: [],
 };
 
-export const patientSlice = createSlice({
+export const epsSlice = createSlice({
   name: "eps",
   initialState,
   reducers: {
@@ -111,7 +112,8 @@ export const patientSlice = createSlice({
       state.residence_address = "";
       state.company_area = 0;
       state.eps_company = 0;
-      (state.eps_company_abbrev = ""), (state.errors = []);
+      state.eps_company_abbrev = "";
+      state.errors = [];
     },
   },
 });
@@ -137,6 +139,6 @@ export const {
   setMedicalReqUserEps,
   setErrorsUserEps,
   setDefaultValuesUserEps,
-} = patientSlice.actions;
+} = epsSlice.actions;
 
-export default patientSlice.reducer;
+export default epsSlice.reducer;

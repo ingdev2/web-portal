@@ -112,9 +112,9 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
         },
       });
 
-      var rejectedMedicalReqSuccess = response.data;
+      let rejectedMedicalReqSuccess = response.data;
 
-      var rejectedMedicalReqError = response.error;
+      let rejectedMedicalReqError = response.error;
 
       if (rejectedMedicalReqError?.status !== 202) {
         const errorMessage = rejectedMedicalReqError?.data.message;
@@ -123,9 +123,7 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
           dispatch(setErrorsAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);

@@ -9,6 +9,9 @@ export enum ItemNames {
   SUB_EPS_AUDITORS = "Usuarios EPS",
   SUB_PATIENT_USERS = "Pacientes",
   SUB_RELATIVES_USERS = "Familiares",
+
+  ITEM_PARAMETRIZATION = "Parametrización",
+  SUB_EPS_COMPANIES_PARAMS = "Empresas EPS",
 }
 
 export enum ItemKeys {
@@ -17,9 +20,12 @@ export enum ItemKeys {
   SUB_ALL_REQUESTS_REQ_KEY = "requests",
   SUB_ALL_LEGAL_REQUESTS_REQ_KEY = "legal_requests",
 
-  ITEM_USERS_KEY = "all_users",
+  ITEM_USERS_KEY = "all_user",
   SUB_ADMIN_USERS_KEY = "all_admins",
-  SUB_EPS_AUDITORS_KEY = "all_eps",
+  SUB_EPS_AUDITORS_KEY = "all_eps_users",
   SUB_PATIENT_USERS_KEY = "all_patients",
   SUB_RELATIVES_USERS_KEY = "all_relatives",
+
+  ITEM_PARAMETRIZATION_KEY = "parametrization",
+  SUB_EPS_COMPANIES_PARAMS_KEY = "all_eps_companies",
 }

@@ -59,4 +59,10 @@ export class RequirementTypeController {
       updateRequirementType,
     );
   }
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Patch('/ban/:id')
+  async banRequirementeType(@Param('id') id: number) {
+    return await this.requirementTypeService.banRequirementeType(id);
+  }
 }

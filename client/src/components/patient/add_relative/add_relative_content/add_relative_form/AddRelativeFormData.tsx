@@ -340,6 +340,7 @@ const AddRelativeFormData: React.FC<{
         style={{ marginBottom: "13px" }}
         rules={[
           {
+            required: true,
             validator: validateRequiredFiles(
               copyFamiliarCitizenshipCardFilesState,
               "¡Por favor documento de identidad del familiar!"

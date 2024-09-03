@@ -56,9 +56,9 @@ const ResetPasswordFormUsers: React.FC = () => {
           newPassword: newPasswordResetLocalState,
         });
 
-        var validationResetPasswordData = response.data?.status;
+        let validationResetPasswordData = response.data?.status;
 
-        var validationResetPasswordError = response.error?.status;
+        let validationResetPasswordError = response.error?.status;
 
         if (
           validationResetPasswordError !== 200 &&

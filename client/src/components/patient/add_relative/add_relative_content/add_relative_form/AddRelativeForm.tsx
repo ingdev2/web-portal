@@ -297,11 +297,11 @@ const AddRelativeForm: React.FC = () => {
         },
       });
 
-      var addAuthFamiliarError = response.error;
+      let addAuthFamiliarError = response.error;
 
-      var addAuthFamiliarValidationData = response.data?.message;
+      let addAuthFamiliarValidationData = response.data?.message;
 
-      var addAuthFamiliarSuccess = response.data;
+      let addAuthFamiliarSuccess = response.data;
 
       if (addAuthFamiliarError || addAuthFamiliarValidationData) {
         const errorMessage = addAuthFamiliarError?.data.message;
@@ -311,18 +311,19 @@ const AddRelativeForm: React.FC = () => {
           dispatch(setErrorsUserFamiliar(errorMessage[0]));
 
           setShowErrorMessageUserFamiliar(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserFamiliar(errorMessage));
+
+          setShowErrorMessageUserFamiliar(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserFamiliar(validationDataMessage[0]));
 
           setShowErrorMessageUserFamiliar(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserFamiliar(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserFamiliar(validationDataMessage));
+
           setShowErrorMessageUserFamiliar(true);
         }
       }

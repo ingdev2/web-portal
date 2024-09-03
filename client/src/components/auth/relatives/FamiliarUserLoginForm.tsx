@@ -186,9 +186,9 @@ const FamiliarUserLoginForm: React.FC = () => {
         rel_with_patient: relationshipWithPatientLocalState,
       });
 
-      var isLoginUserFamiliarError = response.error;
+      let isLoginUserFamiliarError = response.error;
 
-      var isLoginUserFamiliarSuccess = response.data;
+      let isLoginUserFamiliarSuccess = response.data;
 
       if (isLoginUserFamiliarError) {
         const errorMessage = isLoginUserFamiliarError?.data.message;
@@ -196,8 +196,7 @@ const FamiliarUserLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginFamiliar(errorMessage[0]));
           setShowErrorMessageFamiliar(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginFamiliar(errorMessage));
           setShowErrorMessageFamiliar(true);
         }

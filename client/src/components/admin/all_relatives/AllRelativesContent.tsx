@@ -145,9 +145,9 @@ const AllRelativesContent: React.FC = () => {
         id: record.id,
       });
 
-      var banFamiliarSuccess = response.data;
+      let banFamiliarSuccess = response.data;
 
-      var banFamiliarError = response.error;
+      let banFamiliarError = response.error;
 
       if (banFamiliarSuccess?.statusCode === 202 && !banFamiliarError) {
         const successMessage = banFamiliarSuccess?.message;
@@ -161,9 +161,7 @@ const AllRelativesContent: React.FC = () => {
           dispatch(setErrorsUserFamiliar(errorMessage[0]));
 
           setShowErrorMessagePatient(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsUserFamiliar(errorMessage));
 
           setShowErrorMessagePatient(true);

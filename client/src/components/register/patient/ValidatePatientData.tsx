@@ -211,9 +211,9 @@ const ValidatePatientData: React.FC = () => {
 
       const response: any = await createUserPatient(patientData);
 
-      var createUserPatientData = response?.data;
+      let createUserPatientData = response?.data;
 
-      var errorMessage = response.data?.message;
+      let errorMessage = response.data?.message;
 
       if (createUserPatientData?.status === 409) {
         dispatch(setErrorsUserPatient(errorMessage));

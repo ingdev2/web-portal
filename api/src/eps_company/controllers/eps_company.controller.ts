@@ -50,4 +50,10 @@ export class EpsCompanyController {
   ) {
     return this.epsCompanyService.updateEpsCompany(id, updateCompanyArea);
   }
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Patch('/ban/:id')
+  async banEpsCompanies(@Param('id') id: number) {
+    return await this.epsCompanyService.banEpsCompanies(id);
+  }
 }

@@ -138,9 +138,9 @@ const PatientUserLoginForm: React.FC = () => {
         password: passwordPatientLocalState,
       });
 
-      var isLoginUserError = response.error;
+      let isLoginUserError = response.error;
 
-      var isLoginUserSuccess = response.data;
+      let isLoginUserSuccess = response.data;
 
       if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
@@ -148,8 +148,7 @@ const PatientUserLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginPatient(errorMessage[0]));
           setShowErrorMessagePatient(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginPatient(errorMessage));
           setShowErrorMessagePatient(true);
         }

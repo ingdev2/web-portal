@@ -108,7 +108,7 @@ const ValidatePatientExistEps: React.FC = () => {
           idTypeAbbrev: idTypeAbbrevPatientLocalState,
         });
 
-        var idTypeName = responseIdTypeName?.error?.data;
+        let idTypeName = responseIdTypeName?.error?.data;
 
         dispatch(setIdTypeAbbrevUserPatient(idTypeName));
 
@@ -116,7 +116,7 @@ const ValidatePatientExistEps: React.FC = () => {
           idTypeAbbrev: idTypeAbbrevPatientLocalState,
         });
 
-        var idTypeNumber = responseIdTypeNumber?.data;
+        let idTypeNumber = responseIdTypeNumber?.data;
 
         dispatch(setIdTypeUserPatient(idTypeNumber));
       }
@@ -148,9 +148,9 @@ const ValidatePatientExistEps: React.FC = () => {
           idNumber: idNumberLocalStateNumber,
         });
 
-        var validationPatientData = response.data?.[0].status;
+        let validationPatientData = response.data?.[0].status;
 
-        var validationPatientError = response.error?.status;
+        let validationPatientError = response.error?.status;
 
         if (validationPatientData === 404 || validationPatientError === 404) {
           const errorMessage =
@@ -187,7 +187,7 @@ const ValidatePatientExistEps: React.FC = () => {
 
   const handleIdTypeChange = (value: string | undefined) => {
     if (value) {
-      var idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
+      let idTypeAbbrevPatientString: string = value as IdTypeAbbrev;
 
       setIdTypeAbbrevPatientLocalState(idTypeAbbrevPatientString);
     }

@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { LuFileText } from "react-icons/lu";
-import { RiFileList3Line } from "react-icons/ri";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { getItem } from "@/helpers/get_item_menu_dashboard_layout/get_item_menu_dashboard_layout";
 import { MenuItem } from "@/helpers/get_item_menu_dashboard_layout/types/menu_item_type";
+import { getItem } from "@/helpers/get_item_menu_dashboard_layout/get_item_menu_dashboard_layout";
+import { LuFileText } from "react-icons/lu";
+import { RiFileList3Line, RiUserHeartLine } from "react-icons/ri";
+import { FaUsers, FaChartPie, FaHospitalUser } from "react-icons/fa";
+import { GrUserAdmin } from "react-icons/gr";
+import { MdOutlineFamilyRestroom } from "react-icons/md";
+import { IoSettingsSharp } from "react-icons/io5";
+import { IoIosBusiness } from "react-icons/io";
 
 import {
   setIdNumberAdmin,
@@ -140,12 +144,12 @@ export const useMenuItems = () => {
       getItem(
         ItemNames.ITEM_REQUESTS,
         ItemKeys.ITEM_REQUESTS_KEY,
-        <LuFileText />,
+        <LuFileText size={17} />,
         [
           getItem(
             ItemNames.SUB_STATISTICS_REQ,
             ItemKeys.SUB_STATISTICS_REQ_KEY,
-            <RiFileList3Line />
+            <FaChartPie size={15} />
           ),
           isAdminWithRoles(roleIdAdminState, [
             superAdminRoleData.id,
@@ -158,7 +162,7 @@ export const useMenuItems = () => {
             ? getItem(
                 ItemNames.SUB_ALL_REQUESTS,
                 ItemKeys.SUB_ALL_REQUESTS_REQ_KEY,
-                <RiFileList3Line />,
+                <RiFileList3Line size={15} />,
                 undefined,
                 allMedicalReqStatusCreatedData?.length
               )
@@ -170,7 +174,7 @@ export const useMenuItems = () => {
             ? getItem(
                 ItemNames.SUB_ALL_LEGAL_REQUESTS,
                 ItemKeys.SUB_ALL_LEGAL_REQUESTS_REQ_KEY,
-                <RiFileList3Line />,
+                <RiFileList3Line size={15} />,
                 undefined,
                 allMedicalReqLegalAreaStatusUnderReviewData?.length
               )
@@ -181,7 +185,7 @@ export const useMenuItems = () => {
       getItem(
         ItemNames.ITEM_USERS,
         ItemKeys.ITEM_USERS_KEY,
-        <MenuFoldOutlined />,
+        <FaUsers size={17} />,
         [
           isAdminWithRoles(roleIdAdminState, [
             superAdminRoleData.id,
@@ -193,7 +197,7 @@ export const useMenuItems = () => {
             ? getItem(
                 ItemNames.SUB_ADMIN_USERS,
                 ItemKeys.SUB_ADMIN_USERS_KEY,
-                <MenuUnfoldOutlined />
+                <GrUserAdmin size={15} />
               )
             : null,
           isAdminWithRoles(roleIdAdminState, [
@@ -207,7 +211,7 @@ export const useMenuItems = () => {
             ? getItem(
                 ItemNames.SUB_EPS_AUDITORS,
                 ItemKeys.SUB_EPS_AUDITORS_KEY,
-                <MenuUnfoldOutlined />
+                <FaHospitalUser size={15} />
               )
             : null,
           isAdminWithRoles(roleIdAdminState, [
@@ -222,7 +226,7 @@ export const useMenuItems = () => {
             ? getItem(
                 ItemNames.SUB_PATIENT_USERS,
                 ItemKeys.SUB_PATIENT_USERS_KEY,
-                <MenuUnfoldOutlined />
+                <RiUserHeartLine size={15} />
               )
             : null,
           isAdminInCompanyAreas(companyAreaIdAdminState, [
@@ -233,7 +237,28 @@ export const useMenuItems = () => {
             ? getItem(
                 ItemNames.SUB_RELATIVES_USERS,
                 ItemKeys.SUB_RELATIVES_USERS_KEY,
-                <MenuUnfoldOutlined />
+                <MdOutlineFamilyRestroom size={15} />
+              )
+            : null,
+        ].filter(Boolean)
+      ),
+
+      getItem(
+        ItemNames.ITEM_PARAMETRIZATION,
+        ItemKeys.ITEM_PARAMETRIZATION_KEY,
+        <IoSettingsSharp size={17} />,
+        [
+          isAdminWithRoles(roleIdAdminState, [
+            superAdminRoleData.id,
+            adminRoleData.id,
+          ]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            systemsCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_EPS_COMPANIES_PARAMS,
+                ItemKeys.SUB_EPS_COMPANIES_PARAMS_KEY,
+                <IoIosBusiness size={15} />
               )
             : null,
         ].filter(Boolean)

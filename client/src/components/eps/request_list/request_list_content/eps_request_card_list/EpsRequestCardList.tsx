@@ -211,9 +211,9 @@ const EpsRequestCardList: React.FC<{
         selectedRequestIdLocalState
       );
 
-      var isDeletedMedicalReqError = response.error;
+      let isDeletedMedicalReqError = response.error;
 
-      var isDeletedMedicalReqSuccess = response.data;
+      let isDeletedMedicalReqSuccess = response.data;
 
       if (isDeletedMedicalReqError) {
         const errorMessage = isDeletedMedicalReqError?.data.message;
@@ -221,8 +221,7 @@ const EpsRequestCardList: React.FC<{
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsMedicalReq(errorMessage[0]));
           setShowErrorMessageMedicalReq(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsMedicalReq(errorMessage));
           setShowErrorMessageMedicalReq(true);
         }

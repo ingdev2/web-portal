@@ -1,2 +1,2 @@
 // CONTACT PBX NUMBER
-export const CONTACT_PBX = '(601)3770055';
+export const CONTACT_PBX = '(605)3770055';

@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
-import EpsRegistrationForm from "@/components/register/eps/EpsRegistrationForm";
+import EpsCompanyRegistrationForm from "./register_eps_company_forms/EpsCompanyRegistrationForm";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-const RegisterEpsContent: React.FC = () => {
+const RegisterEpsCompanyContent: React.FC = () => {
   const router = useRouter();
 
   const [isSubmittingBackPage, setIsSubmittingBackPage] = useState(false);
@@ -52,7 +52,7 @@ const RegisterEpsContent: React.FC = () => {
                   paddingInline: "7px",
                 }}
                 htmlType="button"
-                className="eps-register-back-button"
+                className="eps-company-register-back-button"
                 onClick={async () => {
                   try {
                     setIsSubmittingBackPage(true);
@@ -70,11 +70,11 @@ const RegisterEpsContent: React.FC = () => {
             </div>
           )}
 
-          <EpsRegistrationForm />
+          <EpsCompanyRegistrationForm />
         </div>
       }
     />
   );
 };
 
-export default RegisterEpsContent;
+export default RegisterEpsCompanyContent;

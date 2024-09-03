@@ -6,11 +6,17 @@ export class EpsCompany {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   nit: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
+
+  @Column({ unique: true })
+  main_email: string;
+
+  @Column({ type: 'boolean', default: true })
+  is_active: boolean;
 
   @OneToMany(() => User, (user) => user.eps)
   user: User[];

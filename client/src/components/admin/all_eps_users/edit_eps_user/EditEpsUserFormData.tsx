@@ -11,7 +11,7 @@ import { IdcardOutlined } from "@ant-design/icons";
 import { FiPhone } from "react-icons/fi";
 import PhoneInput, { PhoneNumber } from "antd-phone-input";
 
-const EditEpsFormData: React.FC<{
+const EditEpsUserFormData: React.FC<{
   nameAdminFormData: string;
   onChangeNameAdminFormData: (e: any) => void;
   lastNameAdminFormData: string;
@@ -443,4 +443,4 @@ const EditEpsFormData: React.FC<{
   );
 };
 
-export default EditEpsFormData;
+export default EditEpsUserFormData;

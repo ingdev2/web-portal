@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
-import EditEpsForm from "./edit_eps/EditEpsForm";
-import { tableColumnsAllEps } from "./table_columns_all_eps/TableColumnsAllEps";
-import ModalEpsDetails from "./modal_eps_details/ModalEpsDetails";
+import EditEpsUserForm from "./edit_eps_user/EditEpsUserForm";
+import { tableColumnsAllEpsUsers } from "./table_columns_all_eps_users/TableColumnsAllEpsUsers";
+import ModalEpsUserDetails from "./modal_eps_user_details/ModalEpsUserDetails";
 import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import { getTagComponentIdTypes } from "@/components/common/custom_tags_id_types/CustomTagsIdTypes";
@@ -42,7 +42,7 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 
 import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
 
-const AllEpsContent: React.FC = () => {
+const AllEpsUsersContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
@@ -158,9 +158,9 @@ const AllEpsContent: React.FC = () => {
         id: record.id,
       });
 
-      var banEpsSuccess = response.data;
+      let banEpsSuccess = response.data;
 
-      var banEpsError = response.error;
+      let banEpsError = response.error;
 
       if (banEpsSuccess?.statusCode === 202 && !banEpsError) {
         const successMessage = banEpsSuccess?.message;
@@ -174,9 +174,7 @@ const AllEpsContent: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessageEps(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsUserEps(errorMessage));
 
           setShowErrorMessageEps(true);
@@ -242,30 +240,34 @@ const AllEpsContent: React.FC = () => {
             <>
               {!isEditEpsVisibleLocalState ? (
                 <>
-                  <ModalEpsDetails
+                  <ModalEpsUserDetails
                     titleDescription="Detalle completo de usuario Eps"
-                    labelAdminName="Nombre(s)"
-                    selectedAdminName={selectedRowDataLocalState?.name}
-                    labelAdminLastName="Apellido(s)"
-                    selectedAdminLastName={selectedRowDataLocalState?.last_name}
-                    labelAdminIdType="Tipo de identificación"
-                    selectedAdminIdType={getTagComponentIdTypes(
+                    labelEpsUserName="Nombre(s)"
+                    selectedEpsUserName={selectedRowDataLocalState?.name}
+                    labelEpsUserLastName="Apellido(s)"
+                    selectedEpsUserLastName={
+                      selectedRowDataLocalState?.last_name
+                    }
+                    labelEpsUserIdType="Tipo de identificación"
+                    selectedEpsUserIdType={getTagComponentIdTypes(
                       selectedRowDataLocalState?.user_id_type.toString()
                     )}
-                    labelAdminIdNumber="Número de identificación"
-                    selectedAdminIdNumber={selectedRowDataLocalState?.id_number}
-                    labelAdminGender="Género"
-                    selectedAdminGender={selectedRowDataLocalState?.user_gender.toString()}
-                    labelAdminLevelPosition="Empresa donde labora"
-                    selectedAdminLevelPosition={selectedRowDataLocalState?.eps_company.toString()}
-                    labelAdminCompanyArea="Área de la empresa"
-                    selectedAdminCompanyArea={selectedRowDataLocalState?.company_area.toString()}
-                    labelAdminCellphone="Número de celular corporativo"
-                    selectedAdminCellphone={
+                    labelEpsUserIdNumber="Número de identificación"
+                    selectedEpsUserIdNumber={
+                      selectedRowDataLocalState?.id_number
+                    }
+                    labelEpsUserGender="Género"
+                    selectedEpsUserGender={selectedRowDataLocalState?.user_gender.toString()}
+                    labelEpsUserLevelPosition="Empresa donde labora"
+                    selectedEpsUserLevelPosition={selectedRowDataLocalState?.eps_company.toString()}
+                    labelEpsUserCompanyArea="Área de la empresa"
+                    selectedEpsUserCompanyArea={selectedRowDataLocalState?.company_area.toString()}
+                    labelEpsUserCellphone="Número de celular corporativo"
+                    selectedEpsUserCellphone={
                       selectedRowDataLocalState?.cellphone || NOT_REGISTER
                     }
-                    labelAdminEmail="Email corporativo"
-                    selectedAdminEmail={selectedRowDataLocalState?.email}
+                    labelEpsUserEmail="Email corporativo"
+                    selectedEpsUserEmail={selectedRowDataLocalState?.email}
                   />
 
                   <Button
@@ -293,12 +295,12 @@ const AllEpsContent: React.FC = () => {
                       }}
                     >
                       <TbUserEdit size={17} />
-                      &nbsp; Editar eps
+                      &nbsp; Editar usuario de EPS
                     </div>
                   </Button>
                 </>
               ) : (
-                <EditEpsForm />
+                <EditEpsUserForm />
               )}
             </>
           }
@@ -321,7 +323,7 @@ const AllEpsContent: React.FC = () => {
 
             <CustomTableFiltersAndSorting
               dataCustomTable={transformedData || []}
-              columnsCustomTable={tableColumnsAllEps({
+              columnsCustomTable={tableColumnsAllEpsUsers({
                 handleClickSeeMore: handleClickSeeMore,
                 handleOnChangeSwitch: handleOnChangeSwitch,
                 onClickSwitch: handleButtonClick,
@@ -339,4 +341,4 @@ const AllEpsContent: React.FC = () => {
   );
 };
 
-export default AllEpsContent;
+export default AllEpsUsersContent;

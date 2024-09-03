@@ -143,7 +143,7 @@ const AdminModalVerificationCode: React.FC = () => {
         id_number: idNumberAdminState,
       });
 
-      var isResponseError = response.error;
+      let isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
         dispatch(setErrorsLoginAdmin(isResponseError?.data.message));

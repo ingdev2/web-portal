@@ -158,11 +158,11 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
         },
       });
 
-      var updatePersonalDataError = response.error;
+      let updatePersonalDataError = response.error;
 
-      var updatePersonalDataStatus = response.data.status;
+      let updatePersonalDataStatus = response.data?.status;
 
-      var updatePersonalDataValidationData = response.data?.message;
+      let updatePersonalDataValidationData = response.data?.message;
 
       if (updatePersonalDataError || updatePersonalDataStatus !== 202) {
         setHasChanges(false);
@@ -174,18 +174,19 @@ const EpsUpdatePersonalDataForm: React.FC = () => {
           dispatch(setErrorsUserEps(errorMessage[0]));
 
           setShowErrorMessageEps(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserEps(errorMessage));
+
+          setShowErrorMessageEps(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserEps(validationDataMessage[0]));
 
           setShowErrorMessageEps(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserEps(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserEps(validationDataMessage));
+
           setShowErrorMessageEps(true);
         }
       }

@@ -143,7 +143,7 @@ const PatientModalVerificationCode: React.FC = () => {
         id_number: idNumberPatientState,
       });
 
-      var isResponseError = response.error;
+      let isResponseError = response.error;
 
       if (!isResendCodeSuccess && !isResendCodeLoading && isResendCodeError) {
         dispatch(setErrorsLoginPatient(isResponseError?.data.message));

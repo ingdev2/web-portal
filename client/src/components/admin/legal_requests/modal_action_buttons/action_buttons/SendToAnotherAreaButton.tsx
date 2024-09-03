@@ -104,9 +104,9 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
         },
       });
 
-      var sendToAnotherAreaSuccess = response.data;
+      let sendToAnotherAreaSuccess = response.data;
 
-      var sendToAnotherAreaError = response.error;
+      let sendToAnotherAreaError = response.error;
 
       if (sendToAnotherAreaError?.status !== 202) {
         const errorMessage = sendToAnotherAreaError?.data.message;
@@ -115,9 +115,7 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
           dispatch(setErrorsAdmin(errorMessage[0]));
 
           setShowErrorMessageAdmin(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsAdmin(errorMessage));
 
           setShowErrorMessageAdmin(true);

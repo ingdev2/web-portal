@@ -143,9 +143,9 @@ const AllPatientsContent: React.FC = () => {
         id: record.id,
       });
 
-      var banPatientSuccess = response.data;
+      let banPatientSuccess = response.data;
 
-      var banPatientError = response.error;
+      let banPatientError = response.error;
 
       if (banPatientSuccess?.statusCode === 202 && !banPatientError) {
         const successMessage = banPatientSuccess?.message;
@@ -159,9 +159,7 @@ const AllPatientsContent: React.FC = () => {
           dispatch(setErrorsUserPatient(errorMessage[0]));
 
           setShowErrorMessagePatient(true);
-        }
-
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsUserPatient(errorMessage));
 
           setShowErrorMessagePatient(true);

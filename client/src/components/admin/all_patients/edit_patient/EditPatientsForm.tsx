@@ -117,11 +117,11 @@ const EditPatientsForm: React.FC = () => {
         },
       });
 
-      var editPatientDataError = response.error;
+      let editPatientDataError = response.error;
 
-      var editPatientDataStatus = response.data.status;
+      let editPatientDataStatus = response.data?.status;
 
-      var editPatientDataValidationData = response.data?.message;
+      let editPatientDataValidationData = response.data?.message;
 
       if (editPatientDataError || editPatientDataStatus !== 202) {
         setHasChanges(false);
@@ -133,18 +133,19 @@ const EditPatientsForm: React.FC = () => {
           dispatch(setErrorsUserPatient(errorMessage[0]));
 
           setShowErrorMessage(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsUserPatient(errorMessage));
+
+          setShowErrorMessage(true);
         }
+
         if (Array.isArray(validationDataMessage)) {
           dispatch(setErrorsUserPatient(validationDataMessage[0]));
 
           setShowErrorMessage(true);
-        }
-        if (
-          typeof errorMessage === "string" ||
-          typeof validationDataMessage === "string"
-        ) {
-          dispatch(setErrorsUserPatient(errorMessage));
+        } else if (typeof validationDataMessage === "string") {
           dispatch(setErrorsUserPatient(validationDataMessage));
+
           setShowErrorMessage(true);
         }
       }

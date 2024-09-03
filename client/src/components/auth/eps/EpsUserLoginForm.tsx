@@ -135,9 +135,9 @@ const EpsUserLoginForm: React.FC = () => {
         password: passwordEpsLocalState,
       });
 
-      var isLoginUserError = response.error;
+      let isLoginUserError = response.error;
 
-      var isLoginUserSuccess = response.data;
+      let isLoginUserSuccess = response.data;
 
       if (isLoginUserError) {
         const errorMessage = isLoginUserError?.data.message;
@@ -145,8 +145,7 @@ const EpsUserLoginForm: React.FC = () => {
         if (Array.isArray(errorMessage)) {
           dispatch(setErrorsLoginEps(errorMessage[0]));
           setShowErrorMessageEps(true);
-        }
-        if (typeof errorMessage === "string") {
+        } else if (typeof errorMessage === "string") {
           dispatch(setErrorsLoginEps(errorMessage));
           setShowErrorMessageEps(true);
         }

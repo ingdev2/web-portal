@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
+import { EpsCompany } from 'src/eps_company/entities/eps_company.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
@@ -28,13 +29,16 @@ import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
 import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 import { ValidatePatientDto } from '../dto/validate_patient.dto';
 import { nanoid } from 'nanoid';
+import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import {
   ACCOUNT_CREATED,
+  USER_CREATION_NOTIFICATION_TO_EPS,
   PASSWORD_RESET,
   RESET_PASSWORD_TEMPLATE,
   SUBJECT_ACCOUNT_CREATED,
+  SUBJECT_USER_CREATION_NOTIFICATION_TO_EPS,
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
@@ -48,6 +52,9 @@ const schedule = require('node-schedule');
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+
+    @InjectRepository(EpsCompany)
+    private epsCompanyRepository: Repository<EpsCompany>,
 
     @InjectRepository(AuthorizedFamiliar)
     private familiarRepository: Repository<AuthorizedFamiliar>,
@@ -462,6 +469,28 @@ export class UsersService {
       );
     }
 
+    const isCorporateEmail = await validateCorporateEmail(userEps.email);
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${userEps.email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const epsCompanyOfUserFound = await this.epsCompanyRepository.findOne({
+      where: {
+        id: userEps.eps_company,
+      },
+    });
+
+    if (!epsCompanyOfUserFound) {
+      return new HttpException(
+        `La empresa EPS no existe.`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const authenticationMethodFound =
       await this.authenticationMethodRepository.findOne({
         where: {
@@ -525,6 +554,23 @@ export class UsersService {
     emailDetailsToSend.contactPbx = CONTACT_PBX;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    const emailUserCreationNotificationToSend = new SendEmailDto();
+
+    emailUserCreationNotificationToSend.recipients = [
+      epsCompanyOfUserFound.main_email,
+    ];
+    emailUserCreationNotificationToSend.userNameToEmail =
+      epsCompanyOfUserFound.name;
+    emailUserCreationNotificationToSend.subject =
+      SUBJECT_USER_CREATION_NOTIFICATION_TO_EPS;
+    emailUserCreationNotificationToSend.emailTemplate =
+      USER_CREATION_NOTIFICATION_TO_EPS;
+    emailUserCreationNotificationToSend.portalWebUrl =
+      process.env.PORTAL_WEB_URL;
+    emailUserCreationNotificationToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailUserCreationNotificationToSend);
 
     return newUserEps;
   }
@@ -769,7 +815,10 @@ export class UsersService {
   // UPDATE FUNTIONS //
 
   async updateUserPatient(id: string, userPatient: UpdateUserPatientDto) {
-    const userFound = await this.userRepository.findOneBy({ id });
+    const userFound = await this.userRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!userFound) {
       return new HttpException(
@@ -881,7 +930,10 @@ export class UsersService {
   }
 
   async updateUserEps(id: string, userEps: UpdateUserEpsDto) {
-    const userFound = await this.userRepository.findOneBy({ id });
+    const userFound = await this.userRepository.findOneBy({
+      id,
+      is_active: true,
+    });
 
     if (!userFound) {
       return new HttpException(
@@ -914,6 +966,15 @@ export class UsersService {
       return new HttpException(
         `El correo electrónico ${userEps.email} ya está registrado.`,
         HttpStatus.CONFLICT,
+      );
+    }
+
+    const isCorporateEmail = await validateCorporateEmail(userEps.email);
+
+    if (!isCorporateEmail) {
+      throw new HttpException(
+        `El email : ${userEps.email} no es un correo corporativo válido.`,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

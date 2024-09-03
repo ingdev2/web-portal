@@ -20,7 +20,7 @@ export const processAndUploadFiles = () => {
     });
 
     try {
-      var s3Response: any = await uploadFileToS3(formData);
+      let s3Response: any = await uploadFileToS3(formData);
 
       if (s3Response.error) {
         const errorMessage = s3Response.error?.data?.message;
