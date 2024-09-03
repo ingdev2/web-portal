@@ -14,7 +14,7 @@ export const reasonForRejectionMedicalReqApi = createApi({
   reducerPath: "reasonForRejectionMedicalReqApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/reasons-for-rejection`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/reasons-for-rejection`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

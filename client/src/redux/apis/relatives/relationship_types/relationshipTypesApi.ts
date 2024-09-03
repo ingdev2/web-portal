@@ -14,7 +14,7 @@ export const relationshipTypesApi = createApi({
   reducerPath: "relationshipTypesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/rel-with-patient`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/rel-with-patient`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

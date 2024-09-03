@@ -18,7 +18,7 @@ export const medicalReqApi = createApi({
   reducerPath: "medicalReqApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/medical-req`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/medical-req`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

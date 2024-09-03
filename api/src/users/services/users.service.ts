@@ -1130,7 +1130,7 @@ export class UsersService {
       emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = PASSWORD_RESET;
       emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
-      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER_PRO}?token=${resetPasswordToken}`;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER}?token=${resetPasswordToken}`;
 
       await this.nodemailerService.sendEmail(emailDetailsToSend);
 
@@ -1184,7 +1184,7 @@ export class UsersService {
       emailDetailsToSend.userNameToEmail = userFound.name;
       emailDetailsToSend.subject = PASSWORD_RESET;
       emailDetailsToSend.emailTemplate = RESET_PASSWORD_TEMPLATE;
-      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER_PRO}?token=${resetPasswordToken}`;
+      emailDetailsToSend.resetPasswordUrl = `${process.env.RESET_PASSWORD_URL_USER}?token=${resetPasswordToken}`;
 
       await this.nodemailerService.sendEmail(emailDetailsToSend);
 

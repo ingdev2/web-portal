@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Button, Col, Form, Input, Row } from "antd";
+import { AutoComplete, Button, Col, Form, Input, Row } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { titleStyleCss } from "@/theme/text_styles";
 import { MdDriveFileRenameOutline, MdOutlineEmail } from "react-icons/md";
@@ -11,6 +11,8 @@ const EpsCompanyRegistrationFormData: React.FC<{
   handleCreateUserEpsCompanyDataForm: () => void;
   epsCompanyNameDataForm: string;
   handleOnChangeEpsCompanyNameDataForm: (e: any) => void;
+  handleSearchNameEpsCompanyDataForm: (e: any) => void;
+  optionsEpsCompanyNameDataForm: any[];
   epsCompanyNitDataForm: string;
   handleOnChangeEpsCompanyNitDataForm: (e: any) => void;
   epsCompanyEmailDataForm: string;
@@ -21,6 +23,8 @@ const EpsCompanyRegistrationFormData: React.FC<{
   handleCreateUserEpsCompanyDataForm,
   epsCompanyNameDataForm,
   handleOnChangeEpsCompanyNameDataForm,
+  handleSearchNameEpsCompanyDataForm,
+  optionsEpsCompanyNameDataForm,
   epsCompanyNitDataForm,
   handleOnChangeEpsCompanyNitDataForm,
   epsCompanyEmailDataForm,
@@ -88,17 +92,18 @@ const EpsCompanyRegistrationFormData: React.FC<{
               },
             ]}
           >
-            <Input
+            <AutoComplete
               id="name-eps-company"
-              prefix={
-                <MdDriveFileRenameOutline className="site-form-item-icon" />
-              }
-              type="text"
-              value={epsCompanyNameDataForm}
+              options={optionsEpsCompanyNameDataForm}
+              style={{ width: "100%" }}
+              onSearch={handleSearchNameEpsCompanyDataForm}
               placeholder="Nombre de empresa"
+              value={epsCompanyNameDataForm}
               onChange={handleOnChangeEpsCompanyNameDataForm}
-              autoComplete="off"
-            />
+              filterOption={false}
+            >
+              <Input type="text" autoComplete="off" />
+            </AutoComplete>
           </Form.Item>
         </Col>
 

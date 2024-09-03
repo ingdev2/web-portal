@@ -24,6 +24,8 @@ const EpsCompanyRegistrationForm: React.FC = () => {
   const router = useRouter();
 
   const [epsCompanyNameLocalState, setEpsCompanyNameLocalState] = useState("");
+  const [options, setOptions] = useState<any[]>([]);
+
   const [epsCompanyNitLocalState, setEpsCompanyNitLocalState] = useState("");
   const [epsCompanyEmailLocalState, setEpsCompanyEmailLocalState] =
     useState("");
@@ -129,6 +131,23 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     }
   };
 
+  const handleSearch = (value: string) => {
+    if (value) {
+      const filteredOptions =
+        allEpsCompanyData
+          ?.filter((company) =>
+            company.name.toUpperCase().includes(value.toUpperCase())
+          )
+          .map((company) => ({
+            value: company.name,
+          })) || [];
+
+      setOptions(filteredOptions);
+    } else {
+      setOptions([]);
+    }
+  };
+
   const handleGoToAllData = async () => {
     try {
       setIsSubmittingGoToAllData(true);
@@ -217,8 +236,10 @@ const EpsCompanyRegistrationForm: React.FC = () => {
         handleCreateUserEpsCompanyDataForm={handleCreateUsercreateEpsCompany}
         epsCompanyNameDataForm={epsCompanyNameLocalState}
         handleOnChangeEpsCompanyNameDataForm={(e) => {
-          setEpsCompanyNameLocalState(e.target.value.toUpperCase());
+          setEpsCompanyNameLocalState(e.toUpperCase());
         }}
+        handleSearchNameEpsCompanyDataForm={handleSearch}
+        optionsEpsCompanyNameDataForm={options}
         epsCompanyNitDataForm={epsCompanyNitLocalState}
         handleOnChangeEpsCompanyNitDataForm={(e) => {
           setEpsCompanyNitLocalState(e.target.value);

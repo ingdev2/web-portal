@@ -14,7 +14,7 @@ export const idTypesApi = createApi({
   reducerPath: "idTypesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/id-types`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/id-types`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

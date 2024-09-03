@@ -14,7 +14,7 @@ export const relativesApi = createApi({
   reducerPath: "relativesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/authorized-familiar`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/authorized-familiar`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

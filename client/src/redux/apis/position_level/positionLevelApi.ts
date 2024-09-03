@@ -14,7 +14,7 @@ export const positionLevelApi = createApi({
   reducerPath: "positionLevelApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/position-level`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/position-level`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

@@ -15,7 +15,7 @@ export const adminRolesApi = createApi({
   reducerPath: "adminRolesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/admin-roles`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin-roles`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
