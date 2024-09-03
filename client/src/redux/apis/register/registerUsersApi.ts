@@ -14,7 +14,7 @@ export const registerUsersApi = createApi({
   reducerPath: "registerUsersApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/auth`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

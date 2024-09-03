@@ -15,7 +15,7 @@ export const companyAreaApi = createApi({
   reducerPath: "companyAreaApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/company-area`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/company-area`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

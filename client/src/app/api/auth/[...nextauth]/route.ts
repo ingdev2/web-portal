@@ -8,7 +8,7 @@ async function refreshAccessToken(token: any) {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/refreshToken`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/auth/refreshToken`,
       {
         method: "POST",
         headers: {
@@ -62,7 +62,7 @@ const handler = NextAuth({
         const { id_number } = credentials;
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verifiedLoginAdmins/${id_number}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/auth/verifiedLoginAdmins/${id_number}`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -105,7 +105,7 @@ const handler = NextAuth({
         const { id_number } = credentials;
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verifiedLoginUsers/${id_number}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/auth/verifiedLoginUsers/${id_number}`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -148,7 +148,7 @@ const handler = NextAuth({
         const { id_number } = credentials;
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verifiedLoginRelatives/${id_number}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/auth/verifiedLoginRelatives/${id_number}`,
           {
             method: "POST",
             body: JSON.stringify({

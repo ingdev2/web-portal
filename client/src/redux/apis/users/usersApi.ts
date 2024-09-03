@@ -14,7 +14,7 @@ export const usersApi = createApi({
   reducerPath: "usersApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/users`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

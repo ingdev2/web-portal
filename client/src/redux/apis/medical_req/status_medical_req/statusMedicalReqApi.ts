@@ -14,7 +14,7 @@ export const statusMedicalReqApi = createApi({
   reducerPath: "statusMedicalReqApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/requirement-status`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/requirement-status`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

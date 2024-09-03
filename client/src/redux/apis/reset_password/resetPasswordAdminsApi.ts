@@ -4,7 +4,7 @@ export const resetPasswordAdminsApi = createApi({
   reducerPath: "resetPasswordAdminsApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/admins`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/admins`,
   }),
 
   endpoints: (builder) => ({

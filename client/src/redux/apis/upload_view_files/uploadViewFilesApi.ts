@@ -14,7 +14,7 @@ export const uploadViewFilesApi = createApi({
   reducerPath: "uploadViewFilesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/s3FileUploader`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/s3FileUploader`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

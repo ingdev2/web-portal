@@ -4,7 +4,7 @@ export const loginRelativesApi = createApi({
   reducerPath: "loginRelativesApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/auth`,
   }),
 
   endpoints: (builder) => ({
