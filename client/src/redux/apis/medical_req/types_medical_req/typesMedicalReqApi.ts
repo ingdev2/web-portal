@@ -20,6 +20,12 @@ export const typesMedicalReqApi = createApi({
     },
   }),
 
+  refetchOnMountOrArgChange: true,
+
+  refetchOnFocus: true,
+
+  refetchOnReconnect: true,
+
   endpoints: (builder) => ({
     createMedicalReqType: builder.mutation<
       MedicalReqType,

@@ -10,6 +10,7 @@ import { GrUserAdmin } from "react-icons/gr";
 import { MdOutlineFamilyRestroom } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
 import { IoIosBusiness } from "react-icons/io";
+import { BiCommentX } from "react-icons/bi";
 
 import {
   setIdNumberAdmin,
@@ -254,11 +255,26 @@ export const useMenuItems = () => {
           ]) &&
           isAdminInCompanyAreas(companyAreaIdAdminState, [
             systemsCompanyAreaData.id,
+            admissionsCompanyAreaData.id,
           ])
             ? getItem(
                 ItemNames.SUB_EPS_COMPANIES_PARAMS,
                 ItemKeys.SUB_EPS_COMPANIES_PARAMS_KEY,
                 <IoIosBusiness size={15} />
+              )
+            : null,
+          isAdminWithRoles(roleIdAdminState, [
+            superAdminRoleData.id,
+            adminRoleData.id,
+          ]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            systemsCompanyAreaData.id,
+            admissionsCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_REASONS_FOR_REJECTION_PARAMS,
+                ItemKeys.SUB_REASONS_FOR_REJECTION_PARAMS_KEY,
+                <BiCommentX size={15} />
               )
             : null,
         ].filter(Boolean)

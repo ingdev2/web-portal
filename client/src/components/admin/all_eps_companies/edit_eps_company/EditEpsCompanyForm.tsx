@@ -141,7 +141,7 @@ const EditEpsCompanyForm: React.FC = () => {
   const handleButtonClick = () => {
     setSuccessMessage("");
     setShowSuccessMessage(false);
-    dispatch(setMainEmailEpsCompany([]));
+    dispatch(setErrorsEpsCompany([]));
     setShowErrorMessage(false);
   };
 

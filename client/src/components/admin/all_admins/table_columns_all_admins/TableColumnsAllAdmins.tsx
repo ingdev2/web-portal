@@ -105,7 +105,7 @@ export const tableColumnsAllAdmins = ({
     title: "EMAIL CORPORATIVO",
     key: adminEmailKey,
     dataIndex: adminEmailKey,
-    width: 301,
+    width: 405,
     ellipsis: true,
     searchable: true,
   },

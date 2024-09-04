@@ -3,8 +3,8 @@ import { IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
 export class CreateEpsCompanyDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(7)
-  @MaxLength(13)
+  @MinLength(8)
+  @MaxLength(15)
   nit: string;
 
   @IsNotEmpty()

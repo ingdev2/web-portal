@@ -68,7 +68,7 @@ export const tableColumnsAllPatients = ({
     title: "EMAIL",
     key: patientEmailKey,
     dataIndex: patientEmailKey,
-    width: 371,
+    width: 405,
     ellipsis: true,
     searchable: true,
   },

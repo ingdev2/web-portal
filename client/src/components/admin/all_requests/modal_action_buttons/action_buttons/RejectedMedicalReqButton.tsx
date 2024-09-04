@@ -275,6 +275,12 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
                       paddingInline: "7px",
                       paddingBlock: "7px",
                     }}
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.label as string)
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                     allowClear
                   />
                 )}

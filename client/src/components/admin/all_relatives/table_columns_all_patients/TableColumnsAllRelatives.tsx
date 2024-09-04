@@ -82,7 +82,7 @@ export const tableColumnsAllRelatives = ({
     title: "EMAIL",
     key: familiarEmailKey,
     dataIndex: familiarEmailKey,
-    width: 371,
+    width: 405,
     ellipsis: true,
     searchable: true,
   },

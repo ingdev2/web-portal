@@ -261,6 +261,12 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
                     value={companyAreaNumberAdminLocalState}
                     placeholder="Seleccionar área"
                     onChange={handleOnChangeSelectCompanyArea}
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children as unknown as string)
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
                   >
                     {adminCompanyAreasListLocalState?.map((option: any) => (
                       <Select.Option key={option.id} value={option.id}>

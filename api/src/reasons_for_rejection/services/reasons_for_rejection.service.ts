@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateReasonsForRejectionDto } from '../dto/create-reasons_for_rejection.dto';
 import { UpdateReasonsForRejectionDto } from '../dto/update-reasons_for_rejection.dto';
 import { ReasonsForRejection } from '../entities/reasons_for_rejection.entity';
@@ -56,6 +56,24 @@ export class ReasonsForRejectionService {
     }
   }
 
+  async getReasonForRejectionById(id: number) {
+    const reasonForRejectionFound =
+      await this.reasonsForRejectionRepository.findOne({
+        where: {
+          id: id,
+        },
+      });
+
+    if (!reasonForRejectionFound) {
+      return new HttpException(
+        `El motivo de rechazo con número de ID: ${id} no esta registrado.`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return reasonForRejectionFound;
+    }
+  }
+
   // UPDATE FUNTIONS //
 
   async updateReasonForRejection(
@@ -77,6 +95,7 @@ export class ReasonsForRejectionService {
       const duplicateEpsCompany =
         await this.reasonsForRejectionRepository.findOne({
           where: {
+            id: Not(reasonFound.id),
             rejection_title: reasonForRejection.rejection_title,
           },
         });
