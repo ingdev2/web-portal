@@ -174,26 +174,32 @@ const ModalRequestsDetails: React.FC<{
             title: "Información de la Solicitud",
             content: (
               <>
-                <p style={subtitleStyleCss}>
+                <div style={subtitleStyleCss}>
                   <b>Número de Radicado:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedRequestFilingNumber}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRequestFilingNumber}
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Tipo de Solicitud:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedRequestType}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedRequestType}</div>
+                <div style={subtitleStyleCss}>
                   <b>Estado:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedRequestStatus}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedRequestStatus}</div>
+                <div style={subtitleStyleCss}>
                   <b>Derecho de Petición:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedHaveRightPetition}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedHaveRightPetition}
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Comentarios del Usuario:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedRequestUserComments}</p>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRequestUserComments}
+                </div>
               </>
             ),
           },
@@ -201,26 +207,30 @@ const ModalRequestsDetails: React.FC<{
             title: "Información del Paciente",
             content: (
               <>
-                <p style={subtitleStyleCss}>
+                <div style={subtitleStyleCss}>
                   <b>Clase de Paciente:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedPatientClassStatus}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedPatientClassStatus}
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Tipo de Identificación:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedPatientIdType}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedPatientIdType}</div>
+                <div style={subtitleStyleCss}>
                   <b>Número de Identificación:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedPatientIdNumber}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedPatientIdNumber}</div>
+                <div style={subtitleStyleCss}>
                   <b>Nombre:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedPatientName}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedPatientName}</div>
+                <div style={subtitleStyleCss}>
                   <b>Fechas de Registro:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedRegistrationDates}</p>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRegistrationDates}
+                </div>
               </>
             ),
           },
@@ -228,32 +238,34 @@ const ModalRequestsDetails: React.FC<{
             title: "Información del Solicitante",
             content: (
               <>
-                <p style={subtitleStyleCss}>
+                <div style={subtitleStyleCss}>
                   <b>Tipo de Solicitante:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedAplicantType}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantType}</div>
+                <div style={subtitleStyleCss}>
                   <b>Nombre:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedAplicantName}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantName}</div>
+                <div style={subtitleStyleCss}>
                   <b>Tipo de Identificación:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedAplicantIdType}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantIdType}</div>
+                <div style={subtitleStyleCss}>
                   <b>Número de Identificación:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedAplicantIdNumber}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedAplicantIdNumber}
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Relación con el Paciente:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedRelationShipWithPatient}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Email:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedAplicantEmail}</p>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantEmail}</div>
               </>
             ),
           },
@@ -261,42 +273,42 @@ const ModalRequestsDetails: React.FC<{
             title: "Documentos Anexados",
             content: (
               <>
-                <p style={subtitleStyleCss}>
+                <div style={subtitleStyleCss}>
                   <b>Copia Documento de Identificación del Solicitante:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedCopyAplicantIdDocument}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Copia Cédula de Ciudadanía del Paciente:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedCopyPatientCitizenshipCard}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Copia Registro Civil del Paciente:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedCopyPatientCivilRegistration}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Copia Cédula de Ciudadanía de los Padres:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedCopyParentsCitizenshipCard}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Copia Certificado de Matrimonio:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedCopyMarriageCertificate}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Copia Certificado de Convivencia:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedCopyCohabitationCertificate}
-                </p>
+                </div>
               </>
             ),
           },
@@ -304,28 +316,28 @@ const ModalRequestsDetails: React.FC<{
             title: "Fechas y Tiempo de Respuesta",
             content: (
               <>
-                <p style={subtitleStyleCss}>
+                <div style={subtitleStyleCss}>
                   <b>Fecha de Ingreso:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedDateOfAdmission}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedDateOfAdmission}</div>
+                <div style={subtitleStyleCss}>
                   <b>Fecha de Respuesta:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedAnswerDate}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAnswerDate}</div>
+                <div style={subtitleStyleCss}>
                   <b>Tiempo de Respuesta:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedResponseTime}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedResponseTime}</div>
+                <div style={subtitleStyleCss}>
                   <b>Actualmente en Área:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedCurrentlyInArea}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedCurrentlyInArea}</div>
+                <div style={subtitleStyleCss}>
                   <b>Mensaje de Redirección de Área:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedAreaRedirectionMessage}
-                </p>
+                </div>
               </>
             ),
           },
@@ -333,26 +345,26 @@ const ModalRequestsDetails: React.FC<{
             title: "Documentos de Respuesta",
             content: (
               <>
-                <p style={subtitleStyleCss}>
+                <div style={subtitleStyleCss}>
                   <b>Documentos de Respuesta:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedRequestResponseDocuments}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Fecha de Expiración de Documentos:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>
                   {selectedRequestDocumentExpirationDate}
-                </p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={subtitleStyleCss}>
                   <b>Respuesta de la Solicitud:</b>
-                </p>
-                <p style={itemSeccionStyleCss}>{selectedRequestResponse}</p>
-                <p style={subtitleStyleCss}>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedRequestResponse}</div>
+                <div style={subtitleStyleCss}>
                   <b>Razones para el Rechazo:</b>
-                </p>
-                <p>{selectedRequestReasonsForRejection}</p>
+                </div>
+                <div>{selectedRequestReasonsForRejection}</div>
               </>
             ),
           },

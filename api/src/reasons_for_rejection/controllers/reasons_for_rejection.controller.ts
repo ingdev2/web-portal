@@ -49,6 +49,11 @@ export class ReasonsForRejectionController {
     return this.reasonsForRejectionService.getAllReasonsForRejection();
   }
 
+  @Get('/getReasonForRejection/:id')
+  getReasonForRejectionById(@Param('id') id: number) {
+    return this.reasonsForRejectionService.getReasonForRejectionById(id);
+  }
+
   // PATCH METHODS //
 
   @Patch('/update/:id')

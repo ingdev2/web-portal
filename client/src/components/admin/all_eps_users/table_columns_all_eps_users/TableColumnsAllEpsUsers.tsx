@@ -105,7 +105,7 @@ export const tableColumnsAllEpsUsers = ({
     title: "EMAIL CORPORATIVO",
     key: epsEmailKey,
     dataIndex: epsEmailKey,
-    width: 301,
+    width: 405,
     ellipsis: true,
     searchable: true,
   },

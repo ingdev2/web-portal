@@ -14,11 +14,17 @@ export const typesMedicalReqApi = createApi({
   reducerPath: "typesMedicalReqApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/requirement-type`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/requirement-type`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
   }),
+
+  refetchOnMountOrArgChange: true,
+
+  refetchOnFocus: true,
+
+  refetchOnReconnect: true,
 
   endpoints: (builder) => ({
     createMedicalReqType: builder.mutation<

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
@@ -24,6 +24,8 @@ const EpsCompanyRegistrationForm: React.FC = () => {
   const router = useRouter();
 
   const [epsCompanyNameLocalState, setEpsCompanyNameLocalState] = useState("");
+  const [options, setOptions] = useState<any[]>([]);
+
   const [epsCompanyNitLocalState, setEpsCompanyNitLocalState] = useState("");
   const [epsCompanyEmailLocalState, setEpsCompanyEmailLocalState] =
     useState("");
@@ -61,11 +63,7 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     error: allEpsCompanyError,
   } = useGetAllEpsCompanyQuery(null);
 
-  //   useEffect()=> {
-
-  //   }
-
-  const handleCreateUsercreateEpsCompany = () => {
+  const handleCreateEpsCompany = () => {
     try {
       setModalIsOpenConfirm(true);
     } catch (error) {
@@ -126,6 +124,23 @@ const EpsCompanyRegistrationForm: React.FC = () => {
       console.error(error);
     } finally {
       setIsSubmittingNewEpsCompany(false);
+    }
+  };
+
+  const handleSearch = (value: string) => {
+    if (value) {
+      const filteredOptions =
+        allEpsCompanyData
+          ?.filter((company) =>
+            company.name.toUpperCase().includes(value.toUpperCase())
+          )
+          .map((company) => ({
+            value: company.name,
+          })) || [];
+
+      setOptions(filteredOptions);
+    } else {
+      setOptions([]);
     }
   };
 
@@ -214,11 +229,13 @@ const EpsCompanyRegistrationForm: React.FC = () => {
       )}
 
       <EpsCompanyRegistrationFormData
-        handleCreateUserEpsCompanyDataForm={handleCreateUsercreateEpsCompany}
+        handleCreateUserEpsCompanyDataForm={handleCreateEpsCompany}
         epsCompanyNameDataForm={epsCompanyNameLocalState}
         handleOnChangeEpsCompanyNameDataForm={(e) => {
-          setEpsCompanyNameLocalState(e.target.value.toUpperCase());
+          setEpsCompanyNameLocalState(e.toUpperCase());
         }}
+        handleSearchNameEpsCompanyDataForm={handleSearch}
+        optionsEpsCompanyNameDataForm={options}
         epsCompanyNitDataForm={epsCompanyNitLocalState}
         handleOnChangeEpsCompanyNitDataForm={(e) => {
           setEpsCompanyNitLocalState(e.target.value);

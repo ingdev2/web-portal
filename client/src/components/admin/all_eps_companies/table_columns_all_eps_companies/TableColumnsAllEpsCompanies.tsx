@@ -57,7 +57,7 @@ export const tableColumnsAllEpsCompanies = ({
     title: "EMAIL PRINCIPAL",
     key: epsCompanyMainEmailKey,
     dataIndex: epsCompanyMainEmailKey,
-    width: 301,
+    width: 405,
     ellipsis: true,
     searchable: true,
   },

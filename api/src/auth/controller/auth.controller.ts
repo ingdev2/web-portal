@@ -43,7 +43,7 @@ export class AuthController {
     });
   }
 
-  // @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Post('registerSuperAdmin')
   async registerSuperAdmin(@Body() registerSuperAdmin: CreateSuperAdminDto) {
     return await this.authService.registerSuperAdmin(registerSuperAdmin);

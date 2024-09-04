@@ -14,7 +14,7 @@ export const authMethodApi = createApi({
   reducerPath: "authMethodApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/authentication-method`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/authentication-method`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },

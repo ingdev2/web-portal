@@ -14,11 +14,17 @@ export const epsCompanyApi = createApi({
   reducerPath: "epsCompanyApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/eps-company`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/eps-company`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
   }),
+
+  refetchOnMountOrArgChange: true,
+
+  refetchOnFocus: true,
+
+  refetchOnReconnect: true,
 
   endpoints: (builder) => ({
     createEpsCompany: builder.mutation<EpsCompany, Partial<EpsCompany>>({

@@ -14,7 +14,7 @@ export const reasonForRejectionMedicalReqApi = createApi({
   reducerPath: "reasonForRejectionMedicalReqApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL_PRO}/reasons-for-rejection`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/reasons-for-rejection`,
     prepareHeaders(headers, { getState }) {
       return addTokenToRequest(headers, { getState });
     },
@@ -23,6 +23,8 @@ export const reasonForRejectionMedicalReqApi = createApi({
   refetchOnMountOrArgChange: true,
 
   refetchOnFocus: true,
+
+  refetchOnReconnect: true,
 
   endpoints: (builder) => ({
     createMedicalReqReasonForRejection: builder.mutation<
@@ -43,15 +45,25 @@ export const reasonForRejectionMedicalReqApi = createApi({
       query: () => "getAll",
     }),
 
+    getMedicalReqReasonsForRejectionById: builder.query<
+      MedicalReqReasonForRejection,
+      number
+    >({
+      query: (id) => `getReasonForRejection/${id}`,
+    }),
+
     updateMedicalReqReasonForRejectionById: builder.mutation<
       any,
-      { id: number; newName: string }
+      {
+        id: number;
+        updateReasonForRejection: Partial<MedicalReqReasonForRejection>;
+      }
     >({
-      query: ({ id, newName }) => ({
+      query: ({ id, updateReasonForRejection }) => ({
         url: `update/${id}`,
         method: "PATCH",
         params: { id },
-        body: { newName },
+        body: updateReasonForRejection,
       }),
     }),
   }),
@@ -60,5 +72,6 @@ export const reasonForRejectionMedicalReqApi = createApi({
 export const {
   useCreateMedicalReqReasonForRejectionMutation,
   useGetAllMedicalReqReasonsForRejectionQuery,
+  useGetMedicalReqReasonsForRejectionByIdQuery,
   useUpdateMedicalReqReasonForRejectionByIdMutation,
 } = reasonForRejectionMedicalReqApi;

@@ -142,19 +142,6 @@ export class EpsCompanyService {
       );
     }
 
-    if (epsCompany.name) {
-      const duplicateEpsCompany = await this.epsCompanyRepository.findOne({
-        where: {
-          name: epsCompany.name,
-          is_active: true,
-        },
-      });
-
-      if (duplicateEpsCompany) {
-        return new HttpException(`Empresa duplicada.`, HttpStatus.CONFLICT);
-      }
-    }
-
     const emailEpsCompanyValidate = await this.epsCompanyRepository.findOne({
       where: {
         id: Not(epsCompanyFound.id),
