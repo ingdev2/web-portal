@@ -3,69 +3,179 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { CreateUserPersonDto } from '../dto/create_user_person.dto';
 import { UsersService } from '../services/users.service';
-import { UpdateUserPersonDto } from '../dto/update_user_person.dto';
-import { CreateUserEpsDto } from '../dto/create_user_eps.dto';
+import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
 import { UpdateUserEpsDto } from '../dto/update_user_eps.dto';
+import { UpdatePasswordUserDto } from '../dto/update_password_user.dto';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { UserRolType } from '../../utils/enums/user_roles.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patient.dto';
+import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
+import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  // POST METHODS //
-
-  @Post('/createUserPerson')
-  async createUserPerson(@Body() newUserPerson: CreateUserPersonDto) {
-    return await this.usersService.createUserPerson(newUserPerson);
-  }
-
-  @Post('/createUserEps')
-  async createUserEps(@Body() newUserEps: CreateUserEpsDto) {
-    return await this.usersService.createUserEps(newUserEps);
-  }
-
   // GET METHODS //
 
-  @Get('/getAllPerson')
-  async getAllUsersPerson() {
-    return await this.usersService.getAllUsersPerson();
+  @Post('/transformIdTypeName')
+  async transformIdTypeName(
+    @Body('idTypeAbbrev')
+    idTypeAbbrev: string,
+  ) {
+    return await this.usersService.transformIdTypeName(idTypeAbbrev);
   }
 
+  @Post('/transformIdTypeNumber')
+  async transformIdTypeNumber(
+    @Body('idTypeAbbrev')
+    idTypeAbbrev: string,
+  ) {
+    return await this.usersService.transformIdTypeNumber(idTypeAbbrev);
+  }
+
+  @Post('/transformGenderName')
+  async transformGenderName(
+    @Body('genderAbbrev')
+    genderAbbrev: string,
+  ) {
+    return await this.usersService.transformGenderName(genderAbbrev);
+  }
+
+  @Post('/transformGenderNumber')
+  async transformGenderNumber(
+    @Body('genderAbbrev')
+    genderAbbrev: string,
+  ) {
+    return await this.usersService.transformGenderNumber(genderAbbrev);
+  }
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Get('/getAllUsers')
+  async getAllUsers() {
+    return await this.usersService.getAllUsers();
+  }
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Get('/getAllPatient')
+  async getAllUsersPatient() {
+    return await this.usersService.getAllUsersPatient();
+  }
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Get('/getAllEps')
   async getAllUsersEps() {
     return await this.usersService.getAllUsersEps();
   }
 
-  @Get('/person/:id')
-  async getUserPersonById(@Param('id') id: string) {
-    return await this.usersService.getUserPersonById(id);
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Get('/getUser/:id')
+  async getUsersById(@Param('id') id: string) {
+    return await this.usersService.getUsersById(id);
   }
 
-  @Get('/eps/:id')
-  async getUserEpsById(@Param('id') id: string) {
-    return await this.usersService.getUserEpsById(id);
+  @Get('/getUserByIdNumber/:idType/:idNumber')
+  async getUserFoundByIdNumber(
+    @Param('idType') idType: number,
+    @Param('idNumber') idNumber: number,
+  ) {
+    return await this.usersService.getUserFoundByIdNumber(idType, idNumber);
+  }
+
+  @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Get('/getAllRelatives/:patientId')
+  async getAllAuthorizedPatientRelatives(
+    @Param('patientId') patientId: string,
+  ) {
+    return await this.usersService.getAllAuthorizedPatientRelatives(patientId);
+  }
+
+  @Get('/getPatientUserByIdNumber/:idNumber')
+  async getPatientUserByIdNumber(@Param('idNumber') idNumber: number) {
+    return await this.usersService.getPatientUserByIdNumber(idNumber);
+  }
+
+  @Get('/getEpsUserByIdNumber/:idNumber')
+  async getEpsUserByIdNumber(@Param('idNumber') idNumber: number) {
+    return await this.usersService.getEpsUserByIdNumber(idNumber);
   }
 
   // PATCH METHODS //
 
-  @Patch('/updatePerson/:id')
+  @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Patch('/updatePatient/:id')
   async updateUserPerson(
     @Param('id') id: string,
-    @Body() user: UpdateUserPersonDto,
+    @Body() user: UpdateUserPatientDto,
   ) {
-    return await this.usersService.updateUserPerson(id, user);
+    return await this.usersService.updateUserPatient(id, user);
   }
 
+  @Auth(UserRolType.EPS, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updateEps/:id')
   async updateUserEps(@Param('id') id: string, @Body() user: UpdateUserEpsDto) {
     return await this.usersService.updateUserEps(id, user);
   }
 
+  @Auth(
+    UserRolType.PATIENT,
+    UserRolType.EPS,
+    AdminRolType.SUPER_ADMIN,
+    AdminRolType.ADMIN,
+  )
+  @Patch('/updatePassword/:id')
+  async updateUserPassword(
+    @Param('id')
+    id: string,
+    @Body()
+    passwords: UpdatePasswordUserDto,
+  ) {
+    return await this.usersService.updateUserPassword(id, passwords);
+  }
+
+  @Patch('/forgotPatientPassword')
+  async forgotUserPatientPassword(
+    @Body()
+    { id_type, id_number, birthdate }: ForgotPasswordUserPatientDto,
+  ) {
+    return await this.usersService.forgotUserPatientPassword({
+      id_type,
+      id_number,
+      birthdate,
+    });
+  }
+
+  @Patch('/forgotEpsPassword')
+  async forgotUserEpsPassword(
+    @Body()
+    { id_type, id_number, eps_company }: ForgotPasswordUserEpsDto,
+  ) {
+    return await this.usersService.forgotUserEpsPassword({
+      id_type,
+      id_number,
+      eps_company,
+    });
+  }
+
+  @Patch('/resetPassword')
+  async resetUserPassword(
+    @Query('token') token: string,
+    @Body()
+    { newPassword }: ResetPasswordUserDto,
+  ) {
+    return await this.usersService.resetUserPassword(token, { newPassword });
+  }
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/ban/:id')
   async banUsers(@Param('id') id: string) {
     return await this.usersService.banUsers(id);

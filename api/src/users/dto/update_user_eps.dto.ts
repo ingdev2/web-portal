@@ -1,22 +1,24 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateUserEpsDto {
-  @IsOptional()
-  @IsString()
-  name: string;
+  // @IsOptional()
+  // @IsString()
+  // name: string;
 
-  @IsOptional()
-  @IsString()
-  last_name: string;
-
-  @IsOptional()
-  company_area: string;
+  // @IsOptional()
+  // @IsString()
+  // last_name: string;
 
   @IsOptional()
   @IsEmail()
   email: string;
 
   @IsOptional()
-  @IsString()
-  password: string;
+  cellphone: number;
+
+  @IsOptional()
+  authentication_method: number;
+
+  @IsOptional()
+  company_area: number;
 }

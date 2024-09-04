@@ -1,24 +1,29 @@
 import {
   IsNotEmpty,
-  IsEnum,
-  IsNumber,
   IsOptional,
   IsString,
   IsBoolean,
   IsDateString,
   IsUUID,
+  IsEmail,
+  IsArray,
 } from 'class-validator';
-import { RequirementType, RequestStatus } from '../entities/medical_req.entity';
-import {
-  UserGender,
-  UserIdType,
-  UserRolType,
-} from 'src/users/entities/user.entity';
 
 export class CreateMedicalReqEpsDto {
+  @IsOptional()
+  @IsString()
+  filing_number: string;
+
   @IsNotEmpty()
-  @IsEnum(RequirementType)
-  requirement_type: RequirementType;
+  requirement_type: number;
+
+  @IsNotEmpty()
+  @IsString()
+  registration_dates: string;
+
+  @IsOptional()
+  @IsUUID()
+  aplicantId: string;
 
   @IsOptional()
   @IsString()
@@ -29,40 +34,40 @@ export class CreateMedicalReqEpsDto {
   aplicant_last_name: string;
 
   @IsOptional()
-  @IsEnum(UserGender)
-  aplicant_gender: UserGender;
+  aplicant_gender: number;
 
   @IsOptional()
-  @IsEnum(UserIdType)
-  aplicant_id_type: UserIdType;
+  aplicant_id_type: number;
 
   @IsOptional()
-  @IsNumber()
   aplicant_id_number: number;
 
   @IsOptional()
-  @IsString()
+  @IsEmail()
   aplicant_email: string;
 
   @IsOptional()
-  @IsString()
-  aplicant_company_name: string;
+  aplicant_cellphone: number;
+
+  @IsOptional()
+  aplicant_eps_company: number;
+
+  @IsOptional()
+  aplicant_company_area: number;
 
   @IsOptional()
   @IsString()
-  aplicant_company_area: string;
+  patient_name: string;
 
   @IsNotEmpty()
-  @IsEnum(UserIdType)
-  patient_id_type: UserIdType;
+  patient_id_type: number;
 
   @IsNotEmpty()
-  @IsNumber()
   patient_id_number: number;
 
-  @IsNotEmpty()
-  @IsDateString()
-  patient_id_exp_date: Date;
+  @IsOptional()
+  @IsBoolean()
+  accept_terms: boolean;
 
   @IsOptional()
   @IsDateString()
@@ -73,22 +78,27 @@ export class CreateMedicalReqEpsDto {
   answer_date: Date;
 
   @IsOptional()
+  @IsString()
+  response_time: string;
+
+  @IsOptional()
   @IsDateString()
   download_expiration_date: Date;
 
   @IsOptional()
-  @IsEnum(RequestStatus)
-  request_status: RequestStatus;
+  requirement_status: number;
 
   @IsOptional()
-  @IsBoolean()
-  is_deleted: boolean;
+  currently_in_area: number;
 
   @IsOptional()
-  @IsUUID()
-  aplicantId: string;
+  medicalReqUserType: number;
+
+  @IsNotEmpty()
+  @IsString()
+  user_message: string;
 
   @IsOptional()
-  @IsEnum(UserRolType)
-  medicalReqUserType: UserRolType;
+  @IsArray()
+  user_message_documents: string[];
 }

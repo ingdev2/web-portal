@@ -1,0 +1,63 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Cambio de Estado en Solicitud</title>
+    <style>
+      body { font-family: Arial, Helvetica, sans-serif; line-height: 2.0;
+      margin: 0; padding: 0; } .container { max-width: 609px; margin: 0 auto;
+      padding: 20px; border: 2px solid #ccc; border-radius: 13px;
+      background-color: #f7f7f7; } h1 { text-align: center; color:#015E90;
+      font-weight: bold; line-height: 1.3;} p { margin: 10px 0; size: 22px;}
+      .highlight { font-weight: bold; color: #015E90;} .button-container {
+      text-align: center; } .button { padding: 10px 20px; background-color:
+      #004d77; color: #fff; text-decoration: none; border-radius: 7px; }
+      .button:hover { background-color: #017DC0; } .logoProced { display: block;
+      margin: 0 auto; height: 69px;}.logoBonna { display: block; margin: 0 auto;
+      height: 88px;} .p-center {font-weight: bold; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <br />
+      <div style='text-align: center;'>
+        <img
+          src='cid:logo_proced@bonnadona.co'
+          alt='LogoProced'
+          class='logo-proced'
+          style='width: 301px; height: auto; display: block; margin: 0 auto;'
+        />
+      </div>
+      <br />
+      <h1>NOTIFICACIÓN CAMBIO DE ESTADO EN SOLICITUD</h1>
+      <p>Cordial saludo,</p>
+      <p>Señor(a) <span class='highlight'>{{userNameToEmail}}</span>,</p>
+      <p>Le informamos que el estado de su solicitud tipo:
+        <span class='highlight'>{{requirementType}}</span>
+        con número de radicado:
+        <span class='highlight'>{{medicalReqFilingNumber}}</span>
+        ha cambiado a estado:
+        <span class='highlight'>{{requestStatusReq}}</span>.</p>
+      <br />
+      <p class='p-center'>Lo invitamos a ingresar a nuestro portal web y ver el
+        estado de sus solicitudes:
+        <br />
+        <p class='button-container'>
+          <a href={{portalWebUrl}} class='button'>Ingresar al Portal Web</a>
+        </p>
+      </p>
+      <br />
+      <p>Att: Departamento de archivos de Clínica Bonnadona Prevenir</p>
+      <br />
+      <div style='text-align: center;'>
+        <img
+          src='cid:logo_bonnadona@bonnadona.co'
+          alt='LogoBonnadona'
+          class='logo-bonnadona'
+          style='width: 207px; height: auto; display: block; margin: 0 auto;'
+        />
+      </div>
+      <br />
+    </div>
+  </body>
+</html>

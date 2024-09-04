@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsEmail, IsString, IsOptional } from 'class-validator';
 
 export class UpdateAdminDto {
   @IsOptional()
@@ -10,7 +10,6 @@ export class UpdateAdminDto {
   last_name: string;
 
   @IsOptional()
-  @IsNumber()
   id_number: number;
 
   @IsOptional()
@@ -18,6 +17,8 @@ export class UpdateAdminDto {
   corporate_email: string;
 
   @IsOptional()
-  @IsString()
-  password: string;
+  company_area: number;
+
+  @IsOptional()
+  position_level: number;
 }
