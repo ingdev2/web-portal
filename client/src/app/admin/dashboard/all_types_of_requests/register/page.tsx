@@ -8,7 +8,7 @@ import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
-import RegisterReasonForRejectionContent from "@/components/admin/all_reasons_for_rejection/register_reason_for_rejection/RegisterReasonForRejectionContent";
+import RegisterTypeOfRequestContent from "@/components/admin/all_types_of_requests/register_type_of_request/RegisterTypeOfRequestContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -26,7 +26,7 @@ import { AdminRolType } from "../../../../../../../api/src/utils/enums/admin_rol
 import { CompanyAreaEnum } from "../../../../../../../api/src/utils/enums/company_area.enum";
 import { PositionLevelEnum } from "../../../../../../../api/src/utils/enums/position_level.enum";
 
-const RegisterReasonForRejectionPage = () => {
+const RegisterTypeOfRequestPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -49,22 +49,12 @@ const RegisterReasonForRejectionPage = () => {
       name: PositionLevelEnum.DIRECTOR,
     });
 
-  const {
-    data: coordinatorPositionLevelData,
-    error: coordinatorPositionLevelError,
-  } = useGetPositionLevelByNameQuery({
-    name: PositionLevelEnum.COORDINATOR,
-  });
-
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   const allowedAreas = [
     systemsCompanyAreaData?.id,
     archivesCompanyAreaData?.id,
   ];
-  const allowedPositionLevels = [
-    directorPositionLevelData?.id,
-    coordinatorPositionLevelData?.id,
-  ];
+  const allowedPositionLevels = [directorPositionLevelData?.id];
 
   useRoleValidation(allowedRoles);
   userCompanyAreaValidation(allowedAreas);
@@ -76,10 +66,7 @@ const RegisterReasonForRejectionPage = () => {
     archivesCompanyAreaData &&
     !archivesCompanyAreaError &&
     directorPositionLevelData &&
-    !directorPositionLevelError &&
-    coordinatorPositionLevelData &&
-    !coordinatorPositionLevelError;
-
+    !directorPositionLevelError;
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
   );
@@ -145,12 +132,12 @@ const RegisterReasonForRejectionPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-register-reason-for-rejection-content">
-          <RegisterReasonForRejectionContent />
+        <div className="dashboard-register-type-of-request-content">
+          <RegisterTypeOfRequestContent />
         </div>
       )}
     </div>
   );
 };
 
-export default RegisterReasonForRejectionPage;
+export default RegisterTypeOfRequestPage;

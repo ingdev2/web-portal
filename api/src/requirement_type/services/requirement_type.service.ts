@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateRequirementTypeDto } from '../dto/create-requirement_type.dto';
 import { UpdateRequirementTypeDto } from '../dto/update-requirement_type.dto';
 import { RequirementType } from '../entities/requirement_type.entity';
@@ -113,6 +113,7 @@ export class RequirementTypeService {
       const duplicateRequirementType =
         await this.requirementTypeRepository.findOne({
           where: {
+            id: Not(requirementTypeFound.id),
             name: requirementType.name,
           },
         });

@@ -52,13 +52,13 @@ export const typesMedicalReqApi = createApi({
 
     updateMedicalReqTypeById: builder.mutation<
       any,
-      { id: number; newName: string }
+      { id: number; updateTypeOfRequest: Partial<MedicalReqType> }
     >({
-      query: ({ id, newName }) => ({
+      query: ({ id, updateTypeOfRequest }) => ({
         url: `update/${id}`,
         method: "PATCH",
         params: { id },
-        body: { newName },
+        body: updateTypeOfRequest,
       }),
     }),
 

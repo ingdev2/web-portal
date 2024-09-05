@@ -8,7 +8,7 @@ import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
-import AllEpsCompaniesContent from "@/components/admin/all_eps_companies/AllEpsCompaniesContent";
+import AllTypesOfRequestsContent from "@/components/admin/all_types_of_requests/AllTypesOfRequestsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -133,8 +133,8 @@ const AllTypesOfRequestsPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-all-eps-companies-content">
-          <AllEpsCompaniesContent />
+        <div className="dashboard-all-types-of-requests-content">
+          <AllTypesOfRequestsContent />
         </div>
       )}
     </div>

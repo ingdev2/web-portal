@@ -8,7 +8,7 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { subtitleStyleCss } from "@/theme/text_styles";
 
-import { useGetAllEpsCompanyAdminDashboardQuery } from "@/redux/apis/eps_company/epsCompanyApi";
+import { useGetAllMedicalReqTypesAdminDashboardQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 
 const CreateButton: React.FC<{
   isSubmittingCreateButton: boolean;
@@ -17,12 +17,12 @@ const CreateButton: React.FC<{
   const router = useRouter();
 
   const {
-    data: allEpsCompanyData,
-    isLoading: allEpsCompanyLoading,
-    isFetching: allEpsCompanyFetching,
-    error: allEpsCompanyError,
-    refetch: refecthAllEpsCompany,
-  } = useGetAllEpsCompanyAdminDashboardQuery(null);
+    data: allTypesOfRequestsData,
+    isLoading: allTypesOfRequestsLoading,
+    isFetching: allTypesOfRequestsFetching,
+    error: allTypesOfRequestsError,
+    refetch: refecthTypesOfRequestsCompany,
+  } = useGetAllMedicalReqTypesAdminDashboardQuery(null);
 
   return (
     <Row
@@ -57,8 +57,8 @@ const CreateButton: React.FC<{
         >
           Total de&nbsp;
           <b>
-            {allEpsCompanyData?.length || 0}
-            &nbsp;empresa(s) de EPS
+            {allTypesOfRequestsData?.length || 0}
+            &nbsp;tipo(s) de solicitud(es)
           </b>
         </h2>
       </Col>
@@ -95,12 +95,12 @@ const CreateButton: React.FC<{
               margin: "0px",
             }}
             htmlType="button"
-            className="eps-company-register-button"
+            className="type-of-request-register-button"
             onClick={async () => {
               try {
                 setIsSubmittingCreateButton(true);
 
-                await router.push("all_eps_companies/register", {
+                await router.push("all_types_of_requests/register", {
                   scroll: true,
                 });
               } catch (error) {

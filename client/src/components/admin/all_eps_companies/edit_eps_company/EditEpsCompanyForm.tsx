@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import EditAdminFormData from "./EditEpsCompanyFormData";
+import EditEpsCompanyFormData from "./EditEpsCompanyFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
@@ -161,7 +161,7 @@ const EditEpsCompanyForm: React.FC = () => {
         />
       )}
 
-      <EditAdminFormData
+      <EditEpsCompanyFormData
         nameEpsCompanyFormData={nameEpsCompanyState || NOT_REGISTER}
         onChangeNameEpsCompanyFormData={(e) => {
           setHasChanges(true);

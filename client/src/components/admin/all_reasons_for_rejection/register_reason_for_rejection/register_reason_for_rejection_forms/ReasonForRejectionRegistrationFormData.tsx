@@ -5,7 +5,6 @@ import React from "react";
 import { AutoComplete, Button, Col, Form, Input, Row } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { titleStyleCss } from "@/theme/text_styles";
-import { FaRegCommentDots } from "react-icons/fa";
 import TextArea from "antd/es/input/TextArea";
 
 const ReasonForRejectionRegistrationFormData: React.FC<{

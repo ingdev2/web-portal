@@ -5,71 +5,74 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Col } from "antd";
-import EpsCompanyRegistrationFormData from "./EpsCompanyRegistrationFormData";
+import ReasonForRejectionRegistrationFormData from "./ReasonForRejectionRegistrationFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { FcInfo } from "react-icons/fc";
 
-import { setErrorsEpsCompany } from "@/redux/features/eps_company/epsCompanySlice";
+import { setErrorsReasonForRejection } from "@/redux/features/medical_req/reason_for_rejection/reasonForRejection";
 
 import {
-  useCreateEpsCompanyMutation,
-  useGetAllEpsCompanyQuery,
-} from "@/redux/apis/eps_company/epsCompanyApi";
+  useCreateMedicalReqReasonForRejectionMutation,
+  useGetAllMedicalReqReasonsForRejectionQuery,
+} from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
 
-const EpsCompanyRegistrationForm: React.FC = () => {
+const ReasonForRejectionRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const [epsCompanyNameLocalState, setEpsCompanyNameLocalState] = useState("");
+  const [
+    reasonForRejectionNameLocalState,
+    setReasonForRejectionNameLocalState,
+  ] = useState("");
   const [options, setOptions] = useState<any[]>([]);
 
-  const [epsCompanyNitLocalState, setEpsCompanyNitLocalState] = useState("");
-  const [epsCompanyEmailLocalState, setEpsCompanyEmailLocalState] =
-    useState("");
+  const [
+    reasonForRejectionMessageLocalState,
+    setReasonForRejectionMessageLocalState,
+  ] = useState("");
 
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
 
   const [isSubmittingConfirmModal, setIsSubmittingConfirmModal] =
     useState(false);
-  const [isSubmittingNewEpsCompany, setIsSubmittingNewEpsCompany] =
-    useState(false);
+  const [isSubmittingNewData, setIsSubmittingNewData] = useState(false);
   const [isSubmittingGoToAllData, setIsSubmittingGoToAllData] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
-  const userEpsCompanyErrorsState = useAppSelector(
-    (state) => state.epsCompany.errors
+  const reasonForRejectionErrorsState = useAppSelector(
+    (state) => state.reasonForRejection.errors
   );
 
   const [
-    createEpsCompany,
+    createReasonForRejection,
     {
-      data: createEpsCompanyData,
-      isLoading: createEpsCompanyLoading,
-      isSuccess: createEpsCompanySuccess,
-      isError: createEpsCompanyError,
+      data: reasonForRejectionData,
+      isLoading: reasonForRejectionLoading,
+      isSuccess: reasonForRejectionSuccess,
+      isError: reasonForRejectionError,
     },
-  ] = useCreateEpsCompanyMutation({
-    fixedCacheKey: "createEpsCompany",
+  ] = useCreateMedicalReqReasonForRejectionMutation({
+    fixedCacheKey: "createReasonForRejection",
   });
 
   const {
-    data: allEpsCompanyData,
-    isLoading: allEpsCompanyLoading,
-    isFetching: allEpsCompanyFetching,
-    error: allEpsCompanyError,
-  } = useGetAllEpsCompanyQuery(null);
+    data: allReasonsForRejectionData,
+    isLoading: allReasonsForRejectionLoading,
+    isFetching: allReasonsForRejectionFetching,
+    error: allReasonsForRejectionError,
+  } = useGetAllMedicalReqReasonsForRejectionQuery(null);
 
-  const handleCreateEpsCompany = () => {
+  const handleCreateReasonForRejection = () => {
     try {
       setModalIsOpenConfirm(true);
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingNewEpsCompany(false);
+      setIsSubmittingNewData(false);
     }
   };
 
@@ -77,12 +80,11 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     try {
-      setIsSubmittingNewEpsCompany(true);
+      setIsSubmittingNewData(true);
 
-      const response: any = await createEpsCompany({
-        name: epsCompanyNameLocalState,
-        nit: epsCompanyNitLocalState,
-        main_email: epsCompanyEmailLocalState,
+      const response: any = await createReasonForRejection({
+        rejection_title: reasonForRejectionNameLocalState,
+        reason_message: reasonForRejectionMessageLocalState,
       });
 
       let createDataError = response.error;
@@ -96,21 +98,21 @@ const EpsCompanyRegistrationForm: React.FC = () => {
         const validationDataMessage = createValidationData;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsEpsCompany(errorMessage[0]));
+          dispatch(setErrorsReasonForRejection(errorMessage[0]));
 
           setShowErrorMessage(true);
         } else if (typeof errorMessage === "string") {
-          dispatch(setErrorsEpsCompany(errorMessage));
+          dispatch(setErrorsReasonForRejection(errorMessage));
 
           setShowErrorMessage(true);
         }
 
         if (Array.isArray(validationDataMessage)) {
-          dispatch(setErrorsEpsCompany(validationDataMessage[0]));
+          dispatch(setErrorsReasonForRejection(validationDataMessage[0]));
 
           setShowErrorMessage(true);
         } else if (typeof validationDataMessage === "string") {
-          dispatch(setErrorsEpsCompany(validationDataMessage));
+          dispatch(setErrorsReasonForRejection(validationDataMessage));
 
           setShowErrorMessage(true);
         }
@@ -123,19 +125,19 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setIsSubmittingNewEpsCompany(false);
+      setIsSubmittingNewData(false);
     }
   };
 
   const handleSearch = (value: string) => {
     if (value) {
       const filteredOptions =
-        allEpsCompanyData
-          ?.filter((companies) =>
-            companies.name.toUpperCase().includes(value.toUpperCase())
+        allReasonsForRejectionData
+          ?.filter((reasons) =>
+            reasons.rejection_title.toUpperCase().includes(value.toUpperCase())
           )
-          .map((company) => ({
-            value: company.name,
+          .map((reason) => ({
+            value: reason.rejection_title,
           })) || [];
 
       setOptions(filteredOptions);
@@ -148,7 +150,7 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     try {
       setIsSubmittingGoToAllData(true);
 
-      await router.replace("/admin/dashboard/all_eps_companies", {
+      await router.replace("/admin/dashboard/all_reasons_for_rejection", {
         scroll: false,
       });
     } catch (error) {
@@ -160,7 +162,7 @@ const EpsCompanyRegistrationForm: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsEpsCompany([]));
+    dispatch(setErrorsReasonForRejection([]));
     setShowErrorMessage(false);
   };
 
@@ -180,40 +182,39 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     >
       {modalIsOpenConfirm && (
         <CustomModalTwoOptions
-          key={"custom-confirm-modal-create-user-eps-company"}
+          key={"custom-confirm-modal-create-reason-for-rejection"}
           openCustomModalState={modalIsOpenConfirm}
           iconCustomModal={<FcInfo size={77} />}
-          titleCustomModal="¿Deseas crear una nueva empresa de EPS?"
+          titleCustomModal="¿Deseas crear un nuevo motivo de rechazo de solicitud?"
           subtitleCustomModal={
             <p>
-              Se creará la empresa con nombre:&nbsp;
-              <b>{epsCompanyNameLocalState},</b>
-              &nbsp; con número NIT:&nbsp;<b>{epsCompanyNitLocalState}.</b>
+              Se creará el motivo de rechazo con nombre:&nbsp;
+              <b>{reasonForRejectionNameLocalState}.</b>
             </p>
           }
           handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
           handleConfirmCustomModal={handleConfirmDataModal}
-          isSubmittingConfirm={isSubmittingNewEpsCompany}
+          isSubmittingConfirm={isSubmittingNewData}
           handleClickCustomModal={handleButtonClick}
         ></CustomModalTwoOptions>
       )}
 
       {modalIsOpenSuccess && (
         <CustomModalNoContent
-          key={"custom-success-modal-create-user-eps-company"}
+          key={"custom-success-modal-create-reason-for-rejection"}
           widthCustomModalNoContent={"54%"}
           openCustomModalState={modalIsOpenSuccess}
           closableCustomModal={false}
           maskClosableCustomModal={false}
           contentCustomModal={
             <CustomResultOneButton
-              key={"user-eps-company-created-custom-result"}
+              key={"reason-for-rejection-created-custom-result"}
               statusTypeResult={"success"}
-              titleCustomResult="¡Empresa de EPS creada correctamente!"
-              subtitleCustomResult="La empresa ha sido agregada a la lista de empresa de EPS."
+              titleCustomResult="¡Motivo de rechazo creado correctamente!"
+              subtitleCustomResult="El motivo ha sido agregado a la lista de motivos de rechazo de solicitud."
               handleClickCustomResult={handleGoToAllData}
               isSubmittingButton={isSubmittingGoToAllData}
-              textButtonCustomResult="Regresar a lista de empresa EPS"
+              textButtonCustomResult="Regresar a lista de motivos de rechazo"
             />
           }
         />
@@ -223,26 +224,23 @@ const EpsCompanyRegistrationForm: React.FC = () => {
         <CustomMessage
           typeMessage="error"
           message={
-            userEpsCompanyErrorsState?.toString() || "¡Error en la petición!"
+            reasonForRejectionErrorsState?.toString() ||
+            "¡Error en la petición!"
           }
         />
       )}
 
-      <EpsCompanyRegistrationFormData
-        handleCreateUserEpsCompanyDataForm={handleCreateEpsCompany}
-        epsCompanyNameDataForm={epsCompanyNameLocalState}
-        handleOnChangeEpsCompanyNameDataForm={(e) => {
-          setEpsCompanyNameLocalState(e.toUpperCase());
+      <ReasonForRejectionRegistrationFormData
+        handleCreateUserEpsCompanyDataForm={handleCreateReasonForRejection}
+        reasonForRejectionNameDataForm={reasonForRejectionNameLocalState}
+        handleOnChangeReasonForRejectionNameDataForm={(e) => {
+          setReasonForRejectionNameLocalState(e.toUpperCase());
         }}
-        handleSearchNameEpsCompanyDataForm={handleSearch}
-        optionsEpsCompanyNameDataForm={options}
-        epsCompanyNitDataForm={epsCompanyNitLocalState}
-        handleOnChangeEpsCompanyNitDataForm={(e) => {
-          setEpsCompanyNitLocalState(e.target.value);
-        }}
-        epsCompanyEmailDataForm={epsCompanyEmailLocalState}
-        handleOnChangeEpsCompanyEmailDataForm={(e) => {
-          setEpsCompanyEmailLocalState(e.target.value.toLowerCase());
+        handleSearchNameReasonForRejectionDataForm={handleSearch}
+        optionsReasonForRejectionNameDataForm={options}
+        reasonForRejectionMessageDataForm={reasonForRejectionMessageLocalState}
+        handleOnChangeReasonForRejectionMessageDataForm={(e) => {
+          setReasonForRejectionMessageLocalState(e.target.value);
         }}
         buttonSubmitFormLoadingDataForm={
           isSubmittingConfirmModal && !modalIsOpenConfirm
@@ -253,4 +251,4 @@ const EpsCompanyRegistrationForm: React.FC = () => {
   );
 };
 
-export default EpsCompanyRegistrationForm;
+export default ReasonForRejectionRegistrationForm;

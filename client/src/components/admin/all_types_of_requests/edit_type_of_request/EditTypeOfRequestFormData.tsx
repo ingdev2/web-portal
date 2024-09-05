@@ -7,38 +7,33 @@ import { Store } from "antd/es/form/interface";
 import { titleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import TextArea from "antd/es/input/TextArea";
 
-const EditReasonForRejectionFormData: React.FC<{
-  nameReasonForRejectionFormData: string;
-  onChangeNameReasonForRejectionFormData: (e: any) => void;
-  messageReasonForRejectionFormData: string;
-  onChangeMessageReasonForRejectionFormData: (e: any) => void;
-  handleConfirmEpsCompanyFormData: (
+const EditTypeOfRequestFormData: React.FC<{
+  nameTypeOfRequestFormData: string;
+  onChangeNameTypeOfRequestFormData: (e: any) => void;
+  handleConfirmDataFormData: (
     e: React.FormEvent<HTMLFormElement>
   ) => Promise<void>;
-  initialValuesEditAdminFormData: Store | undefined;
-  isSubmittingEditAdminFormData: boolean;
+  initialValuesEditFormData: Store | undefined;
+  isSubmittingEditFormData: boolean;
   handleButtonClickFormData: () => void;
   hasChangesFormData: boolean;
 }> = ({
-  nameReasonForRejectionFormData,
-  onChangeNameReasonForRejectionFormData,
-  messageReasonForRejectionFormData,
-  onChangeMessageReasonForRejectionFormData,
-  handleConfirmEpsCompanyFormData,
-  initialValuesEditAdminFormData,
-  isSubmittingEditAdminFormData,
+  nameTypeOfRequestFormData,
+  onChangeNameTypeOfRequestFormData,
+  handleConfirmDataFormData,
+  initialValuesEditFormData,
+  isSubmittingEditFormData,
   handleButtonClickFormData,
   hasChangesFormData,
 }) => {
   return (
     <Form
-      id="edit-reason-for-rejection-form"
-      name="edit-reason-for-rejection-form"
-      className="edit-reason-for-rejection-form"
-      onFinish={handleConfirmEpsCompanyFormData}
-      initialValues={initialValuesEditAdminFormData}
+      id="edit-type-of-request-form"
+      name="edit-type-of-request-form"
+      className="edit-type-of-request-form"
+      onFinish={handleConfirmDataFormData}
+      initialValues={initialValuesEditFormData}
       autoComplete="false"
       layout="vertical"
       style={{
@@ -48,7 +43,7 @@ const EditReasonForRejectionFormData: React.FC<{
       }}
     >
       <h2
-        className="title-edit-reason-for-rejection-form"
+        className="title-edit-type-of-request-form"
         style={{
           ...titleStyleCss,
           textAlign: "center",
@@ -56,14 +51,14 @@ const EditReasonForRejectionFormData: React.FC<{
           marginBottom: "22px",
         }}
       >
-        Editar motivo de rechazo
+        Editar tipo de solicitud
       </h2>
 
       <Row gutter={24}>
         <Col span={24}>
           <Form.Item
-            name="edit-reason-for-rejection-name"
-            label="Titulo de motivo de rechazo:"
+            name="edit-type-of-request-name"
+            label="Nombre de tipo de solicitud:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -77,15 +72,15 @@ const EditReasonForRejectionFormData: React.FC<{
             rules={[
               {
                 required: false,
-                message: "¡Por favor ingrese el nombre del motivo!",
+                message: "¡Por favor ingrese el nombre del tipo de solicitud!",
               },
               {
-                min: 10,
-                message: "El nombre debe tener al menos 10 caracteres",
+                min: 5,
+                message: "El nombre debe tener al menos 5 caracteres",
               },
               {
-                max: 50,
-                message: "El nombre no puede tener más de 50 caracteres",
+                max: 40,
+                message: "El nombre no puede tener más de 40 caracteres",
               },
               {
                 pattern: /^[A-ZÁÉÍÓÚÑ\s]*$/,
@@ -95,49 +90,15 @@ const EditReasonForRejectionFormData: React.FC<{
             ]}
           >
             <Input
-              id="name-reason-for-rejection"
+              id="name-type-of-request"
               prefix={
                 <MdDriveFileRenameOutline className="site-form-item-icon" />
               }
               type="text"
-              value={nameReasonForRejectionFormData}
-              placeholder="Nombre de motivo"
-              onChange={onChangeNameReasonForRejectionFormData}
+              value={nameTypeOfRequestFormData}
+              placeholder="Nombre de tipo de solicitud"
+              onChange={onChangeNameTypeOfRequestFormData}
               autoComplete="off"
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Row gutter={24}>
-        <Col span={24}>
-          <Form.Item
-            name="edit-reason-for-rejection-message"
-            label="Mensaje de motivo:"
-            style={{ marginBottom: "13px" }}
-            rules={[
-              {
-                required: false,
-                message: "¡Por favor ingresa el mensaje del motivo!",
-              },
-              {
-                min: 20,
-                message: "El mensaje debe tener al menos 20 caracteres",
-              },
-              {
-                max: 200,
-                message: "El mensaje no puede tener más de 200 caracteres",
-              },
-            ]}
-          >
-            <TextArea
-              id="message-reason-for-rejection"
-              value={messageReasonForRejectionFormData}
-              placeholder="Mensaje de motivo"
-              onChange={onChangeMessageReasonForRejectionFormData}
-              autoComplete="off"
-              autoSize={{ minRows: 2, maxRows: 10 }}
-              maxLength={200}
             />
           </Form.Item>
         </Col>
@@ -150,7 +111,7 @@ const EditReasonForRejectionFormData: React.FC<{
           paddingBlock: "13px",
         }}
       >
-        {isSubmittingEditAdminFormData ? (
+        {isSubmittingEditFormData ? (
           <CustomSpin />
         ) : (
           <div
@@ -170,7 +131,7 @@ const EditReasonForRejectionFormData: React.FC<{
                 borderRadius: 31,
               }}
               htmlType="submit"
-              className="edit-reason-for-rejection-form-button"
+              className="edit-type-of-request-form-button"
               onClick={handleButtonClickFormData}
               disabled={!hasChangesFormData}
             >
@@ -183,4 +144,4 @@ const EditReasonForRejectionFormData: React.FC<{
   );
 };
 
-export default EditReasonForRejectionFormData;
+export default EditTypeOfRequestFormData;

@@ -8,7 +8,7 @@ import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
-import AllReasonsForRejectionContent from "@/components/admin/reasons_for_rejection/AllReasonsForRejectionContent";
+import AllReasonsForRejectionContent from "@/components/admin/all_reasons_for_rejection/AllReasonsForRejectionContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
