@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreatePositionLevelDto } from '../dto/create-position_level.dto';
 import { UpdatePositionLevelDto } from '../dto/update-position_level.dto';
 import { PositionLevel } from '../entities/position_level.entity';
+import { PositionLevelEnum } from 'src/utils/enums/position_level.enum';
 
 @Injectable()
 export class PositionLevelService {
@@ -50,6 +51,23 @@ export class PositionLevelService {
       );
     } else {
       return allPositionLevel;
+    }
+  }
+
+  async getPositionLevelByName(name?: PositionLevelEnum) {
+    if (name) {
+      const positionLevelName = await this.positionLevelRepository.findOne({
+        where: { name: name },
+      });
+
+      if (!positionLevelName) {
+        throw new HttpException(
+          `El nivel de cargo "${name}" no existe`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return positionLevelName;
     }
   }
 

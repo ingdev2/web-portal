@@ -42,6 +42,10 @@ export const typesMedicalReqApi = createApi({
       query: () => "getAll",
     }),
 
+    getAllMedicalReqTypesAdminDashboard: builder.query<MedicalReqType[], null>({
+      query: () => "getAllAdminDashboard",
+    }),
+
     getMedicalReqTypeById: builder.query<MedicalReqType, number>({
       query: (id) => `getReqType/${id}`,
     }),
@@ -71,6 +75,7 @@ export const typesMedicalReqApi = createApi({
 export const {
   useCreateMedicalReqTypeMutation,
   useGetAllMedicalReqTypesQuery,
+  useGetAllMedicalReqTypesAdminDashboardQuery,
   useGetMedicalReqTypeByIdQuery,
   useUpdateMedicalReqTypeByIdMutation,
   useBanMedicalReqTypeMutation,

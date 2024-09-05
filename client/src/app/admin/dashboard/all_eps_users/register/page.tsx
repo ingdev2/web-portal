@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
+import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
 import RegisterEpsUserContent from "@/components/admin/all_eps_users/register_eps_user/RegisterEpsUserContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -19,13 +20,17 @@ import {
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
+import { useGetPositionLevelByNameQuery } from "@/redux/apis/position_level/positionLevelApi";
 
 import { AdminRolType } from "../../../../../../../api/src/utils/enums/admin_roles.enum";
 import { CompanyAreaEnum } from "../../../../../../../api/src/utils/enums/company_area.enum";
+import { PositionLevelEnum } from "../../../../../../../api/src/utils/enums/position_level.enum";
 
 const RegisterEpsUserPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
+
+  // AREA //
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
@@ -37,20 +42,31 @@ const RegisterEpsUserPage = () => {
       name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
     });
 
+  // NIVEL DE CARGO //
+
+  const { data: directorPositionLevelData, error: directorPositionLevelError } =
+    useGetPositionLevelByNameQuery({
+      name: PositionLevelEnum.DIRECTOR,
+    });
+
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   const allowedAreas = [
     systemsCompanyAreaData?.id,
     archivesCompanyAreaData?.id,
   ];
+  const allowedPositionLevels = [directorPositionLevelData?.id];
 
   useRoleValidation(allowedRoles);
   userCompanyAreaValidation(allowedAreas);
+  userPositionLevelValidation(allowedPositionLevels);
 
   const waitAdminData =
     systemsCompanyAreaData &&
     !systemsCompanyAreaError &&
     archivesCompanyAreaData &&
-    !archivesCompanyAreaError;
+    !archivesCompanyAreaError &&
+    directorPositionLevelData &&
+    !directorPositionLevelError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen

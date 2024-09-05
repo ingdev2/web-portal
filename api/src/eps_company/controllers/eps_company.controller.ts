@@ -35,6 +35,12 @@ export class EpsCompanyController {
     return this.epsCompanyService.getAllEpsCompanies();
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Get('/getAllAdminDashboard')
+  getAllEpsCompaniesAdminDashboard() {
+    return this.epsCompanyService.getAllEpsCompaniesAdminDashboard();
+  }
+
   @Get('/getCompany/:id')
   getCompanyById(@Param('id') id: number) {
     return this.epsCompanyService.getCompanyById(id);

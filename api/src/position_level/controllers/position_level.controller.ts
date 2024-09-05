@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PositionLevelService } from '../services/position_level.service';
 import { CreatePositionLevelDto } from '../dto/create-position_level.dto';
@@ -13,6 +14,7 @@ import { UpdatePositionLevelDto } from '../dto/update-position_level.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { PositionLevelEnum } from 'src/utils/enums/position_level.enum';
 
 @ApiTags('position-level')
 @ApiBearerAuth()
@@ -33,6 +35,11 @@ export class PositionLevelController {
   @Get('/getAll')
   getAllPositionLevel() {
     return this.positionLevelService.getAllPositionLevel();
+  }
+
+  @Get('/getByName')
+  getPositionLevelByName(@Query('name') name?: PositionLevelEnum) {
+    return this.positionLevelService.getPositionLevelByName(name);
   }
 
   // PATCH METHODS //

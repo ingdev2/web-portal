@@ -26,7 +26,7 @@ import {
 } from "@/redux/features/eps_company/epsCompanySlice";
 
 import {
-  useGetAllEpsCompanyQuery,
+  useGetAllEpsCompanyAdminDashboardQuery,
   useBanEpsCompanyMutation,
 } from "@/redux/apis/eps_company/epsCompanyApi";
 
@@ -71,7 +71,7 @@ const AllEpsCompaniesContent: React.FC = () => {
     isFetching: allEpsCompaniesFetching,
     error: allEpsCompaniesError,
     refetch: refecthAllEpsCompanies,
-  } = useGetAllEpsCompanyQuery(null);
+  } = useGetAllEpsCompanyAdminDashboardQuery(null);
 
   const transformedData = Array.isArray(allEpsCompaniesData)
     ? allEpsCompaniesData.map((req: any) => ({

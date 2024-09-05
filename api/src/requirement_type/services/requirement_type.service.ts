@@ -38,6 +38,26 @@ export class RequirementTypeService {
 
   async getAllRequirementType() {
     const allRequirementTypes = await this.requirementTypeRepository.find({
+      where: {
+        is_active: true,
+      },
+      order: {
+        id: 'ASC',
+      },
+    });
+
+    if (allRequirementTypes.length === 0) {
+      return new HttpException(
+        `No hay tipos de requerimientos registrados en la base de datos`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allRequirementTypes;
+    }
+  }
+
+  async getAllRequirementTypeAdminDashboard() {
+    const allRequirementTypes = await this.requirementTypeRepository.find({
       order: {
         id: 'ASC',
       },

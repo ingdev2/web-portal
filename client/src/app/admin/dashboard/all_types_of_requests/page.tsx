@@ -8,7 +8,7 @@ import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
-import RegisterEpsCompanyContent from "@/components/admin/all_eps_companies/register_eps_company/RegisterEpsCompanyContent";
+import AllEpsCompaniesContent from "@/components/admin/all_eps_companies/AllEpsCompaniesContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -22,11 +22,11 @@ import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetPositionLevelByNameQuery } from "@/redux/apis/position_level/positionLevelApi";
 
-import { AdminRolType } from "../../../../../../../api/src/utils/enums/admin_roles.enum";
-import { CompanyAreaEnum } from "../../../../../../../api/src/utils/enums/company_area.enum";
-import { PositionLevelEnum } from "../../../../../../../api/src/utils/enums/position_level.enum";
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
+import { PositionLevelEnum } from "../../../../../../api/src/utils/enums/position_level.enum";
 
-const RegisterEpsCompanyPage = () => {
+const AllTypesOfRequestsPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -67,6 +67,7 @@ const RegisterEpsCompanyPage = () => {
     !archivesCompanyAreaError &&
     directorPositionLevelData &&
     !directorPositionLevelError;
+
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
   );
@@ -132,12 +133,12 @@ const RegisterEpsCompanyPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-register-eps-company-content">
-          <RegisterEpsCompanyContent />
+        <div className="dashboard-all-eps-companies-content">
+          <AllEpsCompaniesContent />
         </div>
       )}
     </div>
   );
 };
 
-export default RegisterEpsCompanyPage;
+export default AllTypesOfRequestsPage;

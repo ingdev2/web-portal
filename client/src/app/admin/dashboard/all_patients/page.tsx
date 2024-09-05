@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
+import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
 import AllPatientsContent from "@/components/admin/all_patients/AllPatientsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -19,13 +20,17 @@ import {
 
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
+import { useGetPositionLevelByNameQuery } from "@/redux/apis/position_level/positionLevelApi";
 
 import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
 import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
+import { PositionLevelEnum } from "../../../../../../api/src/utils/enums/position_level.enum";
 
 const AllPatientsPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
+
+  // AREA //
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
@@ -42,15 +47,34 @@ const AllPatientsPage = () => {
       name: CompanyAreaEnum.ADMISSIONS_DEPARTMENT,
     });
 
+  // NIVEL DE CARGO //
+
+  const { data: directorPositionLevelData, error: directorPositionLevelError } =
+    useGetPositionLevelByNameQuery({
+      name: PositionLevelEnum.DIRECTOR,
+    });
+
+  const {
+    data: coordinatorPositionLevelData,
+    error: coordinatorPositionLevelError,
+  } = useGetPositionLevelByNameQuery({
+    name: PositionLevelEnum.COORDINATOR,
+  });
+
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   const allowedAreas = [
     systemsCompanyAreaData?.id,
     archivesCompanyAreaData?.id,
     admissionsCompanyAreaData?.id,
   ];
+  const allowedPositionLevels = [
+    directorPositionLevelData?.id,
+    coordinatorPositionLevelData?.id,
+  ];
 
   useRoleValidation(allowedRoles);
   userCompanyAreaValidation(allowedAreas);
+  userPositionLevelValidation(allowedPositionLevels);
 
   const waitAdminData =
     systemsCompanyAreaData &&
@@ -58,7 +82,11 @@ const AllPatientsPage = () => {
     archivesCompanyAreaData &&
     !archivesCompanyAreaError &&
     admissionsCompanyAreaData &&
-    !admissionsCompanyAreaError;
+    !admissionsCompanyAreaError &&
+    directorPositionLevelData &&
+    !directorPositionLevelError &&
+    coordinatorPositionLevelData &&
+    !coordinatorPositionLevelError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen

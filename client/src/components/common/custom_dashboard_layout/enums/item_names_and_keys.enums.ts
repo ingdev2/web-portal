@@ -13,6 +13,7 @@ export enum ItemNames {
   ITEM_PARAMETRIZATION = "Parametrización",
   SUB_EPS_COMPANIES_PARAMS = "Empresas EPS",
   SUB_REASONS_FOR_REJECTION_PARAMS = "Motivos de rechazo",
+  SUB_REQ_TYPES_PARAMS = "Tipos de req.",
 }
 
 export enum ItemKeys {
@@ -30,4 +31,5 @@ export enum ItemKeys {
   ITEM_PARAMETRIZATION_KEY = "parametrization",
   SUB_EPS_COMPANIES_PARAMS_KEY = "all_eps_companies",
   SUB_REASONS_FOR_REJECTION_PARAMS_KEY = "all_reasons_for_rejection",
+  SUB_REQ_TYPES_PARAMS_KEY = "all_types_of_requests",
 }
