@@ -8,7 +8,7 @@ import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { subtitleStyleCss } from "@/theme/text_styles";
 
-import { useGetAllEpsCompanyQuery } from "@/redux/apis/eps_company/epsCompanyApi";
+import { useGetAllEpsCompanyAdminDashboardQuery } from "@/redux/apis/eps_company/epsCompanyApi";
 
 const CreateButton: React.FC<{
   isSubmittingCreateButton: boolean;
@@ -22,7 +22,7 @@ const CreateButton: React.FC<{
     isFetching: allEpsCompanyFetching,
     error: allEpsCompanyError,
     refetch: refecthAllEpsCompany,
-  } = useGetAllEpsCompanyQuery(null);
+  } = useGetAllEpsCompanyAdminDashboardQuery(null);
 
   return (
     <Row

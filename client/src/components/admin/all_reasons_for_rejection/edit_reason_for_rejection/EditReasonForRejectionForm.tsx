@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import EditAdminFormData from "./EditReasonForRejectionFormData";
+import EditReasonForRejectionFormData from "./EditReasonForRejectionFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
@@ -191,7 +191,7 @@ const EditReasonForRejectionForm: React.FC = () => {
         />
       )}
 
-      <EditAdminFormData
+      <EditReasonForRejectionFormData
         nameReasonForRejectionFormData={
           titleNameReasonForRejectionState || NOT_REGISTER
         }
@@ -210,14 +210,14 @@ const EditReasonForRejectionForm: React.FC = () => {
 
           setMessageReasonForRejectionLocalState(e.target.value);
         }}
-        handleConfirmEpsCompanyFormData={handleConfirmUpdateData}
-        initialValuesEditAdminFormData={{
+        handleConfirmDataFormData={handleConfirmUpdateData}
+        initialValuesEditFormData={{
           "edit-reason-for-rejection-name":
             titleNameReasonForRejectionState || NOT_REGISTER,
           "edit-reason-for-rejection-message":
             messageReasonForRejectionState || NOT_REGISTER,
         }}
-        isSubmittingEditAdminFormData={isSubmittingUpdateData}
+        isSubmittingEditFormData={isSubmittingUpdateData}
         hasChangesFormData={hasChanges}
         handleButtonClickFormData={handleButtonClick}
       />

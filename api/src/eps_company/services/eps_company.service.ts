@@ -98,6 +98,26 @@ export class EpsCompanyService {
 
   async getAllEpsCompanies() {
     const allEpsCompanies = await this.epsCompanyRepository.find({
+      where: {
+        is_active: true,
+      },
+      order: {
+        id: 'ASC',
+      },
+    });
+
+    if (allEpsCompanies.length === 0) {
+      return new HttpException(
+        `No hay empresas registradas en la base de datos`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allEpsCompanies;
+    }
+  }
+
+  async getAllEpsCompaniesAdminDashboard() {
+    const allEpsCompanies = await this.epsCompanyRepository.find({
       order: {
         id: 'ASC',
       },

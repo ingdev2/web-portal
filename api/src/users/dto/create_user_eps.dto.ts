@@ -56,7 +56,7 @@ export class CreateUserEpsDto {
   })
   company_area: number;
 
-  @IsNotEmpty({
+  @IsOptional({
     message: '¡Por favor selecciona el método de autenticación!',
   })
   authentication_method: number;

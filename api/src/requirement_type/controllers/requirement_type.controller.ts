@@ -41,6 +41,12 @@ export class RequirementTypeController {
     return this.requirementTypeService.getAllRequirementType();
   }
 
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Get('/getAllAdminDashboard')
+  getAllRequirementTypeAdminDashboard() {
+    return this.requirementTypeService.getAllRequirementTypeAdminDashboard();
+  }
+
   @Get('/getReqType/:id')
   getRequirementTypeById(id: number) {
     return this.requirementTypeService.getRequirementTypeById(id);

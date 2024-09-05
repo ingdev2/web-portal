@@ -3,8 +3,8 @@ import { IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
 export class CreateReasonsForRejectionDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(10)
-  @MaxLength(50)
+  @MinLength(5)
+  @MaxLength(40)
   rejection_title: string;
 
   @IsNotEmpty()

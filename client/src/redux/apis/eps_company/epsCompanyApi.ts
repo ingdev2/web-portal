@@ -39,6 +39,10 @@ export const epsCompanyApi = createApi({
       query: () => "getAll",
     }),
 
+    getAllEpsCompanyAdminDashboard: builder.query<EpsCompany[], null>({
+      query: () => "getAllAdminDashboard",
+    }),
+
     getEpsCompanyById: builder.query<EpsCompany, number>({
       query: (id) => `getCompany/${id}`,
     }),
@@ -68,6 +72,7 @@ export const epsCompanyApi = createApi({
 export const {
   useCreateEpsCompanyMutation,
   useGetAllEpsCompanyQuery,
+  useGetAllEpsCompanyAdminDashboardQuery,
   useGetEpsCompanyByIdQuery,
   useUpdateEpsCompanyByIdMutation,
   useBanEpsCompanyMutation,

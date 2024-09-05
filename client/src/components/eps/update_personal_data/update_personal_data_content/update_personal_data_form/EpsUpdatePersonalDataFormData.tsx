@@ -352,6 +352,7 @@ const EpsUpdatePersonalDataFormData: React.FC<{
               value={authMethodUserEpsFormData}
               onChange={onChangeAuthMethodUserEpsFormData}
               style={{ textAlign: "start" }}
+              disabled
             >
               <Space size={"small"} direction="horizontal">
                 {epsAuthMethodsListFormData?.map((option: any) => (

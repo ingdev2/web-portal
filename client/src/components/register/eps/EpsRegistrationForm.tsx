@@ -194,6 +194,7 @@ const EpsRegistrationForm: React.FC = () => {
     gendersError,
     companyAreaData,
     companyAreaError,
+    epsAuthMethodState,
     authMethodData,
     authMethodError,
     epsAuthMethodsListLocalState,
@@ -231,7 +232,6 @@ const EpsRegistrationForm: React.FC = () => {
         email: epsEmailLocalState,
         cellphone: parseInt(fullCellphoneNumber, 10) || undefined,
         password: passwordUserEpsLocalState,
-        authentication_method: epsAuthMethodState,
       });
 
       let createUserEpsError = response.error;
@@ -312,7 +312,7 @@ const EpsRegistrationForm: React.FC = () => {
     try {
       setIsSubmittingGoToAllEps(true);
 
-      await router.replace("/admin/dashboard/all_eps", {
+      await router.replace("/admin/dashboard/all_eps_users", {
         scroll: false,
       });
     } catch (error) {

@@ -131,8 +131,8 @@ const EpsCompanyRegistrationForm: React.FC = () => {
     if (value) {
       const filteredOptions =
         allEpsCompanyData
-          ?.filter((company) =>
-            company.name.toUpperCase().includes(value.toUpperCase())
+          ?.filter((companies) =>
+            companies.name.toUpperCase().includes(value.toUpperCase())
           )
           .map((company) => ({
             value: company.name,

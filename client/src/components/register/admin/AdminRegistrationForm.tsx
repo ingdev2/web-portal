@@ -12,20 +12,28 @@ import CustomModalNoContent from "@/components/common/custom_modal_no_content/Cu
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { FcInfo } from "react-icons/fc";
 
-import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
+import {
+  setAuthMethodAdmin,
+  setErrorsAdmin,
+} from "@/redux/features/admin/adminSlice";
 
 import { useCreateAdminMutation } from "@/redux/apis/register/registerAdminApi";
 import { useGetAllPositionLevelsQuery } from "@/redux/apis/position_level/positionLevelApi";
 import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
+import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import { checkboxProcessingPersonalDataValidator } from "@/helpers/checkbox_validator/checkbox_validator";
+import { AuthenticationMethodEnum } from "@/../../api/src/utils/enums/authentication_method.enum";
 
 const AdminRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const adminAuthMethodState = useAppSelector(
+    (state) => state.admin.authentication_method
+  );
   const adminErrorsState = useAppSelector((state) => state.admin.errors);
 
   const [adminNameLocalState, setAdminNameLocalState] = useState("");
@@ -61,6 +69,10 @@ const AdminRegistrationForm: React.FC = () => {
   ] = useState("");
   const [passwordAdminLocalState, setPasswordAdminLocalState] = useState("");
 
+  const [
+    adminAuthMethodsListLocalState,
+    setAdminAuthMethodsListLocalState,
+  ]: any[] = useState([]);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
@@ -99,6 +111,13 @@ const AdminRegistrationForm: React.FC = () => {
     isFetching: companyAreaFetching,
     error: companyAreaError,
   } = useGetAllCompanyAreaQuery(null);
+
+  const {
+    data: authMethodData,
+    isLoading: authMethodLoading,
+    isFetching: authMethodFetching,
+    error: authMethodError,
+  } = useGetAllAuthMethodsQuery(null);
 
   const [
     createAdmin,
@@ -147,6 +166,25 @@ const AdminRegistrationForm: React.FC = () => {
       setShowErrorMessageAdmin(true);
       setPositionLevelListLocalState(positionLevelData);
     }
+    if (!authMethodLoading && !authMethodFetching && authMethodData) {
+      setAdminAuthMethodsListLocalState(authMethodData);
+    }
+    if (authMethodError) {
+      dispatch(
+        setErrorsAdmin("¡No se pudo obtener los métodos de autenticación!")
+      );
+      setShowErrorMessageAdmin(true);
+      setAdminAuthMethodsListLocalState(authMethodData);
+    }
+    if (adminAuthMethodsListLocalState.length > 0) {
+      const defaultMethod = adminAuthMethodsListLocalState.find(
+        (method: AuthMethod) => method.name === AuthenticationMethodEnum.EMAIL
+      );
+
+      if (defaultMethod) {
+        dispatch(setAuthMethodAdmin(defaultMethod.id));
+      }
+    }
   }, [
     idTypesData,
     idTypesError,
@@ -159,6 +197,10 @@ const AdminRegistrationForm: React.FC = () => {
     adminNameLocalState,
     adminLastNameLocalState,
     adminIdNumberLocalState,
+    adminAuthMethodState,
+    authMethodData,
+    authMethodError,
+    adminAuthMethodsListLocalState,
   ]);
 
   const handleCreateAdmin = () => {
@@ -453,6 +495,8 @@ const AdminRegistrationForm: React.FC = () => {
 
           return Promise.resolve();
         }}
+        adminAuthMethodValueDataForm={adminAuthMethodState}
+        adminAuthMethodListDataForm={adminAuthMethodsListLocalState}
       />
     </Col>
   );

@@ -117,6 +117,7 @@ const CustomDashboardLayout: React.FC<{
           style={{
             margin: "0px",
             padding: "0px",
+            paddingBottom: "7px",
           }}
         />
       </Sider>

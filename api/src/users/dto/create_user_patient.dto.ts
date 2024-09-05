@@ -73,7 +73,7 @@ export class CreateUserPatientDto {
   @IsNotEmpty()
   user_id_type: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   authentication_method: number;
 
   @IsOptional()

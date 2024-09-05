@@ -53,6 +53,8 @@ const AdminRegistrationFormData: React.FC<{
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
   handleOnChangeValidatorPasswordDataForm: (_: any, value: any) => void;
+  adminAuthMethodValueDataForm: number;
+  adminAuthMethodListDataForm: string[];
 }> = ({
   positionLevelLoadingDataForm,
   positionLevelValueDataForm,
@@ -87,14 +89,9 @@ const AdminRegistrationFormData: React.FC<{
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
   handleOnChangeValidatorPasswordDataForm,
+  adminAuthMethodValueDataForm,
+  adminAuthMethodListDataForm,
 }) => {
-  const adminAuthMethodListDataForm = [
-    { id: "email", name: "CORREO ELECTRÓNICO" },
-    { id: "phone", name: "CELULAR" },
-  ];
-
-  const adminDefaultValueAuthMethod: string = adminAuthMethodListDataForm[0].id;
-
   return (
     <Form
       id="create-admin-form"
@@ -533,7 +530,7 @@ const AdminRegistrationFormData: React.FC<{
             className="radio-select-auth-method"
             label="Método de autenticación del colaborador"
             tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
-            initialValue={adminDefaultValueAuthMethod}
+            initialValue={adminAuthMethodValueDataForm}
             style={{ marginBottom: "7px" }}
             rules={[
               {

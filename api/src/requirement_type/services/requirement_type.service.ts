@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateRequirementTypeDto } from '../dto/create-requirement_type.dto';
 import { UpdateRequirementTypeDto } from '../dto/update-requirement_type.dto';
 import { RequirementType } from '../entities/requirement_type.entity';
@@ -37,6 +37,26 @@ export class RequirementTypeService {
   // GET FUNTIONS //
 
   async getAllRequirementType() {
+    const allRequirementTypes = await this.requirementTypeRepository.find({
+      where: {
+        is_active: true,
+      },
+      order: {
+        id: 'ASC',
+      },
+    });
+
+    if (allRequirementTypes.length === 0) {
+      return new HttpException(
+        `No hay tipos de requerimientos registrados en la base de datos`,
+        HttpStatus.CONFLICT,
+      );
+    } else {
+      return allRequirementTypes;
+    }
+  }
+
+  async getAllRequirementTypeAdminDashboard() {
     const allRequirementTypes = await this.requirementTypeRepository.find({
       order: {
         id: 'ASC',
@@ -93,6 +113,7 @@ export class RequirementTypeService {
       const duplicateRequirementType =
         await this.requirementTypeRepository.findOne({
           where: {
+            id: Not(requirementTypeFound.id),
             name: requirementType.name,
           },
         });
