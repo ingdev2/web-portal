@@ -390,6 +390,7 @@ const PatientUpdatePersonalDataFormData: React.FC<{
               value={authMethodUserPatientFormData}
               onChange={onChangeAuthMethodUserPatientFormData}
               style={{ textAlign: "start" }}
+              disabled
             >
               <Space size={"small"} direction="horizontal">
                 {patientAuthMethodsListFormData?.map((option: any) => (
