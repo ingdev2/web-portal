@@ -70,6 +70,7 @@ export class AuthorizedFamiliarService {
       where: {
         id_number: familiar.id_number,
         patient_id: patientFound.id,
+        is_active: true,
       },
     });
 
@@ -120,19 +121,19 @@ export class AuthorizedFamiliarService {
       }
     }
 
-    const authenticationMethodFound =
-      await this.authenticationMethodRepository.findOne({
-        where: {
-          id: familiar.authentication_method,
-        },
-      });
+    // const authenticationMethodFound =
+    //   await this.authenticationMethodRepository.findOne({
+    //     where: {
+    //       id: familiar.authentication_method,
+    //     },
+    //   });
 
-    if (!authenticationMethodFound) {
-      return new HttpException(
-        `El método de autenticación ingresado no es válido.`,
-        HttpStatus.CONFLICT,
-      );
-    }
+    // if (!authenticationMethodFound) {
+    //   return new HttpException(
+    //     `El método de autenticación ingresado no es válido.`,
+    //     HttpStatus.CONFLICT,
+    //   );
+    // }
 
     const authenticationMethodEmailFound =
       await this.authenticationMethodRepository.findOne({
@@ -147,6 +148,20 @@ export class AuthorizedFamiliarService {
           name: AuthenticationMethodEnum.CELLPHONE,
         },
       });
+
+    if (!authenticationMethodEmailFound) {
+      return new HttpException(
+        `El método de autenticación "Email" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (!authenticationMethodCellphoneFound) {
+      return new HttpException(
+        `El método de autenticación "Célular" no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     if (
       familiar.authentication_method ===
@@ -195,7 +210,7 @@ export class AuthorizedFamiliarService {
         user_role: familiarWithAnotherPatient.user_role,
         patient_id: patientFound.id,
         patient_id_number: patientFound.id_number,
-        authentication_method: authenticationMethodFound.id,
+        authentication_method: authenticationMethodEmailFound.id,
         accept_terms: true,
       });
 
@@ -234,6 +249,7 @@ export class AuthorizedFamiliarService {
       user_role: roleFamiliarFound.id,
       patient_id: patientFound.id,
       patient_id_number: patientFound.id_number,
+      authentication_method: authenticationMethodEmailFound.id,
       accept_terms: true,
     });
 

@@ -53,7 +53,7 @@ export class CreateAuthorizedFamiliarDto {
   })
   user_id_type: number;
 
-  @IsNotEmpty({
+  @IsOptional({
     message: '¡Por favor selecciona el método de autenticación!',
   })
   authentication_method: number;

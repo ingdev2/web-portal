@@ -43,6 +43,7 @@ import {
 } from "@/helpers/checkbox_validator/checkbox_validator";
 
 import { CONTACT_PBX } from "@/utils/constants/constants";
+import { AuthenticationMethodEnum } from "@/../../api/src/utils/enums/authentication_method.enum";
 
 const ValidatePatientData: React.FC = () => {
   const { data: session, status } = useSession();
@@ -84,6 +85,9 @@ const ValidatePatientData: React.FC = () => {
   const residenceAddressPatientState = useAppSelector(
     (state) => state.patient.residence_address
   );
+  const patientAuthMethodState = useAppSelector(
+    (state) => state.patient.authentication_method
+  );
   const errorsPatientState = useAppSelector((state) => state.patient.errors);
 
   const {
@@ -98,7 +102,8 @@ const ValidatePatientData: React.FC = () => {
   const [showCustomCancelModal, setShowCustomCancelModal] = useState(false);
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
-  const [allAuthMethodsData, setAllAuthMethodsData]: any[] = useState([]);
+  const [allAuthMethodsListLocalState, setAllAuthMethodsListLocalState]: any[] =
+    useState([]);
 
   const [countryCode, setCountryCode] = useState(0);
   const [areaCode, setAreaCode] = useState("");
@@ -139,7 +144,7 @@ const ValidatePatientData: React.FC = () => {
       setShowErrorMessagePatient(true);
     }
     if (!authMethodLoading && !authMethodFetching && authMethodData) {
-      setAllAuthMethodsData(authMethodData);
+      setAllAuthMethodsListLocalState(authMethodData);
     }
     if (authMethodError) {
       dispatch(
@@ -148,7 +153,16 @@ const ValidatePatientData: React.FC = () => {
         )
       );
       setShowErrorMessagePatient(true);
-      setAllAuthMethodsData(authMethodData);
+      setAllAuthMethodsListLocalState(authMethodData);
+    }
+    if (allAuthMethodsListLocalState.length > 0) {
+      const defaultMethod = allAuthMethodsListLocalState.find(
+        (method: AuthMethod) => method.name === AuthenticationMethodEnum.EMAIL
+      );
+
+      if (defaultMethod) {
+        dispatch(setAuthMethodUserPatient(defaultMethod.id));
+      }
     }
   }, [
     status,
@@ -158,6 +172,8 @@ const ValidatePatientData: React.FC = () => {
     authMethodFetching,
     authMethodData,
     authMethodError,
+    allAuthMethodsListLocalState,
+    patientAuthMethodState,
     areaCode,
     phoneNumber,
     passwordUserPatientLocalState,
@@ -200,7 +216,6 @@ const ValidatePatientData: React.FC = () => {
         password: passwordUserPatientLocalState,
         affiliation_eps: affiliationEpsPatientState,
         residence_address: residenceAddressPatientState,
-        authentication_method: authMethodUserPatientLocalState,
       };
 
       if (countryCode && areaCode && phoneNumber) {
@@ -539,6 +554,7 @@ const ValidatePatientData: React.FC = () => {
                 name="radio-select-auth-method"
                 label="Método de autenticación"
                 tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
+                initialValue={patientAuthMethodState}
                 style={{ marginBottom: 22 }}
                 rules={[
                   {
@@ -549,14 +565,14 @@ const ValidatePatientData: React.FC = () => {
                 ]}
               >
                 <Radio.Group
-                  value={authMethodUserPatientLocalState}
-                  onChange={(e) =>
-                    setAuthMethodUserPatientLocalState(e.target.value)
-                  }
+                  id="radio-select-auth-method-patient"
+                  name="radio-select-auth-method-patient"
+                  className="radio-select-auth-method-patient"
                   style={{ textAlign: "start" }}
+                  disabled
                 >
                   <Space size={"small"} direction="horizontal">
-                    {allAuthMethodsData?.map((option: any) => (
+                    {allAuthMethodsListLocalState?.map((option: any) => (
                       <Radio key={option.id} value={option.id}>
                         {option.name}
                       </Radio>

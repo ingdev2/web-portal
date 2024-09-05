@@ -43,7 +43,6 @@ const AddRelativeFormData: React.FC<{
   validatorCellphoneInputFormData: (_: any, value: any) => Promise<void>;
   handleOnChangeFamiliarCellphoneDataForm: (e: any) => void;
   familiarAuthMethodValueDataForm: number;
-  handleOnChangeSelectAuthMethodDataForm: (e: any) => void;
   familiarAuthMethodListDataForm: string[];
   familiarWhatsappDataForm: number;
   validatorWhatsappInputFormData: (_: any, value: any) => Promise<void>;
@@ -88,7 +87,6 @@ const AddRelativeFormData: React.FC<{
   validatorCellphoneInputFormData,
   handleOnChangeFamiliarCellphoneDataForm,
   familiarAuthMethodValueDataForm,
-  handleOnChangeSelectAuthMethodDataForm,
   familiarAuthMethodListDataForm,
   familiarWhatsappDataForm,
   validatorWhatsappInputFormData,
@@ -438,6 +436,7 @@ const AddRelativeFormData: React.FC<{
         name="radio-select-auth-method"
         label="Método de autenticación del familiar"
         tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
+        initialValue={familiarAuthMethodValueDataForm}
         style={{ marginBottom: "22px" }}
         rules={[
           {
@@ -447,9 +446,11 @@ const AddRelativeFormData: React.FC<{
         ]}
       >
         <Radio.Group
-          value={familiarAuthMethodValueDataForm}
-          onChange={handleOnChangeSelectAuthMethodDataForm}
+          id="radio-select-auth-method-familiar"
+          name="radio-select-auth-method-familiar"
+          className="radio-select-auth-method-familiar"
           style={{ textAlign: "start" }}
+          disabled
         >
           <Space size={"small"} direction="horizontal">
             {familiarAuthMethodListDataForm?.map((option: any) => (

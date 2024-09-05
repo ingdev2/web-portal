@@ -120,6 +120,7 @@ export class AdminsService {
     const insertRoleAdminSuperAdmin = await this.adminRepository.create({
       ...superAdmin,
       admin_role: roleSuperAdminFound.id,
+      authentication_method: authenticationMethodEmailFound.id,
     });
 
     const adminSuperAdminWithRole = await this.adminRepository.save(

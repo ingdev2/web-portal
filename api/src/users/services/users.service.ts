@@ -283,19 +283,19 @@ export class UsersService {
       );
     }
 
-    const authenticationMethodFound =
-      await this.authenticationMethodRepository.findOne({
-        where: {
-          id: userPatient.authentication_method,
-        },
-      });
+    // const authenticationMethodFound =
+    //   await this.authenticationMethodRepository.findOne({
+    //     where: {
+    //       id: userPatient.authentication_method,
+    //     },
+    //   });
 
-    if (!authenticationMethodFound) {
-      return new HttpException(
-        `El método de autenticación ingresado no es válido.`,
-        HttpStatus.CONFLICT,
-      );
-    }
+    // if (!authenticationMethodFound) {
+    //   return new HttpException(
+    //     `El método de autenticación ingresado no es válido.`,
+    //     HttpStatus.CONFLICT,
+    //   );
+    // }
 
     const userPatientEmailFound = await this.userRepository.findOne({
       where: {
@@ -400,7 +400,7 @@ export class UsersService {
     const insertRoleUserPatient = await this.userRepository.create({
       ...userPatient,
       user_role: rolePatientFound.id,
-      authentication_method: authenticationMethodFound.id,
+      authentication_method: authenticationMethodEmailFound.id,
       accept_terms: true,
     });
 
@@ -491,14 +491,14 @@ export class UsersService {
       );
     }
 
-    const authenticationMethodFound =
+    const authenticationEmailMethodFound =
       await this.authenticationMethodRepository.findOne({
         where: {
           name: AuthenticationMethodEnum.EMAIL,
         },
       });
 
-    if (!authenticationMethodFound) {
+    if (!authenticationEmailMethodFound) {
       return new HttpException(
         `El método de autenticación "Email" no existe.`,
         HttpStatus.NOT_FOUND,
@@ -518,7 +518,7 @@ export class UsersService {
     const insertRoleUserEps = await this.userRepository.create({
       ...userEps,
       user_role: roleEpsFound.id,
-      authentication_method: authenticationMethodFound.id,
+      authentication_method: authenticationEmailMethodFound.id,
       accept_terms: true,
     });
 

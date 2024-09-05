@@ -15,10 +15,11 @@ import { FcInfo } from "react-icons/fc";
 
 import { setIdUserPatient } from "@/redux/features/patient/patientSlice";
 import {
+  setIdTypesUserFamiliar,
+  setAuthMethodUserFamiliar,
   setFileCopyFamiliarCitizenshipCard,
   removeFileCopyFamiliarCitizenshipCard,
   setErrorsUserFamiliar,
-  setIdTypesUserFamiliar,
 } from "@/redux/features/familiar/familiarSlice";
 
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
@@ -34,6 +35,7 @@ import {
   checkboxProcessingPersonalDataValidator,
   checkboxMessagesValidator,
 } from "@/helpers/checkbox_validator/checkbox_validator";
+import { AuthenticationMethodEnum } from "@/../../api/src/utils/enums/authentication_method.enum";
 
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +51,9 @@ const AddRelativeForm: React.FC = () => {
   );
   const idTypeFamiliarState = useAppSelector(
     (state) => state.familiar.user_id_type
+  );
+  const familiarAuthMethodState = useAppSelector(
+    (state) => state.familiar.authentication_method
   );
   const userFamiliarErrorsState = useAppSelector(
     (state) => state.familiar.errors
@@ -93,8 +98,6 @@ const AddRelativeForm: React.FC = () => {
     familiarRelationshipNameLocalState,
     setFamiliarRelationshipNameLocalState,
   ] = useState("");
-  const [familiarAuthMethodLocalState, setFamiliarAuthMethodLocalState] =
-    useState(0);
   const [
     familiarAuthMethodsListLocalState,
     setFamiliarAuthMethodsListLocalState,
@@ -218,7 +221,14 @@ const AddRelativeForm: React.FC = () => {
       setShowErrorMessageUserFamiliar(true);
       setFamiliarAuthMethodsListLocalState(authMethodData);
     }
-    if (familiarNameLocalState || familiarLastNameLocalState) {
+    if (familiarAuthMethodsListLocalState.length > 0) {
+      const defaultMethod = familiarAuthMethodsListLocalState.find(
+        (method: AuthMethod) => method.name === AuthenticationMethodEnum.EMAIL
+      );
+
+      if (defaultMethod) {
+        dispatch(setAuthMethodUserFamiliar(defaultMethod.id));
+      }
     }
   }, [
     idUserPatientState,
@@ -227,6 +237,8 @@ const AddRelativeForm: React.FC = () => {
     idTypesError,
     gendersData,
     gendersError,
+    familiarAuthMethodState,
+    familiarAuthMethodsListLocalState,
     authMethodData,
     authMethodError,
     relationshipTypesData,
@@ -290,7 +302,6 @@ const AddRelativeForm: React.FC = () => {
           user_gender: familiarGenderLocalState,
           email: familiarEmailLocalState,
           cellphone: parseInt(fullCellphoneNumber, 10) || undefined,
-          authentication_method: familiarAuthMethodLocalState,
           rel_with_patient: familiarRelationshipLocalState,
           whatsapp: parseInt(fullWhatsAppNumber, 10) || undefined,
           ...responses,
@@ -618,10 +629,7 @@ const AddRelativeForm: React.FC = () => {
           familiarCellphoneDataForm={parseInt(fullCellphoneNumber, 10)}
           validatorCellphoneInputFormData={validatorCellphoneInput}
           handleOnChangeFamiliarCellphoneDataForm={handlePhoneInputChange}
-          familiarAuthMethodValueDataForm={familiarAuthMethodLocalState}
-          handleOnChangeSelectAuthMethodDataForm={(e) =>
-            setFamiliarAuthMethodLocalState(e.target.value)
-          }
+          familiarAuthMethodValueDataForm={familiarAuthMethodState}
           familiarAuthMethodListDataForm={familiarAuthMethodsListLocalState}
           familiarWhatsappDataForm={parseInt(fullWhatsAppNumber, 10)}
           validatorWhatsappInputFormData={validatorWhatsappInput}
