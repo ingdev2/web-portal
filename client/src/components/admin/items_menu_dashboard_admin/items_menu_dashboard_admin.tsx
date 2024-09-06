@@ -12,6 +12,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { IoIosBusiness } from "react-icons/io";
 import { BiCommentX } from "react-icons/bi";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
+import { SiGoogleclassroom } from "react-icons/si";
 
 import {
   setIdNumberAdmin,
@@ -359,6 +360,19 @@ export const useMenuItems = () => {
                     ItemNames.SUB_REQ_TYPES_PARAMS,
                     ItemKeys.SUB_REQ_TYPES_PARAMS_KEY,
                     <VscGitPullRequestGoToChanges size={15} />
+                  )
+                : null,
+              isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
+              isAdminInCompanyAreas(companyAreaIdAdminState, [
+                systemsCompanyAreaData.id,
+              ]) &&
+              isAdminInPositionLevel(positionLevelIdAdminState, [
+                directorPositionLevelData.id,
+              ])
+                ? getItem(
+                    ItemNames.SUB_COMPANY_AREAS_PARAMS,
+                    ItemKeys.SUB_COMPANY_AREAS_PARAMS_KEY,
+                    <SiGoogleclassroom size={15} />
                   )
                 : null,
             ].filter(Boolean)

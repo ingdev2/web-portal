@@ -3,39 +3,37 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import EditTypeOfRequestFormData from "./EditTypeOfRequestFormData";
+import EditCompanyAreaFormData from "./EditCompanyAreaFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
 import {
-  setIdTypeOfMedicalRequest,
-  setNameTypeOfMedicalRequest,
-  setErrorsTypeOfMedicalRequest,
-} from "@/redux/features/medical_req/type_of_medical_request/typeOfMedicalRequestSlice";
+  setIdCompanyArea,
+  setNameCompanyArea,
+  setErrorsCompanyArea,
+} from "@/redux/features/company_area/companyAreaSlice";
 
 import {
-  useGetMedicalReqTypeByIdQuery,
-  useUpdateMedicalReqTypeByIdMutation,
-} from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
+  useGetCompanyAreaByIdQuery,
+  useUpdateCompanyAreaByIdMutation,
+} from "@/redux/apis/company_area/companyAreaApi";
 
-const EditTypeOfRequestForm: React.FC = () => {
+const EditCompanyAreaForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
 
-  const idTypeOfRequestState = useAppSelector(
-    (state) => state.typeOfMedicalRequest.id
-  );
-  const nameTypeOfRequestState = useAppSelector(
-    (state) => state.typeOfMedicalRequest.name
+  const idCompanyAreaState = useAppSelector((state) => state.companyArea.id);
+  const nameCompanyAreaState = useAppSelector(
+    (state) => state.companyArea.name
   );
 
-  const reasonForRejectionErrorsState = useAppSelector(
-    (state) => state.typeOfMedicalRequest.errors
+  const companyAreaErrorsState = useAppSelector(
+    (state) => state.companyArea.errors
   );
 
   const [hasChanges, setHasChanges] = useState(false);
 
-  const [nameTypeOfRequestLocalState, setNameTypeOfRequestLocalState] =
+  const [nameCompanyAreaLocalState, setNameCompanyAreaLocalState] =
     useState("");
 
   const [isSubmittingUpdateData, setIsSubmittingUpdateData] = useState(false);
@@ -44,34 +42,34 @@ const EditTypeOfRequestForm: React.FC = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const {
-    data: typeOfRequestData,
-    isLoading: typeOfRequestLoading,
-    isFetching: typeOfRequestFetching,
-    error: typeOfRequestError,
-  } = useGetMedicalReqTypeByIdQuery(idTypeOfRequestState);
+    data: companyAreaData,
+    isLoading: companyAreaLoading,
+    isFetching: companyAreaFetching,
+    error: companyAreaError,
+  } = useGetCompanyAreaByIdQuery(idCompanyAreaState);
 
   const [
-    updateTypeOfRequestData,
+    updateCompanyAreaData,
     {
-      data: updateTypeOfRequestMainData,
-      isLoading: updateTypeOfRequestLoading,
-      isSuccess: updateTypeOfRequestSuccess,
-      isError: updateTypeOfRequestError,
+      data: updateCompanyAreaMainData,
+      isLoading: updateCompanyAreaLoading,
+      isSuccess: updateCompanyAreaSuccess,
+      isError: updateCompanyAreaError,
     },
-  ] = useUpdateMedicalReqTypeByIdMutation({
-    fixedCacheKey: "updateTypeOfRequestData",
+  ] = useUpdateCompanyAreaByIdMutation({
+    fixedCacheKey: "updateCompanyAreaData",
   });
 
   useEffect(() => {
     if (
-      typeOfRequestData &&
-      !idTypeOfRequestState &&
-      !typeOfRequestLoading &&
-      !typeOfRequestFetching
+      companyAreaData &&
+      !idCompanyAreaState &&
+      !companyAreaLoading &&
+      !companyAreaFetching
     ) {
-      dispatch(setIdTypeOfMedicalRequest(typeOfRequestData.id));
+      dispatch(setIdCompanyArea(companyAreaData.id));
     }
-  }, [typeOfRequestData, idTypeOfRequestState]);
+  }, [companyAreaData, idCompanyAreaState]);
 
   const handleConfirmUpdateData = async (
     e: React.FormEvent<HTMLFormElement>
@@ -79,10 +77,10 @@ const EditTypeOfRequestForm: React.FC = () => {
     try {
       setIsSubmittingUpdateData(true);
 
-      const response: any = await updateTypeOfRequestData({
-        id: idTypeOfRequestState,
-        updateTypeOfRequest: {
-          name: nameTypeOfRequestLocalState || nameTypeOfRequestState,
+      const response: any = await updateCompanyAreaData({
+        id: idCompanyAreaState,
+        updateCompanyArea: {
+          name: nameCompanyAreaLocalState || nameCompanyAreaState,
         },
       });
 
@@ -99,21 +97,21 @@ const EditTypeOfRequestForm: React.FC = () => {
         const validationDataMessage = editDataValidationData;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsTypeOfMedicalRequest(errorMessage[0]));
+          dispatch(setErrorsCompanyArea(errorMessage[0]));
 
           setShowErrorMessage(true);
         } else if (typeof errorMessage === "string") {
-          dispatch(setErrorsTypeOfMedicalRequest(errorMessage));
+          dispatch(setErrorsCompanyArea(errorMessage));
 
           setShowErrorMessage(true);
         }
 
         if (Array.isArray(validationDataMessage)) {
-          dispatch(setErrorsTypeOfMedicalRequest(validationDataMessage[0]));
+          dispatch(setErrorsCompanyArea(validationDataMessage[0]));
 
           setShowErrorMessage(true);
         } else if (typeof validationDataMessage === "string") {
-          dispatch(setErrorsTypeOfMedicalRequest(validationDataMessage));
+          dispatch(setErrorsCompanyArea(validationDataMessage));
 
           setShowErrorMessage(true);
         }
@@ -123,9 +121,7 @@ const EditTypeOfRequestForm: React.FC = () => {
         setHasChanges(false);
 
         dispatch(
-          setNameTypeOfMedicalRequest(
-            nameTypeOfRequestLocalState || nameTypeOfRequestState
-          )
+          setNameCompanyArea(nameCompanyAreaLocalState || nameCompanyAreaState)
         );
 
         setSuccessMessage(
@@ -137,14 +133,14 @@ const EditTypeOfRequestForm: React.FC = () => {
       console.error(error);
     } finally {
       setIsSubmittingUpdateData(false);
-      setNameTypeOfRequestLocalState("");
+      setNameCompanyAreaLocalState("");
     }
   };
 
   const handleButtonClick = () => {
     setSuccessMessage("");
     setShowSuccessMessage(false);
-    dispatch(setErrorsTypeOfMedicalRequest([]));
+    dispatch(setErrorsCompanyArea([]));
     setShowErrorMessage(false);
   };
 
@@ -154,8 +150,7 @@ const EditTypeOfRequestForm: React.FC = () => {
         <CustomMessage
           typeMessage="error"
           message={
-            reasonForRejectionErrorsState?.toString() ||
-            "¡Error en la petición!"
+            companyAreaErrorsState?.toString() || "¡Error en la petición!"
           }
         />
       )}
@@ -167,16 +162,16 @@ const EditTypeOfRequestForm: React.FC = () => {
         />
       )}
 
-      <EditTypeOfRequestFormData
-        nameTypeOfRequestFormData={nameTypeOfRequestState || NOT_REGISTER}
-        onChangeNameTypeOfRequestFormData={(e) => {
+      <EditCompanyAreaFormData
+        nameCompanyAreaFormData={nameCompanyAreaState || NOT_REGISTER}
+        onChangeNameCompanyAreaFormData={(e) => {
           setHasChanges(true);
 
-          setNameTypeOfRequestLocalState(e.target.value.toUpperCase());
+          setNameCompanyAreaLocalState(e.target.value.toUpperCase());
         }}
         handleConfirmDataFormData={handleConfirmUpdateData}
         initialValuesEditFormData={{
-          "edit-type-of-request-name": nameTypeOfRequestState || NOT_REGISTER,
+          "edit-company-area-name": nameCompanyAreaState || NOT_REGISTER,
         }}
         isSubmittingEditFormData={isSubmittingUpdateData}
         hasChangesFormData={hasChanges}
@@ -186,4 +181,4 @@ const EditTypeOfRequestForm: React.FC = () => {
   );
 };
 
-export default EditTypeOfRequestForm;
+export default EditCompanyAreaForm;

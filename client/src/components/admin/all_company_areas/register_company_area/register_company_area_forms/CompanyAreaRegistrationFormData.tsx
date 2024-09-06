@@ -6,28 +6,28 @@ import { AutoComplete, Button, Col, Form, Input, Row } from "antd";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import { titleStyleCss } from "@/theme/text_styles";
 
-const TypeOfRequestRegistrationFormData: React.FC<{
+const CompanyAreaRegistrationFormData: React.FC<{
   handleCreateDataFormData: () => void;
-  typeOfRequestNameFormData: string;
-  handleOnChangeTypeOfRequestNameFormData: (e: any) => void;
-  handleSearchNameTypeOfRequestFormData: (e: any) => void;
-  optionsTypeOfRequestNameFormData: any[];
+  companyAreaNameFormData: string;
+  handleOnChangeCompanyAreaNameFormData: (e: any) => void;
+  handleSearchNameCompanyAreaFormData: (e: any) => void;
+  optionsCompanyAreasNameFormData: any[];
   buttonSubmitFormLoadingFormData: boolean;
   handleButtonSubmitFormData: () => void;
 }> = ({
   handleCreateDataFormData,
-  typeOfRequestNameFormData,
-  handleOnChangeTypeOfRequestNameFormData,
-  handleSearchNameTypeOfRequestFormData,
-  optionsTypeOfRequestNameFormData,
+  companyAreaNameFormData,
+  handleOnChangeCompanyAreaNameFormData,
+  handleSearchNameCompanyAreaFormData,
+  optionsCompanyAreasNameFormData,
   buttonSubmitFormLoadingFormData,
   handleButtonSubmitFormData,
 }) => {
   return (
     <Form
-      id="create-type-of-request-form"
-      name="create-type-of-request-form"
-      className="create-type-of-request-form"
+      id="create-company-area-form"
+      name="create-company-area-form"
+      className="create-company-area-form"
       onFinish={handleCreateDataFormData}
       initialValues={{ remember: false }}
       autoComplete="false"
@@ -39,21 +39,21 @@ const TypeOfRequestRegistrationFormData: React.FC<{
       }}
     >
       <h2
-        className="title-create-type-of-request-form"
+        className="title-create-company-area-form"
         style={{
           ...titleStyleCss,
           textAlign: "center",
           marginBottom: "22px",
         }}
       >
-        Crear tipo de solicitud
+        Crear área de empresa
       </h2>
 
       <Row gutter={24}>
         <Col span={24}>
           <Form.Item
-            name="new-type-of-request-name"
-            label="Nombre de tipo de solicitud:"
+            name="new-company-area-name"
+            label="Nombre de área de empresa:"
             style={{ marginBottom: "13px" }}
             normalize={(value) => {
               if (!value) return "";
@@ -67,15 +67,15 @@ const TypeOfRequestRegistrationFormData: React.FC<{
             rules={[
               {
                 required: true,
-                message: "¡Por favor ingrese el nombre del tipo de solicitud!",
+                message: "¡Por favor ingrese el nombre del área de empresa!",
               },
               {
                 min: 5,
                 message: "El nombre debe tener al menos 5 caracteres",
               },
               {
-                max: 40,
-                message: "El nombre no puede tener más de 40 caracteres",
+                max: 50,
+                message: "El nombre no puede tener más de 50 caracteres",
               },
               {
                 pattern: /^[A-ZÁÉÍÓÚÑ\s]*$/,
@@ -85,13 +85,13 @@ const TypeOfRequestRegistrationFormData: React.FC<{
             ]}
           >
             <AutoComplete
-              id="name-type-of-request"
-              options={optionsTypeOfRequestNameFormData}
+              id="name-company-area"
+              options={optionsCompanyAreasNameFormData}
               style={{ width: "100%" }}
-              onSearch={handleSearchNameTypeOfRequestFormData}
-              placeholder="Nombre de tipo de solicitud"
-              value={typeOfRequestNameFormData}
-              onChange={handleOnChangeTypeOfRequestNameFormData}
+              onSearch={handleSearchNameCompanyAreaFormData}
+              placeholder="Nombre de área de empresa"
+              value={companyAreaNameFormData}
+              onChange={handleOnChangeCompanyAreaNameFormData}
               filterOption={false}
             >
               <Input type="text" autoComplete="off" />
@@ -113,10 +113,10 @@ const TypeOfRequestRegistrationFormData: React.FC<{
               color: "#f2f2f2",
             }}
             htmlType="submit"
-            className="create-type-of-request-form-button"
+            className="create-company-area-form-button"
             onClick={handleButtonSubmitFormData}
           >
-            Crear tipo de solicitud
+            Crear área de empresa
           </Button>
         )}
       </Form.Item>
@@ -124,4 +124,4 @@ const TypeOfRequestRegistrationFormData: React.FC<{
   );
 };
 
-export default TypeOfRequestRegistrationFormData;
+export default CompanyAreaRegistrationFormData;

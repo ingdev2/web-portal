@@ -14,6 +14,7 @@ export enum ItemNames {
   SUB_EPS_COMPANIES_PARAMS = "Empresas EPS",
   SUB_REASONS_FOR_REJECTION_PARAMS = "Motivos de rechazo",
   SUB_REQ_TYPES_PARAMS = "Tipos de req.",
+  SUB_COMPANY_AREAS_PARAMS = "Áreas de empresa",
 }
 
 export enum ItemKeys {
@@ -32,4 +33,5 @@ export enum ItemKeys {
   SUB_EPS_COMPANIES_PARAMS_KEY = "all_eps_companies",
   SUB_REASONS_FOR_REJECTION_PARAMS_KEY = "all_reasons_for_rejection",
   SUB_REQ_TYPES_PARAMS_KEY = "all_types_of_requests",
+  SUB_COMPANY_AREAS_PARAMS_KEY = "all_company_areas",
 }

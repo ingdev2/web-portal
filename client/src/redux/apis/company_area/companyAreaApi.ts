@@ -56,13 +56,13 @@ export const companyAreaApi = createApi({
 
     updateCompanyAreaById: builder.mutation<
       any,
-      { id: number; newName: string }
+      { id: number; updateCompanyArea: Partial<CompanyArea> }
     >({
-      query: ({ id, newName }) => ({
+      query: ({ id, updateCompanyArea }) => ({
         url: `update/${id}`,
         method: "PATCH",
         params: { id },
-        body: { newName },
+        body: updateCompanyArea,
       }),
     }),
   }),

@@ -12,7 +12,7 @@ import CustomModalNoContent from "@/components/common/custom_modal_no_content/Cu
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { FcInfo } from "react-icons/fc";
 
-import { setErrorsTypeOfMedicalRequest } from "@/redux/features/medical_req/type_of_medical_request/typeOfMedicalRequest";
+import { setErrorsTypeOfMedicalRequest } from "@/redux/features/medical_req/type_of_medical_request/typeOfMedicalRequestSlice";
 
 import {
   useCreateMedicalReqTypeMutation,
@@ -223,7 +223,7 @@ const TypeOfRequestRegistrationForm: React.FC = () => {
 
       <TypeOfRequestRegistrationFormData
         handleCreateDataFormData={handleCreateTypeOfRequest}
-        idTypeRequestNameFormData={typeOfRequestNameLocalState}
+        typeOfRequestNameFormData={typeOfRequestNameLocalState}
         handleOnChangeTypeOfRequestNameFormData={(e) => {
           setTypeOfRequestNameLocalState(e.toUpperCase());
         }}

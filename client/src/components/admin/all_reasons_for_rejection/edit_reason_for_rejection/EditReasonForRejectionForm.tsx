@@ -11,7 +11,7 @@ import {
   setRejectionTitleReasonForRejection,
   setReasonMessageReasonForRejection,
   setErrorsReasonForRejection,
-} from "@/redux/features/medical_req/reason_for_rejection/reasonForRejection";
+} from "@/redux/features/medical_req/reason_for_rejection/reasonForRejectionSlice";
 
 import {
   useGetMedicalReqReasonsForRejectionByIdQuery,

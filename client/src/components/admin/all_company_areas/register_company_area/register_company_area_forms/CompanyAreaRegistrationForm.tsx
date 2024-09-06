@@ -5,34 +5,27 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Col } from "antd";
-import ReasonForRejectionRegistrationFormData from "./ReasonForRejectionRegistrationFormData";
+import CompanyAreaRegistrationFormData from "./CompanyAreaRegistrationFormData";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
 import { FcInfo } from "react-icons/fc";
 
-import { setErrorsReasonForRejection } from "@/redux/features/medical_req/reason_for_rejection/reasonForRejectionSlice";
+import { setErrorsCompanyArea } from "@/redux/features/company_area/companyAreaSlice";
 
 import {
-  useCreateMedicalReqReasonForRejectionMutation,
-  useGetAllMedicalReqReasonsForRejectionQuery,
-} from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
+  useCreateCompanyAreaMutation,
+  useGetAllCompanyAreaQuery,
+} from "@/redux/apis/company_area/companyAreaApi";
 
-const ReasonForRejectionRegistrationForm: React.FC = () => {
+const CompanyAreaRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const [
-    reasonForRejectionNameLocalState,
-    setReasonForRejectionNameLocalState,
-  ] = useState("");
+  const [companyAreaNameLocalState, setCompanyAreaNameLocalState] =
+    useState("");
   const [options, setOptions] = useState<any[]>([]);
-
-  const [
-    reasonForRejectionMessageLocalState,
-    setReasonForRejectionMessageLocalState,
-  ] = useState("");
 
   const [modalIsOpenConfirm, setModalIsOpenConfirm] = useState(false);
   const [modalIsOpenSuccess, setModalIsOpenSuccess] = useState(false);
@@ -43,30 +36,30 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
   const [isSubmittingGoToAllData, setIsSubmittingGoToAllData] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
-  const reasonForRejectionErrorsState = useAppSelector(
-    (state) => state.reasonForRejection.errors
+  const companyAreaErrorsState = useAppSelector(
+    (state) => state.companyArea.errors
   );
 
   const [
-    createReasonForRejection,
+    createCompanyArea,
     {
-      data: reasonForRejectionData,
-      isLoading: reasonForRejectionLoading,
-      isSuccess: reasonForRejectionSuccess,
-      isError: reasonForRejectionError,
+      data: companyAreaData,
+      isLoading: companyAreaLoading,
+      isSuccess: companyAreaSuccess,
+      isError: companyAreaError,
     },
-  ] = useCreateMedicalReqReasonForRejectionMutation({
-    fixedCacheKey: "createReasonForRejection",
+  ] = useCreateCompanyAreaMutation({
+    fixedCacheKey: "createCompanyArea",
   });
 
   const {
-    data: allReasonsForRejectionData,
-    isLoading: allReasonsForRejectionLoading,
-    isFetching: allReasonsForRejectionFetching,
-    error: allReasonsForRejectionError,
-  } = useGetAllMedicalReqReasonsForRejectionQuery(null);
+    data: allCompanyAreasData,
+    isLoading: allCompanyAreasLoading,
+    isFetching: allCompanyAreasFetching,
+    error: allCompanyAreasError,
+  } = useGetAllCompanyAreaQuery(null);
 
-  const handleCreateReasonForRejection = () => {
+  const handleCreateCompanyArea = () => {
     try {
       setModalIsOpenConfirm(true);
     } catch (error) {
@@ -82,9 +75,8 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
     try {
       setIsSubmittingNewData(true);
 
-      const response: any = await createReasonForRejection({
-        rejection_title: reasonForRejectionNameLocalState,
-        reason_message: reasonForRejectionMessageLocalState,
+      const response: any = await createCompanyArea({
+        name: companyAreaNameLocalState,
       });
 
       let createDataError = response.error;
@@ -98,21 +90,21 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
         const validationDataMessage = createValidationData;
 
         if (Array.isArray(errorMessage)) {
-          dispatch(setErrorsReasonForRejection(errorMessage[0]));
+          dispatch(setErrorsCompanyArea(errorMessage[0]));
 
           setShowErrorMessage(true);
         } else if (typeof errorMessage === "string") {
-          dispatch(setErrorsReasonForRejection(errorMessage));
+          dispatch(setErrorsCompanyArea(errorMessage));
 
           setShowErrorMessage(true);
         }
 
         if (Array.isArray(validationDataMessage)) {
-          dispatch(setErrorsReasonForRejection(validationDataMessage[0]));
+          dispatch(setErrorsCompanyArea(validationDataMessage[0]));
 
           setShowErrorMessage(true);
         } else if (typeof validationDataMessage === "string") {
-          dispatch(setErrorsReasonForRejection(validationDataMessage));
+          dispatch(setErrorsCompanyArea(validationDataMessage));
 
           setShowErrorMessage(true);
         }
@@ -132,12 +124,12 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
   const handleSearch = (value: string) => {
     if (value) {
       const filteredOptions =
-        allReasonsForRejectionData
-          ?.filter((reasons) =>
-            reasons.rejection_title.toUpperCase().includes(value.toUpperCase())
+        allCompanyAreasData
+          ?.filter((types) =>
+            types.name.toUpperCase().includes(value.toUpperCase())
           )
-          .map((reason) => ({
-            value: reason.rejection_title,
+          .map((type) => ({
+            value: type.name,
           })) || [];
 
       setOptions(filteredOptions);
@@ -150,7 +142,7 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
     try {
       setIsSubmittingGoToAllData(true);
 
-      await router.replace("/admin/dashboard/all_reasons_for_rejection", {
+      await router.replace("/admin/dashboard/all_company_areas", {
         scroll: false,
       });
     } catch (error) {
@@ -162,7 +154,7 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsReasonForRejection([]));
+    dispatch(setErrorsCompanyArea([]));
     setShowErrorMessage(false);
   };
 
@@ -182,14 +174,14 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
     >
       {modalIsOpenConfirm && (
         <CustomModalTwoOptions
-          key={"custom-confirm-modal-create-reason-for-rejection"}
+          key={"custom-confirm-modal-create-company-area"}
           openCustomModalState={modalIsOpenConfirm}
           iconCustomModal={<FcInfo size={77} />}
-          titleCustomModal="¿Deseas crear un nuevo motivo de rechazo de solicitud?"
+          titleCustomModal="¿Deseas crear una nueva área de empresa?"
           subtitleCustomModal={
             <p>
-              Se creará el motivo de rechazo con nombre:&nbsp;
-              <b>{reasonForRejectionNameLocalState}.</b>
+              Se creará una nueva área de empresa con nombre:&nbsp;
+              <b>{companyAreaNameLocalState}.</b>
             </p>
           }
           handleCancelCustomModal={() => setModalIsOpenConfirm(false)}
@@ -201,20 +193,20 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
 
       {modalIsOpenSuccess && (
         <CustomModalNoContent
-          key={"custom-success-modal-create-reason-for-rejection"}
+          key={"custom-success-modal-create-company-area"}
           widthCustomModalNoContent={"54%"}
           openCustomModalState={modalIsOpenSuccess}
           closableCustomModal={false}
           maskClosableCustomModal={false}
           contentCustomModal={
             <CustomResultOneButton
-              key={"reason-for-rejection-created-custom-result"}
+              key={"company-area-created-custom-result"}
               statusTypeResult={"success"}
-              titleCustomResult="¡Motivo de rechazo creado correctamente!"
-              subtitleCustomResult="El motivo ha sido agregado a la lista de motivos de rechazo de solicitud."
+              titleCustomResult="¡Área de empresa creada correctamente!"
+              subtitleCustomResult="El área ha sido agregada a la lista de áreas de una empresa."
               handleClickCustomResult={handleGoToAllData}
               isSubmittingButton={isSubmittingGoToAllData}
-              textButtonCustomResult="Regresar a lista de motivos de rechazo"
+              textButtonCustomResult="Regresar a lista de áreas de empresa"
             />
           }
         />
@@ -224,31 +216,26 @@ const ReasonForRejectionRegistrationForm: React.FC = () => {
         <CustomMessage
           typeMessage="error"
           message={
-            reasonForRejectionErrorsState?.toString() ||
-            "¡Error en la petición!"
+            companyAreaErrorsState?.toString() || "¡Error en la petición!"
           }
         />
       )}
 
-      <ReasonForRejectionRegistrationFormData
-        handleCreateUserEpsCompanyDataForm={handleCreateReasonForRejection}
-        reasonForRejectionNameDataForm={reasonForRejectionNameLocalState}
-        handleOnChangeReasonForRejectionNameDataForm={(e) => {
-          setReasonForRejectionNameLocalState(e.toUpperCase());
+      <CompanyAreaRegistrationFormData
+        handleCreateDataFormData={handleCreateCompanyArea}
+        companyAreaNameFormData={companyAreaNameLocalState}
+        handleOnChangeCompanyAreaNameFormData={(e) => {
+          setCompanyAreaNameLocalState(e.toUpperCase());
         }}
-        handleSearchNameReasonForRejectionDataForm={handleSearch}
-        optionsReasonForRejectionNameDataForm={options}
-        reasonForRejectionMessageDataForm={reasonForRejectionMessageLocalState}
-        handleOnChangeReasonForRejectionMessageDataForm={(e) => {
-          setReasonForRejectionMessageLocalState(e.target.value);
-        }}
-        buttonSubmitFormLoadingDataForm={
+        handleSearchNameCompanyAreaFormData={handleSearch}
+        optionsCompanyAreasNameFormData={options}
+        buttonSubmitFormLoadingFormData={
           isSubmittingConfirmModal && !modalIsOpenConfirm
         }
-        handleButtonSubmitFormDataForm={handleButtonClick}
+        handleButtonSubmitFormData={handleButtonClick}
       />
     </Col>
   );
 };
 
-export default ReasonForRejectionRegistrationForm;
+export default CompanyAreaRegistrationForm;
