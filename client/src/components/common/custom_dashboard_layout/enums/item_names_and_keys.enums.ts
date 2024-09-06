@@ -13,7 +13,7 @@ export enum ItemNames {
   ITEM_PARAMETRIZATION = "Parametrización",
   SUB_EPS_COMPANIES_PARAMS = "Empresas EPS",
   SUB_REASONS_FOR_REJECTION_PARAMS = "Motivos de rechazo",
-  SUB_REQ_TYPES_PARAMS = "Tipos de req.",
+  SUB_REQ_TYPES_PARAMS = "Tipos de solicitud",
   SUB_COMPANY_AREAS_PARAMS = "Áreas de empresa",
 }
 

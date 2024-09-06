@@ -256,6 +256,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_AUDITORS,
@@ -320,6 +321,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_COMPANIES_PARAMS,
@@ -355,6 +357,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_REQ_TYPES_PARAMS,
@@ -368,6 +371,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_COMPANY_AREAS_PARAMS,
