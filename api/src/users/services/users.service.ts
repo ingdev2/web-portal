@@ -39,6 +39,8 @@ import {
   RESET_PASSWORD_TEMPLATE,
   SUBJECT_ACCOUNT_CREATED,
   SUBJECT_USER_CREATION_NOTIFICATION_TO_EPS,
+  PASSWORD_UPDATED,
+  UPDATED_PASSWORD_TEMPLATE,
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
@@ -1093,6 +1095,17 @@ export class UsersService {
     const hashedNewPassword = await bcryptjs.hash(passwords.newPassword, 10);
 
     await this.userRepository.update(id, { password: hashedNewPassword });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [userFound.email];
+    emailDetailsToSend.userNameToEmail = userFound.name;
+    emailDetailsToSend.subject = PASSWORD_UPDATED;
+    emailDetailsToSend.emailTemplate = UPDATED_PASSWORD_TEMPLATE;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return new HttpException(
       `¡Contraseña actualizada correctamente!`,

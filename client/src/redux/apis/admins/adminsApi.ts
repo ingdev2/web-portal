@@ -52,7 +52,7 @@ export const adminsApi = createApi({
 
     updatePassword: builder.mutation<
       any,
-      { id: string; passwords: UpdatePassword }
+      { id: number; passwords: UpdatePassword }
     >({
       query: ({ id, passwords }) => ({
         url: `updatePassword/${id}`,

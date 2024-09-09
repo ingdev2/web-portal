@@ -28,7 +28,6 @@ const EpsChangePasswordForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const idUserEpsState = useAppSelector((state) => state.eps.id);
-  const idNumberUserEpsState = useAppSelector((state) => state.eps.id_number);
   const nameEpsState = useAppSelector((state) => state.eps.name);
   const lastNameEpsState = useAppSelector((state) => state.eps.last_name);
   const idNumberEpsState = useAppSelector((state) => state.eps.id_number);
@@ -64,12 +63,12 @@ const EpsChangePasswordForm: React.FC = () => {
     isLoading: userEpsDataLoading,
     isFetching: userEpsDataFetching,
     isError: userEpsDataError,
-  } = useGetUserByIdNumberEpsQuery(idNumberUserEpsState);
+  } = useGetUserByIdNumberEpsQuery(idNumberEpsState);
 
   useEffect(() => {
     if (
       !idUserEpsState &&
-      idNumberUserEpsState &&
+      idNumberEpsState &&
       userEpsData &&
       !userEpsDataLoading &&
       !userEpsDataFetching
@@ -81,7 +80,7 @@ const EpsChangePasswordForm: React.FC = () => {
       dispatch(setIdNumberUserEps(userEpsData?.id_number));
       dispatch(setCellphoneUserEps(userEpsData?.cellphone));
     }
-  }, [idUserEpsState, idNumberUserEpsState, userEpsData]);
+  }, [idUserEpsState, idNumberEpsState, userEpsData]);
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     try {

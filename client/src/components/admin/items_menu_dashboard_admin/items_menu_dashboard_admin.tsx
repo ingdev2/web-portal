@@ -12,6 +12,9 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { IoIosBusiness } from "react-icons/io";
 import { BiCommentX } from "react-icons/bi";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
+import { SiGoogleclassroom } from "react-icons/si";
+import { CgProfile } from "react-icons/cg";
+import { PiUserListBold } from "react-icons/pi";
 
 import {
   setIdNumberAdmin,
@@ -255,6 +258,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_AUDITORS,
@@ -319,6 +323,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_COMPANIES_PARAMS,
@@ -354,6 +359,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_REQ_TYPES_PARAMS,
@@ -361,9 +367,36 @@ export const useMenuItems = () => {
                     <VscGitPullRequestGoToChanges size={15} />
                   )
                 : null,
+              isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
+              isAdminInCompanyAreas(companyAreaIdAdminState, [
+                systemsCompanyAreaData.id,
+              ]) &&
+              isAdminInPositionLevel(positionLevelIdAdminState, [
+                directorPositionLevelData.id,
+                coordinatorPositionLevelData.id,
+              ])
+                ? getItem(
+                    ItemNames.SUB_COMPANY_AREAS_PARAMS,
+                    ItemKeys.SUB_COMPANY_AREAS_PARAMS_KEY,
+                    <SiGoogleclassroom size={15} />
+                  )
+                : null,
             ].filter(Boolean)
           )
         : null,
+
+      getItem(
+        ItemNames.ITEM_MY_PROFILE,
+        ItemKeys.ITEM_MY_PROFILE_KEY,
+        <CgProfile size={17} />,
+        [
+          getItem(
+            ItemNames.SUB_UPDATE_PERSONAL_DATA,
+            ItemKeys.SUB_UPDATE_PERSONAL_DATA_KEY,
+            <PiUserListBold size={15} />
+          ),
+        ]
+      ),
     ];
 
     return items;

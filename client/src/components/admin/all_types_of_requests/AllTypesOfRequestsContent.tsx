@@ -21,7 +21,7 @@ import {
   setNameTypeOfMedicalRequest,
   setErrorsTypeOfMedicalRequest,
   setResetTypeOfMedicalRequest,
-} from "@/redux/features/medical_req/type_of_medical_request/typeOfMedicalRequest";
+} from "@/redux/features/medical_req/type_of_medical_request/typeOfMedicalRequestSlice";
 
 import {
   useGetAllMedicalReqTypesAdminDashboardQuery,

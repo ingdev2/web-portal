@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Button } from "antd";
 import CustomDashboardLayout from "@/components/common/custom_dashboard_layout/CustomDashboardLayout";
 import CustomTableFiltersAndSorting from "@/components/common/custom_table_filters_and_sorting/CustomTableFiltersAndSorting";
-import EditReasonForRejectionForm from "./edit_reason_for_rejection/EditReasonForRejectionForm";
-import { tableColumnsAllReasonsForRejection } from "./table_columns_all_reasons_for_rejection/TableColumnsAllReasonsForRejection";
-import ModalReasonForRejectionDetails from "./modal_reason_for_rejection_details/ModalReasonForRejectionDetails";
+import EditCompanyAreaForm from "./edit_company_area/EditCompanyAreaForm";
+import { tableColumnsAllCompanyAreas } from "./table_columns_all_company_areas/TableColumnsAllCompanyAreas";
+import ModalCompanyAreaDetails from "./modal_company_area_details/ModalCompanyAreaDetails";
 import CreateButton from "./create_button/CreateButton";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
@@ -17,16 +17,15 @@ import { FaEdit } from "react-icons/fa";
 import { setTableRowId } from "@/redux/features/common/modal/modalSlice";
 
 import {
-  setIdReasonForRejection,
-  setRejectionTitleReasonForRejection,
-  setReasonMessageReasonForRejection,
-  setErrorsReasonForRejection,
-  setResetReasonForRejection,
-} from "@/redux/features/medical_req/reason_for_rejection/reasonForRejectionSlice";
+  setIdCompanyArea,
+  setNameCompanyArea,
+  setErrorsCompanyArea,
+  setResetCompanyArea,
+} from "@/redux/features/company_area/companyAreaSlice";
 
-import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
+import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 
-const AllReasonsForRejectionContent: React.FC = () => {
+const AllCompanyAreasContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const NOT_REGISTER: string = "NO REGISTRA";
@@ -35,7 +34,7 @@ const AllReasonsForRejectionContent: React.FC = () => {
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
   const [selectedRowDataLocalState, setSelectedRowDataLocalState] =
-    useState<MedicalReqReasonForRejection | null>(null);
+    useState<CompanyArea | null>(null);
 
   const [isSubmittingRegisterPage, setIsSubmittingRegisterPage] =
     useState(false);
@@ -44,25 +43,25 @@ const AllReasonsForRejectionContent: React.FC = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
-  const reasonForRejectionErrorsState = useAppSelector(
-    (state) => state.reasonForRejection.errors
+  const companyAreaErrorsState = useAppSelector(
+    (state) => state.companyArea.errors
   );
 
   const {
-    data: allReasonsForRejectionData,
-    isLoading: allReasonsForRejectionLoading,
-    isFetching: allReasonsForRejectionFetching,
-    error: allReasonsForRejectionError,
-    refetch: refecthAllReasonsForRejection,
-  } = useGetAllMedicalReqReasonsForRejectionQuery(null);
+    data: allCompanyAreasData,
+    isLoading: allCompanyAreasLoading,
+    isFetching: allCompanyAreasFetching,
+    error: allCompanyAreasError,
+    refetch: refecthAllCompanyAreas,
+  } = useGetAllCompanyAreaQuery(null);
 
-  const transformedData = Array.isArray(allReasonsForRejectionData)
-    ? allReasonsForRejectionData.map((req: any) => ({
+  const transformedData = Array.isArray(allCompanyAreasData)
+    ? allCompanyAreasData.map((req: any) => ({
         ...req,
       }))
     : [];
 
-  const handleClickSeeMore = (record: MedicalReqReasonForRejection) => {
+  const handleClickSeeMore = (record: CompanyArea) => {
     dispatch(setTableRowId(""));
     setSelectedRowDataLocalState(record);
 
@@ -70,15 +69,14 @@ const AllReasonsForRejectionContent: React.FC = () => {
 
     setIsModalVisibleLocalState(true);
 
-    refecthAllReasonsForRejection();
+    refecthAllCompanyAreas();
 
-    dispatch(setIdReasonForRejection(record?.id));
-    dispatch(setRejectionTitleReasonForRejection(record?.rejection_title));
-    dispatch(setReasonMessageReasonForRejection(record?.reason_message));
+    dispatch(setIdCompanyArea(record?.id));
+    dispatch(setNameCompanyArea(record?.name));
   };
 
   const handleButtonUpdate = () => {
-    refecthAllReasonsForRejection();
+    refecthAllCompanyAreas();
   };
 
   return (
@@ -87,8 +85,7 @@ const AllReasonsForRejectionContent: React.FC = () => {
         <CustomMessage
           typeMessage="error"
           message={
-            reasonForRejectionErrorsState?.toString() ||
-            "¡Error en la petición!"
+            companyAreaErrorsState?.toString() || "¡Error en la petición!"
           }
         />
       )}
@@ -104,41 +101,35 @@ const AllReasonsForRejectionContent: React.FC = () => {
 
       {isModalVisibleLocalState && (
         <CustomModalNoContent
-          key={"custom-modal-reason-for-rejection-details"}
+          key={"custom-modal-company-area-details"}
           widthCustomModalNoContent={"69%"}
           minWidthCustomModalNoContent="321px"
           openCustomModalState={isModalVisibleLocalState}
           closableCustomModal={true}
           maskClosableCustomModal={false}
           handleCancelCustomModal={() => {
-            refecthAllReasonsForRejection();
+            refecthAllCompanyAreas();
 
             setIsModalVisibleLocalState(false);
             setIsEditVisibleLocalState(false);
 
             setSelectedRowDataLocalState(null);
-            dispatch(setResetReasonForRejection());
+            dispatch(setResetCompanyArea());
           }}
           contentCustomModal={
             <>
               {!isEditVisibleLocalState ? (
                 <>
-                  <ModalReasonForRejectionDetails
-                    titleDescription="Detalle completo de motivo de rechazo"
-                    labelReasonForRejectionId="Id"
-                    selectedReasonForRejectionId={selectedRowDataLocalState?.id}
-                    labelReasonForRejectionTitle="Titulo de motivo"
-                    selectedReasonForRejectionTitle={
-                      selectedRowDataLocalState?.rejection_title
-                    }
-                    labelReasonForRejectionMessage="Mensaje a mostrar de motivo de rechazo"
-                    selectedReasonForRejectionMessage={
-                      selectedRowDataLocalState?.reason_message
-                    }
+                  <ModalCompanyAreaDetails
+                    titleDescription="Detalle completo de área empresa"
+                    labelCompanyAreaId="Id"
+                    selectedCompanyAreaId={selectedRowDataLocalState?.id}
+                    labelCompanyAreaName="Nombre"
+                    selectedCompanyAreaName={selectedRowDataLocalState?.name}
                   />
 
                   <Button
-                    className="edit-reason-for-rejection-button"
+                    className="edit-company-area-button"
                     size="large"
                     style={{
                       backgroundColor: "#015E90",
@@ -162,12 +153,12 @@ const AllReasonsForRejectionContent: React.FC = () => {
                       }}
                     >
                       <FaEdit size={17} />
-                      &nbsp; Editar motivo de rechazo
+                      &nbsp; Editar área de empresa
                     </div>
                   </Button>
                 </>
               ) : (
-                <EditReasonForRejectionForm />
+                <EditCompanyAreaForm />
               )}
             </>
           }
@@ -190,7 +181,7 @@ const AllReasonsForRejectionContent: React.FC = () => {
 
             <CustomTableFiltersAndSorting
               dataCustomTable={transformedData || []}
-              columnsCustomTable={tableColumnsAllReasonsForRejection({
+              columnsCustomTable={tableColumnsAllCompanyAreas({
                 handleClickSeeMore: handleClickSeeMore,
               })}
               onClickUpdateCustomTable={handleButtonUpdate}
@@ -202,4 +193,4 @@ const AllReasonsForRejectionContent: React.FC = () => {
   );
 };
 
-export default AllReasonsForRejectionContent;
+export default AllCompanyAreasContent;

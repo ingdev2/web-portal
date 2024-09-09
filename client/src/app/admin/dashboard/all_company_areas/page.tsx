@@ -8,7 +8,7 @@ import { useRoleValidation } from "@/utils/hooks/use_role_validation";
 import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
-import RegisterEpsCompanyContent from "@/components/admin/all_eps_companies/register_eps_company/RegisterEpsCompanyContent";
+import AllCompanyAreasContent from "@/components/admin/all_company_areas/AllCompanyAreasContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 
@@ -22,11 +22,11 @@ import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetPositionLevelByNameQuery } from "@/redux/apis/position_level/positionLevelApi";
 
-import { AdminRolType } from "../../../../../../../api/src/utils/enums/admin_roles.enum";
-import { CompanyAreaEnum } from "../../../../../../../api/src/utils/enums/company_area.enum";
-import { PositionLevelEnum } from "../../../../../../../api/src/utils/enums/position_level.enum";
+import { AdminRolType } from "../../../../../../api/src/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "../../../../../../api/src/utils/enums/company_area.enum";
+import { PositionLevelEnum } from "../../../../../../api/src/utils/enums/position_level.enum";
 
-const RegisterEpsCompanyPage = () => {
+const AllCompanyAreasPage = () => {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
@@ -35,11 +35,6 @@ const RegisterEpsCompanyPage = () => {
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
       name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
-    });
-
-  const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
-    useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
     });
 
   // NIVEL DE CARGO //
@@ -57,10 +52,7 @@ const RegisterEpsCompanyPage = () => {
   });
 
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
-  const allowedAreas = [
-    systemsCompanyAreaData?.id,
-    archivesCompanyAreaData?.id,
-  ];
+  const allowedAreas = [systemsCompanyAreaData?.id];
   const allowedPositionLevels = [
     directorPositionLevelData?.id,
     coordinatorPositionLevelData?.id,
@@ -73,8 +65,6 @@ const RegisterEpsCompanyPage = () => {
   const waitAdminData =
     systemsCompanyAreaData &&
     !systemsCompanyAreaError &&
-    archivesCompanyAreaData &&
-    !archivesCompanyAreaError &&
     directorPositionLevelData &&
     !directorPositionLevelError &&
     coordinatorPositionLevelData &&
@@ -145,12 +135,12 @@ const RegisterEpsCompanyPage = () => {
       !waitAdminData ? (
         <CustomSpin />
       ) : (
-        <div className="dashboard-register-eps-company-content">
-          <RegisterEpsCompanyContent />
+        <div className="dashboard-all-company-areas-content">
+          <AllCompanyAreasContent />
         </div>
       )}
     </div>
   );
 };
 
-export default RegisterEpsCompanyPage;
+export default AllCompanyAreasPage;

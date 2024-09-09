@@ -49,12 +49,22 @@ const AllEpsUsersPage = () => {
       name: PositionLevelEnum.DIRECTOR,
     });
 
+  const {
+    data: coordinatorPositionLevelData,
+    error: coordinatorPositionLevelError,
+  } = useGetPositionLevelByNameQuery({
+    name: PositionLevelEnum.COORDINATOR,
+  });
+
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   const allowedAreas = [
     systemsCompanyAreaData?.id,
     archivesCompanyAreaData?.id,
   ];
-  const allowedPositionLevels = [directorPositionLevelData?.id];
+  const allowedPositionLevels = [
+    directorPositionLevelData?.id,
+    coordinatorPositionLevelData?.id,
+  ];
 
   useRoleValidation(allowedRoles);
   userCompanyAreaValidation(allowedAreas);
@@ -66,7 +76,9 @@ const AllEpsUsersPage = () => {
     archivesCompanyAreaData &&
     !archivesCompanyAreaError &&
     directorPositionLevelData &&
-    !directorPositionLevelError;
+    !directorPositionLevelError &&
+    coordinatorPositionLevelData &&
+    !coordinatorPositionLevelError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen
