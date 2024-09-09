@@ -53,7 +53,7 @@ const AdminHeaderLayout: React.FC = () => {
 
   const handleClickUpdatePersonalData = async () => {
     try {
-      await router.push("/admin/dashboard/update_personal_data", {
+      await router.push("/admin/dashboard/personal_data", {
         scroll: true,
       });
     } catch (error) {
@@ -94,8 +94,8 @@ const AdminHeaderLayout: React.FC = () => {
             lastNameAdminState
           )}`}
           iconCustomItem1={<PiUserListBold />}
+          titleCustomItem1="Mis Datos"
           iconCustomItem2={<FaSignOutAlt />}
-          titleCustomItem1="Actualizar Datos"
           titleCustomItem2="Cerrar Sesión"
           handleClickCustomItem1={handleClickUpdatePersonalData}
           handleClickCustomItem2={handleClickSignOut}

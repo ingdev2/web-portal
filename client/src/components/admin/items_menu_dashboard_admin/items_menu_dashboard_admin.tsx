@@ -13,6 +13,8 @@ import { IoIosBusiness } from "react-icons/io";
 import { BiCommentX } from "react-icons/bi";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 import { SiGoogleclassroom } from "react-icons/si";
+import { CgProfile } from "react-icons/cg";
+import { PiUserListBold } from "react-icons/pi";
 
 import {
   setIdNumberAdmin,
@@ -382,6 +384,19 @@ export const useMenuItems = () => {
             ].filter(Boolean)
           )
         : null,
+
+      getItem(
+        ItemNames.ITEM_MY_PROFILE,
+        ItemKeys.ITEM_MY_PROFILE_KEY,
+        <CgProfile size={17} />,
+        [
+          getItem(
+            ItemNames.SUB_UPDATE_PERSONAL_DATA,
+            ItemKeys.SUB_UPDATE_PERSONAL_DATA_KEY,
+            <PiUserListBold size={15} />
+          ),
+        ]
+      ),
     ];
 
     return items;

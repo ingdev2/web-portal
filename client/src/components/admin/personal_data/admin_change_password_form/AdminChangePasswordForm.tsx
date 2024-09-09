@@ -3,43 +3,43 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import { Button, Card, Col, Form, Input, Select } from "antd";
+import { Button, Col, Form, Input } from "antd";
 import { titleStyleCss } from "@/theme/text_styles";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { LockOutlined } from "@ant-design/icons";
 
 import {
-  setIdUserPatient,
-  setNameUserPatient,
-  setLastNameUserPatient,
-  setIdNumberUserPatient,
-  setCellphoneUserPatient,
-  setErrorsUserPatient,
-} from "@/redux/features/patient/patientSlice";
-import { setPatientModalIsOpen } from "@/redux/features/common/modal/modalSlice";
+  setIdAdmin,
+  setNameAdmin,
+  setLastNameAdmin,
+  setIdNumberAdmin,
+  setCorporateEmailAdmin,
+  setErrorsAdmin,
+} from "@/redux/features/admin/adminSlice";
+import { setAdminModalIsOpen } from "@/redux/features/common/modal/modalSlice";
 
 import {
   useUpdatePasswordMutation,
-  useGetUserByIdNumberPatientQuery,
-} from "@/redux/apis/users/usersApi";
+  useGetAdminByIdNumberQuery,
+} from "@/redux/apis/admins/adminsApi";
 
-const PatientChangePasswordForm: React.FC = () => {
+const AdminChangePasswordForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const idUserPatientState = useAppSelector((state) => state.patient.id);
-  const namePatientState = useAppSelector((state) => state.patient.name);
-  const idNumberPatientState = useAppSelector(
-    (state) => state.patient.id_number
+  const idAdminState = useAppSelector((state) => state.admin.id);
+  const idNumberAdminState = useAppSelector((state) => state.admin.id_number);
+  const nameAdminState = useAppSelector((state) => state.admin.name);
+  const lastNameEpsState = useAppSelector((state) => state.admin.last_name);
+  const idNumberEpsState = useAppSelector((state) => state.admin.id_number);
+  const emailAdminState = useAppSelector(
+    (state) => state.admin.corporate_email
   );
-  const cellphonePatientState = useAppSelector(
-    (state) => state.patient.cellphone
-  );
-  const errorsPatientState = useAppSelector((state) => state.patient.errors);
+  const errorsEpsState = useAppSelector((state) => state.admin.errors);
 
-  const [oldPasswordPatientLocalState, setOldPasswordPatientLocalState] =
+  const [oldPasswordAdminLocalState, setOldPasswordAdminLocalState] =
     useState("");
-  const [newPasswordPatientLocalState, setNewPasswordPatientLocalState] =
+  const [newPasswordAdminLocalState, setNewPasswordAdminLocalState] =
     useState("");
 
   const [isSubmittingChangePassword, setIsSubmittingChangePassword] =
@@ -52,124 +52,121 @@ const PatientChangePasswordForm: React.FC = () => {
     useState(false);
 
   const [
-    updatePasswordPatient,
+    updatePasswordAdmin,
     {
-      data: updatePasswordPatientData,
-      isLoading: updatePasswordPatientLoading,
-      isSuccess: updatePasswordPatientSuccess,
-      isError: updatePasswordPatientError,
+      data: updatePasswordAdminData,
+      isLoading: updatePasswordAdminLoading,
+      isSuccess: updatePasswordAdminSuccess,
+      isError: updatePasswordAdminError,
     },
   ] = useUpdatePasswordMutation({
-    fixedCacheKey: "updatePasswordPatientData",
+    fixedCacheKey: "updatePasswordAdminData",
   });
 
   const {
-    data: userPatientData,
-    isLoading: userPatientDataLoading,
-    isFetching: userPatientDataFetching,
-    isError: userPatientDataError,
-  } = useGetUserByIdNumberPatientQuery(idNumberPatientState);
+    data: adminData,
+    isLoading: adminDataLoading,
+    isFetching: adminDataFetching,
+    isError: adminDataError,
+  } = useGetAdminByIdNumberQuery(idNumberAdminState);
 
   useEffect(() => {
     if (
-      !idUserPatientState &&
-      idNumberPatientState &&
-      userPatientData &&
-      !userPatientDataLoading &&
-      !userPatientDataFetching
+      !idAdminState &&
+      idNumberAdminState &&
+      adminData &&
+      !adminDataLoading &&
+      !adminDataFetching
     ) {
-      dispatch(setIdUserPatient(userPatientData?.id));
+      dispatch(setIdAdmin(adminData?.id));
 
-      dispatch(setNameUserPatient(userPatientData?.name));
-      dispatch(setLastNameUserPatient(userPatientData?.last_name));
-      dispatch(setIdNumberUserPatient(userPatientData?.id_number));
-      dispatch(setCellphoneUserPatient(userPatientData?.cellphone));
+      dispatch(setNameAdmin(adminData?.name));
+      dispatch(setLastNameAdmin(adminData?.last_name));
+      dispatch(setIdNumberAdmin(adminData?.id_number));
+      dispatch(setCorporateEmailAdmin(adminData?.corporate_email));
     }
-  }, [idUserPatientState, idNumberPatientState, userPatientData]);
+  }, [idAdminState, idNumberAdminState, adminData]);
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setIsSubmittingChangePassword(true);
 
       if (
-        idUserPatientState &&
-        oldPasswordPatientLocalState &&
-        newPasswordPatientLocalState
+        idAdminState &&
+        oldPasswordAdminLocalState &&
+        newPasswordAdminLocalState
       ) {
-        const response: any = await updatePasswordPatient({
-          id: idUserPatientState,
+        const response: any = await updatePasswordAdmin({
+          id: idAdminState,
           passwords: {
-            oldPassword: oldPasswordPatientLocalState,
-            newPassword: newPasswordPatientLocalState,
+            oldPassword: oldPasswordAdminLocalState,
+            newPassword: newPasswordAdminLocalState,
           },
         });
 
-        let validationPatientData = response.data?.status;
+        let validationData = response.data?.status;
 
-        let validationPatientError = response.error?.status;
+        let validationDataError = response.error?.status;
 
-        if (validationPatientError !== 200 && !validationPatientData) {
+        if (validationDataError !== 200 && !validationData) {
           const errorMessage = response.error?.data?.message;
 
-          dispatch(setErrorsUserPatient(errorMessage));
+          dispatch(setErrorsAdmin(errorMessage));
           setShowErrorMessageChangePassword(true);
 
           setIsSubmittingChangePassword(false);
         }
-        if (validationPatientData === 202 && !validationPatientError) {
+        if (validationData === 202 && !validationDataError) {
           setShowSuccessMessageChangePassword(true);
-          setOldPasswordPatientLocalState("");
-          setNewPasswordPatientLocalState("");
+          setOldPasswordAdminLocalState("");
+          setNewPasswordAdminLocalState("");
 
           setTimeout(() => {
-            dispatch(setPatientModalIsOpen(false));
+            dispatch(setAdminModalIsOpen(false));
           }, 4000);
         }
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSubmittingChangePassword(false);
     }
   };
 
   const handleButtonClick = () => {
-    dispatch(setErrorsUserPatient([]));
+    dispatch(setErrorsAdmin([]));
     setShowErrorMessageChangePassword(false);
     setShowSuccessMessageChangePassword(false);
   };
 
   const handleOnChangeValidatorNewPasswordForm = (_: any, value: string) => {
-    if (!namePatientState || !idNumberPatientState || !cellphonePatientState) {
+    if (
+      !nameAdminState ||
+      !lastNameEpsState ||
+      !idNumberEpsState ||
+      !emailAdminState
+    ) {
       return Promise.resolve();
     }
 
-    const passwordUpperCase = value?.toUpperCase();
+    const passwordUpperCase = value.toUpperCase();
+    const idNumber = String(idNumberEpsState);
 
-    const nameWords = namePatientState?.toUpperCase().split(" ");
+    const corporateEmailLocalPart = emailAdminState
+      .split("@")[0]
+      ?.toUpperCase();
 
-    const idNumber = String(idNumberPatientState);
+    const forbiddenWords = [
+      ...nameAdminState.toUpperCase().split(" "),
+      ...lastNameEpsState.toUpperCase().split(" "),
+      idNumber,
+      corporateEmailLocalPart,
+    ];
 
-    const cellphoneNumber = String(cellphonePatientState);
-
-    if (nameWords?.some((word) => passwordUpperCase?.includes(word))) {
+    if (forbiddenWords.some((word) => passwordUpperCase.includes(word))) {
       return Promise.reject(
         new Error(
-          "¡La contraseña no puede contener datos del nombre del usuario!"
-        )
-      );
-    }
-
-    if (passwordUpperCase?.includes(idNumber)) {
-      return Promise.reject(
-        new Error(
-          "¡La contraseña no puede contener datos del número de cédula del usuario!"
-        )
-      );
-    }
-
-    if (passwordUpperCase?.includes(cellphoneNumber)) {
-      return Promise.reject(
-        new Error(
-          "¡La contraseña no puede contener datos del número de celular del usuario!"
+          "¡La contraseña no puede contener datos personales del usuario!"
         )
       );
     }
@@ -178,18 +175,6 @@ const PatientChangePasswordForm: React.FC = () => {
   };
 
   return (
-    // <Card
-    //   style={{
-    //     width: "100%",
-    //     maxWidth: "405px",
-    //     alignItems: "center",
-    //     justifyContent: "center",
-    //     backgroundColor: "#fcfcfc",
-    //     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-    //     marginBottom: "31px",
-    //   }}
-    // >
-
     <Col
       xs={24}
       sm={24}
@@ -204,7 +189,7 @@ const PatientChangePasswordForm: React.FC = () => {
       {showErrorMessageChangePassword && (
         <CustomMessage
           typeMessage="error"
-          message={errorsPatientState?.toString() || "¡Error en la petición!"}
+          message={errorsEpsState?.toString() || "¡Error en la petición!"}
         />
       )}
 
@@ -216,16 +201,16 @@ const PatientChangePasswordForm: React.FC = () => {
       )}
 
       <Form
-        id="change-password-form-patient"
-        name="change-password-form-patient"
-        className="change-password-form-patient"
+        id="change-password-form-admin"
+        name="change-password-form-admin"
+        className="change-password-form-admin"
         onFinish={handleChangePassword}
         initialValues={{ remember: false }}
         autoComplete="false"
         layout="vertical"
       >
         <h2
-          className="title-change-password-patient"
+          className="title-change-password-admin"
           style={{
             ...titleStyleCss,
             marginBlock: 22,
@@ -236,9 +221,9 @@ const PatientChangePasswordForm: React.FC = () => {
         </h2>
 
         <Form.Item
-          id="current-password-patient"
-          name="current-password-patient"
-          className="current-password-patient"
+          id="current-password-admin"
+          name="current-password-admin"
+          className="current-password-admin"
           label="Contraseña actual"
           style={{ marginBottom: 13 }}
           rules={[
@@ -285,18 +270,18 @@ const PatientChangePasswordForm: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={oldPasswordPatientLocalState}
+            value={oldPasswordAdminLocalState}
             placeholder="Contraseña actual"
             onChange={(e) => {
-              setOldPasswordPatientLocalState(e.target.value.trim());
+              setOldPasswordAdminLocalState(e.target.value.trim());
             }}
           />
         </Form.Item>
 
         <Form.Item
-          id="new-password-patient"
-          name="new-password-patient"
-          className="new-password-patient"
+          id="new-password-admin"
+          name="new-password-admin"
+          className="new-password-admin"
           label="Contraseña nueva"
           style={{ marginBottom: 13 }}
           rules={[
@@ -346,21 +331,21 @@ const PatientChangePasswordForm: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={newPasswordPatientLocalState}
+            value={newPasswordAdminLocalState}
             placeholder="Contraseña nueva"
             onChange={(e) => {
-              setNewPasswordPatientLocalState(e.target.value.trim());
+              setNewPasswordAdminLocalState(e.target.value.trim());
             }}
           />
         </Form.Item>
 
         <Form.Item
-          id="verify-new-password-patient"
-          name="verify-new-password-patient"
-          className="verify-new-password-patient"
+          id="verify-new-password-admin"
+          name="verify-new-password-admin"
+          className="verify-new-password-admin"
           label="Verificar contraseña nueva"
           style={{ marginBottom: 22 }}
-          dependencies={["new-password-patient"]}
+          dependencies={["new-password-admin"]}
           rules={[
             {
               required: true,
@@ -368,7 +353,7 @@ const PatientChangePasswordForm: React.FC = () => {
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("new-password-patient") === value) {
+                if (!value || getFieldValue("new-password-admin") === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject("Las contraseñas no coinciden.");
@@ -380,10 +365,10 @@ const PatientChangePasswordForm: React.FC = () => {
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            value={newPasswordPatientLocalState}
+            value={newPasswordAdminLocalState}
             placeholder="Verificar contraseña nueva"
             onChange={(e) => {
-              setNewPasswordPatientLocalState(e.target.value.trim());
+              setNewPasswordAdminLocalState(e.target.value.trim());
             }}
           />
         </Form.Item>
@@ -406,7 +391,7 @@ const PatientChangePasswordForm: React.FC = () => {
                 marginBlock: 7,
               }}
               htmlType="submit"
-              className="change-password-form-button-patient"
+              className="change-password-form-button-admin"
               onClick={handleButtonClick}
             >
               Cambiar contraseña
@@ -415,8 +400,7 @@ const PatientChangePasswordForm: React.FC = () => {
         </Form.Item>
       </Form>
     </Col>
-    // </Card>
   );
 };
 
-export default PatientChangePasswordForm;
+export default AdminChangePasswordForm;

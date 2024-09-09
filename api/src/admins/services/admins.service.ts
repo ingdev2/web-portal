@@ -25,11 +25,14 @@ import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import {
   PASSWORD_RESET,
+  PASSWORD_UPDATED,
   RESET_PASSWORD_TEMPLATE,
+  UPDATED_PASSWORD_TEMPLATE,
 } from 'src/nodemailer/constants/email_config.constant';
 
 import * as bcryptjs from 'bcryptjs';
 import { maskEmailAdmin } from '../helpers/mask_email';
+import { CONTACT_PBX } from 'src/utils/constants/constants';
 
 const schedule = require('node-schedule');
 
@@ -528,6 +531,17 @@ export class AdminsService {
     const hashedNewPassword = await bcryptjs.hash(passwords.newPassword, 10);
 
     await this.adminRepository.update(id, { password: hashedNewPassword });
+
+    const emailDetailsToSend = new SendEmailDto();
+
+    emailDetailsToSend.recipients = [adminFound.corporate_email];
+    emailDetailsToSend.userNameToEmail = adminFound.name;
+    emailDetailsToSend.subject = PASSWORD_UPDATED;
+    emailDetailsToSend.emailTemplate = UPDATED_PASSWORD_TEMPLATE;
+    emailDetailsToSend.portalWebUrl = process.env.PORTAL_WEB_URL;
+    emailDetailsToSend.contactPbx = CONTACT_PBX;
+
+    await this.nodemailerService.sendEmail(emailDetailsToSend);
 
     return new HttpException(
       `¡Contraseña actualizada correctamente!`,

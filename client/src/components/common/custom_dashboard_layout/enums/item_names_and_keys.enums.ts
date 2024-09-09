@@ -15,6 +15,9 @@ export enum ItemNames {
   SUB_REASONS_FOR_REJECTION_PARAMS = "Motivos de rechazo",
   SUB_REQ_TYPES_PARAMS = "Tipos de solicitud",
   SUB_COMPANY_AREAS_PARAMS = "Áreas de empresa",
+
+  ITEM_MY_PROFILE = "Mi perfil",
+  SUB_UPDATE_PERSONAL_DATA = "Mis datos",
 }
 
 export enum ItemKeys {
@@ -34,4 +37,7 @@ export enum ItemKeys {
   SUB_REASONS_FOR_REJECTION_PARAMS_KEY = "all_reasons_for_rejection",
   SUB_REQ_TYPES_PARAMS_KEY = "all_types_of_requests",
   SUB_COMPANY_AREAS_PARAMS_KEY = "all_company_areas",
+
+  ITEM_MY_PROFILE_KEY = "my_profile",
+  SUB_UPDATE_PERSONAL_DATA_KEY = "personal_data",
 }
