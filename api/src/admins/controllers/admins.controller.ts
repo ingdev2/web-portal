@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
 import { AdminsService } from '../services/admins.service';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
@@ -15,6 +16,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { ForgotPasswordAdminDto } from '../dto/forgot_password_admin.dto';
 import { ResetPasswordAdminDto } from '../dto/reset_password_admin.dto';
+import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('admins')
 @ApiBearerAuth()
@@ -52,6 +54,7 @@ export class AdminsController {
 
   // PATCH METHODS //
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updateAdmin/:id')
   async updateAdmin(
@@ -94,7 +97,8 @@ export class AdminsController {
     return await this.adminsService.resetAdminPassword(token, { newPassword });
   }
 
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @EnableAuditLog()
+  @Auth(AdminRolType.SUPER_ADMIN)
   @Patch('/banAdmin/:id')
   async banAdmins(@Param('id') id: number) {
     return await this.adminsService.banAdmins(id);

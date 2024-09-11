@@ -61,6 +61,13 @@ const AllRelativesPage = () => {
     name: PositionLevelEnum.COORDINATOR,
   });
 
+  const {
+    data: colaboratorPositionLevelData,
+    error: colaboratorPositionLevelError,
+  } = useGetPositionLevelByNameQuery({
+    name: PositionLevelEnum.COLLABORATOR,
+  });
+
   const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
   const allowedAreas = [
     systemsCompanyAreaData?.id,
@@ -70,6 +77,7 @@ const AllRelativesPage = () => {
   const allowedPositionLevels = [
     directorPositionLevelData?.id,
     coordinatorPositionLevelData?.id,
+    colaboratorPositionLevelData?.id,
   ];
 
   useRoleValidation(allowedRoles);
@@ -86,7 +94,9 @@ const AllRelativesPage = () => {
     directorPositionLevelData &&
     !directorPositionLevelError &&
     coordinatorPositionLevelData &&
-    !coordinatorPositionLevelError;
+    !coordinatorPositionLevelError &&
+    colaboratorPositionLevelData &&
+    !colaboratorPositionLevelError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen

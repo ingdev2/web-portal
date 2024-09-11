@@ -51,7 +51,7 @@ const RegisterAdminPage = () => {
     name: PositionLevelEnum.COORDINATOR,
   });
 
-  const allowedRoles = [AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN];
+  const allowedRoles = [AdminRolType.SUPER_ADMIN];
   const allowedAreas = [systemsCompanyAreaData?.id];
   const allowedPositionLevels = [
     directorPositionLevelData?.id,

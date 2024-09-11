@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +10,7 @@ import { In, Not, Repository } from 'typeorm';
 import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
+import { CompanyArea } from 'src/company_area/entities/company_area.entity';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { AuthenticationMethod } from 'src/authentication_method/entities/authentication_method.entity';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
@@ -33,6 +35,12 @@ import {
 import * as bcryptjs from 'bcryptjs';
 import { maskEmailAdmin } from '../helpers/mask_email';
 import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
+import { PositionLevelEnum } from 'src/utils/enums/position_level.enum';
+import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
 
 const schedule = require('node-schedule');
 
@@ -47,10 +55,15 @@ export class AdminsService {
     @InjectRepository(PositionLevel)
     private positionLevelRepository: Repository<PositionLevel>,
 
+    @InjectRepository(CompanyArea)
+    private companyAreaRepository: Repository<CompanyArea>,
+
     @InjectRepository(AuthenticationMethod)
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
     private readonly nodemailerService: NodemailerService,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -153,7 +166,7 @@ export class AdminsService {
     return newAdminSuperAdmin;
   }
 
-  async createAdmin(admin: CreateAdminDto) {
+  async createAdmin(admin: CreateAdminDto, @Req() requestAuditLog: any) {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id_number: admin.id_number,
@@ -217,6 +230,19 @@ export class AdminsService {
       );
     }
 
+    const adminCompanyArea = await this.companyAreaRepository.findOne({
+      where: {
+        id: admin.company_area,
+      },
+    });
+
+    if (!adminCompanyArea) {
+      throw new HttpException(
+        'El área de la compañia ingresado no es valido.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const authenticationMethodEmailFound =
       await this.authenticationMethodRepository.findOne({
         where: {
@@ -227,6 +253,36 @@ export class AdminsService {
     if (!authenticationMethodEmailFound) {
       return new HttpException(
         `El método de autenticación con Email no existe`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const auditorPositionLevel = await this.positionLevelRepository.findOne({
+      where: {
+        name: PositionLevelEnum.AUDITOR,
+      },
+    });
+
+    const auditorCompanyArea = await this.companyAreaRepository.findOne({
+      where: {
+        name: CompanyAreaEnum.EXTERNAL_AUDITOR,
+      },
+    });
+
+    const hasCorrectPositionLevel =
+      admin.position_level === auditorPositionLevel.id;
+    const hasCorrectCompanyArea = admin.company_area === auditorCompanyArea.id;
+
+    if (!hasCorrectPositionLevel && hasCorrectCompanyArea) {
+      return new HttpException(
+        `Para crear un Auditor debe de tener el nivel de cargo y el área respectiva`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (hasCorrectPositionLevel && !hasCorrectCompanyArea) {
+      return new HttpException(
+        `Para crear un Auditor debe de tener el nivel de cargo y el área respectiva`,
         HttpStatus.CONFLICT,
       );
     }
@@ -260,6 +316,16 @@ export class AdminsService {
     const newAdminInAdmin = await this.adminRepository.findOne({
       where: { id: adminInAdminWithRole.id },
     });
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_ADMIN,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.ADMINS_MODULE,
+      module_record_id: newAdminInAdmin.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return newAdminInAdmin;
   }

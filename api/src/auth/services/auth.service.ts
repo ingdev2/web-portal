@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,6 +42,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Tokens } from '../interfaces/tokens.interface';
 import * as bcryptjs from 'bcryptjs';
 import { AdminRolType } from 'src/utils/enums/admin_roles.enum';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 const schedule = require('node-schedule');
 
@@ -73,6 +78,7 @@ export class AuthService {
     private readonly familiarService: AuthorizedFamiliarService,
     private readonly jwtService: JwtService,
     private readonly nodemailerService: NodemailerService,
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // VALIDATE PATIENT //
@@ -168,34 +174,40 @@ export class AuthService {
     });
   }
 
-  async registerAdmin({
-    name,
-    last_name,
-    admin_gender,
-    admin_id_type,
-    id_number,
-    corporate_email,
-    password,
-    company_area,
-    position_level,
-    admin_role,
-    authentication_method,
-  }: CreateAdminDto) {
-    await this.adminsService.getAdminByIdNumber(id_number);
-
-    return await this.adminsService.createAdmin({
+  async registerAdmin(
+    {
       name,
       last_name,
       admin_gender,
       admin_id_type,
       id_number,
       corporate_email,
-      password: await bcryptjs.hash(password, 10),
+      password,
       company_area,
       position_level,
       admin_role,
       authentication_method,
-    });
+    }: CreateAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
+    await this.adminsService.getAdminByIdNumber(id_number);
+
+    return await this.adminsService.createAdmin(
+      {
+        name,
+        last_name,
+        admin_gender,
+        admin_id_type,
+        id_number,
+        corporate_email,
+        password: await bcryptjs.hash(password, 10),
+        company_area,
+        position_level,
+        admin_role,
+        authentication_method,
+      },
+      requestAuditLog,
+    );
   }
 
   async validatePatientRegister({ id_type, id_number }: IdNumberDto) {
@@ -432,7 +444,11 @@ export class AuthService {
     return { id_type, id_number };
   }
 
-  async verifyCodeAndLoginAdmins(idNumber: number, verification_code: number) {
+  async verifyCodeAndLoginAdmins(
+    idNumber: number,
+    verification_code: number,
+    @Req() requestAuditLog: any,
+  ) {
     const adminFound = await this.adminsService.getAdminFoundByIdAndCode(
       idNumber,
       verification_code,
@@ -460,6 +476,24 @@ export class AuthService {
 
     const { access_token, refresh_token, access_token_expires_in } =
       await this.generateTokens(payload);
+
+    const auditLogData = {
+      user_name: adminFound.name || 'NO REGISTRA',
+      user_id_number: adminFound.id_number.toString(),
+      user_email: adminFound.corporate_email || 'NO REGISTRA',
+      user_role: requestAuditLog.user?.role?.name || 'NO REGISTRA',
+      is_mobile: requestAuditLog.headers['sec-ch-ua-mobile'] || 'NO REGISTRA',
+      browser_version: requestAuditLog.headers['sec-ch-ua'] || 'NO REGISTRA',
+      operating_system:
+        requestAuditLog.headers['sec-ch-ua-platform'] || 'NO REGISTRA',
+      ip_address: requestAuditLog.ip || 'NO REGISTRA',
+      action_type: ActionTypesEnum.LOGIN,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.ADMINS_MODULE,
+      module_record_id: null,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return {
       access_token,

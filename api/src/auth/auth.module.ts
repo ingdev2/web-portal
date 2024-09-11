@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './controller/auth.controller';
-import { AuthService } from './service/auth.service';
+import { AuthController } from './controllers/auth.controller';
+import { AuthService } from './services/auth.service';
 import { AdminsModule } from '../admins/admins.module';
 import { UsersModule } from '../users/users.module';
 import { AuthorizedFamiliarModule } from '../authorized_familiar/authorized_familiar.module';
@@ -15,6 +15,7 @@ import { UserRole } from '../user_roles/entities/user_role.entity';
 import { AdminRolesModule } from '../admin_roles/admin_roles.module';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuditLogsModule } from 'src/audit_logs/audit_logs.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AuthorizedFamiliarModule,
     AdminRolesModule,
     NodemailerModule,
+    AuditLogsModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT_CONSTANTS_SECRET,

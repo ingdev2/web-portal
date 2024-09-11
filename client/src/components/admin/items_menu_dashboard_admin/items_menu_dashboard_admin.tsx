@@ -91,6 +91,18 @@ export const useMenuItems = () => {
     name: PositionLevelEnum.COORDINATOR,
   });
 
+  const {
+    data: colaboratorPositionLevelData,
+    error: colaboratorPositionLevelError,
+  } = useGetPositionLevelByNameQuery({
+    name: PositionLevelEnum.COLLABORATOR,
+  });
+
+  const { data: auditorPositionLevelData, error: auditorPositionLevelError } =
+    useGetPositionLevelByNameQuery({
+      name: PositionLevelEnum.AUDITOR,
+    });
+
   // AREAS //
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
@@ -171,6 +183,10 @@ export const useMenuItems = () => {
     coordinatorPositionLevelData &&
     !coordinatorPositionLevelError &&
     systemsCompanyAreaData &&
+    colaboratorPositionLevelData &&
+    !colaboratorPositionLevelError &&
+    auditorPositionLevelData &&
+    !auditorPositionLevelError &&
     !systemsCompanyAreaError &&
     archivesCompanyAreaData &&
     !archivesCompanyAreaError &&
@@ -225,16 +241,14 @@ export const useMenuItems = () => {
       isAdminInPositionLevel(positionLevelIdAdminState, [
         directorPositionLevelData.id,
         coordinatorPositionLevelData.id,
+        colaboratorPositionLevelData.id,
       ])
         ? getItem(
             ItemNames.ITEM_USERS,
             ItemKeys.ITEM_USERS_KEY,
             <FaUsers size={17} />,
             [
-              isAdminWithRoles(roleIdAdminState, [
-                superAdminRoleData.id,
-                adminRoleData.id,
-              ]) &&
+              isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
               ]) &&
@@ -248,6 +262,7 @@ export const useMenuItems = () => {
                     <GrUserAdmin size={15} />
                   )
                 : null,
+
               isAdminWithRoles(roleIdAdminState, [
                 superAdminRoleData.id,
                 adminRoleData.id,
@@ -266,6 +281,7 @@ export const useMenuItems = () => {
                     <FaHospitalUser size={15} />
                   )
                 : null,
+
               isAdminWithRoles(roleIdAdminState, [
                 superAdminRoleData.id,
                 adminRoleData.id,
@@ -278,6 +294,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_PATIENT_USERS,
@@ -285,6 +302,7 @@ export const useMenuItems = () => {
                     <RiUserHeartLine size={15} />
                   )
                 : null,
+
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
@@ -293,6 +311,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_RELATIVES_USERS,
@@ -331,6 +350,7 @@ export const useMenuItems = () => {
                     <IoIosBusiness size={15} />
                   )
                 : null,
+
               isAdminWithRoles(roleIdAdminState, [
                 superAdminRoleData.id,
                 adminRoleData.id,
@@ -349,6 +369,7 @@ export const useMenuItems = () => {
                     <BiCommentX size={15} />
                   )
                 : null,
+
               isAdminWithRoles(roleIdAdminState, [
                 superAdminRoleData.id,
                 adminRoleData.id,
@@ -367,6 +388,7 @@ export const useMenuItems = () => {
                     <VscGitPullRequestGoToChanges size={15} />
                   )
                 : null,
+
               isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,

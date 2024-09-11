@@ -93,6 +93,7 @@ export const adminSlice = createSlice({
       state.id_number = 0;
       state.corporate_email = "";
       state.password = "";
+      state.admin_role = 0;
       state.company_area = 0;
       state.company_area_abbrev = "";
       state.position_level = 0;

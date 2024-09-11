@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Post, Req } from '@nestjs/common';
-import { AuthService } from '../service/auth.service';
+import { AuthService } from '../services/auth.service';
 import { CreateSuperAdminDto } from '../../admins/dto/create_super_admin.dto';
 import { CreateAdminDto } from '../../admins/dto/create_admin.dto';
 import { CreateUserPatientDto } from '../../users/dto/create_user_patient.dto';
@@ -12,7 +12,8 @@ import { IdNumberDto } from '../dto/id_number.dto';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { Auth } from '../../auth/decorators/auth.decorator';
+import { Auth } from '../decorators/auth.decorator';
+import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('auth')
 @ApiBearerAuth()
@@ -49,10 +50,14 @@ export class AuthController {
     return await this.authService.registerSuperAdmin(registerSuperAdmin);
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN)
   @Post('registerAdmin')
-  async registerAdmin(@Body() registerAdmin: CreateAdminDto) {
-    return await this.authService.registerAdmin(registerAdmin);
+  async registerAdmin(
+    @Body() registerAdmin: CreateAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
+    return await this.authService.registerAdmin(registerAdmin, requestAuditLog);
   }
 
   @Post('registerUserPatient')
@@ -93,10 +98,12 @@ export class AuthController {
   async verifyCodeAndLoginAdmins(
     @Param('id_number') id_number: number,
     @Body('verification_code') verification_code: number,
+    @Req() requestAuditLog: any,
   ) {
     return await this.authService.verifyCodeAndLoginAdmins(
       id_number,
       verification_code,
+      requestAuditLog,
     );
   }
 
