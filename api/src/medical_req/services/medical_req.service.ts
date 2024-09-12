@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   DataSource,
@@ -36,6 +36,7 @@ import { RequirementTypeService } from '../../requirement_type/services/requirem
 import { RequirementTypeEnum } from '../enums/requirement_type.enum';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { S3FileUploaderService } from 'src/s3_file_uploader/services/s3_file_uploader.service';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
 import { ReasonsForRejection } from '../../reasons_for_rejection/entities/reasons_for_rejection.entity';
 import { generateFilingNumber } from '../helpers/generate_filing_number.helper';
@@ -48,6 +49,9 @@ import {
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
 import { randomUUID } from 'crypto';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 const schedule = require('node-schedule');
 
@@ -91,6 +95,8 @@ export class MedicalReqService {
     private s3FileUploaderService: S3FileUploaderService,
     private nodemailerService: NodemailerService,
     private requirementTypeService: RequirementTypeService,
+
+    private readonly auditLogService: AuditLogsService,
 
     private entityManager: EntityManager,
     private dataSource: DataSource,
@@ -1427,7 +1433,7 @@ export class MedicalReqService {
 
   // UPDATE FUNTIONS //
 
-  async changeStatusToVisualized(reqId: string) {
+  async changeStatusToVisualized(reqId: string, @Req() requestAuditLog: any) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -1519,6 +1525,16 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type: ActionTypesEnum.REQUEST_DISPLAY,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.MEDICAL_REQ_MODULE,
+        module_record_id: reqId,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
+
       return new HttpException(
         `El requerimiento cambio a estado: ${statusVisualizedFound.name}`,
         HttpStatus.ACCEPTED,
@@ -1531,7 +1547,10 @@ export class MedicalReqService {
     }
   }
 
-  async changeStatusToUnderReview(filingNumber: string) {
+  async changeStatusToUnderReview(
+    filingNumber: string,
+    @Req() requestAuditLog: any,
+  ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -1623,6 +1642,16 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type: ActionTypesEnum.REQUEST_MANAGEMENT,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.MEDICAL_REQ_MODULE,
+        module_record_id: requirementFound.id,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
+
       return new HttpException(
         `El requerimiento cambio a estado: ${statusUnderReviewFound.name}`,
         HttpStatus.ACCEPTED,
@@ -1638,6 +1667,7 @@ export class MedicalReqService {
   async changeStatusToDelivered(
     filingNumber: string,
     deliveredStatus: UpdateStatusMedicalReqDto,
+    @Req() requestAuditLog: any,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -1830,6 +1860,16 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type: ActionTypesEnum.SUBMIT_REQ_DOCUMENTS,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.MEDICAL_REQ_MODULE,
+        module_record_id: updatedMedicalReqDelivered.id,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
+
       return new HttpException(
         `¡La solicitud con número de radicado: ${updatedMedicalReqDelivered.filing_number} ha sido respondida satisfactoriamente!`,
         HttpStatus.ACCEPTED,
@@ -1845,6 +1885,7 @@ export class MedicalReqService {
   async changeStatusToRejected(
     filingNumber: string,
     rejectedStatus: UpdateStatusMedicalReqDto,
+    @Req() requestAuditLog: any,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -2033,6 +2074,16 @@ export class MedicalReqService {
 
       await queryRunner.commitTransaction();
 
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type: ActionTypesEnum.REJECT_REQ,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.MEDICAL_REQ_MODULE,
+        module_record_id: updatedMedicalReqRejected.id,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
+
       return new HttpException(
         `¡La solicitud con número de radicado: ${updatedMedicalReqRejected.filing_number} ha sido rechazada satisfactoriamente!`,
         HttpStatus.ACCEPTED,
@@ -2048,6 +2099,7 @@ export class MedicalReqService {
   async sendToAnotherArea(
     filingNumber: string,
     sendToOtherArea: UpdateStatusMedicalReqDto,
+    @Req() requestAuditLog: any,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -2146,6 +2198,16 @@ export class MedicalReqService {
       );
 
       await queryRunner.commitTransaction();
+
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type: ActionTypesEnum.SEND_REQ_TO_ANOTHER_AREA,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.MEDICAL_REQ_MODULE,
+        module_record_id: createNewRecord.identifiers?.[0]?.id,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
 
       return new HttpException(
         `El requerimiento médico se traslado al área de: ${companyArea.name}`,

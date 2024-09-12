@@ -8,6 +8,7 @@ import { AuthorizedFamiliarController } from './controllers/authorized_familiar.
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationMethod } from '../authentication_method/entities/authentication_method.entity';
 import { NodemailerModule } from 'src/nodemailer/nodemailer.module';
+import { AuditLogsModule } from 'src/audit_logs/audit_logs.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { NodemailerModule } from 'src/nodemailer/nodemailer.module';
       AuthenticationMethod,
     ]),
     NodemailerModule,
+    AuditLogsModule,
   ],
   controllers: [AuthorizedFamiliarController],
   providers: [AuthorizedFamiliarService],

@@ -253,6 +253,7 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
                 label="Motivos por los cuales se rechaza la solicitud:"
                 tooltip="Aquí debes seleccionar las razones por las cuales se rechazó la solicitud."
                 style={{ marginBottom: "13px" }}
+                initialValue={[]}
                 rules={[
                   {
                     required: true,
@@ -268,7 +269,6 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
                     mode="multiple"
                     placeholder={"Seleccionar razones de rechazo:"}
                     options={reasonsForRejectionSelectoptions}
-                    defaultValue={[]}
                     onChange={handleReasonsSelectionChange}
                     style={{
                       width: "100%",

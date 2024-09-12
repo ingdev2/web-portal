@@ -19,6 +19,7 @@ import { PatientClassStatus } from '../patient_class_status/entities/patient_cla
 import { RelWithPatient } from '../rel_with_patient/entities/rel_with_patient.entity';
 import { NodemailerModule } from '../nodemailer/nodemailer.module';
 import { S3FileUploaderModule } from 'src/s3_file_uploader/s3_file_uploader.module';
+import { AuditLogsModule } from 'src/audit_logs/audit_logs.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { S3FileUploaderModule } from 'src/s3_file_uploader/s3_file_uploader.modu
     S3FileUploaderModule,
     RequirementTypeModule,
     RequirementStatusModule,
+    AuditLogsModule,
   ],
   providers: [MedicalReqService],
   controllers: [MedicalReqController],

@@ -113,13 +113,15 @@ export class UsersController {
 
   // PATCH METHODS //
 
+  @EnableAuditLog()
   @Auth(UserRolType.PATIENT, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updatePatient/:id')
   async updateUserPerson(
     @Param('id') id: string,
     @Body() user: UpdateUserPatientDto,
+    @Req() requestAuditLog: any,
   ) {
-    return await this.usersService.updateUserPatient(id, user);
+    return await this.usersService.updateUserPatient(id, user, requestAuditLog);
   }
 
   @EnableAuditLog()
@@ -133,6 +135,7 @@ export class UsersController {
     return await this.usersService.updateUserEps(id, user, requestAuditLog);
   }
 
+  @EnableAuditLog()
   @Auth(
     UserRolType.PATIENT,
     UserRolType.EPS,
@@ -145,8 +148,13 @@ export class UsersController {
     id: string,
     @Body()
     passwords: UpdatePasswordUserDto,
+    @Req() requestAuditLog: any,
   ) {
-    return await this.usersService.updateUserPassword(id, passwords);
+    return await this.usersService.updateUserPassword(
+      id,
+      passwords,
+      requestAuditLog,
+    );
   }
 
   @Patch('/forgotPatientPassword')

@@ -50,9 +50,10 @@ const CustomDashboardLayout: React.FC<{
     <Layout
       className="custom-dashboard-layout-sider"
       style={{
+        display: "flex",
         minWidth: "888px",
         minHeight: "100vh",
-        backgroundColor: "transparent",
+        backgroundColor: "#013B5A",
         margin: "0px",
         padding: "0px",
         overflow: "auto",
@@ -105,6 +106,7 @@ const CustomDashboardLayout: React.FC<{
             }}
           />
         </a>
+
         <Menu
           className="custom--dashboard-layout-menu"
           mode="inline"
@@ -115,9 +117,7 @@ const CustomDashboardLayout: React.FC<{
           onOpenChange={handleOpenChange}
           onClick={({ key }) => handleMenuClick(key)}
           style={{
-            margin: "0px",
-            padding: "0px",
-            paddingBottom: "7px",
+            height: "100vh",
           }}
         />
       </Sider>
@@ -198,7 +198,7 @@ const CustomDashboardLayout: React.FC<{
         </Header>
         <Content
           className="custom--dashboard-layout-content"
-          style={{ margin: "13px 13px" }}
+          style={{ margin: "13px" }}
         >
           <div
             style={{

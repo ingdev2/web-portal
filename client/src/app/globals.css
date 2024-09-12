@@ -105,3 +105,23 @@ a {
     color-scheme: dark;
   }
 }
+
+/* Estilo global para el scrollbar */
+
+::-webkit-scrollbar {
+  width: 10.3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f7f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #013b5a;
+  border-radius: 22px;
+  border: 3.1px solid #f7f7f7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00b5e8;
+}

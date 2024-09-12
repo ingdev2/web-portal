@@ -6,6 +6,7 @@ import {
   Get,
   Patch,
   Query,
+  Req,
 } from '@nestjs/common';
 import { MedicalReqService } from '../services/medical_req.service';
 import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.dto';
@@ -18,6 +19,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { RequirementStatusEnum } from '../enums/requirement_status.enum';
 import { RequirementTypeEnum } from '../enums/requirement_type.enum';
+import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('medical-req')
 @ApiBearerAuth()
@@ -177,51 +179,74 @@ export class MedicalReqController {
 
   // PATCH METHODS //
 
+  @EnableAuditLog()
   @Auth(AdminRolType.ADMIN)
   @Patch('/visualizedStatus/:reqId')
-  async changeStatusToVisualized(@Param('reqId') reqId: string) {
-    return await this.medicalReqService.changeStatusToVisualized(reqId);
+  async changeStatusToVisualized(
+    @Param('reqId') reqId: string,
+    @Req() requestAuditLog: any,
+  ) {
+    return await this.medicalReqService.changeStatusToVisualized(
+      reqId,
+      requestAuditLog,
+    );
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.ADMIN)
   @Patch('/underReviewStatus/:filingNumber')
-  async changeStatusToUnderReview(@Param('filingNumber') filingNumber: string) {
-    return await this.medicalReqService.changeStatusToUnderReview(filingNumber);
+  async changeStatusToUnderReview(
+    @Param('filingNumber') filingNumber: string,
+    @Req() requestAuditLog: any,
+  ) {
+    return await this.medicalReqService.changeStatusToUnderReview(
+      filingNumber,
+      requestAuditLog,
+    );
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.ADMIN)
   @Patch('/deliveredStatus/:filingNumber')
   async changeStatusToDelivered(
     @Param('filingNumber') filingNumber: string,
     @Body() deliveredStatus: UpdateStatusMedicalReqDto,
+    @Req() requestAuditLog: any,
   ) {
     return await this.medicalReqService.changeStatusToDelivered(
       filingNumber,
       deliveredStatus,
+      requestAuditLog,
     );
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.ADMIN)
   @Patch('/rejectedStatus/:filingNumber')
   async changeStatusToRejected(
     @Param('filingNumber') filingNumber: string,
     @Body() rejectedStatus: UpdateStatusMedicalReqDto,
+    @Req() requestAuditLog: any,
   ) {
     return await this.medicalReqService.changeStatusToRejected(
       filingNumber,
       rejectedStatus,
+      requestAuditLog,
     );
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.ADMIN)
   @Patch('/sendToAnotherArea/:filingNumber')
   async forwardToAnotherArea(
     @Param('filingNumber') filingNumber: string,
     @Body() sendToLegalArea: UpdateStatusMedicalReqDto,
+    @Req() requestAuditLog: any,
   ) {
     return await this.medicalReqService.sendToAnotherArea(
       filingNumber,
       sendToLegalArea,
+      requestAuditLog,
     );
   }
 

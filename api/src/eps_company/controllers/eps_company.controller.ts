@@ -6,13 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { EpsCompanyService } from '../services/eps_company.service';
 import { CreateEpsCompanyDto } from '../dto/create-eps_company.dto';
 import { UpdateEpsCompanyDto } from '../dto/update-eps_company.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Auth } from '../../auth/decorators/auth.decorator';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('eps-company')
 @ApiBearerAuth()
@@ -22,10 +24,17 @@ export class EpsCompanyController {
 
   // POST METHODS //
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
-  createEpsCompany(@Body() createEpsCompany: CreateEpsCompanyDto) {
-    return this.epsCompanyService.createEpsCompany(createEpsCompany);
+  createEpsCompany(
+    @Body() createEpsCompany: CreateEpsCompanyDto,
+    @Req() requestAuditLog: any,
+  ) {
+    return this.epsCompanyService.createEpsCompany(
+      createEpsCompany,
+      requestAuditLog,
+    );
   }
 
   // GET METHODS //
@@ -48,13 +57,19 @@ export class EpsCompanyController {
 
   // PATCH METHODS //
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/update/:id')
   updateEpsCompany(
     @Param('id') id: number,
     @Body() updateCompanyArea: UpdateEpsCompanyDto,
+    @Req() requestAuditLog: any,
   ) {
-    return this.epsCompanyService.updateEpsCompany(id, updateCompanyArea);
+    return this.epsCompanyService.updateEpsCompany(
+      id,
+      updateCompanyArea,
+      requestAuditLog,
+    );
   }
 
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)

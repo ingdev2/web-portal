@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
@@ -13,6 +14,7 @@ import { AuthorizedFamiliarService } from '../services/authorized_familiar.servi
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
+import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('authorized-familiar')
 @ApiBearerAuth()
@@ -57,9 +59,13 @@ export class AuthorizedFamiliarController {
     return await this.authorizedFamiliarService.updateUserFamiliar(id, familar);
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN, UserRolType.PATIENT)
   @Patch('/ban/:id')
-  async banRelatives(@Param('id') id: string) {
-    return await this.authorizedFamiliarService.banRelatives(id);
+  async banRelatives(@Param('id') id: string, @Req() requestAuditLog: any) {
+    return await this.authorizedFamiliarService.banRelatives(
+      id,
+      requestAuditLog,
+    );
   }
 }

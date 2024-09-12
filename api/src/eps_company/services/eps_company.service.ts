@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { CreateEpsCompanyDto } from '../dto/create-eps_company.dto';
@@ -7,12 +7,16 @@ import { EpsCompany } from '../entities/eps_company.entity';
 import { validateCorporateEmail } from '../helpers/validate_corporate_email';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import { NodemailerService } from 'src/nodemailer/services/nodemailer.service';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
 
 import {
   EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS,
   SUBJECT_EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS,
 } from 'src/nodemailer/constants/email_config.constant';
 import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 @Injectable()
 export class EpsCompanyService {
@@ -21,11 +25,16 @@ export class EpsCompanyService {
     private epsCompanyRepository: Repository<EpsCompany>,
 
     private readonly nodemailerService: NodemailerService,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
 
-  async createEpsCompany(epsCompany: CreateEpsCompanyDto) {
+  async createEpsCompany(
+    epsCompany: CreateEpsCompanyDto,
+    @Req() requestAuditLog: any,
+  ) {
     const epsCompanyNameFound = await this.epsCompanyRepository.findOne({
       where: {
         name: epsCompany.name,
@@ -75,7 +84,11 @@ export class EpsCompanyService {
       );
     }
 
-    const newEpsCompany = await this.epsCompanyRepository.create(epsCompany);
+    const createNewEpsCompany =
+      await this.epsCompanyRepository.create(epsCompany);
+
+    const saveNewEpsCompany =
+      await this.epsCompanyRepository.save(createNewEpsCompany);
 
     const emailEpsCompanyCreatedToSend = new SendEmailDto();
 
@@ -91,7 +104,21 @@ export class EpsCompanyService {
 
     await this.nodemailerService.sendEmail(emailEpsCompanyCreatedToSend);
 
-    return await this.epsCompanyRepository.save(newEpsCompany);
+    const newEpsCompany = await this.epsCompanyRepository.findOne({
+      where: { id: saveNewEpsCompany.id },
+    });
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_EPS_COMPANY,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.EPS_COMPANY_MODULE,
+      module_record_id: newEpsCompany.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
+
+    return newEpsCompany;
   }
 
   // GET FUNTIONS //
@@ -152,7 +179,11 @@ export class EpsCompanyService {
 
   // UPDATE FUNTIONS //
 
-  async updateEpsCompany(id: number, epsCompany: UpdateEpsCompanyDto) {
+  async updateEpsCompany(
+    id: number,
+    epsCompany: UpdateEpsCompanyDto,
+    @Req() requestAuditLog: any,
+  ) {
     const epsCompanyFound = await this.epsCompanyRepository.findOneBy({ id });
 
     if (!epsCompanyFound) {
@@ -195,6 +226,16 @@ export class EpsCompanyService {
     if (updateEpsCompany.affected === 0) {
       return new HttpException(`Empresa no encontrada.`, HttpStatus.CONFLICT);
     }
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_DATA_EPS_COMPANY,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.EPS_COMPANY_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Datos guardados correctamente!`,

@@ -8,6 +8,7 @@ import SessionAuthProvider from "@/context/SessionAuthProvider";
 import { ConfigProvider } from "antd";
 import themeConfig from "@/theme/themeConfig";
 import es_ES from "antd/locale/es_ES";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

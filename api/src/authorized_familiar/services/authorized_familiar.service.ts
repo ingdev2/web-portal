@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { AuthorizedFamiliar } from '../entities/authorized_familiar.entity';
@@ -11,11 +11,15 @@ import { AuthenticationMethod } from '../../authentication_method/entities/authe
 import { AuthenticationMethodEnum } from '../../utils/enums/authentication_method.enum';
 import { FamiliarLoginDto } from 'src/auth/dto/familiar_login.dto';
 import { NodemailerService } from 'src/nodemailer/services/nodemailer.service';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import {
   ADDED_AS_AUTHORIZED_RELATIVE,
   ADDED_FAMILY,
 } from 'src/nodemailer/constants/email_config.constant';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 @Injectable()
 export class AuthorizedFamiliarService {
@@ -32,6 +36,8 @@ export class AuthorizedFamiliarService {
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
     private readonly nodemailerService: NodemailerService,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -591,7 +597,7 @@ export class AuthorizedFamiliarService {
 
   // DELETED-BAN FUNTIONS //
 
-  async banRelatives(id: string) {
+  async banRelatives(id: string, @Req() requestAuditLog: any) {
     const familiarFound = await this.familiarRepository.findOne({
       where: {
         id: id,
@@ -608,6 +614,19 @@ export class AuthorizedFamiliarService {
     familiarFound.is_active = !familiarFound.is_active;
 
     await this.familiarRepository.save(familiarFound);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type:
+        familiarFound.is_active === false
+          ? ActionTypesEnum.BAN_USER_FAMILIAR
+          : ActionTypesEnum.UNBAN_USER_FAMILIAR,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.RELATIVES_MODULE,
+      module_record_id: familiarFound.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     const statusMessage = familiarFound.is_active
       ? `El familiar con número de ID: ${familiarFound.id_number} se ha ACTIVADO.`

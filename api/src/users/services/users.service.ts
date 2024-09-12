@@ -833,7 +833,11 @@ export class UsersService {
 
   // UPDATE FUNTIONS //
 
-  async updateUserPatient(id: string, userPatient: UpdateUserPatientDto) {
+  async updateUserPatient(
+    id: string,
+    userPatient: UpdateUserPatientDto,
+    @Req() requestAuditLog: any,
+  ) {
     const userFound = await this.userRepository.findOneBy({
       id,
       is_active: true,
@@ -941,6 +945,16 @@ export class UsersService {
     if (updateUserPatient.affected === 0) {
       return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
     }
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_DATA_USER_PATIENT,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.USERS_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Datos guardados correctamente!`,
@@ -1087,7 +1101,11 @@ export class UsersService {
     );
   }
 
-  async updateUserPassword(id: string, passwords: UpdatePasswordUserDto) {
+  async updateUserPassword(
+    id: string,
+    passwords: UpdatePasswordUserDto,
+    @Req() requestAuditLog: any,
+  ) {
     const userFound = await this.userRepository
       .createQueryBuilder('user')
       .addSelect(['user.password'])
@@ -1139,6 +1157,16 @@ export class UsersService {
     emailDetailsToSend.contactPbx = CONTACT_PBX;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_PASSWORD_ACCOUNT,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.USERS_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Contraseña actualizada correctamente!`,
