@@ -18,6 +18,12 @@ const EpsRequestDetailsModalContent: React.FC<{
   selectedRequestResponseDocuments: ReactNode;
   labelDocumentExpirationDate: string;
   selectedRequestDocumentExpirationDate: ReactNode;
+  labelPatientName: string;
+  selectedPatientName: string;
+  labelPatientIdType: string;
+  selectedPatientIdType: string;
+  labelPatientIdNumber: string;
+  selectedPatientIdNumber: number;
   labelUserComments: string;
   selectedRequestUserComments: string;
   labelRequestResponse: string;
@@ -36,6 +42,12 @@ const EpsRequestDetailsModalContent: React.FC<{
   selectedRequestResponseDocuments,
   labelDocumentExpirationDate,
   selectedRequestDocumentExpirationDate,
+  labelPatientName,
+  selectedPatientName,
+  labelPatientIdType,
+  selectedPatientIdType,
+  labelPatientIdNumber,
+  selectedPatientIdNumber,
   labelUserComments,
   selectedRequestUserComments,
   labelRequestResponse,
@@ -135,10 +147,49 @@ const EpsRequestDetailsModalContent: React.FC<{
       </Descriptions>
 
       <Descriptions
+        className="description-patient-info-request-details-eps"
+        layout="vertical"
+        size="middle"
+        style={{ paddingTop: "31px" }}
+        labelStyle={{
+          ...titleStyleCss,
+        }}
+        contentStyle={{
+          ...subtitleStyleCss,
+        }}
+        bordered
+        column={3}
+      >
+        <Descriptions.Item
+          label={labelPatientName}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedPatientName}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelPatientIdType}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedPatientIdType}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label={labelPatientIdNumber}
+          style={{ textAlign: "center" }}
+          span={3}
+        >
+          {selectedPatientIdNumber}
+        </Descriptions.Item>
+      </Descriptions>
+
+      <Descriptions
         className="description2-request-details-eps"
         layout="vertical"
         size="middle"
-        style={{ paddingBlock: "7px" }}
+        style={{ paddingTop: "31px", paddingBottom: "13px" }}
         labelStyle={{
           ...titleStyleCss,
         }}

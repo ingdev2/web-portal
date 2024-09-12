@@ -148,30 +148,38 @@ export class AuthService {
 
   // REGISTER FUNTIONS //
 
-  async registerSuperAdmin({
-    name,
-    last_name,
-    admin_gender,
-    admin_id_type,
-    id_number,
-    corporate_email,
-    password,
-    company_area,
-    admin_role,
-  }: CreateSuperAdminDto) {
-    await this.adminsService.getSuperAdminByIdNumber(id_number);
-
-    return await this.adminsService.createSuperAdmin({
+  async registerSuperAdmin(
+    {
       name,
       last_name,
       admin_gender,
       admin_id_type,
       id_number,
       corporate_email,
-      password: await bcryptjs.hash(password, 10),
+      password,
       company_area,
+      position_level,
       admin_role,
-    });
+    }: CreateSuperAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
+    await this.adminsService.getSuperAdminByIdNumber(id_number);
+
+    return await this.adminsService.createSuperAdmin(
+      {
+        name,
+        last_name,
+        admin_gender,
+        admin_id_type,
+        id_number,
+        corporate_email,
+        password: await bcryptjs.hash(password, 10),
+        company_area,
+        position_level,
+        admin_role,
+      },
+      requestAuditLog,
+    );
   }
 
   async registerAdmin(
@@ -312,24 +320,8 @@ export class AuthService {
     });
   }
 
-  async registerUserEps({
-    name,
-    last_name,
-    user_gender,
-    user_id_type,
-    id_number,
-    eps_company,
-    company_area,
-    email,
-    cellphone,
-    password,
-    authentication_method,
-    user_role,
-    verification_code,
-  }: CreateUserEpsDto) {
-    await this.usersService.getEpsUserByIdNumber(id_number);
-
-    return await this.usersService.createUserEps({
+  async registerUserEps(
+    {
       name,
       last_name,
       user_gender,
@@ -339,11 +331,33 @@ export class AuthService {
       company_area,
       email,
       cellphone,
-      password: await bcryptjs.hash(password, 10),
+      password,
       authentication_method,
       user_role,
       verification_code,
-    });
+    }: CreateUserEpsDto,
+    @Req() requestAuditLog: any,
+  ) {
+    await this.usersService.getEpsUserByIdNumber(id_number);
+
+    return await this.usersService.createUserEps(
+      {
+        name,
+        last_name,
+        user_gender,
+        user_id_type,
+        id_number,
+        eps_company,
+        company_area,
+        email,
+        cellphone,
+        password: await bcryptjs.hash(password, 10),
+        authentication_method,
+        user_role,
+        verification_code,
+      },
+      requestAuditLog,
+    );
   }
 
   // LOGIN FUNTIONS //

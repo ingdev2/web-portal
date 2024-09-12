@@ -44,10 +44,17 @@ export class AuthController {
     });
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN)
   @Post('registerSuperAdmin')
-  async registerSuperAdmin(@Body() registerSuperAdmin: CreateSuperAdminDto) {
-    return await this.authService.registerSuperAdmin(registerSuperAdmin);
+  async registerSuperAdmin(
+    @Body() registerSuperAdmin: CreateSuperAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
+    return await this.authService.registerSuperAdmin(
+      registerSuperAdmin,
+      requestAuditLog,
+    );
   }
 
   @EnableAuditLog()
@@ -74,10 +81,17 @@ export class AuthController {
     return await this.authService.registerFamiliar(patientId, registerFamiliar);
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('registerUserEps')
-  async registerUserEps(@Body() registerUserEps: CreateUserEpsDto) {
-    return await this.authService.registerUserEps(registerUserEps);
+  async registerUserEps(
+    @Body() registerUserEps: CreateUserEpsDto,
+    @Req() requestAuditLog: any,
+  ) {
+    return await this.authService.registerUserEps(
+      registerUserEps,
+      requestAuditLog,
+    );
   }
 
   // LOGIN

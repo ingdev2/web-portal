@@ -17,6 +17,9 @@ const EpsRequestDetailsModal: React.FC<{
   selectedRequestStatusModal: ReactNode;
   selectedRequestResponseDocumentsModal: string[];
   selectedRequestDocumentExpirationDateModal: ReactNode;
+  selectedPatientNameModal: string;
+  selectedPatientIdTypeModal: string;
+  selectedPatientIdNumberModal: number;
   selectedRequestReasonsForRejectionModal: string[];
   selectedRequestUserCommentsModal: string;
   selectedRequestResponseCommentsModal: string;
@@ -28,6 +31,9 @@ const EpsRequestDetailsModal: React.FC<{
   selectedRequestStatusModal,
   selectedRequestResponseDocumentsModal,
   selectedRequestDocumentExpirationDateModal,
+  selectedPatientNameModal,
+  selectedPatientIdTypeModal,
+  selectedPatientIdNumberModal,
   selectedRequestReasonsForRejectionModal,
   selectedRequestUserCommentsModal,
   selectedRequestResponseCommentsModal,
@@ -105,6 +111,12 @@ const EpsRequestDetailsModal: React.FC<{
               <b style={{ color: "#960202" }}>No aplica</b>
             )
           }
+          labelPatientName="Nombre de paciente"
+          selectedPatientName={selectedPatientNameModal}
+          labelPatientIdType="Tipo de identificación paciente"
+          selectedPatientIdType={selectedPatientIdTypeModal}
+          labelPatientIdNumber="Número de identificación paciente"
+          selectedPatientIdNumber={selectedPatientIdNumberModal}
           labelReasonsForRejection="Motivos de rechazo a solicitud"
           selectedRequestReasonsForRejection={
             selectedRequestReasonsForRejectionModal.length > 0 ? (

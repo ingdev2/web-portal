@@ -61,10 +61,12 @@ export class AdminsController {
     @Param('id')
     id: number,
     @Body() admin: UpdateAdminDto,
+    @Req() requestAuditLog: any,
   ) {
-    return await this.adminsService.updateAdmin(id, admin);
+    return await this.adminsService.updateAdmin(id, admin, requestAuditLog);
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updatePassword/:id')
   async updateAdminPassword(
@@ -72,8 +74,13 @@ export class AdminsController {
     id: number,
     @Body()
     passwords: UpdatePasswordAdminDto,
+    @Req() requestAuditLog: any,
   ) {
-    return await this.adminsService.updateAdminPassword(id, passwords);
+    return await this.adminsService.updateAdminPassword(
+      id,
+      passwords,
+      requestAuditLog,
+    );
   }
 
   @Patch('/forgotAdminsPassword')
@@ -100,7 +107,7 @@ export class AdminsController {
   @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN)
   @Patch('/banAdmin/:id')
-  async banAdmins(@Param('id') id: number) {
-    return await this.adminsService.banAdmins(id);
+  async banAdmins(@Param('id') id: number, @Req() requestAuditLog: any) {
+    return await this.adminsService.banAdmins(id, requestAuditLog);
   }
 }

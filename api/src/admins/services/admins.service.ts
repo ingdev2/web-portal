@@ -68,7 +68,10 @@ export class AdminsService {
 
   // CREATE FUNTIONS //
 
-  async createSuperAdmin(superAdmin: CreateSuperAdminDto) {
+  async createSuperAdmin(
+    superAdmin: CreateSuperAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
     const superAdminFound = await this.adminRepository.findOne({
       where: {
         id_number: superAdmin.id_number,
@@ -120,6 +123,32 @@ export class AdminsService {
       );
     }
 
+    const adminPositionLevel = await this.positionLevelRepository.findOne({
+      where: {
+        id: superAdmin.position_level,
+      },
+    });
+
+    if (!adminPositionLevel) {
+      throw new HttpException(
+        'El nivel de cargo ingresado no es valido.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const adminCompanyArea = await this.companyAreaRepository.findOne({
+      where: {
+        id: superAdmin.company_area,
+      },
+    });
+
+    if (!adminCompanyArea) {
+      throw new HttpException(
+        'El área de la compañia ingresado no es valido.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const roleSuperAdminFound = await this.adminRoleRepository.findOne({
       where: {
         name: AdminRolType.SUPER_ADMIN,
@@ -162,6 +191,16 @@ export class AdminsService {
     const newAdminSuperAdmin = await this.adminRepository.findOne({
       where: { id: adminSuperAdminWithRole.id },
     });
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_SUPER_ADMIN,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.ADMINS_MODULE,
+      module_record_id: newAdminSuperAdmin.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return newAdminSuperAdmin;
   }
@@ -479,7 +518,11 @@ export class AdminsService {
 
   // UPDATE FUNTIONS //
 
-  async updateAdmin(id: number, admin: UpdateAdminDto) {
+  async updateAdmin(
+    id: number,
+    admin: UpdateAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
     const adminFound = await this.adminRepository.findOneBy({
       id,
       is_active: true,
@@ -550,13 +593,27 @@ export class AdminsService {
       return new HttpException(`Usuario no encontrado.`, HttpStatus.CONFLICT);
     }
 
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_DATA_ADMIN,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.ADMINS_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
+
     return new HttpException(
       `¡Datos guardados correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }
 
-  async updateAdminPassword(id: number, passwords: UpdatePasswordAdminDto) {
+  async updateAdminPassword(
+    id: number,
+    passwords: UpdatePasswordAdminDto,
+    @Req() requestAuditLog: any,
+  ) {
     const adminFound = await this.adminRepository
       .createQueryBuilder('admin')
       .addSelect(['admin.password'])
@@ -608,6 +665,16 @@ export class AdminsService {
     emailDetailsToSend.contactPbx = CONTACT_PBX;
 
     await this.nodemailerService.sendEmail(emailDetailsToSend);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_PASSWORD_ACCOUNT,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.ADMINS_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Contraseña actualizada correctamente!`,
@@ -702,7 +769,7 @@ export class AdminsService {
 
   // DELETED-BAN FUNTIONS //
 
-  async banAdmins(id: number) {
+  async banAdmins(id: number, @Req() requestAuditLog: any) {
     const adminFound = await this.adminRepository.findOne({
       where: {
         id: id,
@@ -732,6 +799,19 @@ export class AdminsService {
     adminFound.is_active = !adminFound.is_active;
 
     await this.adminRepository.save(adminFound);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type:
+        adminFound.is_active === false
+          ? ActionTypesEnum.BAN_ADMIN
+          : ActionTypesEnum.UNBAN_ADMIN,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.ADMINS_MODULE,
+      module_record_id: adminFound.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     const statusMessage = adminFound.is_active
       ? `El admin con número de ID: ${adminFound.id_number} se ha ACTIVADO.`

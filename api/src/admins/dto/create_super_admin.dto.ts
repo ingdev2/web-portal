@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   IsEmail,
-  IsNumber,
   IsString,
   IsOptional,
   MinLength,
@@ -41,4 +40,7 @@ export class CreateSuperAdminDto {
 
   @IsNotEmpty()
   company_area: number;
+
+  @IsNotEmpty()
+  position_level: number;
 }

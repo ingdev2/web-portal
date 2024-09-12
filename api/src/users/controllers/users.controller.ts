@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
@@ -18,6 +19,7 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 import { ForgotPasswordUserPatientDto } from '../dto/forgot_password_user_patient.dto';
 import { ForgotPasswordUserEpsDto } from '../dto/forgot_password_user_eps.dto';
 import { ResetPasswordUserDto } from '../dto/reset_password_user.dto';
+import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -120,10 +122,15 @@ export class UsersController {
     return await this.usersService.updateUserPatient(id, user);
   }
 
+  @EnableAuditLog()
   @Auth(UserRolType.EPS, AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/updateEps/:id')
-  async updateUserEps(@Param('id') id: string, @Body() user: UpdateUserEpsDto) {
-    return await this.usersService.updateUserEps(id, user);
+  async updateUserEps(
+    @Param('id') id: string,
+    @Body() user: UpdateUserEpsDto,
+    @Req() requestAuditLog: any,
+  ) {
+    return await this.usersService.updateUserEps(id, user, requestAuditLog);
   }
 
   @Auth(
@@ -175,9 +182,10 @@ export class UsersController {
     return await this.usersService.resetUserPassword(token, { newPassword });
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/ban/:id')
-  async banUsers(@Param('id') id: string) {
-    return await this.usersService.banUsers(id);
+  async banUsers(@Param('id') id: string, @Req() requestAuditLog: any) {
+    return await this.usersService.banUsers(id, requestAuditLog);
   }
 }

@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   UnauthorizedException,
+  Req,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
@@ -31,6 +32,7 @@ import { ValidatePatientDto } from '../dto/validate_patient.dto';
 import { nanoid } from 'nanoid';
 import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import {
   ACCOUNT_CREATED,
@@ -47,6 +49,9 @@ import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
 import { CONTACT_PBX } from 'src/utils/constants/constants';
 import { maskEmailUser } from '../helpers/mask_email';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 const schedule = require('node-schedule');
 
@@ -74,6 +79,8 @@ export class UsersService {
     private authenticationMethodRepository: Repository<AuthenticationMethod>,
 
     private readonly nodemailerService: NodemailerService,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
@@ -444,7 +451,7 @@ export class UsersService {
     return newUserPatient;
   }
 
-  async createUserEps(userEps: CreateUserEpsDto) {
+  async createUserEps(userEps: CreateUserEpsDto, @Req() requestAuditLog: any) {
     const userEpsFound = await this.userRepository.findOne({
       where: {
         id_number: userEps.id_number,
@@ -573,6 +580,16 @@ export class UsersService {
     emailUserCreationNotificationToSend.contactPbx = CONTACT_PBX;
 
     await this.nodemailerService.sendEmail(emailUserCreationNotificationToSend);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_USER_EPS,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.USERS_MODULE,
+      module_record_id: newUserEps.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return newUserEps;
   }
@@ -931,7 +948,11 @@ export class UsersService {
     );
   }
 
-  async updateUserEps(id: string, userEps: UpdateUserEpsDto) {
+  async updateUserEps(
+    id: string,
+    userEps: UpdateUserEpsDto,
+    @Req() requestAuditLog: any,
+  ) {
     const userFound = await this.userRepository.findOneBy({
       id,
       is_active: true,
@@ -980,18 +1001,20 @@ export class UsersService {
       );
     }
 
-    const cellphoneUserEpsValidate = await this.userRepository.findOne({
-      where: {
-        id: Not(userFound.id),
-        cellphone: userEps.cellphone,
-      },
-    });
+    if (userFound.cellphone !== null) {
+      const cellphoneUserEpsValidate = await this.userRepository.findOne({
+        where: {
+          id: Not(userFound.id),
+          cellphone: userEps.cellphone,
+        },
+      });
 
-    if (cellphoneUserEpsValidate) {
-      return new HttpException(
-        `El número de celular ${userEps.cellphone} ya está registrado.`,
-        HttpStatus.CONFLICT,
-      );
+      if (cellphoneUserEpsValidate) {
+        return new HttpException(
+          `El número de celular ${userEps.cellphone} ya está registrado.`,
+          HttpStatus.CONFLICT,
+        );
+      }
     }
 
     const authenticationMethodEmailFound =
@@ -1047,6 +1070,16 @@ export class UsersService {
     if (updateUserEps.affected === 0) {
       return new HttpException(`Usuario no encontrado`, HttpStatus.CONFLICT);
     }
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_DATA_USER_EPS,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.USERS_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Datos guardados correctamente!`,
@@ -1259,7 +1292,7 @@ export class UsersService {
 
   // DELETED-BAN FUNTIONS //
 
-  async banUsers(id: string) {
+  async banUsers(id: string, @Req() requestAuditLog: any) {
     const userFound = await this.userRepository.findOne({
       where: {
         id: id,
@@ -1276,6 +1309,48 @@ export class UsersService {
     userFound.is_active = !userFound.is_active;
 
     await this.userRepository.save(userFound);
+
+    const userRolePatient = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.PATIENT,
+      },
+    });
+
+    const userRoleEps = await this.userRoleRepository.findOne({
+      where: {
+        name: UserRolType.EPS,
+      },
+    });
+
+    if (userFound.user_role === userRolePatient.id) {
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type:
+          userFound.is_active === false
+            ? ActionTypesEnum.BAN_USER_PATIENT
+            : ActionTypesEnum.UNBAN_USER_PATIENT,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.USERS_MODULE,
+        module_record_id: id,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
+    }
+
+    if (userFound.user_role === userRoleEps.id) {
+      const auditLogData = {
+        ...requestAuditLog.auditLogData,
+        action_type:
+          userFound.is_active === false
+            ? ActionTypesEnum.BAN_USER_EPS
+            : ActionTypesEnum.UNBAN_USER_EPS,
+        query_type: QueryTypesEnum.PATCH,
+        module_name: ModuleNameEnum.USERS_MODULE,
+        module_record_id: id,
+      };
+
+      await this.auditLogService.createAuditLog(auditLogData);
+    }
 
     const statusMessage = userFound.is_active
       ? `El usuario con número de ID: ${userFound.id_number} se ha ACTIVADO.`

@@ -23,11 +23,13 @@ import {
 } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
+import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllMedicalReqReasonsForRejectionQuery } from "@/redux/apis/medical_req/reasons_for_rejection/reasonsForRejectionApi";
 
 import { typesMap } from "@/helpers/medical_req_type_map/types_map";
 import { getTagComponentType } from "@/components/common/custom_tags_medical_req_type/CustomTagsTypes";
 import { statusMap } from "@/helpers/medical_req_status_map/status_map";
+import { idTypeMap } from "@/helpers/id_type_map/id_type_map";
 import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
 import { updateSelectedRequestReasonsForRejection } from "@/helpers/medical_req_reason_for_rejection_map/update_selected_reasons_for_rejection";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
@@ -65,6 +67,14 @@ const EpsRequestCardList: React.FC<{
     selectedRequestDocumentsExpirationDateLocalState,
     setSelectedRequestDocumentsExpirationDateLocalState,
   ] = useState<ReactNode>(null);
+  const [selectedPatientNameLocalState, setSelectedPatientNameLocalState] =
+    useState("");
+  const [selectedPatientIdTypeLocalState, setSelectedPatientIdTypeLocalState] =
+    useState("");
+  const [
+    selectedPatientIdNumberLocalState,
+    setSelectedPatientIdNumberLocalState,
+  ] = useState(0);
   const [
     selectedRequestReasonsForRejectionLocalState,
     setSelectedRequestReasonsForRejectionLocalState,
@@ -126,6 +136,13 @@ const EpsRequestCardList: React.FC<{
     error: userMedicalReqStatusError,
   } = useGetAllMedicalReqStatusQuery(null);
 
+  const {
+    data: allIdTypesData,
+    isLoading: allIdTypesLoading,
+    isFetching: allIdTypesFetching,
+    error: allIdTypesError,
+  } = useGetAllIdTypesQuery(null);
+
   const [deletedMedicalReqEps] = useDeletedMedicalReqMutation({
     fixedCacheKey: "deletedMedicalReqEpsData",
   });
@@ -139,6 +156,7 @@ const EpsRequestCardList: React.FC<{
 
   const typeMapList = typesMap(userMedicalReqTypeData || []);
   const statusMapList = statusMap(userMedicalReqStatusData || []);
+  const idTypeMapList = idTypeMap(allIdTypesData || []);
 
   const reasonForRejectionMapList = reasonForRejectionMap(
     userMedicalReqReasonsForRejectionData || []
@@ -272,6 +290,9 @@ const EpsRequestCardList: React.FC<{
         setSelectedRequestDocumentsExpirationDateLocalState(
           item.download_expiration_date
         );
+        setSelectedPatientNameLocalState(item.patient_name);
+        setSelectedPatientIdTypeLocalState(idTypeMapList[item.patient_id_type]);
+        setSelectedPatientIdNumberLocalState(item.patient_id_number);
         setSelectedRequestUserCommentsLocalState(item.user_message);
         setSelectedRequestResponseCommentsLocalState(item.response_comments);
         updateSelectedRequestReasonsForRejection(
@@ -338,6 +359,9 @@ const EpsRequestCardList: React.FC<{
           selectedRequestDocumentExpirationDateModal={
             selectedRequestDocumentsExpirationDateLocalState
           }
+          selectedPatientNameModal={selectedPatientNameLocalState}
+          selectedPatientIdTypeModal={selectedPatientIdTypeLocalState}
+          selectedPatientIdNumberModal={selectedPatientIdNumberLocalState}
           selectedRequestReasonsForRejectionModal={
             selectedRequestReasonsForRejectionLocalState
           }
