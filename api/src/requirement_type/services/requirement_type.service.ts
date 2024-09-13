@@ -1,20 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { CreateRequirementTypeDto } from '../dto/create-requirement_type.dto';
 import { UpdateRequirementTypeDto } from '../dto/update-requirement_type.dto';
 import { RequirementType } from '../entities/requirement_type.entity';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 @Injectable()
 export class RequirementTypeService {
   constructor(
     @InjectRepository(RequirementType)
     private requirementTypeRepository: Repository<RequirementType>,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
 
-  async createRequirementType(requirementType: CreateRequirementTypeDto) {
+  async createRequirementType(
+    requirementType: CreateRequirementTypeDto,
+    @Req() requestAuditLog: any,
+  ) {
     const requirementTypeFound = await this.requirementTypeRepository.findOne({
       where: {
         name: requirementType.name,
@@ -28,10 +37,28 @@ export class RequirementTypeService {
       );
     }
 
-    const newRequirementType =
+    const createRequirementType =
       await this.requirementTypeRepository.create(requirementType);
 
-    return await this.requirementTypeRepository.save(newRequirementType);
+    const saveRequirementType = await this.requirementTypeRepository.save(
+      createRequirementType,
+    );
+
+    const newReqType = await this.requirementTypeRepository.findOne({
+      where: { id: saveRequirementType.id },
+    });
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_REQ_TYPE,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.REQ_TYPE_MODULE,
+      module_record_id: newReqType.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
+
+    return newReqType;
   }
 
   // GET FUNTIONS //
@@ -95,6 +122,7 @@ export class RequirementTypeService {
   async updateRequirementType(
     id: number,
     requirementType: UpdateRequirementTypeDto,
+    @Req() requestAuditLog: any,
   ) {
     const requirementTypeFound = await this.requirementTypeRepository.findOneBy(
       {
@@ -138,13 +166,23 @@ export class RequirementTypeService {
       );
     }
 
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_REQ_TYPE,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.REQ_TYPE_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
+
     return new HttpException(
       `¡Datos guardados correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }
 
-  async banRequirementeType(id: number) {
+  async banRequirementeType(id: number, @Req() requestAuditLog: any) {
     const requirementTypeFound = await this.requirementTypeRepository.findOne({
       where: {
         id: id,
@@ -161,6 +199,19 @@ export class RequirementTypeService {
     requirementTypeFound.is_active = !requirementTypeFound.is_active;
 
     await this.requirementTypeRepository.save(requirementTypeFound);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type:
+        requirementTypeFound.is_active === false
+          ? ActionTypesEnum.BAN_REQ_TYPE
+          : ActionTypesEnum.UNBAN_REQ_TYPE,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.REQ_TYPE_MODULE,
+      module_record_id: requirementTypeFound.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     const statusMessage = requirementTypeFound.is_active
       ? `El tipo de requerimiento con número de ID: ${requirementTypeFound.id} se ha ACTIVADO.`

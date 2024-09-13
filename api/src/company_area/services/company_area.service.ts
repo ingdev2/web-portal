@@ -1,21 +1,30 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCompanyAreaDto } from '../dto/create-company_area.dto';
 import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { CompanyArea } from '../entities/company_area.entity';
 import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 @Injectable()
 export class CompanyAreaService {
   constructor(
     @InjectRepository(CompanyArea)
     private companyAreaRepository: Repository<CompanyArea>,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
 
-  async createCompanyArea(companyArea: CreateCompanyAreaDto) {
+  async createCompanyArea(
+    companyArea: CreateCompanyAreaDto,
+    @Req() requestAuditLog: any,
+  ) {
     const companyAreaFound = await this.companyAreaRepository.findOne({
       where: {
         name: companyArea.name,
@@ -29,9 +38,27 @@ export class CompanyAreaService {
       );
     }
 
-    const newCompanyArea = await this.companyAreaRepository.create(companyArea);
+    const createCompanyArea =
+      await this.companyAreaRepository.create(companyArea);
 
-    return await this.companyAreaRepository.save(newCompanyArea);
+    const saveCompanyArea =
+      await this.companyAreaRepository.save(createCompanyArea);
+
+    const newCompanyArea = await this.companyAreaRepository.findOne({
+      where: { id: saveCompanyArea.id },
+    });
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_COMPANY_AREA,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.COMPANY_AREA_MODULE,
+      module_record_id: newCompanyArea.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
+
+    return newCompanyArea;
   }
 
   // GET FUNTIONS //
@@ -89,7 +116,11 @@ export class CompanyAreaService {
 
   // UPDATE FUNTIONS //
 
-  async updateCompanyArea(id: number, companyArea: UpdateCompanyAreaDto) {
+  async updateCompanyArea(
+    id: number,
+    companyArea: UpdateCompanyAreaDto,
+    @Req() requestAuditLog: any,
+  ) {
     const companyAreaFound = await this.companyAreaRepository.findOneBy({ id });
 
     if (!companyAreaFound) {
@@ -125,6 +156,16 @@ export class CompanyAreaService {
         HttpStatus.CONFLICT,
       );
     }
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_COMPANY_AREA,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.COMPANY_AREA_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Datos guardados correctamente!`,
