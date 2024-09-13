@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { UserRolType } from "../../../../../../apps/api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../../../../../apps/api/src/utils/enums/user_roles.enum";
 
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
 import CustomMessage from "@/components/common/custom_messages/CustomMessage";

@@ -25,8 +25,8 @@ import {
   validateRequiredFiles,
 } from "@/helpers/validate_required_values/validate_required_files";
 
-import { PatientClassificationStatus } from "../../../../../../../apps/api/src/medical_req/enums/patient_classification_status.enum";
-import { RelationshipWithPatient } from "../../../../../../../apps/api/src/medical_req/enums/relationship_with_patient.enum";
+import { PatientClassificationStatus } from "../../../../../../../../apps/api/src/medical_req/enums/patient_classification_status.enum";
+import { RelationshipWithPatient } from "../../../../../../../../apps/api/src/medical_req/enums/relationship_with_patient.enum";
 
 const FamiliarCreateRequestFormData: React.FC<{
   relWithPatientAbbrevFamiliarDataForm: string;

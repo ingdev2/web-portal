@@ -24,7 +24,7 @@ import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import { AuthenticationMethodEnum } from "../../../../../apps/api/src/utils/enums/authentication_method.enum";
+import { AuthenticationMethodEnum } from "../../../../../../apps/api/src/utils/enums/authentication_method.enum";
 
 const EpsRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();

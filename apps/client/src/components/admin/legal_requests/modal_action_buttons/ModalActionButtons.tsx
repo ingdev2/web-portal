@@ -12,7 +12,7 @@ import {
 } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
 
-import { RequirementStatusEnum } from "../../../../../../apps/api/src/medical_req/enums/requirement_status.enum";
+import { RequirementStatusEnum } from "../../../../../../../apps/api/src/medical_req/enums/requirement_status.enum";
 import SendToAnotherAreaButton from "./action_buttons/SendToAnotherAreaButton";
 import DeliverDocumentsButton from "./action_buttons/DeliverDocumentsButton";
 import RejectedMedicalReqButton from "./action_buttons/RejectedMedicalReqButton";

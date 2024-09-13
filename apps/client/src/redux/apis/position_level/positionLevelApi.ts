@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
-import { PositionLevelEnum } from "../../../../../apps/api/src/utils/enums/position_level.enum";
+import { PositionLevelEnum } from "../../../../../../apps/api/src/utils/enums/position_level.enum";
 
 const addTokenToRequest = async (headers: any, { getState }: any) => {
   const session: any = await getSession();

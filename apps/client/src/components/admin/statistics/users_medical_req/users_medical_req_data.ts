@@ -2,9 +2,9 @@ import {
   useGetAllMedicalReqUsersQuery,
   useGetAverageResponseTimeQuery,
 } from "@/redux/apis/medical_req/medicalReqApi";
-import { RequirementTypeEnum } from "../../../../../../apps/api/src/medical_req/enums/requirement_type.enum";
-import { RequirementStatusEnum } from "../../../../../../apps/api/src/medical_req/enums/requirement_status.enum";
-import { UserRolType } from "../../../../../../apps/api/src/utils/enums/user_roles.enum";
+import { RequirementTypeEnum } from "../../../../../../../apps/api/src/medical_req/enums/requirement_type.enum";
+import { RequirementStatusEnum } from "../../../../../../../apps/api/src/medical_req/enums/requirement_status.enum";
+import { UserRolType } from "../../../../../../../apps/api/src/utils/enums/user_roles.enum";
 
 export const useMedicalReqData = (year?: number, month?: number) => {
   const {

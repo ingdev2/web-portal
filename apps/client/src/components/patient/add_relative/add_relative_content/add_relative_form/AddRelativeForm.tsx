@@ -35,7 +35,7 @@ import {
   checkboxProcessingPersonalDataValidator,
   checkboxMessagesValidator,
 } from "@/helpers/checkbox_validator/checkbox_validator";
-import { AuthenticationMethodEnum } from "../../../../../../../apps/api/src/utils/enums/authentication_method.enum";
+import { AuthenticationMethodEnum } from "../../../../../../../../apps/api/src/utils/enums/authentication_method.enum";
 
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();

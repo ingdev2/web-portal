@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { AdminRolType } from "../../../../../apps/api/src/utils/enums/admin_roles.enum";
+import { AdminRolType } from "../../../../../../apps/api/src/utils/enums/admin_roles.enum";
 
 import StatisticsContent from "@/components/admin/statistics/StatisticsContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";

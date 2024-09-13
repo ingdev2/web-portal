@@ -3,7 +3,7 @@
 import React from "react";
 
 import CustomTags from "../custom_tags/CustomTags";
-import { RequirementTypeEnum } from "../../../../../apps/api/src/medical_req/enums/requirement_type.enum";
+import { RequirementTypeEnum } from "../../../../../../apps/api/src/medical_req/enums/requirement_type.enum";
 
 export const getTagComponentType = (typeName: string | undefined) => {
   switch (typeName) {
