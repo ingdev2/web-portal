@@ -39,12 +39,12 @@ import {
   useGetUserByIdNumberPatientQuery,
 } from "@/redux/apis/users/usersApi";
 
-import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { useProcessAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 
 const EpsCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { uploadFiles } = processAndUploadFiles();
+  const { uploadFiles } = useProcessAndUploadFiles();
 
   const componentChangeState = useAppSelector(
     (state) => state.modal.componentChange

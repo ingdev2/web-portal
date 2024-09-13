@@ -36,12 +36,12 @@ import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_me
 import { useCreateMedicalReqPatientMutation } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { useProcessAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 
 const PatientCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { uploadFiles } = processAndUploadFiles();
+  const { uploadFiles } = useProcessAndUploadFiles();
 
   const nameUserPatientState = useAppSelector((state) => state.patient.name);
   const idNumberUserPatientState = useAppSelector(

@@ -29,7 +29,7 @@ import { useGetAllIdTypesQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
-import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { useProcessAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 
 import {
   checkboxProcessingPersonalDataValidator,
@@ -40,7 +40,7 @@ import { AuthenticationMethodEnum } from "../../../../../../../../apps/api/src/u
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { uploadFiles } = processAndUploadFiles();
+  const { uploadFiles } = useProcessAndUploadFiles();
 
   const idUserPatientState = useAppSelector((state) => state.patient.id);
   const idNumberUserPatientState = useAppSelector(

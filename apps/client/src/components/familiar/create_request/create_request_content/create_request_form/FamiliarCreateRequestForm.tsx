@@ -63,14 +63,14 @@ import { useGetIdTypeByIdQuery } from "@/redux/apis/id_types/idTypesApi";
 import { useGetFamiliarByIdQuery } from "@/redux/apis/relatives/relativesApi";
 import { useGetUserByIdNumberPatientQuery } from "@/redux/apis/users/usersApi";
 
-import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { useProcessAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 import { calculatePatientAge } from "@/helpers/calculate_patient_age/calculate_patient_age";
 import { handleDeceasedPatient } from "@/helpers/handle_deceased_patient/handle_deceased_patient";
 
 const FamiliarCreateRequestForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { uploadFiles } = processAndUploadFiles();
+  const { uploadFiles } = useProcessAndUploadFiles();
 
   const idUserFamiliarState = useAppSelector((state) => state.familiar.id);
   const idNumberUserFamiliarState = useAppSelector(

@@ -5,8 +5,8 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
-import { userPositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
+import { useCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
+import { usePositionLevelValidation } from "@/utils/hooks/user_position_level_validation";
 
 import AllRelativesContent from "@/components/admin/all_relatives/AllRelativesContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -81,8 +81,8 @@ const AllRelativesPage = () => {
   ];
 
   useRoleValidation(allowedRoles);
-  userCompanyAreaValidation(allowedAreas);
-  userPositionLevelValidation(allowedPositionLevels);
+  useCompanyAreaValidation(allowedAreas);
+  usePositionLevelValidation(allowedPositionLevels);
 
   const waitAdminData =
     systemsCompanyAreaData &&

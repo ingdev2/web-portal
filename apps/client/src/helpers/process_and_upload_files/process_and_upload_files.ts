@@ -1,6 +1,6 @@
 import { useUploadFileMutation } from "@/redux/apis/upload_view_files/uploadViewFilesApi";
 
-export const processAndUploadFiles = () => {
+export const useProcessAndUploadFiles = () => {
   const [uploadFileToS3, { data, isLoading, isSuccess, isError, error }] =
     useUploadFileMutation({
       fixedCacheKey: "uploadFileToS3Data",

@@ -6,7 +6,7 @@ import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setIdNumberAdmin } from "@/redux/features/admin/adminSlice";
 
-export const userPositionLevelValidation = (
+export const usePositionLevelValidation = (
   allowedPositionLevel: (number | undefined)[]
 ) => {
   const { data: session, status } = useSession();

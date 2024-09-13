@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { userCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
+import { useCompanyAreaValidation } from "@/utils/hooks/user_company_area_validation";
 
 import AllRequestContent from "@/components/admin/all_requests/AllRequestContent";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
@@ -43,7 +43,7 @@ const RequestsAdminPage = () => {
   ];
 
   useRoleValidation(allowedRoles);
-  userCompanyAreaValidation(allowedAreas);
+  useCompanyAreaValidation(allowedAreas);
 
   const waitAdminData =
     systemsCompanyAreaData &&

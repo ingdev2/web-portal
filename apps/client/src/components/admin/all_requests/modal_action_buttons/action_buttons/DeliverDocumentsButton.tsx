@@ -25,13 +25,13 @@ import {
 
 import { useChangeStatusToDeliveredMutation } from "@/redux/apis/medical_req/medicalReqApi";
 
-import { processAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
+import { useProcessAndUploadFiles } from "@/helpers/process_and_upload_files/process_and_upload_files";
 import { validateRequiredFiles } from "@/helpers/validate_required_values/validate_required_files";
 
 const DeliverDocumentsButton: React.FC<{}> = ({}) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { uploadFiles } = processAndUploadFiles();
+  const { uploadFiles } = useProcessAndUploadFiles();
 
   const [isModalVisibleLocalState, setIsModalVisibleLocalState] =
     useState(false);
