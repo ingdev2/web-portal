@@ -245,7 +245,7 @@ export class EpsCompanyService {
 
   // DELETED-BAN FUNTIONS //
 
-  async banEpsCompanies(id: number) {
+  async banEpsCompanies(id: number, @Req() requestAuditLog: any) {
     const epsCompanyFound = await this.epsCompanyRepository.findOne({
       where: {
         id: id,
@@ -262,6 +262,19 @@ export class EpsCompanyService {
     epsCompanyFound.is_active = !epsCompanyFound.is_active;
 
     await this.epsCompanyRepository.save(epsCompanyFound);
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type:
+        epsCompanyFound.is_active === false
+          ? ActionTypesEnum.BAN_EPS_COMPANY
+          : ActionTypesEnum.UNBAN_EPS_COMPANY,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.EPS_COMPANY_MODULE,
+      module_record_id: epsCompanyFound.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     const statusMessage = epsCompanyFound.is_active
       ? `La EPS con número de ID: ${epsCompanyFound.id} se ha ACTIVADO.`

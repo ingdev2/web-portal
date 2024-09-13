@@ -1,21 +1,28 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { CreateReasonsForRejectionDto } from '../dto/create-reasons_for_rejection.dto';
 import { UpdateReasonsForRejectionDto } from '../dto/update-reasons_for_rejection.dto';
 import { ReasonsForRejection } from '../entities/reasons_for_rejection.entity';
+import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
+import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
+import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
+import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
 
 @Injectable()
 export class ReasonsForRejectionService {
   constructor(
     @InjectRepository(ReasonsForRejection)
     private reasonsForRejectionRepository: Repository<ReasonsForRejection>,
+
+    private readonly auditLogService: AuditLogsService,
   ) {}
 
   // CREATE FUNTIONS //
 
   async createReasonForRejection(
     reasonForRejection: CreateReasonsForRejectionDto,
+    @Req() requestAuditLog: any,
   ) {
     const reasonFound = await this.reasonsForRejectionRepository.findOne({
       where: {
@@ -30,10 +37,27 @@ export class ReasonsForRejectionService {
       );
     }
 
-    const newReason =
+    const createNewReason =
       await this.reasonsForRejectionRepository.create(reasonForRejection);
 
-    return await this.reasonsForRejectionRepository.save(newReason);
+    const saveNewReason =
+      await this.reasonsForRejectionRepository.save(createNewReason);
+
+    const newEpsCompany = await this.reasonsForRejectionRepository.findOne({
+      where: { id: saveNewReason.id },
+    });
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.CREATE_REASON_FOR_REJECTION,
+      query_type: QueryTypesEnum.POST,
+      module_name: ModuleNameEnum.REASONS_FOR_REJECTION_MODULE,
+      module_record_id: newEpsCompany.id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
+
+    return newEpsCompany;
   }
 
   // GET FUNTIONS //
@@ -79,6 +103,7 @@ export class ReasonsForRejectionService {
   async updateReasonForRejection(
     id: number,
     reasonForRejection: UpdateReasonsForRejectionDto,
+    @Req() requestAuditLog: any,
   ) {
     const reasonFound = await this.reasonsForRejectionRepository.findOneBy({
       id,
@@ -117,6 +142,16 @@ export class ReasonsForRejectionService {
         HttpStatus.CONFLICT,
       );
     }
+
+    const auditLogData = {
+      ...requestAuditLog.auditLogData,
+      action_type: ActionTypesEnum.UPDATE_DATA_REASON_FOR_REJECTION,
+      query_type: QueryTypesEnum.PATCH,
+      module_name: ModuleNameEnum.REASONS_FOR_REJECTION_MODULE,
+      module_record_id: id,
+    };
+
+    await this.auditLogService.createAuditLog(auditLogData);
 
     return new HttpException(
       `¡Datos guardados correctamente!`,

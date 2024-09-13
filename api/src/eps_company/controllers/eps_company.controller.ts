@@ -72,9 +72,10 @@ export class EpsCompanyController {
     );
   }
 
+  @EnableAuditLog()
   @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Patch('/ban/:id')
-  async banEpsCompanies(@Param('id') id: number) {
-    return await this.epsCompanyService.banEpsCompanies(id);
+  async banEpsCompanies(@Param('id') id: number, @Req() requestAuditLog: any) {
+    return await this.epsCompanyService.banEpsCompanies(id, requestAuditLog);
   }
 }

@@ -118,6 +118,9 @@ const CustomDashboardLayout: React.FC<{
           onClick={({ key }) => handleMenuClick(key)}
           style={{
             height: "100vh",
+            margin: "0px",
+            padding: "0px",
+            paddingBottom: "7px",
           }}
         />
       </Sider>
