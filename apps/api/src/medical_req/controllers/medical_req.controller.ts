@@ -13,8 +13,8 @@ import { CreateMedicalReqFamiliarDto } from '../dto/create_medical_req_familiar.
 import { CreateMedicalReqPatientDto } from '../dto/create_medical_req_patient.dto';
 import { CreateMedicalReqEpsDto } from '../dto/create_medical_req_eps.dto';
 import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto';
-import { AdminRolType } from '../../utils/enums/admin_roles.enum';
-import { UserRolType } from '../../utils/enums/user_roles.enum';
+import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { UserRolType } from 'shared/utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { RequirementStatusEnum } from '../enums/requirement_status.enum';

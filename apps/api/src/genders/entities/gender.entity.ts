@@ -1,7 +1,7 @@
 import { Admin } from '../../admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Gender } from '../../utils/enums/gender.enum';
+import { Gender } from 'shared/utils/enums/gender.enum';
 
 @Entity()
 export class GenderType {

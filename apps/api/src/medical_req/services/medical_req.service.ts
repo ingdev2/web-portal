@@ -18,14 +18,14 @@ import { UpdateStatusMedicalReqDto } from '../dto/update_status_medical_req.dto'
 import { User } from '../../users/entities/user.entity';
 import { EpsCompany } from 'src/eps_company/entities/eps_company.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { UserRolType } from '../../utils/enums/user_roles.enum';
+import { UserRolType } from 'shared/utils/enums/user_roles.enum';
 import { RequirementType } from '../../requirement_type/entities/requirement_type.entity';
 import { CompanyArea } from '../../company_area/entities/company_area.entity';
-import { CompanyAreaEnum } from '../../utils/enums/company_area.enum';
+import { CompanyAreaEnum } from 'shared/utils/enums/company_area.enum';
 import { PatientClassStatus } from '../../patient_class_status/entities/patient_class_status.entity';
 import { PatientClassificationStatus } from '../enums/patient_classification_status.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
-import { IdType } from '../../utils/enums/id_type.enum';
+import { IdType } from 'shared/utils/enums/id_type.enum';
 import { IdTypeAbbrev } from '../../users/enums/id_type_abbrev.enum';
 import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';

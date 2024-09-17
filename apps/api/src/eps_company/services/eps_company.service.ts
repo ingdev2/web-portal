@@ -13,7 +13,7 @@ import {
   EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS,
   SUBJECT_EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS,
 } from 'src/nodemailer/constants/email_config.constant';
-import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { CONTACT_PBX } from 'shared/utils/constants/constants';
 import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
 import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
 import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';

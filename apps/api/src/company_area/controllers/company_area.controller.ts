@@ -14,8 +14,8 @@ import { CreateCompanyAreaDto } from '../dto/create-company_area.dto';
 import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../utils/enums/admin_roles.enum';
-import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
+import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { CompanyAreaEnum } from 'shared/utils/enums/company_area.enum';
 import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('company-area')

@@ -11,7 +11,7 @@ import { Admin } from '../entities/admin.entity';
 import { AdminRole } from '../../admin_roles/entities/admin_role.entity';
 import { PositionLevel } from '../../position_level/entities/position_level.entity';
 import { CompanyArea } from 'src/company_area/entities/company_area.entity';
-import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
 import { AuthenticationMethod } from 'src/authentication_method/entities/authentication_method.entity';
 import { CreateSuperAdminDto } from '../dto/create_super_admin.dto';
 import { CreateAdminDto } from '../dto/create_admin.dto';
@@ -22,7 +22,7 @@ import { ResetPasswordAdminDto } from '../dto/reset_password_admin.dto';
 
 import { nanoid } from 'nanoid';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
-import { AuthenticationMethodEnum } from 'src/utils/enums/authentication_method.enum';
+import { AuthenticationMethodEnum } from 'shared/utils/enums/authentication_method.enum';
 import { SendEmailDto } from 'src/nodemailer/dto/send_email.dto';
 import { validateCorporateEmail } from 'src/eps_company/helpers/validate_corporate_email';
 import {

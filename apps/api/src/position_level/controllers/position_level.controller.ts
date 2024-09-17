@@ -13,8 +13,8 @@ import { CreatePositionLevelDto } from '../dto/create-position_level.dto';
 import { UpdatePositionLevelDto } from '../dto/update-position_level.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from '../../utils/enums/admin_roles.enum';
-import { PositionLevelEnum } from 'src/utils/enums/position_level.enum';
+import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { PositionLevelEnum } from 'shared/utils/enums/position_level.enum';
 
 @ApiTags('position-level')
 @ApiBearerAuth()

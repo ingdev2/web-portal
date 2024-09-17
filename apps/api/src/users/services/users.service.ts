@@ -11,14 +11,14 @@ import { User } from '../entities/user.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';
 import { EpsCompany } from 'src/eps_company/entities/eps_company.entity';
 import { UserRole } from '../../user_roles/entities/user_role.entity';
-import { UserRolType } from '../../utils/enums/user_roles.enum';
+import { UserRolType } from 'shared/utils/enums/user_roles.enum';
 import { IdTypeEntity } from '../../id_types/entities/id_type.entity';
-import { IdType } from '../../utils/enums/id_type.enum';
+import { IdType } from 'shared/utils/enums/id_type.enum';
 import { IdTypeAbbrev } from '../enums/id_type_abbrev.enum';
 import { GenderType } from '../../genders/entities/gender.entity';
-import { Gender } from '../../utils/enums/gender.enum';
+import { Gender } from 'shared/utils/enums/gender.enum';
 import { AuthenticationMethod } from '../../authentication_method/entities/authentication_method.entity';
-import { AuthenticationMethodEnum } from '../../utils/enums/authentication_method.enum';
+import { AuthenticationMethodEnum } from 'shared/utils/enums/authentication_method.enum';
 import { DeptsAndCitiesService } from '../../depts_and_cities/services/depts_and_cities.service';
 import { CreateUserPatientDto } from '../dto/create_user_patient.dto';
 import { UpdateUserPatientDto } from '../dto/update_user_patient.dto';
@@ -47,7 +47,7 @@ import {
 
 import * as bcryptjs from 'bcryptjs';
 import axios from 'axios';
-import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { CONTACT_PBX } from 'shared/utils/constants/constants';
 import { maskEmailUser } from '../helpers/mask_email';
 import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
 import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';

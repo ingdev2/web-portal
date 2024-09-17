@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateCompanyAreaDto } from '../dto/create-company_area.dto';
 import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { CompanyArea } from '../entities/company_area.entity';
-import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
+import { CompanyAreaEnum } from 'shared/utils/enums/company_area.enum';
 import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
 import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
 import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';

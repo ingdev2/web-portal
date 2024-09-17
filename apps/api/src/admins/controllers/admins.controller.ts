@@ -11,7 +11,7 @@ import {
 import { AdminsService } from '../services/admins.service';
 import { UpdateAdminDto } from '../dto/update_admin.dto';
 import { UpdatePasswordAdminDto } from '../dto/update_password_admin.dto';
-import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { ForgotPasswordAdminDto } from '../dto/forgot_password_admin.dto';
