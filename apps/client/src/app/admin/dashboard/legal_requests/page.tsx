@@ -20,8 +20,8 @@ import {
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 
-import { AdminRolType } from "../../../../../../../apps/api/src/utils/enums/admin_roles.enum";
-import { CompanyAreaEnum } from "../../../../../../../apps/api/src/utils/enums/company_area.enum";
+import { AdminRolType } from "shared/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "shared/utils/enums/company_area.enum";
 
 const LegalRequestsAdminPage = () => {
   const { data: session, status } = useSession();

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { AdminRolType } from "../../../../../../apps/api/src/utils/enums/admin_roles.enum";
+import { AdminRolType } from "shared/utils/enums/admin_roles.enum";
 
 import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Row, Select } from "antd";

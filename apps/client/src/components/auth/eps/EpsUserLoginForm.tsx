@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
-import { UserRolType } from "../../../../../../apps/api/src/utils/enums/user_roles.enum";
+import { UserRolType } from "shared/utils/enums/user_roles.enum";
 
 import {
   Button,

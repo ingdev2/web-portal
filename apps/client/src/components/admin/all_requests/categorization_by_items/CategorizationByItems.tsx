@@ -9,8 +9,8 @@ import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 
 import { useGetAllMedicalReqUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
-import { RequirementStatusEnum } from "../../../../../../../apps/api/src/medical_req/enums/requirement_status.enum";
-import { RequirementTypeEnum } from "../../../../../../../apps/api/src/medical_req/enums/requirement_type.enum";
+import { RequirementStatusEnum } from "shared/utils/enums/requirement_status.enum";
+import { RequirementTypeEnum } from "shared/utils/enums/requirement_type.enum";
 
 const CategorizationByItems: React.FC = () => {
   const { data: allMedicalReqStatusCreatedData } =

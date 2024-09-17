@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
-import { RequirementStatusEnum } from "../../../../../../apps/api/src/medical_req/enums/requirement_status.enum";
-import { RequirementTypeEnum } from "../../../../../../apps/api/src/medical_req/enums/requirement_type.enum";
+import { RequirementStatusEnum } from "shared/utils/enums/requirement_status.enum";
+import { RequirementTypeEnum } from "shared/utils/enums/requirement_type.enum";
 import { UserRolType } from "shared/utils/enums/user_roles.enum";
 
 const addTokenToRequest = async (headers: any, { getState }: any) => {
