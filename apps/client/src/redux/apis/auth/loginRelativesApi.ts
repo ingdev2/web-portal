@@ -21,24 +21,34 @@ export const loginRelativesApi = createApi({
 
     verifyFamiliarCode: builder.mutation<
       Partial<FamiliarLogin>,
-      { verification_code: number; id_number: number }
+      {
+        id_number: number;
+        patient_id_number: number;
+        familiar_email: string;
+        verification_code: number;
+      }
     >({
-      query: ({ verification_code, id_number }) => ({
+      query: ({
+        id_number,
+        patient_id_number,
+        familiar_email,
+        verification_code,
+      }) => ({
         url: `verifiedLoginRelatives/${id_number}`,
         method: "POST",
         params: { id_number },
-        body: { verification_code },
+        body: { patient_id_number, familiar_email, verification_code },
       }),
     }),
 
     resendFamiliarVerificationCode: builder.mutation<
       Partial<UserLogin>,
-      { id_type: number; id_number: number }
+      FamiliarResendCode
     >({
-      query: ({ id_type, id_number }) => ({
+      query: (familiarResendCode) => ({
         url: `resendVerificationFamiliarCode`,
         method: "POST",
-        body: { id_type, id_number },
+        body: familiarResendCode,
       }),
     }),
   }),

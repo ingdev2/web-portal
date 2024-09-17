@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Req,
+  Query,
 } from '@nestjs/common';
 import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
 import { UserRolType } from 'shared/utils/enums/user_roles.enum';
@@ -38,9 +39,13 @@ export class AuthorizedFamiliarController {
   }
 
   @Get('/getFamiliarById/:idNumber')
-  async getFamiliarByIdNumber(@Param('idNumber') idNumber: number) {
+  async getFamiliarByIdNumber(
+    @Param('idNumber') idNumber: number,
+    @Query('patientIdNumber') patientIdNumber?: number,
+  ) {
     return await this.authorizedFamiliarService.getFamiliarCompleteByIdNumber(
       idNumber,
+      patientIdNumber,
     );
   }
 

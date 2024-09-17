@@ -378,21 +378,27 @@ export class AuthorizedFamiliarService {
   }
 
   async getFamiliarFoundByIdNumber(
-    idType: number,
-    idNumber: number,
+    familiarIdType: number,
+    famiiliarIdNumber: number,
     familiarEmail: string,
   ) {
     return await this.familiarRepository.findOneBy({
-      user_id_type: idType,
-      id_number: idNumber,
+      user_id_type: familiarIdType,
+      id_number: famiiliarIdNumber,
       email: familiarEmail,
+      is_active: true,
     });
   }
 
-  async getFamiliarCompleteByIdNumber(idNumber: number) {
+  async getFamiliarCompleteByIdNumber(
+    idNumber: number,
+    patientIdNumber?: number,
+  ) {
     const familiarFound = await this.familiarRepository.findOne({
       where: {
         id_number: idNumber,
+        patient_id_number: patientIdNumber,
+        is_active: true,
       },
       relations: ['medical_req'],
     });
@@ -417,6 +423,7 @@ export class AuthorizedFamiliarService {
     const patientData = await this.userRepository.findOne({
       where: {
         id_number: patient_id_number,
+        is_active: true,
       },
     });
 
@@ -430,7 +437,9 @@ export class AuthorizedFamiliarService {
         id_number: id_number_familiar,
         email: email_familiar,
         patient_id: patientData.id,
+        patient_id_number: patientData.id_number,
         rel_with_patient: rel_with_patient,
+        is_active: true,
       },
       select: [
         'id',
@@ -438,8 +447,9 @@ export class AuthorizedFamiliarService {
         'user_id_type',
         'id_number',
         'email',
-        'role',
         'patient_id',
+        'patient_id_number',
+        'role',
       ],
     });
 
@@ -460,10 +470,14 @@ export class AuthorizedFamiliarService {
 
   async getFamiliarFoundByIdAndCode(
     idNumber: number,
+    patienIdNumber: number,
+    familiarEmail: string,
     verificationCode: number,
   ) {
     return await this.familiarRepository.findOneBy({
       id_number: idNumber,
+      patient_id_number: patienIdNumber,
+      email: familiarEmail,
       verification_code: verificationCode,
       is_active: true,
     });

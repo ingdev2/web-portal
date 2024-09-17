@@ -22,6 +22,7 @@ import {
   setVerificationCodeLoginFamiliar,
   setErrorsLoginFamiliar,
   setIdLoginFamiliar,
+  setIdNumberLoginFamiliar,
 } from "@/redux/features/login/familiarLoginSlice";
 import {
   setFamiliarModalIsOpen,
@@ -52,11 +53,11 @@ const FamiliarModalVerificationCode: React.FC = () => {
   const idNumberFamiliarState = useAppSelector(
     (state) => state.familiarLogin.id_number_familiar
   );
-  const emailFamiliarState = useAppSelector(
-    (state) => state.familiarLogin.email_familiar
-  );
   const idNumberPatientOfFamiliarState = useAppSelector(
     (state) => state.familiarLogin.patient_id_number
+  );
+  const emailFamiliarState = useAppSelector(
+    (state) => state.familiarLogin.email_familiar
   );
   const relationshipWithPatientState = useAppSelector(
     (state) => state.familiarLogin.rel_with_patient
@@ -109,6 +110,9 @@ const FamiliarModalVerificationCode: React.FC = () => {
       const idNumber = idNumberFamiliarState
         ? parseInt(idNumberFamiliarState?.toString(), 10)
         : "";
+      const patientIdNumber = idNumberPatientOfFamiliarState
+        ? parseInt(idNumberPatientOfFamiliarState?.toString(), 10)
+        : "";
       const verificationCode = verificationCodeFamiliarState
         ? parseInt(verificationCodeFamiliarState?.toString(), 10)
         : "";
@@ -117,6 +121,8 @@ const FamiliarModalVerificationCode: React.FC = () => {
         process.env.NEXT_PUBLIC_NAME_AUTH_CREDENTIALS_RELATIVES,
         {
           id_number: idNumber,
+          patient_id_number: patientIdNumber,
+          familiar_email: emailFamiliarState,
           verification_code: verificationCode,
           redirect: false,
         }
@@ -159,8 +165,9 @@ const FamiliarModalVerificationCode: React.FC = () => {
       setIsSubmittingResendCode(true);
 
       const response: any = await resendUserVerificationCodeFamiliar({
-        id_type: idTypeFamiliarState,
-        id_number: idNumberFamiliarState,
+        id_type_familiar: idTypeFamiliarState,
+        id_number_familiar: idNumberFamiliarState,
+        email_familiar: emailFamiliarState,
       });
 
       let isResponseError = response.error;

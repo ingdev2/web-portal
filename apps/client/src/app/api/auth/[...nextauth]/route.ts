@@ -133,6 +133,17 @@ const handler = NextAuth({
           inputMode: "numeric",
           pattern: "[0-9]*",
         },
+        patient_id_number: {
+          label: "Número de identificación del paciente",
+          type: "number",
+          inputMode: "numeric",
+          pattern: "[0-9]*",
+        },
+        familiar_email: {
+          label: "Email de familiar",
+          type: "string",
+          inputMode: "text",
+        },
         verification_code: {
           label: "Código de verificación",
           type: "number",
@@ -153,6 +164,8 @@ const handler = NextAuth({
             method: "POST",
             body: JSON.stringify({
               id_number: credentials?.id_number,
+              patient_id_number: credentials?.patient_id_number,
+              familiar_email: credentials?.familiar_email,
               verification_code: credentials?.verification_code,
             }),
             headers: { "Content-Type": "application/json" },

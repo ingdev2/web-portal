@@ -32,6 +32,7 @@ import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorize
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
 import { IdNumberDto } from '../dto/id_number.dto';
 import { SendEmailDto } from '../../nodemailer/dto/send_email.dto';
+import { FamiliarResendCodeDto } from '../dto/familiar_resend_code.dto';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import {
   EMAIL_VERIFICATION_CODE,
@@ -807,6 +808,8 @@ export class AuthService {
     const patientOfFamiliar = await this.userRepository.findOne({
       where: {
         id: familiarFound.patient_id,
+        id_number: patient_id_number,
+        is_active: true,
       },
     });
 
@@ -816,6 +819,7 @@ export class AuthService {
         id_number: id_number_familiar,
         email: email_familiar,
         patient_id: patientOfFamiliar.id,
+        patient_id_number: patient_id_number,
         user_role: familiarUserRoleFound.id,
         is_active: true,
       },
@@ -958,7 +962,7 @@ export class AuthService {
     id_type_familiar,
     id_number_familiar,
     email_familiar,
-  }: FamiliarLoginDto) {
+  }: FamiliarResendCodeDto) {
     const familiarFound = await this.familiarService.getFamiliarFoundByIdNumber(
       id_type_familiar,
       id_number_familiar,
@@ -974,7 +978,9 @@ export class AuthService {
         user_id_type: id_type_familiar,
         id_number: id_number_familiar,
         email: email_familiar,
+        patient_id_number: familiarFound.patient_id_number,
         rel_with_patient: familiarFound.rel_with_patient,
+        is_active: true,
       },
     });
 
@@ -1119,11 +1125,15 @@ export class AuthService {
 
   async verifyCodeAndLoginRelatives(
     idNumber: number,
+    patienIdNumber: number,
+    familiarEmail: string,
     verification_code: number,
   ) {
     const familiarFound =
       await this.familiarService.getFamiliarFoundByIdAndCode(
         idNumber,
+        patienIdNumber,
+        familiarEmail,
         verification_code,
       );
 

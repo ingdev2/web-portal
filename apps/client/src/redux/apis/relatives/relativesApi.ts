@@ -35,8 +35,12 @@ export const relativesApi = createApi({
       query: (id) => `getFamiliar/${id}`,
     }),
 
-    getFamiliarByIdNumber: builder.query<Familiar, number>({
-      query: (idNumber) => `getFamiliarById/${idNumber}`,
+    getFamiliarByIdNumber: builder.query<
+      Familiar,
+      { idNumber: number; patientIdNumber: number }
+    >({
+      query: ({ idNumber, patientIdNumber }) =>
+        `getFamiliarById/${idNumber}?patientIdNumber=${patientIdNumber}`,
     }),
 
     updateFamiliar: builder.mutation<

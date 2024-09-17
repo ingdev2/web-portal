@@ -91,8 +91,11 @@ const FamiliarUserLoginForm: React.FC = () => {
     isSuccess: userFamiliarSuccess,
     isError: userFamiliarError,
   } = useGetFamiliarByIdNumberQuery(
-    parseInt(idNumberFamiliarLocalState?.toString(), 10),
-    { skip: !idNumberFamiliarLocalState }
+    {
+      idNumber: parseInt(idNumberFamiliarLocalState?.toString(), 10),
+      patientIdNumber: parseInt(idNumberPatientLocalState?.toString(), 10),
+    },
+    { skip: !idNumberFamiliarLocalState || !idNumberPatientLocalState }
   );
 
   const {
@@ -208,6 +211,7 @@ const FamiliarUserLoginForm: React.FC = () => {
         }
         dispatch(setIdTypeLoginFamiliar(idTypeFamiliarLocalState));
         dispatch(setIdNumberLoginFamiliar(idNumberFamiliarLocalStateInt));
+        dispatch(setPatientIdNumberLoginFamiliar(idNumberPatientLocalStateInt));
         dispatch(setEmailLoginFamiliar(emailFamiliarLocalState));
         dispatch(setErrorsLoginFamiliar([]));
         setShowErrorMessageFamiliar(false);

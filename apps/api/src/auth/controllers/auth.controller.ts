@@ -7,6 +7,8 @@ import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/creat
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { ValidatePatientDto } from '../../users/dto/validate_patient.dto';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
+import { VerifiedLoginFamiliarDto } from '../dto/verified_login_familiar.dto';
+import { FamiliarResendCodeDto } from '../dto/familiar_resend_code.dto';
 import { LoginDto } from '../dto/login.dto';
 import { IdNumberDto } from '../dto/id_number.dto';
 import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
@@ -160,20 +162,30 @@ export class AuthController {
   @Post('verifiedLoginRelatives/:id_number')
   async verifyCodeAndLoginRelatives(
     @Param('id_number') id_number: number,
-    @Body('verification_code') verification_code: number,
+    @Body()
+    verifiedLoginFamiliar: {
+      patient_id_number: number;
+      familiar_email: string;
+      verification_code: number;
+    },
   ) {
+    const { patient_id_number, familiar_email, verification_code } =
+      verifiedLoginFamiliar;
+
     return await this.authService.verifyCodeAndLoginRelatives(
       id_number,
+      patient_id_number,
+      familiar_email,
       verification_code,
     );
   }
 
   @Post('resendVerificationFamiliarCode')
   async resendVerificationFamiliarCode(
-    @Body() loginFamiliarDto: FamiliarLoginDto,
+    @Body() resendVerificationFamiliarCodeDto: FamiliarResendCodeDto,
   ) {
     return await this.authService.resendVerificationFamiliarCode(
-      loginFamiliarDto,
+      resendVerificationFamiliarCodeDto,
     );
   }
 }

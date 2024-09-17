@@ -120,7 +120,6 @@ const CustomDashboardLayout: React.FC<{
             height: "100vh",
             margin: "0px",
             padding: "0px",
-            paddingBottom: "7px",
           }}
         />
       </Sider>
