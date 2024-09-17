@@ -1,0 +1,221 @@
+"use strict";
+var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
+    function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
+    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+    var _, done = false;
+    for (var i = decorators.length - 1; i >= 0; i--) {
+        var context = {};
+        for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
+        for (var p in contextIn.access) context.access[p] = contextIn.access[p];
+        context.addInitializer = function (f) { if (done) throw new TypeError("Cannot add initializers after decoration has completed"); extraInitializers.push(accept(f || null)); };
+        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context);
+        if (kind === "accessor") {
+            if (result === void 0) continue;
+            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
+            if (_ = accept(result.get)) descriptor.get = _;
+            if (_ = accept(result.set)) descriptor.set = _;
+            if (_ = accept(result.init)) initializers.unshift(_);
+        }
+        else if (_ = accept(result)) {
+            if (kind === "field") initializers.unshift(_);
+            else descriptor[key] = _;
+        }
+    }
+    if (target) Object.defineProperty(target, contextIn.name, descriptor);
+    done = true;
+};
+var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for (var i = 0; i < initializers.length; i++) {
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+};
+var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
+    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
+    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Admin = void 0;
+var openapi = require("@nestjs/swagger");
+var admin_role_entity_1 = require("../../admin_roles/entities/admin_role.entity");
+var gender_entity_1 = require("../../genders/entities/gender.entity");
+var id_type_entity_1 = require("../../id_types/entities/id_type.entity");
+var company_area_entity_1 = require("../../company_area/entities/company_area.entity");
+var position_level_entity_1 = require("../../position_level/entities/position_level.entity");
+var authentication_method_entity_1 = require("../../../../../../../../../../../../../../src/authentication_method/entities/authentication_method.entity");
+var typeorm_1 = require("typeorm");
+var Admin = function () {
+    var _classDecorators = [(0, typeorm_1.Entity)()];
+    var _classDescriptor;
+    var _classExtraInitializers = [];
+    var _classThis;
+    var _id_decorators;
+    var _id_initializers = [];
+    var _id_extraInitializers = [];
+    var _name_decorators;
+    var _name_initializers = [];
+    var _name_extraInitializers = [];
+    var _last_name_decorators;
+    var _last_name_initializers = [];
+    var _last_name_extraInitializers = [];
+    var _id_number_decorators;
+    var _id_number_initializers = [];
+    var _id_number_extraInitializers = [];
+    var _corporate_email_decorators;
+    var _corporate_email_initializers = [];
+    var _corporate_email_extraInitializers = [];
+    var _password_decorators;
+    var _password_initializers = [];
+    var _password_extraInitializers = [];
+    var _is_active_decorators;
+    var _is_active_initializers = [];
+    var _is_active_extraInitializers = [];
+    var _createdAt_decorators;
+    var _createdAt_initializers = [];
+    var _createdAt_extraInitializers = [];
+    var _updateAt_decorators;
+    var _updateAt_initializers = [];
+    var _updateAt_extraInitializers = [];
+    var _deletedAt_decorators;
+    var _deletedAt_initializers = [];
+    var _deletedAt_extraInitializers = [];
+    var _role_decorators;
+    var _role_initializers = [];
+    var _role_extraInitializers = [];
+    var _admin_role_decorators;
+    var _admin_role_initializers = [];
+    var _admin_role_extraInitializers = [];
+    var _gender_decorators;
+    var _gender_initializers = [];
+    var _gender_extraInitializers = [];
+    var _admin_gender_decorators;
+    var _admin_gender_initializers = [];
+    var _admin_gender_extraInitializers = [];
+    var _id_type_decorators;
+    var _id_type_initializers = [];
+    var _id_type_extraInitializers = [];
+    var _admin_id_type_decorators;
+    var _admin_id_type_initializers = [];
+    var _admin_id_type_extraInitializers = [];
+    var _company_admin_area_decorators;
+    var _company_admin_area_initializers = [];
+    var _company_admin_area_extraInitializers = [];
+    var _company_area_decorators;
+    var _company_area_initializers = [];
+    var _company_area_extraInitializers = [];
+    var _admin_position_level_decorators;
+    var _admin_position_level_initializers = [];
+    var _admin_position_level_extraInitializers = [];
+    var _position_level_decorators;
+    var _position_level_initializers = [];
+    var _position_level_extraInitializers = [];
+    var _admin_authentication_method_decorators;
+    var _admin_authentication_method_initializers = [];
+    var _admin_authentication_method_extraInitializers = [];
+    var _authentication_method_decorators;
+    var _authentication_method_initializers = [];
+    var _authentication_method_extraInitializers = [];
+    var _verification_code_decorators;
+    var _verification_code_initializers = [];
+    var _verification_code_extraInitializers = [];
+    var _reset_password_token_decorators;
+    var _reset_password_token_initializers = [];
+    var _reset_password_token_extraInitializers = [];
+    var Admin = _classThis = /** @class */ (function () {
+        function Admin_1() {
+            this.id = __runInitializers(this, _id_initializers, void 0);
+            this.name = (__runInitializers(this, _id_extraInitializers), __runInitializers(this, _name_initializers, void 0));
+            this.last_name = (__runInitializers(this, _name_extraInitializers), __runInitializers(this, _last_name_initializers, void 0));
+            this.id_number = (__runInitializers(this, _last_name_extraInitializers), __runInitializers(this, _id_number_initializers, void 0));
+            this.corporate_email = (__runInitializers(this, _id_number_extraInitializers), __runInitializers(this, _corporate_email_initializers, void 0));
+            this.password = (__runInitializers(this, _corporate_email_extraInitializers), __runInitializers(this, _password_initializers, void 0));
+            this.is_active = (__runInitializers(this, _password_extraInitializers), __runInitializers(this, _is_active_initializers, void 0));
+            this.createdAt = (__runInitializers(this, _is_active_extraInitializers), __runInitializers(this, _createdAt_initializers, void 0));
+            this.updateAt = (__runInitializers(this, _createdAt_extraInitializers), __runInitializers(this, _updateAt_initializers, void 0));
+            this.deletedAt = (__runInitializers(this, _updateAt_extraInitializers), __runInitializers(this, _deletedAt_initializers, void 0));
+            this.role = (__runInitializers(this, _deletedAt_extraInitializers), __runInitializers(this, _role_initializers, void 0));
+            this.admin_role = (__runInitializers(this, _role_extraInitializers), __runInitializers(this, _admin_role_initializers, void 0));
+            this.gender = (__runInitializers(this, _admin_role_extraInitializers), __runInitializers(this, _gender_initializers, void 0));
+            this.admin_gender = (__runInitializers(this, _gender_extraInitializers), __runInitializers(this, _admin_gender_initializers, void 0));
+            this.id_type = (__runInitializers(this, _admin_gender_extraInitializers), __runInitializers(this, _id_type_initializers, void 0));
+            this.admin_id_type = (__runInitializers(this, _id_type_extraInitializers), __runInitializers(this, _admin_id_type_initializers, void 0));
+            this.company_admin_area = (__runInitializers(this, _admin_id_type_extraInitializers), __runInitializers(this, _company_admin_area_initializers, void 0));
+            this.company_area = (__runInitializers(this, _company_admin_area_extraInitializers), __runInitializers(this, _company_area_initializers, void 0));
+            this.admin_position_level = (__runInitializers(this, _company_area_extraInitializers), __runInitializers(this, _admin_position_level_initializers, void 0));
+            this.position_level = (__runInitializers(this, _admin_position_level_extraInitializers), __runInitializers(this, _position_level_initializers, void 0));
+            this.admin_authentication_method = (__runInitializers(this, _position_level_extraInitializers), __runInitializers(this, _admin_authentication_method_initializers, void 0));
+            this.authentication_method = (__runInitializers(this, _admin_authentication_method_extraInitializers), __runInitializers(this, _authentication_method_initializers, void 0));
+            this.verification_code = (__runInitializers(this, _authentication_method_extraInitializers), __runInitializers(this, _verification_code_initializers, void 0));
+            this.reset_password_token = (__runInitializers(this, _verification_code_extraInitializers), __runInitializers(this, _reset_password_token_initializers, void 0));
+            __runInitializers(this, _reset_password_token_extraInitializers);
+        }
+        Admin_1._OPENAPI_METADATA_FACTORY = function () {
+            return { id: { required: true, type: function () { return Number; } }, name: { required: true, type: function () { return String; } }, last_name: { required: true, type: function () { return String; } }, id_number: { required: true, type: function () { return Number; } }, corporate_email: { required: true, type: function () { return String; } }, password: { required: true, type: function () { return String; } }, is_active: { required: true, type: function () { return Boolean; } }, createdAt: { required: true, type: function () { return Date; } }, updateAt: { required: true, type: function () { return Date; } }, deletedAt: { required: true, type: function () { return Date; } }, role: { required: true, type: function () { return require("../../admin_roles/entities/admin_role.entity").AdminRole; } }, admin_role: { required: true, type: function () { return Number; } }, gender: { required: true, type: function () { return require("../../genders/entities/gender.entity").GenderType; } }, admin_gender: { required: true, type: function () { return Number; } }, id_type: { required: true, type: function () { return require("../../id_types/entities/id_type.entity").IdTypeEntity; } }, admin_id_type: { required: true, type: function () { return Number; } }, company_admin_area: { required: true, type: function () { return require("../../company_area/entities/company_area.entity").CompanyArea; } }, company_area: { required: true, type: function () { return Number; } }, admin_position_level: { required: true, type: function () { return require("../../position_level/entities/position_level.entity").PositionLevel; } }, position_level: { required: true, type: function () { return Number; } }, admin_authentication_method: { required: true, type: function () { return Object; } }, authentication_method: { required: true, type: function () { return Number; } }, verification_code: { required: true, type: function () { return Number; } }, reset_password_token: { required: true, type: function () { return String; } } };
+        };
+        return Admin_1;
+    }());
+    __setFunctionName(_classThis, "Admin");
+    (function () {
+        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
+        _id_decorators = [(0, typeorm_1.PrimaryGeneratedColumn)()];
+        _name_decorators = [(0, typeorm_1.Column)({ type: 'text' })];
+        _last_name_decorators = [(0, typeorm_1.Column)({ type: 'text' })];
+        _id_number_decorators = [(0, typeorm_1.Column)({ type: 'bigint', unique: true })];
+        _corporate_email_decorators = [(0, typeorm_1.Column)({ unique: true })];
+        _password_decorators = [(0, typeorm_1.Column)({ select: false })];
+        _is_active_decorators = [(0, typeorm_1.Column)({ type: 'boolean', default: true })];
+        _createdAt_decorators = [(0, typeorm_1.CreateDateColumn)()];
+        _updateAt_decorators = [(0, typeorm_1.UpdateDateColumn)()];
+        _deletedAt_decorators = [(0, typeorm_1.DeleteDateColumn)()];
+        _role_decorators = [(0, typeorm_1.ManyToOne)(function () { return admin_role_entity_1.AdminRole; }, function (role) { return role.admin; }, {
+                eager: true,
+                cascade: true,
+            }), (0, typeorm_1.JoinColumn)({ name: 'admin_role', referencedColumnName: 'id' })];
+        _admin_role_decorators = [(0, typeorm_1.Column)()];
+        _gender_decorators = [(0, typeorm_1.ManyToOne)(function () { return gender_entity_1.GenderType; }, function (gender) { return gender.admin; }), (0, typeorm_1.JoinColumn)({ name: 'admin_gender', referencedColumnName: 'id' })];
+        _admin_gender_decorators = [(0, typeorm_1.Column)()];
+        _id_type_decorators = [(0, typeorm_1.ManyToOne)(function () { return id_type_entity_1.IdTypeEntity; }, function (id_type) { return id_type.admin; }), (0, typeorm_1.JoinColumn)({ name: 'admin_id_type', referencedColumnName: 'id' })];
+        _admin_id_type_decorators = [(0, typeorm_1.Column)()];
+        _company_admin_area_decorators = [(0, typeorm_1.ManyToOne)(function () { return company_area_entity_1.CompanyArea; }, function (company_admin_area) { return company_admin_area.admin; }), (0, typeorm_1.JoinColumn)({ name: 'company_area', referencedColumnName: 'id' })];
+        _company_area_decorators = [(0, typeorm_1.Column)()];
+        _admin_position_level_decorators = [(0, typeorm_1.ManyToOne)(function () { return position_level_entity_1.PositionLevel; }, function (admin_position_level) { return admin_position_level.admin; }), (0, typeorm_1.JoinColumn)({ name: 'position_level', referencedColumnName: 'id' })];
+        _position_level_decorators = [(0, typeorm_1.Column)({ nullable: true })];
+        _admin_authentication_method_decorators = [(0, typeorm_1.ManyToOne)(function () { return authentication_method_entity_1.AuthenticationMethod; }, function (admin_authentication_method) { return admin_authentication_method.admin; }), (0, typeorm_1.JoinColumn)({ name: 'authentication_method', referencedColumnName: 'id' })];
+        _authentication_method_decorators = [(0, typeorm_1.Column)({ nullable: true })];
+        _verification_code_decorators = [(0, typeorm_1.Column)({ nullable: true })];
+        _reset_password_token_decorators = [(0, typeorm_1.Column)({ nullable: true })];
+        __esDecorate(null, null, _id_decorators, { kind: "field", name: "id", static: false, private: false, access: { has: function (obj) { return "id" in obj; }, get: function (obj) { return obj.id; }, set: function (obj, value) { obj.id = value; } }, metadata: _metadata }, _id_initializers, _id_extraInitializers);
+        __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: function (obj) { return "name" in obj; }, get: function (obj) { return obj.name; }, set: function (obj, value) { obj.name = value; } }, metadata: _metadata }, _name_initializers, _name_extraInitializers);
+        __esDecorate(null, null, _last_name_decorators, { kind: "field", name: "last_name", static: false, private: false, access: { has: function (obj) { return "last_name" in obj; }, get: function (obj) { return obj.last_name; }, set: function (obj, value) { obj.last_name = value; } }, metadata: _metadata }, _last_name_initializers, _last_name_extraInitializers);
+        __esDecorate(null, null, _id_number_decorators, { kind: "field", name: "id_number", static: false, private: false, access: { has: function (obj) { return "id_number" in obj; }, get: function (obj) { return obj.id_number; }, set: function (obj, value) { obj.id_number = value; } }, metadata: _metadata }, _id_number_initializers, _id_number_extraInitializers);
+        __esDecorate(null, null, _corporate_email_decorators, { kind: "field", name: "corporate_email", static: false, private: false, access: { has: function (obj) { return "corporate_email" in obj; }, get: function (obj) { return obj.corporate_email; }, set: function (obj, value) { obj.corporate_email = value; } }, metadata: _metadata }, _corporate_email_initializers, _corporate_email_extraInitializers);
+        __esDecorate(null, null, _password_decorators, { kind: "field", name: "password", static: false, private: false, access: { has: function (obj) { return "password" in obj; }, get: function (obj) { return obj.password; }, set: function (obj, value) { obj.password = value; } }, metadata: _metadata }, _password_initializers, _password_extraInitializers);
+        __esDecorate(null, null, _is_active_decorators, { kind: "field", name: "is_active", static: false, private: false, access: { has: function (obj) { return "is_active" in obj; }, get: function (obj) { return obj.is_active; }, set: function (obj, value) { obj.is_active = value; } }, metadata: _metadata }, _is_active_initializers, _is_active_extraInitializers);
+        __esDecorate(null, null, _createdAt_decorators, { kind: "field", name: "createdAt", static: false, private: false, access: { has: function (obj) { return "createdAt" in obj; }, get: function (obj) { return obj.createdAt; }, set: function (obj, value) { obj.createdAt = value; } }, metadata: _metadata }, _createdAt_initializers, _createdAt_extraInitializers);
+        __esDecorate(null, null, _updateAt_decorators, { kind: "field", name: "updateAt", static: false, private: false, access: { has: function (obj) { return "updateAt" in obj; }, get: function (obj) { return obj.updateAt; }, set: function (obj, value) { obj.updateAt = value; } }, metadata: _metadata }, _updateAt_initializers, _updateAt_extraInitializers);
+        __esDecorate(null, null, _deletedAt_decorators, { kind: "field", name: "deletedAt", static: false, private: false, access: { has: function (obj) { return "deletedAt" in obj; }, get: function (obj) { return obj.deletedAt; }, set: function (obj, value) { obj.deletedAt = value; } }, metadata: _metadata }, _deletedAt_initializers, _deletedAt_extraInitializers);
+        __esDecorate(null, null, _role_decorators, { kind: "field", name: "role", static: false, private: false, access: { has: function (obj) { return "role" in obj; }, get: function (obj) { return obj.role; }, set: function (obj, value) { obj.role = value; } }, metadata: _metadata }, _role_initializers, _role_extraInitializers);
+        __esDecorate(null, null, _admin_role_decorators, { kind: "field", name: "admin_role", static: false, private: false, access: { has: function (obj) { return "admin_role" in obj; }, get: function (obj) { return obj.admin_role; }, set: function (obj, value) { obj.admin_role = value; } }, metadata: _metadata }, _admin_role_initializers, _admin_role_extraInitializers);
+        __esDecorate(null, null, _gender_decorators, { kind: "field", name: "gender", static: false, private: false, access: { has: function (obj) { return "gender" in obj; }, get: function (obj) { return obj.gender; }, set: function (obj, value) { obj.gender = value; } }, metadata: _metadata }, _gender_initializers, _gender_extraInitializers);
+        __esDecorate(null, null, _admin_gender_decorators, { kind: "field", name: "admin_gender", static: false, private: false, access: { has: function (obj) { return "admin_gender" in obj; }, get: function (obj) { return obj.admin_gender; }, set: function (obj, value) { obj.admin_gender = value; } }, metadata: _metadata }, _admin_gender_initializers, _admin_gender_extraInitializers);
+        __esDecorate(null, null, _id_type_decorators, { kind: "field", name: "id_type", static: false, private: false, access: { has: function (obj) { return "id_type" in obj; }, get: function (obj) { return obj.id_type; }, set: function (obj, value) { obj.id_type = value; } }, metadata: _metadata }, _id_type_initializers, _id_type_extraInitializers);
+        __esDecorate(null, null, _admin_id_type_decorators, { kind: "field", name: "admin_id_type", static: false, private: false, access: { has: function (obj) { return "admin_id_type" in obj; }, get: function (obj) { return obj.admin_id_type; }, set: function (obj, value) { obj.admin_id_type = value; } }, metadata: _metadata }, _admin_id_type_initializers, _admin_id_type_extraInitializers);
+        __esDecorate(null, null, _company_admin_area_decorators, { kind: "field", name: "company_admin_area", static: false, private: false, access: { has: function (obj) { return "company_admin_area" in obj; }, get: function (obj) { return obj.company_admin_area; }, set: function (obj, value) { obj.company_admin_area = value; } }, metadata: _metadata }, _company_admin_area_initializers, _company_admin_area_extraInitializers);
+        __esDecorate(null, null, _company_area_decorators, { kind: "field", name: "company_area", static: false, private: false, access: { has: function (obj) { return "company_area" in obj; }, get: function (obj) { return obj.company_area; }, set: function (obj, value) { obj.company_area = value; } }, metadata: _metadata }, _company_area_initializers, _company_area_extraInitializers);
+        __esDecorate(null, null, _admin_position_level_decorators, { kind: "field", name: "admin_position_level", static: false, private: false, access: { has: function (obj) { return "admin_position_level" in obj; }, get: function (obj) { return obj.admin_position_level; }, set: function (obj, value) { obj.admin_position_level = value; } }, metadata: _metadata }, _admin_position_level_initializers, _admin_position_level_extraInitializers);
+        __esDecorate(null, null, _position_level_decorators, { kind: "field", name: "position_level", static: false, private: false, access: { has: function (obj) { return "position_level" in obj; }, get: function (obj) { return obj.position_level; }, set: function (obj, value) { obj.position_level = value; } }, metadata: _metadata }, _position_level_initializers, _position_level_extraInitializers);
+        __esDecorate(null, null, _admin_authentication_method_decorators, { kind: "field", name: "admin_authentication_method", static: false, private: false, access: { has: function (obj) { return "admin_authentication_method" in obj; }, get: function (obj) { return obj.admin_authentication_method; }, set: function (obj, value) { obj.admin_authentication_method = value; } }, metadata: _metadata }, _admin_authentication_method_initializers, _admin_authentication_method_extraInitializers);
+        __esDecorate(null, null, _authentication_method_decorators, { kind: "field", name: "authentication_method", static: false, private: false, access: { has: function (obj) { return "authentication_method" in obj; }, get: function (obj) { return obj.authentication_method; }, set: function (obj, value) { obj.authentication_method = value; } }, metadata: _metadata }, _authentication_method_initializers, _authentication_method_extraInitializers);
+        __esDecorate(null, null, _verification_code_decorators, { kind: "field", name: "verification_code", static: false, private: false, access: { has: function (obj) { return "verification_code" in obj; }, get: function (obj) { return obj.verification_code; }, set: function (obj, value) { obj.verification_code = value; } }, metadata: _metadata }, _verification_code_initializers, _verification_code_extraInitializers);
+        __esDecorate(null, null, _reset_password_token_decorators, { kind: "field", name: "reset_password_token", static: false, private: false, access: { has: function (obj) { return "reset_password_token" in obj; }, get: function (obj) { return obj.reset_password_token; }, set: function (obj, value) { obj.reset_password_token = value; } }, metadata: _metadata }, _reset_password_token_initializers, _reset_password_token_extraInitializers);
+        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+        Admin = _classThis = _classDescriptor.value;
+        if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+        __runInitializers(_classThis, _classExtraInitializers);
+    })();
+    return Admin = _classThis;
+}();
+exports.Admin = Admin;
