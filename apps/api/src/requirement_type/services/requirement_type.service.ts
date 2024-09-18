@@ -5,9 +5,9 @@ import { CreateRequirementTypeDto } from '../dto/create-requirement_type.dto';
 import { UpdateRequirementTypeDto } from '../dto/update-requirement_type.dto';
 import { RequirementType } from '../entities/requirement_type.entity';
 import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
-import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
-import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
-import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
+import { ActionTypesEnum } from 'shared/utils/enums/audit_logs_enums/action_types.enum';
+import { QueryTypesEnum } from 'shared/utils/enums/audit_logs_enums/query_types.enum';
+import { ModuleNameEnum } from 'shared/utils/enums/audit_logs_enums/module_names.enum';
 
 @Injectable()
 export class RequirementTypeService {

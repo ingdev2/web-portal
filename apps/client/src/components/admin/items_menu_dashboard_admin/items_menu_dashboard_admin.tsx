@@ -13,6 +13,8 @@ import { IoIosBusiness } from "react-icons/io";
 import { BiCommentX } from "react-icons/bi";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 import { SiGoogleclassroom } from "react-icons/si";
+import { AiOutlineAudit } from "react-icons/ai";
+import { TbLogs } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { PiUserListBold } from "react-icons/pi";
 
@@ -125,6 +127,11 @@ export const useMenuItems = () => {
       name: CompanyAreaEnum.ADMISSIONS_DEPARTMENT,
     });
 
+  const { data: externalAuditorData, error: externalAuditorError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.EXTERNAL_AUDITOR,
+    });
+
   // ESTADOS DE SOLICITUDES //
 
   const {
@@ -193,7 +200,9 @@ export const useMenuItems = () => {
     legalCompanyAreaData &&
     !legalCompanyAreaError &&
     admissionsCompanyAreaData &&
-    !admissionsCompanyAreaError;
+    !admissionsCompanyAreaError &&
+    externalAuditorData &&
+    !externalAuditorError;
 
   if (waitAdminData) {
     const items: MenuItem[] = [
@@ -403,6 +412,28 @@ export const useMenuItems = () => {
                     <SiGoogleclassroom size={15} />
                   )
                 : null,
+            ].filter(Boolean)
+          )
+        : null,
+
+      isAdminInPositionLevel(positionLevelIdAdminState, [
+        directorPositionLevelData.id,
+        auditorPositionLevelData.id,
+      ]) &&
+      isAdminInCompanyAreas(companyAreaIdAdminState, [
+        systemsCompanyAreaData.id,
+        externalAuditorData.id,
+      ])
+        ? getItem(
+            ItemNames.ITEM_AUDIT,
+            ItemKeys.ITEM_AUDIT_KEY,
+            <AiOutlineAudit size={17} />,
+            [
+              getItem(
+                ItemNames.SUB_AUDIT_LOGS,
+                ItemKeys.SUB_AUDIT_LOGS_KEY,
+                <TbLogs size={15} />
+              ),
             ].filter(Boolean)
           )
         : null,

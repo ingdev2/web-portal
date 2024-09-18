@@ -17,6 +17,7 @@ import familiarLoginReducer from "./features/login/familiarLoginSlice";
 import medicalReqReducer from "./features/medical_req/medicalReqSlice";
 import reasonForRejectionReducer from "./features/medical_req/reason_for_rejection/reasonForRejectionSlice";
 import typeOfMedicalRequestReducer from "./features/medical_req/type_of_medical_request/typeOfMedicalRequestSlice";
+import auditLogReducer from "./features/audit_log/auditLogSlice";
 import modalReducer from "./features/common/modal/modalSlice";
 
 import { adminsApi } from "./apis/admins/adminsApi";
@@ -45,6 +46,7 @@ import { gendersApi } from "./apis/genders/gendersApi";
 import { authMethodApi } from "./apis/auth_method/authMethodApi";
 import { resetPasswordAdminsApi } from "./apis/reset_password/resetPasswordAdminsApi";
 import { resetPasswordUsersApi } from "./apis/reset_password/resetPasswordUsersApi";
+import { auditLogsApi } from "./apis/audit_logs/auditLogsApi";
 
 const persistConfig = {
   key: "root",
@@ -72,6 +74,7 @@ const rootReducer = combineReducers({
   medicalReq: medicalReqReducer,
   reasonForRejection: reasonForRejectionReducer,
   typeOfMedicalRequest: typeOfMedicalRequestReducer,
+  auditLog: auditLogReducer,
   admin: adminReducer,
   selectedAdmin: selectedAdminReducer,
   patient: patientReducer,
@@ -107,6 +110,7 @@ const rootReducer = combineReducers({
   [authMethodApi.reducerPath]: authMethodApi.reducer,
   [resetPasswordAdminsApi.reducerPath]: resetPasswordAdminsApi.reducer,
   [resetPasswordUsersApi.reducerPath]: resetPasswordUsersApi.reducer,
+  [auditLogsApi.reducerPath]: auditLogsApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -144,6 +148,7 @@ export const store = configureStore({
       authMethodApi.middleware,
       resetPasswordAdminsApi.middleware,
       resetPasswordUsersApi.middleware,
+      auditLogsApi.middleware,
     ]),
 });
 

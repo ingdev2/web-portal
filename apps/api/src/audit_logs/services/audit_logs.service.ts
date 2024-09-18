@@ -18,4 +18,20 @@ export class AuditLogsService {
 
     return await this.auditLogsRepository.save(newAuditLog);
   }
+
+  // GET FUNTIONS //
+
+  async getAllAuditLogs() {
+    const allAuditLogs = await this.auditLogsRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    if (!allAuditLogs.length || allAuditLogs.length === 0) {
+      return [];
+    } else {
+      return allAuditLogs;
+    }
+  }
 }

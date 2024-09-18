@@ -6,9 +6,9 @@ import { UpdateCompanyAreaDto } from '../dto/update-company_area.dto';
 import { CompanyArea } from '../entities/company_area.entity';
 import { CompanyAreaEnum } from 'shared/utils/enums/company_area.enum';
 import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
-import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
-import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
-import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
+import { ActionTypesEnum } from 'shared/utils/enums/audit_logs_enums/action_types.enum';
+import { QueryTypesEnum } from 'shared/utils/enums/audit_logs_enums/query_types.enum';
+import { ModuleNameEnum } from 'shared/utils/enums/audit_logs_enums/module_names.enum';
 
 @Injectable()
 export class CompanyAreaService {

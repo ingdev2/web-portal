@@ -44,7 +44,7 @@ const HomePage = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            paddingTop: "22px",
+            paddingBlock: "7px",
           }}
         >
           <img
@@ -100,6 +100,7 @@ const HomePage = () => {
                   textAlign: "center",
                   fontWeight: "bold",
                   lineHeight: 1.3,
+                  paddingBlock: "13px",
                 }}
               >
                 Portal web para pacientes, familiares y entidades aliadas.
@@ -110,6 +111,7 @@ const HomePage = () => {
                   textAlign: "center",
                   fontWeight: "normal",
                   lineHeight: 1.3,
+                  paddingBlock: "13px",
                 }}
               >
                 Trámites en línea para hacer más fácil y ágil tus solicitudes

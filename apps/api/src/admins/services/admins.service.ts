@@ -34,13 +34,13 @@ import {
 
 import * as bcryptjs from 'bcryptjs';
 import { maskEmailAdmin } from '../helpers/mask_email';
-import { CONTACT_PBX } from 'src/utils/constants/constants';
+import { CONTACT_PBX } from 'shared/utils/constants/constants';
 import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
-import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
-import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
-import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
-import { PositionLevelEnum } from 'src/utils/enums/position_level.enum';
-import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
+import { ActionTypesEnum } from 'shared/utils/enums/audit_logs_enums/action_types.enum';
+import { QueryTypesEnum } from 'shared/utils/enums/audit_logs_enums/query_types.enum';
+import { ModuleNameEnum } from 'shared/utils/enums/audit_logs_enums/module_names.enum';
+import { PositionLevelEnum } from 'shared/utils/enums/position_level.enum';
+import { CompanyAreaEnum } from 'shared/utils/enums/company_area.enum';
 
 const schedule = require('node-schedule');
 

@@ -49,9 +49,9 @@ import {
   SUBJECT_EMAIL_STATUS_CHANGE,
 } from '../../nodemailer/constants/email_config.constant';
 import { randomUUID } from 'crypto';
-import { ActionTypesEnum } from 'src/audit_logs/utils/enums/action_types.enum';
-import { QueryTypesEnum } from 'src/audit_logs/utils/enums/query_types.enum';
-import { ModuleNameEnum } from 'src/audit_logs/utils/enums/module_names.enum';
+import { ActionTypesEnum } from 'shared/utils/enums/audit_logs_enums/action_types.enum';
+import { QueryTypesEnum } from 'shared/utils/enums/audit_logs_enums/query_types.enum';
+import { ModuleNameEnum } from 'shared/utils/enums/audit_logs_enums/module_names.enum';
 
 const schedule = require('node-schedule');
 

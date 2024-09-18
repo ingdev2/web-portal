@@ -146,6 +146,7 @@ const ButtonAuth = () => {
             borderRadius: 31,
             backgroundColor: "#800000",
             color: "#f2f2f2",
+            marginBlock: "7px",
           }}
         >
           Cerrar sesión
@@ -172,6 +173,7 @@ const ButtonAuth = () => {
           borderRadius: 31,
           backgroundColor: "#015E90",
           color: "#f2f2f2",
+          marginBlock: "7px",
         }}
       >
         Ingresar al portal
