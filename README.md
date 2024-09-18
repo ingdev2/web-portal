@@ -1,4 +1,4 @@
-<img src="./client/public/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png" alt="logo-portal-web">
+<img src="./apps/client/public/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png" alt="logo-portal-web">
 
 ## Portal web para usuarios de clínica Bonnadona
 

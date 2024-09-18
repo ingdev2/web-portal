@@ -1,0 +1,58 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
+import { PositionLevelService } from '../services/position_level.service';
+import { CreatePositionLevelDto } from '../dto/create-position_level.dto';
+import { UpdatePositionLevelDto } from '../dto/update-position_level.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from '../../auth/decorators/auth.decorator';
+import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { PositionLevelEnum } from 'shared/utils/enums/position_level.enum';
+
+@ApiTags('position-level')
+@ApiBearerAuth()
+@Controller('position-level')
+export class PositionLevelController {
+  constructor(private readonly positionLevelService: PositionLevelService) {}
+
+  // POST METHODS //
+
+  @Auth(AdminRolType.SUPER_ADMIN)
+  @Post('/create')
+  createPositionLevel(@Body() createPositionLevel: CreatePositionLevelDto) {
+    return this.positionLevelService.createPositionLevel(createPositionLevel);
+  }
+
+  // GET METHODS //
+
+  @Get('/getAll')
+  getAllPositionLevel() {
+    return this.positionLevelService.getAllPositionLevel();
+  }
+
+  @Get('/getByName')
+  getPositionLevelByName(@Query('name') name?: PositionLevelEnum) {
+    return this.positionLevelService.getPositionLevelByName(name);
+  }
+
+  // PATCH METHODS //
+
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Patch('/update/:id')
+  updatePositionLevel(
+    @Param('id') id: number,
+    @Body() updatePositionLevel: UpdatePositionLevelDto,
+  ) {
+    return this.positionLevelService.updatePositionLevel(
+      id,
+      updatePositionLevel,
+    );
+  }
+}

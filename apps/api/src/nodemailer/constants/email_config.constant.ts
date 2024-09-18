@@ -1,0 +1,33 @@
+// EMAIL CONFIG //
+export const NAME_EMAIL_FROM = 'Departamento de Desarrollo';
+export const DEFAULT_EMAIL_FROM = 'ingdesarrollo2@bonnadona.co';
+
+// EMAIL SUBJECT //
+export const SUBJECT_ACCOUNT_CREATED = 'CUENTA CREADA';
+export const SUBJECT_USER_CREATION_NOTIFICATION_TO_EPS =
+  'NOTIFICACIÓN DE CREACIÓN DE AUDITOR';
+export const SUBJECT_EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS =
+  'NOTIFICACIÓN DE REGISTRO DE EMAIL PRINCIPAL';
+export const ADDED_AS_AUTHORIZED_RELATIVE =
+  'HAS SIDO AGREGADO COMO FAMILIAR AUTORIZADO';
+export const SUBJECT_EMAIL_CONFIRM_CREATION = 'CREACION REQUERIMIENTO MÉDICO';
+export const SUBJECT_CREATION_FAMILIAR_MEDICAL_REQ =
+  'NOTIFICACIÓN CREACION REQUERIMIENTO MÉDICO POR FAMILIAR';
+export const SUBJECT_EMAIL_STATUS_CHANGE =
+  'CAMBIO DE ESTADO EN REQUERIMIENTO MÉDICO';
+export const SUBJECT_EMAIL_VERIFICATION_CODE = 'CONFIRMACIÓN CODIGO DE INGRESO';
+export const PASSWORD_UPDATED = 'CONTRASEÑA ACTUALIZADA';
+export const PASSWORD_RESET = 'RESTABLECIMIENTO DE CONTRASEÑA';
+
+// EMAIL TEMPLATES //
+export const ACCOUNT_CREATED = 'account_created';
+export const USER_CREATION_NOTIFICATION_TO_EPS =
+  'user_creation_notification_to_eps';
+export const EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS = 'eps_company_created';
+export const ADDED_FAMILY = 'added_family';
+export const MEDICAL_REQ_CREATED = 'medical_req_created';
+export const MEDICAL_REQ_CREATED_BY_FAMILIAR = 'creation_familiar_medical_req';
+export const MEDICAL_REQ_UPDATE = 'status_change';
+export const EMAIL_VERIFICATION_CODE = 'verification_code';
+export const UPDATED_PASSWORD_TEMPLATE = 'updated_password';
+export const RESET_PASSWORD_TEMPLATE = 'reset_password';
