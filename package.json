@@ -6,7 +6,7 @@
   "main": "index.js",
   "dependencies": {
     "turbo": "^2.1.2",
-    "turbo-windows-64": "^2.1.2"
+    "turbo-linux-64": "^2.1.2"
   },
   "devDependencies": {
     "turbo": "^2.1.2"
