@@ -42,8 +42,8 @@ import {
   checkboxMessagesValidator,
 } from "@/helpers/checkbox_validator/checkbox_validator";
 
-import { CONTACT_PBX } from "shared/utils/constants/constants";
-import { AuthenticationMethodEnum } from "shared/utils/enums/authentication_method.enum";
+import { CONTACT_PBX } from "../../../utils/constants/constants";
+import { AuthenticationMethodEnum } from "../../../utils/enums/authentication_method.enum";
 
 const ValidatePatientData: React.FC = () => {
   const { data: session, status } = useSession();

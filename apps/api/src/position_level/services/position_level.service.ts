@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { CreatePositionLevelDto } from '../dto/create-position_level.dto';
 import { UpdatePositionLevelDto } from '../dto/update-position_level.dto';
 import { PositionLevel } from '../entities/position_level.entity';
-import { PositionLevelEnum } from 'shared/utils/enums/position_level.enum';
+import { PositionLevelEnum } from '../../utils/enums/position_level.enum';
 
 @Injectable()
 export class PositionLevelService {

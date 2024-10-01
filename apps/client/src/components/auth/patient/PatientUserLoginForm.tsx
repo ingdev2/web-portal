@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
-import { UserRolType } from "shared/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../utils/enums/user_roles.enum";
 
 import { titleStyleCss } from "@/theme/text_styles";
 import { Button, Card, Col, Divider, Form, Input, Select } from "antd";

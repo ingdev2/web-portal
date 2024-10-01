@@ -7,7 +7,7 @@ import { subtitleStyleCss } from "@/theme/text_styles";
 
 import { useGetAllMedicalReqUsersQuery } from "@/redux/apis/medical_req/medicalReqApi";
 
-import { RequirementStatusEnum } from "shared/utils/enums/requirement_status.enum";
+import { RequirementStatusEnum } from "../../../utils/enums/requirement_status.enum";
 
 const StatusItems: React.FC = () => {
   const {

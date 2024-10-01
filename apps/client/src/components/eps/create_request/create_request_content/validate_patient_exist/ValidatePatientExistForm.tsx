@@ -30,7 +30,7 @@ import {
   useTransformIdTypeNumberMutation,
 } from "@/redux/apis/users/usersApi";
 
-import { IdTypeAbbrev } from "shared/utils/enums/id_type_abbrev.enum";
+import { IdTypeAbbrev } from "../../../utils/enums/id_type_abbrev.enum";
 
 const ValidatePatientExistEps: React.FC = () => {
   const dispatch = useAppDispatch();

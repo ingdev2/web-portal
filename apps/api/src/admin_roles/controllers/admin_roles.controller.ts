@@ -13,7 +13,7 @@ import { CreateAdminRoleDto } from '../dto/create-admin_role.dto';
 import { UpdateAdminRoleDto } from '../dto/update-admin_role.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('admin-roles')
 @ApiBearerAuth()

@@ -34,10 +34,10 @@ import { useGetAdminRoleByNameQuery } from "@/redux/apis/admin_roles/adminRolesA
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetPositionLevelByNameQuery } from "@/redux/apis/position_level/positionLevelApi";
 
-import { AdminRolType } from "shared/utils/enums/admin_roles.enum";
-import { PositionLevelEnum } from "shared/utils/enums/position_level.enum";
-import { CompanyAreaEnum } from "shared/utils/enums/company_area.enum";
-import { RequirementStatusEnum } from "shared/utils/enums/requirement_status.enum";
+import { AdminRolType } from "../../../utils/enums/admin_roles.enum";
+import { PositionLevelEnum } from "../../../utils/enums/position_level.enum";
+import { CompanyAreaEnum } from "../../../utils/enums/company_area.enum";
+import { RequirementStatusEnum } from "../../../utils/enums/requirement_status.enum";
 import {
   ItemKeys,
   ItemNames,

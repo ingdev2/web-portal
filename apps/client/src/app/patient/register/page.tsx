@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { UserRolType } from "shared/utils/enums/user_roles.enum";
+import { UserRolType } from "../../../utils/enums/user_roles.enum";
 
 import { Tabs } from "antd";
 import { FaUser } from "react-icons/fa";

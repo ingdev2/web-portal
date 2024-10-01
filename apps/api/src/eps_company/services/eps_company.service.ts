@@ -13,10 +13,10 @@ import {
   EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS,
   SUBJECT_EPS_COMPANY_CREATED_NOTIFICATION_TO_EPS,
 } from 'src/nodemailer/constants/email_config.constant';
-import { CONTACT_PBX } from 'shared/utils/constants/constants';
-import { ActionTypesEnum } from 'shared/utils/enums/audit_logs_enums/action_types.enum';
-import { QueryTypesEnum } from 'shared/utils/enums/audit_logs_enums/query_types.enum';
-import { ModuleNameEnum } from 'shared/utils/enums/audit_logs_enums/module_names.enum';
+import { CONTACT_PBX } from '../../utils/constants/constants';
+import { ActionTypesEnum } from '../../utils/enums/audit_logs_enums/action_types.enum';
+import { QueryTypesEnum } from '../../utils/enums/audit_logs_enums/query_types.enum';
+import { ModuleNameEnum } from '../../utils/enums/audit_logs_enums/module_names.enum';
 
 @Injectable()
 export class EpsCompanyService {
