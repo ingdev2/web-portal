@@ -11,13 +11,13 @@ import { join } from 'path';
     MailerModule.forRootAsync({
       useFactory: async () => ({
         transport: {
-          host: process.env.MAIL_HOST,
-          port: Number(process.env.MAIL_PORT),
-          secure: true, // true para 465, false para otros puertos
+          host: process.env.MAIL_HOST_OUTLOOK,
+          port: Number(process.env.MAIL_PORT_OUTLOOK),
+          secure: false, // true para 465, false para otros puertos
           requireTLS: true,
           auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS,
+            user: process.env.MAIL_USER_OUTLOOK,
+            pass: process.env.MAIL_PASS_OUTLOOK,
           },
         },
         transports: {},

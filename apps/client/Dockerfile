@@ -1,52 +1,47 @@
-FROM node:18-alpine AS base
+# Use the official Node.js 18-alpine image as the base image for the build stage
+FROM node:18-alpine AS build
 
-# This Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-with-docker.
-# Make sure you update both files!
-
-FROM base AS builder
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk update
-RUN apk add --no-cache libc6-compat
-# Set working directory
+# Set the working directory to /app
 WORKDIR /app
-RUN yarn global add turbo
+
+# Copy the package.json and package-lock.json files to the container
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy the rest of the application code to the container
 COPY . .
-RUN turbo prune client --docker
 
-# Add lockfile and package.json's of isolated subworkspace
-FROM base AS installer
-RUN apk update
-RUN apk add --no-cache libc6-compat
+# Build the Next.js app
+RUN npm run build
+
+
+# Use the official Node.js 18-alpine image as the base image for the runtime stage
+FROM node:18-alpine AS runtime
+
+# Set the working directory to /app
 WORKDIR /app
 
-# First install the dependencies (as they change less often)
-COPY --from=builder /app/out/json/ .
-RUN yarn install
+# Copy the package.json and package-lock.json files to the container
+COPY package*.json ./
 
-# Build the project
-COPY --from=builder /app/out/full/ .
+# Install only production dependencies
+RUN npm ci --only=production
 
-# Uncomment and use build args to enable remote caching
-# ARG TURBO_TEAM
-# ENV TURBO_TEAM=$TURBO_TEAM
+# Copy the built app from the build stage to the runtime stage
+COPY --from=build /app/.next ./.next
 
-# ARG TURBO_TOKEN
-# ENV TURBO_TOKEN=$TURBO_TOKEN
+# Copy the public folder from the build stage to the runtime stage
+COPY --from=build /app/public ./public
 
-RUN yarn turbo build --filter=client...
+# Expose port 3000
+EXPOSE 3000
 
-FROM base AS runner
-WORKDIR /app
+USER node
 
-# Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
+# Start the Next.js app
+CMD ["npm", "start"]
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/client/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/client/.next/static ./apps/client/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/client/public ./apps/client/public
-
-CMD node apps/client/server.js
+#sudo docker build -t portal-front .
+#sudo docker run -p 3000:3000 portal-front
