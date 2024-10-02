@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
 import PatientUpdatePersonalDataFormData from "./PatientUpdatePersonalDataFormData";
-import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomMessage from "@/../common/custom_messages/CustomMessage";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import PatientChangePasswordForm from "../patient_change_password_form/PatientChangePasswordForm";
 import { IoMdArrowRoundBack } from "react-icons/io";

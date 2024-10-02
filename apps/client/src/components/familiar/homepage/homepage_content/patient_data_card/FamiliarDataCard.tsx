@@ -6,8 +6,8 @@ import { getFirstNameAndFirstLastName } from "@/helpers/get_first_name/get_first
 
 import { Card, Row, Col, Divider } from "antd";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
-import CustomSpin from "../../../../common/custom_spin/CustomSpin";
-import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomSpin from "@/../common/custom_spin/CustomSpin";
+import CustomMessage from "@/../common/custom_messages/CustomMessage";
 
 import {
   setIdUserFamiliar,

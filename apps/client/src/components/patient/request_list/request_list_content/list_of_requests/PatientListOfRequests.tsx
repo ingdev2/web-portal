@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
-import CustomSpin from "../../../../common/custom_spin/CustomSpin";
-import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomSpin from "@/../common/custom_spin/CustomSpin";
+import CustomMessage from "@/../common/custom_messages/CustomMessage";
 import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 import PatientRequestCardList from "@/components/patient/request_list/request_list_content/patient_request_card_list/PatientRequestCardList";
 import CustomEmptyButton from "@/components/common/custom_empty_button/CustomEmptyButton";

@@ -5,7 +5,7 @@ import {
   setPatientClassStatusAbbrevMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 
-import { PatientClassificationStatus } from "../../../utils/enums/patient_classification_status.enum";
+import { PatientClassificationStatus } from "@/utils/enums/patient_classification_status.enum";
 
 export const calculatePatientAge = (
   birthdatePatientOfFamiliarState: string,
