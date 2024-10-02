@@ -25,7 +25,7 @@ import { useGetAllCompanyAreaQuery } from "@/redux/apis/company_area/companyArea
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import { checkboxProcessingPersonalDataValidator } from "@/helpers/checkbox_validator/checkbox_validator";
-import { AuthenticationMethodEnum } from "../../../utils/enums/authentication_method.enum";
+import { AuthenticationMethodEnum } from "@/utils/enums/authentication_method.enum";
 
 const AdminRegistrationForm: React.FC = () => {
   const dispatch = useAppDispatch();

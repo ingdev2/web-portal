@@ -3,7 +3,7 @@
 import React from "react";
 
 import CustomTags from "../custom_tags/CustomTags";
-import { IdType } from "../../../utils/enums/id_type.enum";
+import { IdType } from "@/utils/enums/id_type.enum";
 
 export const getTagComponentIdTypes = (statusName: string | undefined) => {
   switch (statusName) {

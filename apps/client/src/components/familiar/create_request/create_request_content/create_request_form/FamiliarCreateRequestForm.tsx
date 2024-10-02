@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, Col } from "antd";
 import FamiliarCreateRequestFormData from "./FamiliarCreateRequestFormData";
-import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomMessage from "@/../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";

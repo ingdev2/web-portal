@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Button, Card, CheckboxProps, Col } from "antd";
 import AddRelativeFormData from "./AddRelativeFormData";
-import CustomMessage from "../../../../common/custom_messages/CustomMessage";
+import CustomMessage from "@/../common/custom_messages/CustomMessage";
 import CustomModalTwoOptions from "@/components/common/custom_modal_two_options/CustomModalTwoOptions";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import CustomResultOneButton from "@/components/common/custom_result_one_button/CustomResultOneButton";
@@ -35,7 +35,7 @@ import {
   checkboxProcessingPersonalDataValidator,
   checkboxMessagesValidator,
 } from "@/helpers/checkbox_validator/checkbox_validator";
-import { AuthenticationMethodEnum } from "../../../utils/enums/authentication_method.enum";
+import { AuthenticationMethodEnum } from "@/utils/enums/authentication_method.enum";
 
 const AddRelativeForm: React.FC = () => {
   const dispatch = useAppDispatch();
