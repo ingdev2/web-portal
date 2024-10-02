@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button, Card, Col } from "antd";
 import EpsUpdatePersonalDataFormData from "./EpsUpdatePersonalDataFormData";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
-import CustomMessage from "@/../common/custom_messages/CustomMessage";
+import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import EpsChangePasswordForm from "../eps_change_password_form/EpsChangePasswordForm";
 import { IoMdArrowRoundBack } from "react-icons/io";

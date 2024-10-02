@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button, Card, Col } from "antd";
 import FamiliarUpdatePersonalDataFormData from "./FamiliarUpdatePersonalDataFormData";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
-import CustomMessage from "@/../common/custom_messages/CustomMessage";
+import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 import {
