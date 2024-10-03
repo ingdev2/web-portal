@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AuthenticationMethodEnum } from 'shared/utils/enums/authentication_method.enum';
+import { AuthenticationMethodEnum } from '../../utils/enums/authentication_method.enum';
 import { Admin } from 'src/admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
 import { AuthorizedFamiliar } from '../../authorized_familiar/entities/authorized_familiar.entity';

@@ -3,7 +3,7 @@
 import React from "react";
 
 import CustomTags from "../custom_tags/CustomTags";
-import { RequirementStatusEnum } from "shared/utils/enums/requirement_status.enum";
+import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
 
 export const getTagComponentStatus = (statusName: string | undefined) => {
   switch (statusName) {

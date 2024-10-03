@@ -2,7 +2,7 @@ import { Admin } from '../../admins/entities/admin.entity';
 import { User } from '../../users/entities/user.entity';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CompanyAreaEnum } from 'shared/utils/enums/company_area.enum';
+import { CompanyAreaEnum } from '../../utils/enums/company_area.enum';
 
 @Entity()
 export class CompanyArea {

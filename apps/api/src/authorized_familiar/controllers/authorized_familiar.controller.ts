@@ -9,8 +9,8 @@ import {
   Req,
   Query,
 } from '@nestjs/common';
-import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
-import { UserRolType } from 'shared/utils/enums/user_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { AuthorizedFamiliarService } from '../services/authorized_familiar.service';
 import { UpdateAuthorizedFamiliarDto } from '../dto/update-authorized_familiar.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

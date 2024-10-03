@@ -64,16 +64,13 @@ export class NodemailerService {
           filename: 'LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
           path: join(
             __dirname,
-            '../../../../client/public/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
+            '../../../assets/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
           ),
           cid: 'logo_proced@bonnadona.co',
         },
         {
           filename: 'LOGO-BONNADONA.png',
-          path: join(
-            __dirname,
-            '../../../../client/public/logos/LOGO-BONNADONA.png',
-          ),
+          path: join(__dirname, '../../../assets/logos/LOGO-BONNADONA.png'),
           cid: 'logo_bonnadona@bonnadona.co',
         },
       ],

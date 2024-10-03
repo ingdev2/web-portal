@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 import AdminPersonalDataFormData from "./AdminPersonalDataFormData";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";
-import CustomMessage from "../../../common/custom_messages/CustomMessage";
+import CustomMessage from "@/components/common/custom_messages/CustomMessage";
 import CustomModalNoContent from "@/components/common/custom_modal_no_content/CustomModalNoContent";
 import AdminChangePasswordForm from "../admin_change_password_form/AdminChangePasswordForm";
 import { TbPasswordUser } from "react-icons/tb";

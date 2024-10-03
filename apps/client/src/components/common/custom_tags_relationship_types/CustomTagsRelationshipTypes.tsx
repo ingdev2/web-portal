@@ -3,7 +3,7 @@
 import React from "react";
 
 import CustomTags from "../custom_tags/CustomTags";
-import { RelationshipWithPatient } from "shared/utils/enums/relationship_with_patient.enum";
+import { RelationshipWithPatient } from "@/utils/enums/relationship_with_patient.enum";
 
 export const getTagComponentRelationshipType = (
   typeName: string | undefined

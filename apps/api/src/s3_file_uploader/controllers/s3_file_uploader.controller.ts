@@ -14,8 +14,8 @@ import { S3FileUploaderService } from '../services/s3_file_uploader.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
-import { UserRolType } from 'shared/utils/enums/user_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
+import { UserRolType } from '../../utils/enums/user_roles.enum';
 
 @ApiTags('s3-file-uploader')
 @ApiBearerAuth()

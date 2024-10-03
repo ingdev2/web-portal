@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ActionTypesEnum } from 'shared/utils/enums/audit_logs_enums/action_types.enum';
-import { QueryTypesEnum } from 'shared/utils/enums/audit_logs_enums/query_types.enum';
-import { ModuleNameEnum } from 'shared/utils/enums/audit_logs_enums/module_names.enum';
+import { ActionTypesEnum } from '../../utils/enums/audit_logs_enums/action_types.enum';
+import { QueryTypesEnum } from '../../utils/enums/audit_logs_enums/query_types.enum';
+import { ModuleNameEnum } from '../../utils/enums/audit_logs_enums/module_names.enum';
 
 export class CreateAuditLogDto {
   @IsOptional()
