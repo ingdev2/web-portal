@@ -42,7 +42,7 @@ import {
   useTransformGenderNumberMutation,
 } from "@/redux/apis/users/usersApi";
 
-import { IdTypeAbbrev } from "shared/utils/enums/id_type_abbrev.enum";
+import { IdTypeAbbrev } from "@/utils/enums/id_type_abbrev.enum";
 import CustomPopover from "@/components/common/custom_popover/CustomPopover";
 
 const ValidatePatientExistForm: React.FC = () => {

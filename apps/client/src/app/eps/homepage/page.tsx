@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRoleValidation } from "@/utils/hooks/use_role_validation";
-import { UserRolType } from "shared/utils/enums/user_roles.enum";
+import { UserRolType } from "@/utils/enums/user_roles.enum";
 
 import EpsHomeLayout from "@/components/eps/homepage/EpsHomeLayout";
 import CustomSpin from "@/components/common/custom_spin/CustomSpin";

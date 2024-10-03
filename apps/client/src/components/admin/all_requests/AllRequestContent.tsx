@@ -39,7 +39,7 @@ import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_i
 import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing_number";
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 
-import { RequirementStatusEnum } from "shared/utils/enums/requirement_status.enum";
+import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
 
 const AllRequestContent: React.FC = () => {
   const dispatch = useAppDispatch();

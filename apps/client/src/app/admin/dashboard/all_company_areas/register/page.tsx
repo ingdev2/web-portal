@@ -22,9 +22,9 @@ import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetCompanyAreaByNameQuery } from "@/redux/apis/company_area/companyAreaApi";
 import { useGetPositionLevelByNameQuery } from "@/redux/apis/position_level/positionLevelApi";
 
-import { AdminRolType } from "shared/utils/enums/admin_roles.enum";
-import { CompanyAreaEnum } from "shared/utils/enums/company_area.enum";
-import { PositionLevelEnum } from "shared/utils/enums/position_level.enum";
+import { AdminRolType } from "@/utils/enums/admin_roles.enum";
+import { CompanyAreaEnum } from "@/utils/enums/company_area.enum";
+import { PositionLevelEnum } from "@/utils/enums/position_level.enum";
 
 const RegisterCompanyAreaPage = () => {
   const { data: session, status } = useSession();

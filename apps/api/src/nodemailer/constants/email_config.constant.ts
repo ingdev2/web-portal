@@ -1,6 +1,6 @@
 // EMAIL CONFIG //
-export const NAME_EMAIL_FROM = 'Departamento de Desarrollo';
-export const DEFAULT_EMAIL_FROM = 'ingdesarrollo2@bonnadona.co';
+export const NAME_EMAIL_FROM = 'Departamento de Archivos';
+export const DEFAULT_EMAIL_FROM = 'no-reply@bonnadona.co';
 
 // EMAIL SUBJECT //
 export const SUBJECT_ACCOUNT_CREATED = 'CUENTA CREADA';

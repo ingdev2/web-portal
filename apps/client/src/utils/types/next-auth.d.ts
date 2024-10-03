@@ -1,6 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth";
-import { UserRolType } from "shared/utils/enums/user_roles.enum";
-import { AdminRolType } from "shared/utils/enums/admin_roles.enum";
+import { UserRolType } from "@/utils/enums/user_roles.enum";
+import { AdminRolType } from "@/utils/enums/admin_roles.enum";
 import { AllowedRoleType } from "./allowed_role_type";
 
 declare module "next-auth" {

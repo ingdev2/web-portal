@@ -1,12 +1,12 @@
 import { Button } from "antd";
 import { FaRegEye } from "react-icons/fa";
 
-import { AdminRolType } from "shared/utils/enums/admin_roles.enum";
-import { UserRolType } from "shared/utils/enums/user_roles.enum";
+import { AdminRolType } from "@/utils/enums/admin_roles.enum";
+import { UserRolType } from "@/utils/enums/user_roles.enum";
 
-import { ActionTypesEnum } from "shared/utils/enums/audit_logs_enums/action_types.enum";
-import { ModuleNameEnum } from "shared/utils/enums/audit_logs_enums/module_names.enum";
-import { QueryTypesEnum } from "shared/utils/enums/audit_logs_enums/query_types.enum";
+import { ActionTypesEnum } from "@/utils/enums/audit_logs_enums/action_types.enum";
+import { ModuleNameEnum } from "@/utils/enums/audit_logs_enums/module_names.enum";
+import { QueryTypesEnum } from "@/utils/enums/audit_logs_enums/query_types.enum";
 
 const enumDataFilters = (enumData: Object) =>
   Object.values(enumData).map((value) => ({

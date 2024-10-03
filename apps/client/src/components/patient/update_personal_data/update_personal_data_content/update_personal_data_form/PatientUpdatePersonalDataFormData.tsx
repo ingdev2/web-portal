@@ -16,7 +16,7 @@ import { TbGenderBigender } from "react-icons/tb";
 import { IoHomeOutline } from "react-icons/io5";
 import { FiPhone } from "react-icons/fi";
 
-import { CONTACT_PBX } from "shared/utils/constants/constants";
+import { CONTACT_PBX } from "@/utils/constants/constants";
 
 const PatientUpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;

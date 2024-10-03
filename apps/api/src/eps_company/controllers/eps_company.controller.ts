@@ -12,7 +12,7 @@ import { EpsCompanyService } from '../services/eps_company.service';
 import { CreateEpsCompanyDto } from '../dto/create-eps_company.dto';
 import { UpdateEpsCompanyDto } from '../dto/update-eps_company.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 

@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateAuditLogDto } from '../dto/create_audit_log.dto';
 import { EnableAuditLog } from '../decorators/enable-audit-log.decorator';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { AdminRolType } from 'shared/utils/enums/admin_roles.enum';
+import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 
 @ApiTags('audit-logs')
 @ApiBearerAuth()
