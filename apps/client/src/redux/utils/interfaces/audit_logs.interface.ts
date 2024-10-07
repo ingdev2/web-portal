@@ -13,5 +13,6 @@ interface AuditLogs {
   browser_version: string;
   operating_system: string;
   createdAt: string;
+  timeAt: string;
   errors: string[];
 }
