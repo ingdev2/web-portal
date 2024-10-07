@@ -40,6 +40,10 @@ import { useGetAllPositionLevelsQuery } from "@/redux/apis/position_level/positi
 import { useGetAllGendersQuery } from "@/redux/apis/genders/gendersApi";
 
 import { transformIdToNameMap } from "@/helpers/transform_id_to_name/transform_id_to_name";
+import {
+  formatDate,
+  formatTime,
+} from "@/helpers/format_date_and_hour/format_date_and_hour";
 
 const AllAdminsContent: React.FC = () => {
   const dispatch = useAppDispatch();

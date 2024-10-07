@@ -32,6 +32,7 @@ const moduleNameAuditLogKey: keyof AuditLogs = "module_name";
 const queryTypeAuditLogKey: keyof AuditLogs = "query_type";
 const moduleRecordIdAuditLogKey: keyof AuditLogs = "module_record_id";
 const dateOfAuditLogKey: keyof AuditLogs = "createdAt";
+const timeOfAuditLogKey: keyof AuditLogs = "timeAt";
 
 interface TableColumnProps {
   handleClickSeeMore: (record: AuditLogs) => void;
@@ -76,6 +77,26 @@ export const tableColumnsAuditLogs = ({
     },
     ellipsis: true,
     render: (actionType: string) => actionType,
+  },
+  {
+    title: "FECHA DE ACCIÓN",
+    key: dateOfAuditLogKey,
+    dataIndex: dateOfAuditLogKey,
+    width: 103,
+    sorter: (a: AuditLogs, b: AuditLogs) => {
+      return a[dateOfAuditLogKey].localeCompare(b[dateOfAuditLogKey]);
+    },
+    ellipsis: true,
+    searchable: true,
+    render: (date: string) => date,
+  },
+  {
+    title: "HORA DE ACCIÓN",
+    key: timeOfAuditLogKey,
+    dataIndex: timeOfAuditLogKey,
+    width: 103,
+    ellipsis: true,
+    render: (time: string) => time,
   },
   {
     title: "NOMBRE DE MÓDULO",
