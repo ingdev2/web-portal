@@ -25,7 +25,7 @@ export class EpsCompanyController {
   // POST METHODS //
 
   @EnableAuditLog()
-  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  // @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
   createEpsCompany(
     @Body() createEpsCompany: CreateEpsCompanyDto,
@@ -37,7 +37,17 @@ export class EpsCompanyController {
     );
   }
 
+  @Post('/updateEpsFromHosvital')
+  updateEpsCompaniesFromHosvital() {
+    return this.epsCompanyService.updateEpsCompaniesFromHosvital();
+  }
+
   // GET METHODS //
+
+  @Get('/getAllEps')
+  validateHosvitalEpsCompanies() {
+    return this.epsCompanyService.validateHosvitalEpsCompanies();
+  }
 
   @Get('/getAll')
   getAllEpsCompanies() {

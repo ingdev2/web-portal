@@ -19,7 +19,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('User Web Portal - PROCED')
+    .setTitle('Web Portal')
     .setDescription(
       'Creación de portal web para usuarios donde puedan hacer solicitudes de documentos médicos',
     )

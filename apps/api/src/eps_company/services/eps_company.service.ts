@@ -18,6 +18,8 @@ import { ActionTypesEnum } from '../../utils/enums/audit_logs_enums/action_types
 import { QueryTypesEnum } from '../../utils/enums/audit_logs_enums/query_types.enum';
 import { ModuleNameEnum } from '../../utils/enums/audit_logs_enums/module_names.enum';
 
+import axios from 'axios';
+
 @Injectable()
 export class EpsCompanyService {
   constructor(
@@ -30,6 +32,68 @@ export class EpsCompanyService {
   ) {}
 
   // CREATE FUNTIONS //
+
+  async validateHosvitalEpsCompanies(): Promise<any[]> {
+    try {
+      const AUTH_VALUE = process.env.X_AUTH_VALUE;
+
+      const response = await axios.get(
+        `https://apitorrecontrol.bonnadona.net/api_torre_control/portal-web/eps`,
+        {
+          headers: {
+            'X-Authorization': AUTH_VALUE,
+          },
+        },
+      );
+
+      const allData = response.data;
+
+      const allEpsCompanies = allData.data;
+
+      return allEpsCompanies;
+    } catch (error) {
+      throw new HttpException(
+        'Hubo un error al consultar en la base de datos.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        error,
+      );
+    }
+  }
+
+  async updateEpsCompaniesFromHosvital() {
+    try {
+      const allEpsCompaniesOfHosvital =
+        await this.validateHosvitalEpsCompanies();
+
+      for (const companyOfHosvital of allEpsCompaniesOfHosvital) {
+        const existingCompany = await this.epsCompanyRepository.findOne({
+          where: {
+            nit: companyOfHosvital?.contractEpsNit,
+            name: companyOfHosvital?.contractEpsDescription,
+          },
+        });
+
+        if (existingCompany) {
+          continue;
+        }
+
+        const newCompany = new CreateEpsCompanyDto();
+
+        newCompany.nit = companyOfHosvital?.contractEpsNit;
+        newCompany.name = companyOfHosvital?.contractEpsDescription;
+
+        await this.epsCompanyRepository.create(newCompany);
+
+        await this.epsCompanyRepository.save(newCompany);
+      }
+    } catch (error) {
+      throw new HttpException(
+        'Hubo un error al consultar en la base de datos.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        error,
+      );
+    }
+  }
 
   async createEpsCompany(
     epsCompany: CreateEpsCompanyDto,
