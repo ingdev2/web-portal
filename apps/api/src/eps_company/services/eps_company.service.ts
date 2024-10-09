@@ -86,6 +86,8 @@ export class EpsCompanyService {
 
         await this.epsCompanyRepository.save(newCompany);
       }
+
+      return { message: '¡Empresas actualizadas correctamente!', status: 202 };
     } catch (error) {
       throw new HttpException(
         'Hubo un error al consultar en la base de datos.',

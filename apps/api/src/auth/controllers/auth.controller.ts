@@ -7,7 +7,6 @@ import { CreateAuthorizedFamiliarDto } from '../../authorized_familiar/dto/creat
 import { CreateUserEpsDto } from '../../users/dto/create_user_eps.dto';
 import { ValidatePatientDto } from '../../users/dto/validate_patient.dto';
 import { FamiliarLoginDto } from '../dto/familiar_login.dto';
-import { VerifiedLoginFamiliarDto } from '../dto/verified_login_familiar.dto';
 import { FamiliarResendCodeDto } from '../dto/familiar_resend_code.dto';
 import { LoginDto } from '../dto/login.dto';
 import { IdNumberDto } from '../dto/id_number.dto';
@@ -60,7 +59,7 @@ export class AuthController {
   }
 
   @EnableAuditLog()
-  @Auth(AdminRolType.SUPER_ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('registerAdmin')
   async registerAdmin(
     @Body() registerAdmin: CreateAdminDto,

@@ -446,6 +446,7 @@ const PatientUpdatePersonalDataFormData: React.FC<{
               style={{ overflow: "hidden", textOverflow: "ellipsis" }}
               onChange={onChangeResidendeAddressUserPatientFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </div>

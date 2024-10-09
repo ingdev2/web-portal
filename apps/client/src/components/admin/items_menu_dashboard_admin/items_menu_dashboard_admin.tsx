@@ -273,6 +273,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_ADMIN_USERS,

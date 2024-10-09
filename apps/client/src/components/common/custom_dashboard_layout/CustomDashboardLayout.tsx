@@ -85,7 +85,7 @@ const CustomDashboardLayout: React.FC<{
             alignContent: "center",
             alignItems: "center",
             backgroundColor: "#f2f2f2",
-            paddingBlock: "22px",
+            paddingBlock: "7px",
             overflow: "hidden",
           }}
           onClick={() => {
@@ -100,7 +100,7 @@ const CustomDashboardLayout: React.FC<{
             }
             alt="Logo de portal"
             style={{
-              maxWidth: collapsed ? "45%" : "77%",
+              maxWidth: collapsed ? "45%" : "72%",
               height: "auto",
               objectFit: "contain",
             }}
