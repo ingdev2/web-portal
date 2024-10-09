@@ -109,23 +109,30 @@ export const useMenuItems = () => {
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+      name: CompanyAreaEnum.SYSTEM_DEPARTMENT,
     });
 
   const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
     });
 
   const { data: legalCompanyAreaData, error: legalCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
+      name: CompanyAreaEnum.LEGAL_DEPARTMENT,
     });
 
   const { data: admissionsCompanyAreaData, error: admissionsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
       name: CompanyAreaEnum.ADMISSIONS_DEPARTMENT,
     });
+
+  const {
+    data: externalConsultationCompanyAreaData,
+    error: externalConsultationCompanyAreaError,
+  } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+  });
 
   const { data: externalAuditorData, error: externalAuditorError } =
     useGetCompanyAreaByNameQuery({
@@ -201,6 +208,8 @@ export const useMenuItems = () => {
     !legalCompanyAreaError &&
     admissionsCompanyAreaData &&
     !admissionsCompanyAreaError &&
+    externalConsultationCompanyAreaData &&
+    !externalConsultationCompanyAreaError &&
     externalAuditorData &&
     !externalAuditorError;
 
@@ -298,7 +307,9 @@ export const useMenuItems = () => {
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
+                legalCompanyAreaData.id,
                 admissionsCompanyAreaData.id,
+                externalAuditorData.id,
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
@@ -315,7 +326,9 @@ export const useMenuItems = () => {
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
+                legalCompanyAreaData.id,
                 admissionsCompanyAreaData.id,
+                externalAuditorData.id,
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,

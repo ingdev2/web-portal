@@ -25,7 +25,7 @@ export class EpsCompanyController {
   // POST METHODS //
 
   @EnableAuditLog()
-  // @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
+  @Auth(AdminRolType.SUPER_ADMIN, AdminRolType.ADMIN)
   @Post('/create')
   createEpsCompany(
     @Body() createEpsCompany: CreateEpsCompanyDto,

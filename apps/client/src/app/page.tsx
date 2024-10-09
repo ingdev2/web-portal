@@ -78,21 +78,6 @@ const HomePage = () => {
               marginInline: "13px",
             }}
           >
-            <div
-              className="proced-logo"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                paddingBlock: "13px",
-              }}
-            >
-              <img
-                src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
-                alt="Logo de Proced"
-                style={{ height: 62 }}
-              />
-            </div>
-
             <div className="text-card">
               <h3
                 className="presentation-text"

@@ -167,7 +167,7 @@ export class MedicalReqService {
 
     const fileArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+        name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
       },
     });
 
@@ -562,7 +562,7 @@ export class MedicalReqService {
 
     const fileArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+        name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
       },
     });
 
@@ -796,7 +796,7 @@ export class MedicalReqService {
 
     const fileArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+        name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
       },
     });
 
@@ -1123,7 +1123,7 @@ export class MedicalReqService {
   ) {
     const legalArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
+        name: CompanyAreaEnum.LEGAL_DEPARTMENT,
       },
     });
 

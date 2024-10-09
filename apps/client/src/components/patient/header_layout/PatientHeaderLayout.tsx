@@ -109,8 +109,8 @@ const PatientHeaderLayout: React.FC = () => {
           }}
         >
           <img
-            src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
-            alt="Logo de Proced"
+            src="/logos/LOGO-BONNADONA.png"
+            alt="Logo de portal"
             style={{
               maxWidth: "72%",
               height: "auto",

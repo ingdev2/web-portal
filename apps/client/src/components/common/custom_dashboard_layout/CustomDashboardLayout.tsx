@@ -96,9 +96,9 @@ const CustomDashboardLayout: React.FC<{
             src={
               collapsed
                 ? "/logos/LOGO-ICONO-130-X-130-PX.png"
-                : "/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
+                : "/logos/LOGO-BONNADONA.png"
             }
-            alt="Logo de Proced"
+            alt="Logo de portal"
             style={{
               maxWidth: collapsed ? "45%" : "77%",
               height: "auto",
