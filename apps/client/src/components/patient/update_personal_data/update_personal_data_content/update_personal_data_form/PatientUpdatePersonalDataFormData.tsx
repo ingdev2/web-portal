@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 
 import { Button, Col, Form, Input, Radio, Row, Space, Typography } from "antd";
 import { Store } from "antd/es/form/interface";
@@ -17,6 +17,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { FiPhone } from "react-icons/fi";
 
 import { EMAIL_CONTACT } from "@/utils/constants/constants";
+import ModalHowUpdatePersonalData from "@/components/register/patient/modal_how_update_personal_data/ModalHowUpdatePersonalData";
 
 const PatientUpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;
@@ -69,6 +70,11 @@ const PatientUpdatePersonalDataFormData: React.FC<{
   hasChangesFormData,
   handleButtonClickFormData,
 }) => {
+  const [
+    showCustomEmailUpdatePersonalDataModal,
+    setShowCustomEmailUpdatePersonalDataModal,
+  ] = useState(false);
+
   return (
     <Col
       xs={24}
@@ -97,11 +103,38 @@ const PatientUpdatePersonalDataFormData: React.FC<{
           textAlign: "center",
         }}
       >
-        Por favor, verifique si todos sus datos están correctos, de lo contrario
-        debe comunicarse a nuestra línea PBX: <b>{EMAIL_CONTACT}</b> para
-        realizar la actualización de sus datos personales que no se puedan
-        actualizar por este medio.
+        Por favor, revise que todos sus datos sean correctos. Si detecta alguna
+        inconsistencia, le solicitamos que envíe un correo electrónico a &nbsp;
+        <b>{EMAIL_CONTACT}</b> para actualizar su información personal.
       </p>
+
+      <div
+        style={{
+          paddingBlock: "7px",
+          textAlign: "center",
+        }}
+      >
+        <a
+          className="what-data-should-I-send"
+          style={{ textDecoration: "underline" }}
+          onClick={() => {
+            setShowCustomEmailUpdatePersonalDataModal(true);
+          }}
+        >
+          ¿Cómo solicito vía correo electrónico actualizar mis datos personales?
+        </a>
+      </div>
+
+      {showCustomEmailUpdatePersonalDataModal && (
+        <ModalHowUpdatePersonalData
+          showCustomEmailUpdatePersonalDataModal={
+            showCustomEmailUpdatePersonalDataModal
+          }
+          setShowCustomEmailUpdatePersonalDataModal={
+            setShowCustomEmailUpdatePersonalDataModal
+          }
+        />
+      )}
 
       <div style={{ textAlign: "start" }}>
         <Typography.Title style={{ marginTop: 7 }} level={5}>

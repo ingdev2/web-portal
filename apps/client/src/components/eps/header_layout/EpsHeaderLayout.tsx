@@ -97,7 +97,7 @@ const EpsHeaderLayout: React.FC = () => {
             flexFlow: "column wrap",
             justifyContent: "center",
             alignContent: "center",
-            width: "72%",
+            width: "96px",
             height: "88%",
             backgroundColor: "#f2f2f2",
             borderEndStartRadius: 7,
@@ -112,7 +112,7 @@ const EpsHeaderLayout: React.FC = () => {
             src="/logos/LOGO-BONNADONA.png"
             alt="Logo de portal"
             style={{
-              maxWidth: "72%",
+              maxWidth: "88%",
               height: "auto",
               objectFit: "contain",
             }}
