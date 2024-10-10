@@ -16,7 +16,7 @@ import { TbGenderBigender } from "react-icons/tb";
 import { IoHomeOutline } from "react-icons/io5";
 import { FiPhone } from "react-icons/fi";
 
-import { CONTACT_PBX } from "@/utils/constants/constants";
+import { EMAIL_CONTACT } from "@/utils/constants/constants";
 
 const PatientUpdatePersonalDataFormData: React.FC<{
   nameUserPatientFormData: string;
@@ -98,9 +98,9 @@ const PatientUpdatePersonalDataFormData: React.FC<{
         }}
       >
         Por favor, verifique si todos sus datos están correctos, de lo contrario
-        debe comunicarse a nuestra línea PBX: <b>{CONTACT_PBX}</b> para realizar
-        la actualización de sus datos personales que no se puedan actualizar por
-        este medio.
+        debe comunicarse a nuestra línea PBX: <b>{EMAIL_CONTACT}</b> para
+        realizar la actualización de sus datos personales que no se puedan
+        actualizar por este medio.
       </p>
 
       <div style={{ textAlign: "start" }}>
