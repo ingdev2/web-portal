@@ -98,8 +98,9 @@ const ModalHowUpdatePersonalData: React.FC<{
                     items: [
                       "1. Adjuntar copia legible de documento de identidad (ambos lados)",
                       "2. Adjuntar foto frontal de paciente con documento de identidad original (similar a imagen de ejemplo)",
-                      "3. Escribir número de celular actualizado",
-                      "4. Escribir correo electrónico actualizado",
+                      "3. Escribir número de celular de contacto actualizado",
+                      "4. Escribir correo electrónico de contacto actualizado",
+                      "5. Escribir dirección de residencia actualizada",
                     ],
                   },
                   {
