@@ -141,6 +141,18 @@ const PatientCreateRequestForm: React.FC = () => {
       setShowErrorMessageMedicalReq(true);
       dispatch(setTypesMedicalReq(reqTypesData));
     }
+    if (
+      haveRightPetitionState === false &&
+      userFilesRightPetitionState.length > 0
+    ) {
+      dispatch(setFileCopyRightPetitionMedicalReq([]));
+    }
+    if (
+      haveUserMessageDocumentsState === false &&
+      userMessageFilesMedicalReqState.length > 0
+    ) {
+      dispatch(setFileUserMessageMedicalReq([]));
+    }
   }, [
     reqTypesData,
     reqTypesLoading,
@@ -150,6 +162,9 @@ const PatientCreateRequestForm: React.FC = () => {
     userPatientLoading,
     userPatientFetching,
     idUserPatientState,
+    haveRightPetitionState,
+    userFilesRightPetitionState,
+    haveUserMessageDocumentsState,
     userMessageFilesMedicalReqState,
   ]);
 
@@ -233,10 +248,12 @@ const PatientCreateRequestForm: React.FC = () => {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
 
-        dispatch(setHaveUserMessageMedicalReq(false));
-        dispatch(setFileUserMessageMedicalReq([]));
         dispatch(setRightPetitionMedicalReq(false));
         dispatch(setFileCopyRightPetitionMedicalReq([]));
+        dispatch(setHaveUserMessageMedicalReq(false));
+        dispatch(setFileUserMessageMedicalReq([]));
+        dispatch(setRegistrationDatesMedicalReq(""));
+        dispatch(setFileCopyPatientCitizenshipCardMedicalReq([]));
       }
     } catch (error) {
       console.error(error);

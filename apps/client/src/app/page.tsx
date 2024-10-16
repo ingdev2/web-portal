@@ -44,7 +44,8 @@ const HomePage = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            paddingBlock: "7px",
+            paddingTop: "31px",
+            paddingBottom: "13px",
           }}
         >
           <img

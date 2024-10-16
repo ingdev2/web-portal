@@ -33,8 +33,18 @@ export const getTagComponentType = (typeName: string | undefined) => {
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
-            color: "#BA3400B2",
+            color: "#943126B2",
             label: RequirementTypeEnum.MEDICAL_DISABILITY,
+          }}
+        />
+      );
+    case RequirementTypeEnum.MIPRES:
+      return (
+        <CustomTags
+          tag={{
+            textColor: "#F7F7F7",
+            color: "#633671B2",
+            label: RequirementTypeEnum.MIPRES,
           }}
         />
       );

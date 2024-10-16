@@ -17,8 +17,8 @@ import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { RequirementStatusEnum } from '../enums/requirement_status.enum';
-import { RequirementTypeEnum } from '../enums/requirement_type.enum';
+import { RequirementStatusEnum } from 'src/utils/enums/requirement_status.enum';
+import { RequirementTypeEnum } from 'src/utils/enums/requirement_type.enum';
 import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
 
 @ApiTags('medical-req')

@@ -13,6 +13,8 @@ import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
 import { RequirementTypeEnum } from "@/utils/enums/requirement_type.enum";
 
 const CategorizationByItems: React.FC = () => {
+  // ESTADOS DE SOLICITUD
+
   const { data: allMedicalReqStatusCreatedData } =
     useGetAllMedicalReqUsersQuery({ status: RequirementStatusEnum.CREATED });
 
@@ -34,6 +36,8 @@ const CategorizationByItems: React.FC = () => {
     useGetAllMedicalReqUsersQuery({
       status: RequirementStatusEnum.EXPIRED,
     });
+
+  // TIPOS DE SOLICITUD
 
   const { data: allMedicalReqTypeClinicHistoryData } =
     useGetAllMedicalReqUsersQuery({

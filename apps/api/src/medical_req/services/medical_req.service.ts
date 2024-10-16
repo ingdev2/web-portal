@@ -30,10 +30,10 @@ import { IdTypeAbbrev } from '../../users/enums/id_type_abbrev.enum';
 import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';
 import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
-import { RequirementStatusEnum } from '../enums/requirement_status.enum';
+import { RequirementStatusEnum } from 'src/utils/enums/requirement_status.enum';
 import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
-import { RequirementTypeEnum } from '../enums/requirement_type.enum';
+import { RequirementTypeEnum } from 'src/utils/enums/requirement_type.enum';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { S3FileUploaderService } from 'src/s3_file_uploader/services/s3_file_uploader.service';
 import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
@@ -829,6 +829,7 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicantId = userEpsFound.id;
     aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
     aplicantEpsDetails.registration_dates = medicalReqEps.registration_dates;
+    aplicantEpsDetails.right_petition = medicalReqEps.right_petition;
     aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
@@ -848,6 +849,15 @@ export class MedicalReqService {
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;
+
+    const { right_petition, copy_right_petition } = medicalReqEps;
+
+    if (right_petition && !copy_right_petition) {
+      return new HttpException(
+        `No se ha adjuntado el documento de derecho de petición.`,
+        HttpStatus.CONFLICT,
+      );
+    }
 
     const userIdType = await this.userIdTypeRepository.findOne({
       where: {

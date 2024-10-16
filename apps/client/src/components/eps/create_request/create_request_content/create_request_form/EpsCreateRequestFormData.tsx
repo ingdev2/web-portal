@@ -9,7 +9,10 @@ import CustomUpload from "@/components/common/custom_upload/CustomUpload";
 import TextArea from "antd/es/input/TextArea";
 import { titleStyleCss } from "@/theme/text_styles";
 
-import { validateRequiredDate } from "@/helpers/validate_required_values/validate_required_files";
+import {
+  validateRequiredDate,
+  validateRequiredFiles,
+} from "@/helpers/validate_required_values/validate_required_files";
 import CustomDoubleDatePicker from "@/components/common/custom_double_date_picker/CustomDoubleDatePicker";
 
 const EpsCreateRequestFormData: React.FC<{
@@ -27,6 +30,11 @@ const EpsCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm: (e: any) => void;
   buttonSubmitFormLoadingDataForm: boolean;
   handleButtonSubmitFormDataForm: () => void;
+  tooltipUploadCopyRightPetitionDataform: string;
+  haveRightPetitionPatientDataForm: boolean;
+  onChangeHaveRightPetitionFamiliarDataForm: (value: any) => void;
+  copyRightPetitionSetterDataform: React.SetStateAction<any>;
+  copyRightPetitionRemoverDataform: React.SetStateAction<any>;
   tooltipUploadReferenceDocumentsDataform: string;
   haveReferenceDocumentDataForm: boolean;
   onChangeHaveReferenceDocumentFamiliarDataForm: (value: any) => void;
@@ -52,6 +60,11 @@ const EpsCreateRequestFormData: React.FC<{
   handleOnChangeUserMessageMedicalReqDataForm,
   buttonSubmitFormLoadingDataForm,
   handleButtonSubmitFormDataForm,
+  tooltipUploadCopyRightPetitionDataform,
+  haveRightPetitionPatientDataForm,
+  onChangeHaveRightPetitionFamiliarDataForm,
+  copyRightPetitionSetterDataform,
+  copyRightPetitionRemoverDataform,
   tooltipUploadReferenceDocumentsDataform,
   haveReferenceDocumentDataForm,
   onChangeHaveReferenceDocumentFamiliarDataForm,
@@ -61,6 +74,14 @@ const EpsCreateRequestFormData: React.FC<{
   fileStatusRemoverDataform,
   tooltipObservationsDataform,
 }) => {
+  const rightPetitionFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_copy_right_petition
+  );
+
+  const referenceDocumentFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_user_message_documents
+  );
+
   const registrationDatesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.registration_dates
   );
@@ -72,6 +93,8 @@ const EpsCreateRequestFormData: React.FC<{
       className="create-medical-req-form-eps"
       onFinish={handleCreateRequestDataForm}
       initialValues={{
+        "radio-select-have-right-petition-eps":
+          haveRightPetitionPatientDataForm,
         "radio-select-have-doc-user-message-eps": haveReferenceDocumentDataForm,
         remember: false,
       }}
@@ -185,6 +208,65 @@ const EpsCreateRequestFormData: React.FC<{
       </Form.Item>
 
       <Form.Item
+        id="radio-select-have-right-petition-eps"
+        name="radio-select-have-right-petition-eps"
+        className="radio-select-have-right-petition-eps"
+        label="¿Desea adjuntar un derecho de petición a la solicitud?"
+        tooltip={tooltipUploadCopyRightPetitionDataform}
+        style={{ marginBottom: "13px" }}
+        rules={[
+          {
+            required: true,
+            message: "¡Por favor selecciona si tiene derecho de petición!",
+          },
+        ]}
+      >
+        <Radio.Group
+          value={haveRightPetitionPatientDataForm}
+          onChange={onChangeHaveRightPetitionFamiliarDataForm}
+          style={{ textAlign: "start" }}
+        >
+          <Space size={"small"} direction="horizontal">
+            <Radio value={true}>SÍ</Radio>
+
+            <Radio value={false}>NO</Radio>
+          </Space>
+        </Radio.Group>
+      </Form.Item>
+
+      {haveRightPetitionPatientDataForm && (
+        <Form.Item
+          id="upload-right-petition-to-request-eps"
+          name="upload-right-petition-to-request-eps"
+          className="upload-right-petition-to-request-eps"
+          style={{ marginBottom: "13px" }}
+          rules={[
+            {
+              required: true,
+              validator: validateRequiredFiles(
+                rightPetitionFilesMedicalReqState,
+                "¡Por favor adjuntar derecho de petición!"
+              ),
+            },
+          ]}
+        >
+          <CustomUpload
+            titleCustomUpload="Cargar Documento(s)"
+            fileStatusSetterCustomUpload={copyRightPetitionSetterDataform}
+            removeFileStatusSetterCustomUpload={
+              copyRightPetitionRemoverDataform
+            }
+            maximumNumberOfFiles={Number(
+              process.env.NEXT_PUBLIC_MAXIMUM_NUMBER_OF_FILES_USERS
+            )}
+            maximumSizeFilesInMegaBytes={Number(
+              process.env.NEXT_PUBLIC_MAXIMUM_FILE_SIZE_IN_MEGABYTES_USERS
+            )}
+          />
+        </Form.Item>
+      )}
+
+      <Form.Item
         id="radio-select-have-doc-user-message-eps"
         name="radio-select-have-doc-user-message-eps"
         className="radio-select-have-doc-user-message-eps"
@@ -218,8 +300,11 @@ const EpsCreateRequestFormData: React.FC<{
           style={{ marginBottom: "13px" }}
           rules={[
             {
-              required: false,
-              message: "¡Por favor adjunta mínimo un documento!",
+              required: true,
+              validator: validateRequiredFiles(
+                referenceDocumentFilesMedicalReqState,
+                "¡Por favor adjuntar documento de referencia!"
+              ),
             },
           ]}
         >
