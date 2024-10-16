@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
+import { CompanyAreaEnum } from "@/utils/enums/company_area.enum";
 import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
 import { RequirementTypeEnum } from "@/utils/enums/requirement_type.enum";
 import { UserRolType } from "@/utils/enums/user_roles.enum";
@@ -108,9 +109,10 @@ export const medicalReqApi = createApi({
       },
     }),
 
-    getAllMedicalReqUsersToLegalArea: builder.query<
+    getAllMedicalReqUsersByArea: builder.query<
       MedicalReq[],
       {
+        companyAreaName?: CompanyAreaEnum | null;
         status?: RequirementStatusEnum | null;
         type?: RequirementTypeEnum | null;
         aplicantType?: UserRolType | null;
@@ -119,6 +121,7 @@ export const medicalReqApi = createApi({
       }
     >({
       query: ({
+        companyAreaName = null,
         status = null,
         type = null,
         aplicantType = null,
@@ -127,6 +130,7 @@ export const medicalReqApi = createApi({
       }) => {
         const params: any = {};
 
+        if (companyAreaName !== null) params.companyAreaName = companyAreaName;
         if (status !== null) params.status = status;
         if (type !== null) params.type = type;
         if (aplicantType !== null) params.aplicantType = aplicantType;
@@ -134,14 +138,26 @@ export const medicalReqApi = createApi({
         if (month !== null) params.month = month;
 
         return {
-          url: "getAllMedicalReqUsersToLegalArea",
+          url: "getAllMedReqUsersByArea",
           params,
         };
       },
     }),
 
-    getAverageResponseTime: builder.query<string[], null>({
-      query: () => "averageResponseTime",
+    getAverageResponseTime: builder.query<
+      string[],
+      { currentlyArea?: number | null }
+    >({
+      query: ({ currentlyArea = null }) => {
+        const params: any = {};
+
+        if (currentlyArea !== null) params.currentlyArea = currentlyArea;
+
+        return {
+          url: "averageResponseTime",
+          params,
+        };
+      },
     }),
 
     getAllMedicalReqPatient: builder.query<MedicalReq[], null>({
@@ -255,7 +271,7 @@ export const {
   useLazyGetAllMedicalReqOfAUsersQuery,
   useGetAllMedicalReqOfAFamiliarQuery,
   useLazyGetAllMedicalReqOfAFamiliarQuery,
-  useGetAllMedicalReqUsersToLegalAreaQuery,
+  useGetAllMedicalReqUsersByAreaQuery,
   useGetAverageResponseTimeQuery,
   useGetAllMedicalReqPatientQuery,
   useGetAllMedicalReqFamiliarQuery,

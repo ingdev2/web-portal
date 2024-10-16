@@ -177,7 +177,6 @@ export const tableColumnsAllRequests = ({
     ellipsis: true,
     render: (area: string) => area,
   },
-
   {
     title: "VER SOLICITUD COMPLETA",
     key: filingNumberKey,

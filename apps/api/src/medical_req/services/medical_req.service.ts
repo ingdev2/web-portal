@@ -1025,12 +1025,18 @@ export class MedicalReqService {
     return allMedicalReqUsers || [];
   }
 
-  async getAverageResponseTime() {
+  async getAverageResponseTime(currentlyArea?: number) {
+    const whereConditions: any = {
+      is_deleted: false,
+      response_time: Not(IsNull()),
+    };
+
+    if (currentlyArea) {
+      whereConditions.currently_in_area = currentlyArea;
+    }
+
     const allMedicalReqUsers = await this.medicalReqRepository.find({
-      where: {
-        is_deleted: false,
-        response_time: Not(IsNull()),
-      },
+      where: whereConditions,
     });
 
     if (allMedicalReqUsers.length === 0) {
@@ -1124,22 +1130,23 @@ export class MedicalReqService {
     }
   }
 
-  async getAllMedReqUsersToLegalArea(
+  async getAllMedReqUsersByArea(
+    companyAreaName?: CompanyAreaEnum,
     status?: RequirementStatusEnum,
     type?: RequirementTypeEnum,
     aplicantType?: UserRolType,
     year?: number,
     month?: number,
   ) {
-    const legalArea = await this.companyAreaRepository.findOne({
+    const companyArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.LEGAL_DEPARTMENT,
+        name: companyAreaName,
       },
     });
 
-    if (!legalArea) {
+    if (!companyArea) {
       throw new HttpException(
-        'El área de "DEPARTAMENTO JURÍDICO" no existe.',
+        `El área de ${companyArea.name} no existe.`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -1147,7 +1154,7 @@ export class MedicalReqService {
     const whereCondition: any = {
       is_deleted: false,
       is_it_reviewed: false,
-      currently_in_area: legalArea.id,
+      currently_in_area: companyArea.id,
     };
 
     if (status) {

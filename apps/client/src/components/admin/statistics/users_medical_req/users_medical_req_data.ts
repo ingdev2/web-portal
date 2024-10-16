@@ -193,8 +193,10 @@ export const useMedicalReqDataByApplicantType = (
   };
 };
 
-export const useGetAverageResponseTimeData = () => {
-  const { data: averageResponseTime } = useGetAverageResponseTimeQuery(null);
+export const useGetAverageResponseTimeData = (currentlyArea?: number) => {
+  const { data: averageResponseTime } = useGetAverageResponseTimeQuery({
+    currentlyArea,
+  });
 
   return { averageResponseTime };
 };

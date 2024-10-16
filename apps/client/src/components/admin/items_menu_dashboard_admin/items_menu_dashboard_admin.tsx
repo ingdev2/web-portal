@@ -27,7 +27,7 @@ import {
 
 import {
   useGetAllMedicalReqUsersQuery,
-  useGetAllMedicalReqUsersToLegalAreaQuery,
+  useGetAllMedicalReqUsersByAreaQuery,
 } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAdminByIdNumberQuery } from "@/redux/apis/admins/adminsApi";
 import { useGetAdminRoleByNameQuery } from "@/redux/apis/admin_roles/adminRolesApi";
@@ -149,9 +149,12 @@ export const useMenuItems = () => {
   const {
     data: allMedicalReqLegalAreaStatusUnderReviewData,
     refetch: refetchAllMedicalReqStatusUnderReview,
-  } = useGetAllMedicalReqUsersToLegalAreaQuery({
+  } = useGetAllMedicalReqUsersByAreaQuery({
+    companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
     status: RequirementStatusEnum.UNDER_REVIEW,
   });
+
+  // DATOS DE ADMIN //
 
   const {
     data: adminData,
@@ -225,6 +228,7 @@ export const useMenuItems = () => {
             ItemKeys.SUB_STATISTICS_REQ_KEY,
             <FaChartPie size={15} />
           ),
+
           isAdminWithRoles(roleIdAdminState, [
             superAdminRoleData.id,
             adminRoleData.id,
@@ -241,6 +245,7 @@ export const useMenuItems = () => {
                 allMedicalReqStatusCreatedData?.length
               )
             : null,
+
           isAdminWithRoles(roleIdAdminState, [adminRoleData.id]) &&
           isAdminInCompanyAreas(companyAreaIdAdminState, [
             legalCompanyAreaData.id,
@@ -349,6 +354,10 @@ export const useMenuItems = () => {
       isAdminInPositionLevel(positionLevelIdAdminState, [
         directorPositionLevelData.id,
         coordinatorPositionLevelData.id,
+      ]) &&
+      isAdminInCompanyAreas(companyAreaIdAdminState, [
+        systemsCompanyAreaData.id,
+        archivesCompanyAreaData.id,
       ])
         ? getItem(
             ItemNames.ITEM_PARAMETRIZATION,
