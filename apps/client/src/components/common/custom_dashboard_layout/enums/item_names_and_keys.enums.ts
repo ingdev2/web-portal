@@ -3,6 +3,7 @@ export enum ItemNames {
   SUB_STATISTICS_REQ = "Estadísticas",
   SUB_ALL_REQUESTS = "Gestionar",
   SUB_ALL_LEGAL_REQUESTS = "Gestionar",
+  SUB_ALL_EXTERNAL_CONSULTATION_REQUESTS = "Gestionar",
 
   ITEM_USERS = "Usuarios",
   SUB_ADMIN_USERS = "Administradores",
@@ -28,6 +29,7 @@ export enum ItemKeys {
   SUB_STATISTICS_REQ_KEY = "/",
   SUB_ALL_REQUESTS_REQ_KEY = "requests",
   SUB_ALL_LEGAL_REQUESTS_REQ_KEY = "legal_requests",
+  SUB_ALL_EXTERNAL_CONSULTATION_REQUESTS_REQ_KEY = "ext_consultation_requests",
 
   ITEM_USERS_KEY = "all_user",
   SUB_ADMIN_USERS_KEY = "all_admins",

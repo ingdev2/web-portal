@@ -46,6 +46,7 @@ import {
 import { isAdminWithRoles } from "@/helpers/is_admin_with_roles/is_admin_with_roles";
 import { isAdminInCompanyAreas } from "@/helpers/validations_to_view_admin_menu_item/is_admin_in_company_areas/is_admin_in_company_areas";
 import { isAdminInPositionLevel } from "@/helpers/validations_to_view_admin_menu_item/is_admin_in_position_level/is_admin_in_position_level";
+import { RequirementTypeEnum } from "@/utils/enums/requirement_type.enum";
 
 export const useMenuItems = () => {
   const dispatch = useAppDispatch();
@@ -154,6 +155,14 @@ export const useMenuItems = () => {
     status: RequirementStatusEnum.UNDER_REVIEW,
   });
 
+  const {
+    data: allMedicalReqExtConsultationAreaStatusUnderReviewData,
+    refetch: refetchAllMedicalReqStatusUnderReviewExtConsultationArea,
+  } = useGetAllMedicalReqUsersByAreaQuery({
+    companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+    status: RequirementStatusEnum.CREATED,
+  });
+
   // DATOS DE ADMIN //
 
   const {
@@ -179,6 +188,7 @@ export const useMenuItems = () => {
     if (tableRowIdState || tableRowFilingNumberState) {
       refetchAllMedicalReqStatusCreated();
       refetchAllMedicalReqStatusUnderReview();
+      refetchAllMedicalReqStatusUnderReviewExtConsultationArea();
     }
   }, [
     idNumberAdminState,
@@ -258,6 +268,19 @@ export const useMenuItems = () => {
                 allMedicalReqLegalAreaStatusUnderReviewData?.length
               )
             : null,
+
+          isAdminWithRoles(roleIdAdminState, [adminRoleData.id]) &&
+          isAdminInCompanyAreas(companyAreaIdAdminState, [
+            externalConsultationCompanyAreaData.id,
+          ])
+            ? getItem(
+                ItemNames.SUB_ALL_EXTERNAL_CONSULTATION_REQUESTS,
+                ItemKeys.SUB_ALL_EXTERNAL_CONSULTATION_REQUESTS_REQ_KEY,
+                <RiFileList3Line size={15} />,
+                undefined,
+                allMedicalReqExtConsultationAreaStatusUnderReviewData?.length
+              )
+            : null,
         ].filter(Boolean)
       ),
 
@@ -265,6 +288,14 @@ export const useMenuItems = () => {
         directorPositionLevelData.id,
         coordinatorPositionLevelData.id,
         colaboratorPositionLevelData.id,
+      ]) &&
+      isAdminInCompanyAreas(companyAreaIdAdminState, [
+        systemsCompanyAreaData.id,
+        archivesCompanyAreaData.id,
+        legalCompanyAreaData.id,
+        admissionsCompanyAreaData.id,
+        externalConsultationCompanyAreaData.id,
+        externalAuditorData.id,
       ])
         ? getItem(
             ItemNames.ITEM_USERS,
@@ -315,6 +346,7 @@ export const useMenuItems = () => {
                 archivesCompanyAreaData.id,
                 legalCompanyAreaData.id,
                 admissionsCompanyAreaData.id,
+                externalConsultationCompanyAreaData.id,
                 externalAuditorData.id,
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
@@ -334,6 +366,7 @@ export const useMenuItems = () => {
                 archivesCompanyAreaData.id,
                 legalCompanyAreaData.id,
                 admissionsCompanyAreaData.id,
+                externalConsultationCompanyAreaData.id,
                 externalAuditorData.id,
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
