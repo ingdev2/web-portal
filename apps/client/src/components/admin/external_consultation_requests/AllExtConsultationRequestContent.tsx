@@ -44,7 +44,6 @@ import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejectio
 
 import { CompanyAreaEnum } from "@/utils/enums/company_area.enum";
 import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
-import { RequirementTypeEnum } from "@/utils/enums/requirement_type.enum";
 import AverageResponseTime from "./average_response_time/AverageResponseTime";
 
 const AllExternalConsultationRequestContent: React.FC = () => {
