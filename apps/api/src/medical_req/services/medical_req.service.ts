@@ -587,7 +587,7 @@ export class MedicalReqService {
     }
 
     const reqTypeMipres = await this.requerimentTypeRepository.findOne({
-      where: { name: RequirementTypeEnum.MIPRES },
+      where: { name: RequirementTypeEnum.MIPRES_EXTERNAL_CONSULTATION },
     });
 
     if (!reqTypeMipres) {

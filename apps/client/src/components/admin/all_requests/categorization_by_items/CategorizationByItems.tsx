@@ -51,7 +51,7 @@ const CategorizationByItems: React.FC = () => {
 
   const { data: allMedicalReqTypeMedicalDisabilityData } =
     useGetAllMedicalReqUsersQuery({
-      type: RequirementTypeEnum.MEDICAL_DISABILITY,
+      type: RequirementTypeEnum.CERTIFICATE_OF_MEDICAL_DISABILITY,
     });
 
   const {

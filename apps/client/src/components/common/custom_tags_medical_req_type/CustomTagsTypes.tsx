@@ -28,23 +28,23 @@ export const getTagComponentType = (typeName: string | undefined) => {
           }}
         />
       );
-    case RequirementTypeEnum.MEDICAL_DISABILITY:
+    case RequirementTypeEnum.CERTIFICATE_OF_MEDICAL_DISABILITY:
       return (
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
             color: "#943126B2",
-            label: RequirementTypeEnum.MEDICAL_DISABILITY,
+            label: RequirementTypeEnum.CERTIFICATE_OF_MEDICAL_DISABILITY,
           }}
         />
       );
-    case RequirementTypeEnum.MIPRES:
+    case RequirementTypeEnum.MIPRES_EXTERNAL_CONSULTATION:
       return (
         <CustomTags
           tag={{
             textColor: "#F7F7F7",
             color: "#633671B2",
-            label: RequirementTypeEnum.MIPRES,
+            label: RequirementTypeEnum.MIPRES_EXTERNAL_CONSULTATION,
           }}
         />
       );

@@ -2,9 +2,13 @@
 
 import React, { ReactNode } from "react";
 
-import { Col, Descriptions } from "antd";
+import { Card, Col, Row } from "antd";
 
-import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
+import {
+  titleStyleCss,
+  subtitleStyleCss,
+  itemSeccionStyleCss,
+} from "@/theme/text_styles";
 
 const ModalRequestsDetails: React.FC<{
   titleDescription: string;
@@ -156,289 +160,243 @@ const ModalRequestsDetails: React.FC<{
         style={{
           width: "100%",
           ...titleStyleCss,
-          margin: "0px",
-          paddingBottom: "13px",
           fontSize: "22px",
+          margin: "0px",
+          paddingBottom: "22px",
         }}
       >
         {titleDescription}
       </h2>
 
-      <Descriptions
-        className="description-request-details-admin"
-        layout="vertical"
-        size="middle"
-        style={{ paddingBlock: "7px" }}
-        labelStyle={{
-          ...titleStyleCss,
-        }}
-        contentStyle={{
-          ...subtitleStyleCss,
-        }}
-        bordered
-        column={14}
-      >
-        <Descriptions.Item
-          label={labelFilingNumber}
-          style={{ textAlign: "center" }}
-          span={1}
-        >
-          {selectedRequestFilingNumber}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelRequestType}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedRequestType}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelRequestStatus}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedRequestStatus}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelHaveRightPetition}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedHaveRightPetition}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelUserComments}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedRequestUserComments}
-        </Descriptions.Item>
-
-        {/* FILA 1 */}
-
-        <Descriptions.Item
-          label={labelPatientClassStatus}
-          style={{ textAlign: "center" }}
-          span={1}
-        >
-          {selectedPatientClassStatus}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelPatientIdType}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedPatientIdType}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelPatientIdNumber}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedPatientIdNumber}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelPatientName}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedPatientName}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelRegistrationDates}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedRegistrationDates}
-        </Descriptions.Item>
-
-        {/* FILA 2 */}
-
-        <Descriptions.Item
-          label={labelAplicantType}
-          style={{ textAlign: "center" }}
-          span={1}
-        >
-          {selectedAplicantType}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelAplicantName}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAplicantName}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelAplicantIdType}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAplicantIdType}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelAplicantIdNumber}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAplicantIdNumber}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelRelationShipWithPatient}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedRelationShipWithPatient}
-        </Descriptions.Item>
-
-        {/* FILA 3 */}
-
-        <Descriptions.Item
-          label={labelAplicantEmail}
-          style={{ textAlign: "center" }}
-          span={1}
-        >
-          {selectedAplicantEmail}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelCopyAplicantIdDocument}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedCopyAplicantIdDocument}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelCopyPatientCitizenshipCard}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedCopyPatientCitizenshipCard}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelCopyPatientCivilRegistration}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedCopyPatientCivilRegistration}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelCopyParentsCitizenshipCard}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedCopyParentsCitizenshipCard}
-        </Descriptions.Item>
-
-        {/* FILA 4 */}
-
-        <Descriptions.Item
-          label={labelCopyMarriageCertificate}
-          style={{ textAlign: "center" }}
-          span={1}
-        >
-          {selectedCopyMarriageCertificate}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelCopyCohabitationCertificate}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedCopyCohabitationCertificate}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelDateOfAdmission}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedDateOfAdmission}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelAnswerDate}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedAnswerDate}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelResponseTime}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedResponseTime}
-        </Descriptions.Item>
-
-        {/* FILA 5 */}
-
-        <Descriptions.Item
-          label={labelCurrentlyInArea}
-          style={{ textAlign: "center" }}
-          span={1}
-        >
-          {selectedCurrentlyInArea}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelResponseDocuments}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedRequestResponseDocuments}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelDocumentExpirationDate}
-          style={{ textAlign: "center" }}
-          span={2}
-        >
-          {selectedRequestDocumentExpirationDate}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelRequestResponse}
-          style={{ textAlign: "center" }}
-          span={9}
-        >
-          {selectedRequestResponse}
-        </Descriptions.Item>
-
-        {/* FILA 6 */}
-        <Descriptions.Item
-          label={labelAreaRedirectionMessage}
-          style={{ textAlign: "center" }}
-          span={3}
-        >
-          {selectedAreaRedirectionMessage}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label={labelReasonsForRejection}
-          style={{ textAlign: "center" }}
-          span={7}
-        >
-          {selectedRequestReasonsForRejection}
-        </Descriptions.Item>
-
-        {/* FILA 7 */}
-      </Descriptions>
+      <Row gutter={[24, 24]} style={{ width: "100%" }}>
+        {[
+          {
+            title: "Información de la Solicitud",
+            content: (
+              <>
+                <div style={subtitleStyleCss}>
+                  <b>Número de Radicado:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRequestFilingNumber}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Tipo de Solicitud:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedRequestType}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Estado:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedRequestStatus}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Derecho de Petición:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedHaveRightPetition}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Comentarios del Usuario:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRequestUserComments}
+                </div>
+              </>
+            ),
+          },
+          {
+            title: "Información del Paciente",
+            content: (
+              <>
+                <div style={subtitleStyleCss}>
+                  <b>Clase de Paciente:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedPatientClassStatus}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Tipo de Identificación:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedPatientIdType}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Número de Identificación:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedPatientIdNumber}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Nombre:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedPatientName}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Fechas de Registro:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRegistrationDates}
+                </div>
+              </>
+            ),
+          },
+          {
+            title: "Información del Solicitante",
+            content: (
+              <>
+                <div style={subtitleStyleCss}>
+                  <b>Tipo de Solicitante:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantType}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Nombre:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantName}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Tipo de Identificación:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantIdType}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Número de Identificación:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedAplicantIdNumber}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Relación con el Paciente:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRelationShipWithPatient}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Email:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAplicantEmail}</div>
+              </>
+            ),
+          },
+          {
+            title: "Documentos Anexados",
+            content: (
+              <>
+                <div style={subtitleStyleCss}>
+                  <b>Copia Documento de Identificación del Solicitante:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedCopyAplicantIdDocument}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Copia Cédula de Ciudadanía del Paciente:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedCopyPatientCitizenshipCard}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Copia Registro Civil del Paciente:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedCopyPatientCivilRegistration}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Copia Cédula de Ciudadanía de los Padres:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedCopyParentsCitizenshipCard}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Copia Certificado de Matrimonio:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedCopyMarriageCertificate}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Copia Certificado de Convivencia:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedCopyCohabitationCertificate}
+                </div>
+              </>
+            ),
+          },
+          {
+            title: "Fechas y Tiempo de Respuesta",
+            content: (
+              <>
+                <div style={subtitleStyleCss}>
+                  <b>Fecha de Ingreso:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedDateOfAdmission}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Fecha de Respuesta:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedAnswerDate}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Tiempo de Respuesta:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedResponseTime}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Actualmente en Área:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedCurrentlyInArea}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Mensaje de Redirección de Área:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedAreaRedirectionMessage}
+                </div>
+              </>
+            ),
+          },
+          {
+            title: "Documentos de Respuesta",
+            content: (
+              <>
+                <div style={subtitleStyleCss}>
+                  <b>Documentos de Respuesta:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRequestResponseDocuments}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Fecha de Expiración de Documentos:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>
+                  {selectedRequestDocumentExpirationDate}
+                </div>
+                <div style={subtitleStyleCss}>
+                  <b>Respuesta de la Solicitud:</b>
+                </div>
+                <div style={itemSeccionStyleCss}>{selectedRequestResponse}</div>
+                <div style={subtitleStyleCss}>
+                  <b>Razones para el Rechazo:</b>
+                </div>
+                <div>{selectedRequestReasonsForRejection}</div>
+              </>
+            ),
+          },
+        ].map((card, index) => (
+          <Col span={12} key={index}>
+            <Card
+              title={
+                <div
+                  style={{
+                    ...titleStyleCss,
+                    fontSize: "17px",
+                    margin: "0px",
+                    padding: "0px",
+                  }}
+                >
+                  {card.title}
+                </div>
+              }
+              style={{
+                background: "#A7BAB713",
+                minHeight: "100%",
+                border: "0.7px solid #013B5A22",
+                borderRadius: "7px",
+                margin: "0px",
+                padding: "0px",
+              }}
+            >
+              {card.content}
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </Col>
   );
 };
