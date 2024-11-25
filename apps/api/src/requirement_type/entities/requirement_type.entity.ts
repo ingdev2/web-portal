@@ -1,4 +1,4 @@
-import { RequirementTypeEnum } from '../../medical_req/enums/requirement_type.enum';
+import { RequirementTypeEnum } from 'src/utils/enums/requirement_type.enum';
 import { MedicalReq } from '../../medical_req/entities/medical_req.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 

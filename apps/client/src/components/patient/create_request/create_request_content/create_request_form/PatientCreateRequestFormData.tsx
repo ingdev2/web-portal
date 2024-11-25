@@ -74,6 +74,10 @@ const PatientCreateRequestFormData: React.FC<{
     (state) => state.medicalReq.files_copy_right_petition
   );
 
+  const referenceDocumentFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_user_message_documents
+  );
+
   const registrationDatesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.registration_dates
   );
@@ -233,8 +237,11 @@ const PatientCreateRequestFormData: React.FC<{
           style={{ marginBottom: "13px" }}
           rules={[
             {
-              required: false,
-              message: "¡Por favor adjuntar documento de referencia!",
+              required: true,
+              validator: validateRequiredFiles(
+                referenceDocumentFilesMedicalReqState,
+                "¡Por favor adjuntar documento de referencia!"
+              ),
             },
           ]}
         >

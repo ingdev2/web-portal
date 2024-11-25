@@ -35,7 +35,7 @@ export const useMedicalReqDataByType = (year?: number, month?: number) => {
     isLoading: isLoadingMedicalDisability,
     isFetching: isFetchingMedicalDisability,
   } = useGetAllMedicalReqUsersQuery({
-    type: RequirementTypeEnum.MEDICAL_DISABILITY,
+    type: RequirementTypeEnum.CERTIFICATE_OF_MEDICAL_DISABILITY,
     year,
     month,
   });
@@ -50,6 +50,16 @@ export const useMedicalReqDataByType = (year?: number, month?: number) => {
     month,
   });
 
+  const {
+    data: mipresExternalConsultationData,
+    isLoading: isLoadingMipresExternalConsultation,
+    isFetching: isFetchingMipresExternalConsultation,
+  } = useGetAllMedicalReqUsersQuery({
+    type: RequirementTypeEnum.MIPRES_EXTERNAL_CONSULTATION,
+    year,
+    month,
+  });
+
   return {
     clinicHistoryData,
     isLoadingClinicHistory,
@@ -60,6 +70,9 @@ export const useMedicalReqDataByType = (year?: number, month?: number) => {
     medicalOrderData,
     isLoadingMedicalOrder,
     isFetchingMedicalOrder,
+    mipresExternalConsultationData,
+    isLoadingMipresExternalConsultation,
+    isFetchingMipresExternalConsultation,
   };
 };
 
@@ -193,8 +206,10 @@ export const useMedicalReqDataByApplicantType = (
   };
 };
 
-export const useGetAverageResponseTimeData = () => {
-  const { data: averageResponseTime } = useGetAverageResponseTimeQuery(null);
+export const useGetAverageResponseTimeData = (currentlyArea?: number) => {
+  const { data: averageResponseTime } = useGetAverageResponseTimeQuery({
+    currentlyArea,
+  });
 
   return { averageResponseTime };
 };

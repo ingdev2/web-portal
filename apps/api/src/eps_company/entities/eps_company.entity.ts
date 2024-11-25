@@ -12,7 +12,7 @@ export class EpsCompany {
   @Column({ unique: true })
   name: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   main_email: string;
 
   @Column({ type: 'boolean', default: true })

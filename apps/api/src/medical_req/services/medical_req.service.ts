@@ -30,10 +30,10 @@ import { IdTypeAbbrev } from '../../users/enums/id_type_abbrev.enum';
 import { RelWithPatient } from '../../rel_with_patient/entities/rel_with_patient.entity';
 import { RelationshipWithPatient } from '../enums/relationship_with_patient.enum';
 import { RequirementStatus } from '../../requirement_status/entities/requirement_status.entity';
-import { RequirementStatusEnum } from '../enums/requirement_status.enum';
+import { RequirementStatusEnum } from 'src/utils/enums/requirement_status.enum';
 import { UsersService } from '../../users/services/users.service';
 import { RequirementTypeService } from '../../requirement_type/services/requirement_type.service';
-import { RequirementTypeEnum } from '../enums/requirement_type.enum';
+import { RequirementTypeEnum } from 'src/utils/enums/requirement_type.enum';
 import { NodemailerService } from '../../nodemailer/services/nodemailer.service';
 import { S3FileUploaderService } from 'src/s3_file_uploader/services/s3_file_uploader.service';
 import { AuditLogsService } from 'src/audit_logs/services/audit_logs.service';
@@ -167,7 +167,7 @@ export class MedicalReqService {
 
     const fileArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+        name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
       },
     });
 
@@ -562,13 +562,37 @@ export class MedicalReqService {
 
     const fileArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+        name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
       },
     });
 
     if (!fileArea) {
       throw new HttpException(
         'El área de "DEPARTAMENTO JURÍDICO" no existe.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const externalConsultationArea = await this.companyAreaRepository.findOne({
+      where: {
+        name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      },
+    });
+
+    if (!externalConsultationArea) {
+      throw new HttpException(
+        'El área de "CONSULTA EXTERNA" no existe.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const reqTypeMipres = await this.requerimentTypeRepository.findOne({
+      where: { name: RequirementTypeEnum.MIPRES_EXTERNAL_CONSULTATION },
+    });
+
+    if (!reqTypeMipres) {
+      throw new HttpException(
+        'El tipo de requerimiento "MIPRES" de requerimiento no existe',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -588,8 +612,13 @@ export class MedicalReqService {
 
     const aplicantPatientDetails = new CreateMedicalReqPatientDto();
 
-    aplicantPatientDetails.filing_number = filingNumber;
+    if (medicalReqPatient.requirement_type === reqTypeMipres.id) {
+      aplicantPatientDetails.currently_in_area = externalConsultationArea.id;
+    } else {
+      aplicantPatientDetails.currently_in_area = fileArea.id;
+    }
 
+    aplicantPatientDetails.filing_number = filingNumber;
     aplicantPatientDetails.requirement_type =
       medicalReqPatient.requirement_type;
     aplicantPatientDetails.registration_dates =
@@ -606,7 +635,6 @@ export class MedicalReqService {
     aplicantPatientDetails.aplicant_email = userPatientFound.email;
     aplicantPatientDetails.aplicant_cellphone = userPatientFound.cellphone;
     aplicantPatientDetails.accept_terms = true;
-    aplicantPatientDetails.currently_in_area = fileArea.id;
     aplicantPatientDetails.requirement_status = reqStatusStablished.id;
     aplicantPatientDetails.patient_id_type = userPatientFound.user_id_type;
     aplicantPatientDetails.patient_id_number = userPatientFound.id_number;
@@ -796,7 +824,7 @@ export class MedicalReqService {
 
     const fileArea = await this.companyAreaRepository.findOne({
       where: {
-        name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+        name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
       },
     });
 
@@ -829,6 +857,7 @@ export class MedicalReqService {
     aplicantEpsDetails.aplicantId = userEpsFound.id;
     aplicantEpsDetails.requirement_type = medicalReqEps.requirement_type;
     aplicantEpsDetails.registration_dates = medicalReqEps.registration_dates;
+    aplicantEpsDetails.right_petition = medicalReqEps.right_petition;
     aplicantEpsDetails.patient_name = patientData[0]?.NOMBRE;
     aplicantEpsDetails.medicalReqUserType = userEpsFound.user_role;
     aplicantEpsDetails.aplicant_name = userEpsFound.name;
@@ -848,6 +877,15 @@ export class MedicalReqService {
 
     const currentDate = new Date();
     aplicantEpsDetails.date_of_admission = currentDate;
+
+    const { right_petition, copy_right_petition } = medicalReqEps;
+
+    if (right_petition && !copy_right_petition) {
+      return new HttpException(
+        `No se ha adjuntado el documento de derecho de petición.`,
+        HttpStatus.CONFLICT,
+      );
+    }
 
     const userIdType = await this.userIdTypeRepository.findOne({
       where: {
@@ -1015,12 +1053,18 @@ export class MedicalReqService {
     return allMedicalReqUsers || [];
   }
 
-  async getAverageResponseTime() {
+  async getAverageResponseTime(currentlyArea?: number) {
+    const whereConditions: any = {
+      is_deleted: false,
+      response_time: Not(IsNull()),
+    };
+
+    if (currentlyArea) {
+      whereConditions.currently_in_area = currentlyArea;
+    }
+
     const allMedicalReqUsers = await this.medicalReqRepository.find({
-      where: {
-        is_deleted: false,
-        response_time: Not(IsNull()),
-      },
+      where: whereConditions,
     });
 
     if (allMedicalReqUsers.length === 0) {
@@ -1114,31 +1158,48 @@ export class MedicalReqService {
     }
   }
 
-  async getAllMedReqUsersToLegalArea(
+  async getAllMedReqUsersByArea(
+    companyAreaName?: CompanyAreaEnum,
     status?: RequirementStatusEnum,
     type?: RequirementTypeEnum,
     aplicantType?: UserRolType,
     year?: number,
     month?: number,
   ) {
-    const legalArea = await this.companyAreaRepository.findOne({
-      where: {
-        name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
-      },
-    });
-
-    if (!legalArea) {
-      throw new HttpException(
-        'El área de "DEPARTAMENTO JURÍDICO" no existe.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
     const whereCondition: any = {
       is_deleted: false,
       is_it_reviewed: false,
-      currently_in_area: legalArea.id,
     };
+
+    if (companyAreaName) {
+      const companyArea = await this.companyAreaRepository.findOne({
+        where: { name: companyAreaName },
+      });
+
+      if (!companyArea) {
+        throw new HttpException(
+          `El área "${companyAreaName}" no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.currently_in_area = companyArea.id;
+    }
+
+    if (type) {
+      const reqType = await this.requerimentTypeRepository.findOne({
+        where: { name: type },
+      });
+
+      if (!reqType) {
+        throw new HttpException(
+          `El tipo de requerimiento "${type}" no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      whereCondition.requirement_type = reqType.id;
+    }
 
     if (status) {
       const reqStatus = await this.requerimentStatusRepository.findOne({
@@ -1153,21 +1214,6 @@ export class MedicalReqService {
       }
 
       whereCondition.requirement_status = reqStatus.id;
-    }
-
-    if (type) {
-      const reqType = await this.requerimentTypeRepository.findOne({
-        where: { name: type },
-      });
-
-      if (!reqType) {
-        throw new HttpException(
-          `El tipo "${type}" de requerimiento no existe`,
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      whereCondition.requirement_type = reqType.id;
     }
 
     if (aplicantType) {
@@ -1217,6 +1263,124 @@ export class MedicalReqService {
     }
 
     return allMedicalReqUsersToLegalArea || [];
+  }
+
+  async getAllMedReqUsersByAreaOrOtherItem(
+    companyAreaName?: CompanyAreaEnum,
+    status?: RequirementStatusEnum,
+    type?: RequirementTypeEnum,
+    aplicantType?: UserRolType,
+    year?: number,
+    month?: number,
+  ) {
+    const baseCondition = {
+      is_deleted: false,
+      is_it_reviewed: false,
+    };
+
+    const orConditions: any[] = [];
+
+    if (companyAreaName) {
+      const companyArea = await this.companyAreaRepository.findOne({
+        where: { name: companyAreaName },
+      });
+
+      if (!companyArea) {
+        throw new HttpException(
+          `El área "${companyAreaName}" no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      orConditions.push({
+        ...baseCondition,
+        currently_in_area: companyArea.id,
+      });
+    }
+
+    if (type) {
+      const reqType = await this.requerimentTypeRepository.findOne({
+        where: { name: type },
+      });
+
+      if (!reqType) {
+        throw new HttpException(
+          `El tipo de requerimiento "${type}" no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      orConditions.push({ ...baseCondition, requirement_type: reqType.id });
+    }
+
+    if (status) {
+      const reqStatus = await this.requerimentStatusRepository.findOne({
+        where: { name: status },
+      });
+
+      if (!reqStatus) {
+        throw new HttpException(
+          `El estado "${status}" de requerimiento no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      orConditions.push({ ...baseCondition, requirement_status: reqStatus.id });
+    }
+
+    if (aplicantType) {
+      const reqByUserType = await this.userRoleRepository.findOne({
+        where: { name: aplicantType },
+      });
+
+      if (!reqByUserType) {
+        throw new HttpException(
+          `El tipo "${aplicantType}" de requerimiento no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      orConditions.push({
+        ...baseCondition,
+        medicalReqUserType: reqByUserType.id,
+      });
+    }
+
+    if (year) {
+      let startDate: Date;
+      let endDate: Date;
+
+      if (month) {
+        const formattedMonth = month.toString().padStart(2, '0');
+
+        startDate = new Date(`${year}-${formattedMonth}-01`);
+        endDate = new Date(year, month, 0);
+      } else {
+        startDate = new Date(`${year}-01-01`);
+        endDate = new Date(`${year}-12-31`);
+      }
+
+      const dateCondition = {
+        date_of_admission: Between(
+          startDate.toISOString().split('T')[0],
+          endDate.toISOString().split('T')[0],
+        ),
+      };
+
+      orConditions.push({ ...baseCondition, ...dateCondition });
+    }
+
+    const whereCondition =
+      orConditions.length > 0 ? orConditions : baseCondition;
+
+    const allMedicalReqUsersToLegalArea = await this.medicalReqRepository.find({
+      where: whereCondition,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return allMedicalReqUsersToLegalArea;
   }
 
   async getAllMedicalReqPatient() {

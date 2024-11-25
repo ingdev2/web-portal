@@ -85,7 +85,7 @@ const CustomDashboardLayout: React.FC<{
             alignContent: "center",
             alignItems: "center",
             backgroundColor: "#f2f2f2",
-            paddingBlock: "22px",
+            paddingBlock: "7px",
             overflow: "hidden",
           }}
           onClick={() => {
@@ -96,11 +96,11 @@ const CustomDashboardLayout: React.FC<{
             src={
               collapsed
                 ? "/logos/LOGO-ICONO-130-X-130-PX.png"
-                : "/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
+                : "/logos/LOGO-BONNADONA.png"
             }
-            alt="Logo de Proced"
+            alt="Logo de portal"
             style={{
-              maxWidth: collapsed ? "45%" : "77%",
+              maxWidth: collapsed ? "45%" : "72%",
               height: "auto",
               objectFit: "contain",
             }}

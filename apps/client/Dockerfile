@@ -36,7 +36,7 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 
 # Expose port 3000
-EXPOSE 3000
+EXPOSE 4000
 
 USER node
 
@@ -44,4 +44,4 @@ USER node
 CMD ["npm", "start"]
 
 #sudo docker build -t portal-front .
-#sudo docker run -p 3000:3000 portal-front
+#sudo docker run -p 4000:4000 portal-front

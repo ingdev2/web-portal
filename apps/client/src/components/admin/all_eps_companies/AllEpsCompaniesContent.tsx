@@ -26,6 +26,7 @@ import {
 } from "@/redux/features/eps_company/epsCompanySlice";
 
 import {
+  useUpdateEpsFromHosvitalMutation,
   useGetAllEpsCompanyAdminDashboardQuery,
   useBanEpsCompanyMutation,
 } from "@/redux/apis/eps_company/epsCompanyApi";
@@ -41,6 +42,7 @@ const AllEpsCompaniesContent: React.FC = () => {
   const [selectedRowDataLocalState, setSelectedRowDataLocalState] =
     useState<EpsCompany | null>(null);
 
+  const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
   const [isSubmittingBan, setIsSubmittingBan] = useState(false);
   const [isSubmittingRegisterPage, setIsSubmittingRegisterPage] =
     useState(false);
@@ -52,6 +54,18 @@ const AllEpsCompaniesContent: React.FC = () => {
   const epsCompanyErrorsState = useAppSelector(
     (state) => state.epsCompany.errors
   );
+
+  const [
+    updateEpsFromHosvital,
+    {
+      data: updateEpsFromHosvitalData,
+      isLoading: updateEpsFromHosvitalLoading,
+      isSuccess: updateEpsFromHosvitalSuccess,
+      isError: updateEpsFromHosvitalError,
+    },
+  ] = useUpdateEpsFromHosvitalMutation({
+    fixedCacheKey: "updateEpsFromHosvital",
+  });
 
   const [
     banEpsCompany,
@@ -95,6 +109,43 @@ const AllEpsCompaniesContent: React.FC = () => {
     dispatch(setMainEmailEpsCompany(record?.main_email));
   };
 
+  const handleUpdateButton = async () => {
+    try {
+      setIsSubmittingUpdate(true);
+
+      const response: any = await updateEpsFromHosvital(null);
+
+      let updateSuccess = response.data;
+
+      let updateError = response.error;
+
+      if (updateSuccess?.status === 202 && !updateError) {
+        const successMessage = updateSuccess?.message;
+
+        setSuccessMessage(successMessage);
+        setShowSuccessMessage(true);
+      } else {
+        const errorMessage = updateError?.data.message;
+
+        if (Array.isArray(errorMessage)) {
+          dispatch(setErrorsEpsCompany(errorMessage[0]));
+
+          setShowErrorMessage(true);
+        } else if (typeof errorMessage === "string") {
+          dispatch(setErrorsEpsCompany(errorMessage));
+
+          setShowErrorMessage(true);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      refecthAllEpsCompanies();
+
+      setIsSubmittingUpdate(false);
+    }
+  };
+
   const handleOnChangeSwitch = async (record: EpsCompany) => {
     try {
       setIsSubmittingBan(true);
@@ -132,10 +183,6 @@ const AllEpsCompaniesContent: React.FC = () => {
 
       setIsSubmittingBan(false);
     }
-  };
-
-  const handleButtonUpdate = () => {
-    refecthAllEpsCompanies();
   };
 
   const handleButtonClick = () => {
@@ -195,7 +242,7 @@ const AllEpsCompaniesContent: React.FC = () => {
                     selectedEpsCompanyName={selectedRowDataLocalState?.name}
                     labelEpsCompanyEmail="Email principal"
                     selectedEpsCompanyEmail={
-                      selectedRowDataLocalState?.main_email
+                      selectedRowDataLocalState?.main_email || NOT_REGISTER
                     }
                   />
 
@@ -258,7 +305,7 @@ const AllEpsCompaniesContent: React.FC = () => {
                 onClickSwitch: handleButtonClick,
                 isLoadingSwitch: isSubmittingBan,
               })}
-              onClickUpdateCustomTable={handleButtonUpdate}
+              onClickUpdateCustomTable={handleUpdateButton}
             />
           </div>
         }

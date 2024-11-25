@@ -336,12 +336,12 @@ const FamiliarUserLoginForm: React.FC = () => {
                   "¡Por favor ingresa número de identificación sin puntos, ni comas!",
               },
               {
-                min: 7,
-                message: "¡Por favor ingresa mínimo 7 números!",
+                min: 5,
+                message: "¡Por favor ingresa mínimo 5 números!",
               },
               {
-                max: 11,
-                message: "¡Por favor ingresa máximo 11 números!",
+                max: 20,
+                message: "¡Por favor ingresa máximo 20 números!",
               },
             ]}
           >

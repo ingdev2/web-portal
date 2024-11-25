@@ -26,7 +26,7 @@ import {
 
 import {
   useChangeStatusToVisualizedMutation,
-  useGetAllMedicalReqUsersToLegalAreaQuery,
+  useGetAllMedicalReqUsersByAreaQuery,
 } from "@/redux/apis/medical_req/medicalReqApi";
 import { useGetAllMedicalReqTypesQuery } from "@/redux/apis/medical_req/types_medical_req/typesMedicalReqApi";
 import { useGetAllMedicalReqStatusQuery } from "@/redux/apis/medical_req/status_medical_req/statusMedicalReqApi";
@@ -43,6 +43,8 @@ import { formatFilingNumber } from "@/helpers/format_filing_number/format_filing
 import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejection_map/reason_for_rejection_map";
 
 import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
+import AverageResponseTime from "./average_response_time/AverageResponseTime";
+import { CompanyAreaEnum } from "@/utils/enums/company_area.enum";
 
 const AllLegalRequestContent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -76,7 +78,9 @@ const AllLegalRequestContent: React.FC = () => {
     isFetching: allMedicalReqLegalAreaFetching,
     error: allMedicalReqLegalAreaError,
     refetch: refecthAllMedicalReqLegalArea,
-  } = useGetAllMedicalReqUsersToLegalAreaQuery({});
+  } = useGetAllMedicalReqUsersByAreaQuery({
+    companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+  });
 
   const {
     data: userMedicalReqTypeData,
@@ -720,6 +724,8 @@ const AllLegalRequestContent: React.FC = () => {
                   })}
                   onClickUpdateCustomTable={handleButtonUpdate}
                 />
+
+                <AverageResponseTime />
               </>
             )}
           </>

@@ -215,32 +215,18 @@ const AdminLoginForm: React.FC = () => {
               alignContent: "center",
               alignItems: "center",
               paddingInline: "13px",
+              paddingBlock: "7px",
               margin: "0px",
             }}
           >
             <img
-              src="/logos/LOGO-BONNADONA.png"
+              src="/background/scene-portal-logo-bonnadona.png"
               alt="Logo de Bonnadona"
               style={{
-                width: "183px",
-                paddingBlock: "22px",
-              }}
-            />
-
-            <Divider
-              orientation="center"
-              style={{
-                marginBlock: 7,
-                borderWidth: 2,
-              }}
-            />
-
-            <img
-              src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
-              alt="Logo de Bonnadona"
-              style={{
-                width: "207px",
-                paddingBlock: "31px",
+                width: "100%",
+                height: "auto",
+                objectFit: "cover",
+                borderRadius: "13px",
               }}
             />
           </Col>
@@ -252,8 +238,10 @@ const AdminLoginForm: React.FC = () => {
             lg={12}
             style={{
               width: "100%",
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
               paddingInline: "13px",
-              paddingTop: "13px",
               margin: "0px",
             }}
           >
@@ -314,12 +302,12 @@ const AdminLoginForm: React.FC = () => {
                       "¡Por favor ingresa número de identificación sin puntos, ni comas!",
                   },
                   {
-                    min: 7,
-                    message: "¡Por favor ingresa mínimo 7 números!",
+                    min: 5,
+                    message: "¡Por favor ingresa mínimo 5 números!",
                   },
                   {
-                    max: 11,
-                    message: "¡Por favor ingresa máximo 11 números!",
+                    max: 20,
+                    message: "¡Por favor ingresa máximo 20 números!",
                   },
                 ]}
               >
@@ -383,7 +371,14 @@ const AdminLoginForm: React.FC = () => {
                 />
               )}
 
-              <Form.Item style={{ textAlign: "center" }}>
+              <div
+                style={{
+                  justifyContent: "center",
+                  alignContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+              >
                 <a
                   className="login-form-forgot-admin-password"
                   // href=""
@@ -420,18 +415,7 @@ const AdminLoginForm: React.FC = () => {
                     Ingresar
                   </Button>
                 )}
-
-                <Divider
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "normal",
-                    marginBlock: 7,
-                    borderWidth: 1.3,
-                  }}
-                >
-                  ¿No tienes cuenta?
-                </Divider>
-              </Form.Item>
+              </div>
               {/* <Form.ErrorList
           errors={errors?.map((error) => (
             <div

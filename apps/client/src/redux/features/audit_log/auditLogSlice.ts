@@ -15,6 +15,7 @@ const initialState: AuditLogs = {
   browser_version: "",
   operating_system: "",
   createdAt: "",
+  timeAt: "",
   errors: [],
 };
 
@@ -64,6 +65,9 @@ export const auditLogSlice = createSlice({
     setCreatedAtAuditLog: (state, action) => {
       state.createdAt = action.payload;
     },
+    setTimeAtAuditLog: (state, action) => {
+      state.timeAt = action.payload;
+    },
     setErrorsAuditLog: (state, action) => {
       state.errors = action.payload;
     },
@@ -82,6 +86,7 @@ export const auditLogSlice = createSlice({
       state.browser_version = "";
       state.operating_system = "";
       state.createdAt = "";
+      state.timeAt = "";
     },
   },
 });
@@ -101,6 +106,7 @@ export const {
   setBrowserVersionAuditLog,
   setOperatingSystemAuditLog,
   setCreatedAtAuditLog,
+  setTimeAtAuditLog,
   setErrorsAuditLog,
   setResetAuditLog,
 } = auditLogSlice.actions;

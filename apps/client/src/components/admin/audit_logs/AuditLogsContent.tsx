@@ -48,11 +48,14 @@ const AuditLogsContent: React.FC = () => {
   const transformedData = Array.isArray(allAuditLogsData)
     ? allAuditLogsData.map((req: any) => ({
         ...req,
+        createdAt: formatDate(req.createdAt),
+        timeAt: formatTime(req.createdAt),
       }))
     : [];
 
   const handleClickSeeMore = (record: AuditLogs) => {
     dispatch(setTableRowId(""));
+
     setSelectedRowDataLocalState(record);
 
     dispatch(setTableRowId(record.id));
@@ -95,11 +98,14 @@ const AuditLogsContent: React.FC = () => {
           closableCustomModal={true}
           maskClosableCustomModal={false}
           handleCancelCustomModal={() => {
+            dispatch(setTableRowId(""));
+
             refecthAllAuditLogs();
 
             setIsModalVisibleLocalState(false);
 
             setSelectedRowDataLocalState(null);
+
             dispatch(setResetAuditLog());
           }}
           contentCustomModal={

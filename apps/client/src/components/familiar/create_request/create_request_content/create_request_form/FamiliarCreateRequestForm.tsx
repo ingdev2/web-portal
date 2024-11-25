@@ -269,6 +269,18 @@ const FamiliarCreateRequestForm: React.FC = () => {
     if (thePatienHasDiedLocalState && patientClassStatusData) {
       handleDeceasedPatient(patientClassStatusData, dispatch);
     }
+    if (
+      haveRightPetitionState === false &&
+      rightPetitionFilesMedicalReqState.length > 0
+    ) {
+      dispatch(setFileCopyRightPetitionMedicalReq([]));
+    }
+    if (
+      haveUserMessageDocumentsState === false &&
+      userMessageFilesMedicalReqState.length > 0
+    ) {
+      dispatch(setFileUserMessageMedicalReq([]));
+    }
   }, [
     userPatientOfFamiliarData,
     userPatientOfFamiliarError,
@@ -282,8 +294,11 @@ const FamiliarCreateRequestForm: React.FC = () => {
     patientClassStatusData,
     patientClassStatusError,
     thePatienHasDiedLocalState,
-    haveRightPetitionState,
     idNumberPatientOfFamiliarFState,
+    haveRightPetitionState,
+    rightPetitionFilesMedicalReqState,
+    haveUserMessageDocumentsState,
+    userMessageFilesMedicalReqState,
   ]);
 
   const handleCreateRequest = () => {
@@ -392,6 +407,13 @@ const FamiliarCreateRequestForm: React.FC = () => {
 
         dispatch(setDefaultValuesUserPatient());
         dispatch(setDefaultValuesMedicalReq());
+
+        dispatch(setRightPetitionMedicalReq(false));
+        dispatch(setFileCopyRightPetitionMedicalReq([]));
+        dispatch(setHaveUserMessageMedicalReq(false));
+        dispatch(setFileUserMessageMedicalReq([]));
+        dispatch(setRegistrationDatesMedicalReq(""));
+        dispatch(setFileCopyPatientCitizenshipCardMedicalReq([]));
       }
     } catch (error) {
       console.error(error);

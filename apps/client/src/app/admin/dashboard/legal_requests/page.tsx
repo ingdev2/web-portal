@@ -29,7 +29,7 @@ const LegalRequestsAdminPage = () => {
 
   const { data: legalCompanyAreaData, error: legalCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.LEGAL_DEPARTAMENT,
+      name: CompanyAreaEnum.LEGAL_DEPARTMENT,
     });
 
   const allowedRoles = [AdminRolType.ADMIN];
