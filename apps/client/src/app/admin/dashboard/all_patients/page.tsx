@@ -34,18 +34,30 @@ const AllPatientsPage = () => {
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+      name: CompanyAreaEnum.SYSTEM_DEPARTMENT,
     });
 
   const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
+    });
+
+  const { data: legalCompanyAreaData, error: legalCompanyAreaError } =
+    useGetCompanyAreaByNameQuery({
+      name: CompanyAreaEnum.LEGAL_DEPARTMENT,
     });
 
   const { data: admissionsCompanyAreaData, error: admissionsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
       name: CompanyAreaEnum.ADMISSIONS_DEPARTMENT,
     });
+
+  const {
+    data: externalConsultationCompanyAreaData,
+    error: externalConsultationCompanyAreaError,
+  } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+  });
 
   // NIVEL DE CARGO //
 
@@ -73,6 +85,8 @@ const AllPatientsPage = () => {
     systemsCompanyAreaData?.id,
     archivesCompanyAreaData?.id,
     admissionsCompanyAreaData?.id,
+    legalCompanyAreaData?.id,
+    externalConsultationCompanyAreaData?.id,
   ];
   const allowedPositionLevels = [
     directorPositionLevelData?.id,
@@ -89,8 +103,12 @@ const AllPatientsPage = () => {
     !systemsCompanyAreaError &&
     archivesCompanyAreaData &&
     !archivesCompanyAreaError &&
+    legalCompanyAreaData &&
+    !legalCompanyAreaError &&
     admissionsCompanyAreaData &&
     !admissionsCompanyAreaError &&
+    externalConsultationCompanyAreaData &&
+    !externalConsultationCompanyAreaError &&
     directorPositionLevelData &&
     !directorPositionLevelError &&
     coordinatorPositionLevelData &&

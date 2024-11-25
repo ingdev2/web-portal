@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { RequirementTypeEnum } from '../../medical_req/enums/requirement_type.enum';
+import { RequirementTypeEnum } from 'src/utils/enums/requirement_type.enum';
 
 export class CreateRequirementTypeDto {
   @IsNotEmpty()

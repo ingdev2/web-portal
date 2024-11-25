@@ -34,12 +34,12 @@ const RegisterEpsUserPage = () => {
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+      name: CompanyAreaEnum.SYSTEM_DEPARTMENT,
     });
 
   const { data: archivesCompanyAreaData, error: archivesCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.ARCHIVES_DEPARTAMENT,
+      name: CompanyAreaEnum.ARCHIVES_DEPARTMENT,
     });
 
   // NIVEL DE CARGO //

@@ -51,6 +51,9 @@ const StatisticsContent: React.FC = () => {
     medicalOrderData,
     isLoadingMedicalOrder,
     isFetchingMedicalOrder,
+    mipresExternalConsultationData,
+    isLoadingMipresExternalConsultation,
+    isFetchingMipresExternalConsultation,
   } = useMedicalReqDataByType(year, month);
 
   const {
@@ -95,6 +98,8 @@ const StatisticsContent: React.FC = () => {
     isFetchingMedicalDisability ||
     isLoadingMedicalOrder ||
     isFetchingMedicalOrder ||
+    isLoadingMipresExternalConsultation ||
+    isFetchingMipresExternalConsultation ||
     isLoadingCreatedRequests ||
     isFetchingCreatedRequests ||
     isLoadingVisualizedRequests ||
@@ -122,10 +127,14 @@ const StatisticsContent: React.FC = () => {
         return [
           { type: "Historia Clínica", value: clinicHistoryData?.length || 0 },
           {
-            type: "Incapacidad Médica",
+            type: "Certificado Incapacidad Médica",
             value: medicalDisabilityData?.length || 0,
           },
           { type: "Orden Médica", value: medicalOrderData?.length || 0 },
+          {
+            type: "MIPRES Consulta Externa",
+            value: mipresExternalConsultationData?.length || 0,
+          },
         ];
       case "ESTADO":
         return [

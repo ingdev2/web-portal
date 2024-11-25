@@ -21,7 +21,7 @@ export function getItem(
           justifyItems: "center",
           alignContent: "center",
           alignItems: "center",
-          paddingTop: "3.1px",
+          paddingTop: "5.4px",
         }}
       >
         {icon}

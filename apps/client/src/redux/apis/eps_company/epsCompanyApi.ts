@@ -35,6 +35,13 @@ export const epsCompanyApi = createApi({
       }),
     }),
 
+    updateEpsFromHosvital: builder.mutation<EpsCompany[], null>({
+      query: () => ({
+        url: `updateEpsFromHosvital`,
+        method: "POST",
+      }),
+    }),
+
     getAllEpsCompany: builder.query<EpsCompany[], null>({
       query: () => "getAll",
     }),
@@ -71,6 +78,7 @@ export const epsCompanyApi = createApi({
 
 export const {
   useCreateEpsCompanyMutation,
+  useUpdateEpsFromHosvitalMutation,
   useGetAllEpsCompanyQuery,
   useGetAllEpsCompanyAdminDashboardQuery,
   useGetEpsCompanyByIdQuery,

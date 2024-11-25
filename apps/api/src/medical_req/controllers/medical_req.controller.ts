@@ -17,9 +17,10 @@ import { AdminRolType } from '../../utils/enums/admin_roles.enum';
 import { UserRolType } from '../../utils/enums/user_roles.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
-import { RequirementStatusEnum } from '../enums/requirement_status.enum';
-import { RequirementTypeEnum } from '../enums/requirement_type.enum';
+import { RequirementStatusEnum } from 'src/utils/enums/requirement_status.enum';
+import { RequirementTypeEnum } from 'src/utils/enums/requirement_type.enum';
 import { EnableAuditLog } from 'src/audit_logs/decorators/enable-audit-log.decorator';
+import { CompanyAreaEnum } from 'src/utils/enums/company_area.enum';
 
 @ApiTags('medical-req')
 @ApiBearerAuth()
@@ -72,15 +73,17 @@ export class MedicalReqController {
   // GET METHODS //
 
   @Auth(AdminRolType.ADMIN)
-  @Get('/getAllMedicalReqUsersToLegalArea')
-  async getAllMedReqUsersToLegalArea(
+  @Get('/getAllMedReqUsersByArea')
+  async getAllMedReqUsersByArea(
+    @Query('companyAreaName') companyAreaName?: CompanyAreaEnum,
     @Query('status') status?: RequirementStatusEnum,
     @Query('type') type?: RequirementTypeEnum,
     @Query('aplicantType') aplicantType?: UserRolType,
     @Query('year') year?: number,
     @Query('month') month?: number,
   ) {
-    return await this.medicalReqService.getAllMedReqUsersToLegalArea(
+    return await this.medicalReqService.getAllMedReqUsersByArea(
+      companyAreaName,
       status,
       type,
       aplicantType,
@@ -109,8 +112,8 @@ export class MedicalReqController {
 
   @Auth(AdminRolType.ADMIN)
   @Get('/averageResponseTime')
-  async getAverageResponseTime() {
-    return await this.medicalReqService.getAverageResponseTime();
+  async getAverageResponseTime(@Query('currentlyArea') currentlyArea?: number) {
+    return await this.medicalReqService.getAverageResponseTime(currentlyArea);
   }
 
   @Auth(UserRolType.PATIENT, UserRolType.EPS)

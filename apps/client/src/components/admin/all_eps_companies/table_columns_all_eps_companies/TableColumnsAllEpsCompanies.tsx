@@ -37,7 +37,7 @@ export const tableColumnsAllEpsCompanies = ({
     title: "NOMBRE DE EMPRESA",
     key: epsCompanyNameKey,
     dataIndex: epsCompanyNameKey,
-    width: 231,
+    width: 321,
     sorter: (a: EpsCompany, b: EpsCompany) => {
       return a[epsCompanyNameKey].localeCompare(b[epsCompanyNameKey]);
     },
@@ -49,7 +49,7 @@ export const tableColumnsAllEpsCompanies = ({
     title: "NIT",
     key: epsCompanyNitKey,
     dataIndex: epsCompanyNitKey,
-    width: 137,
+    width: 123,
     ellipsis: true,
     searchable: true,
   },

@@ -1,2 +1,2 @@
-// CONTACT PBX NUMBER
-export const CONTACT_PBX = '(605)3770055';
+// CONTACT EMAIL CALL CENTER
+export const EMAIL_CONTACT = "contaccenter@bonnadona.co";

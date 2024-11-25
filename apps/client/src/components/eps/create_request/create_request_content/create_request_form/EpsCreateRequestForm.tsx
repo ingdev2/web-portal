@@ -26,6 +26,8 @@ import {
   setRegistrationDatesMedicalReq,
   setFileCopyRightPetitionMedicalReq,
   setErrorsMedicalReq,
+  setRightPetitionMedicalReq,
+  removeFileCopyRightPetitionMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 import { setDefaultValuesUserPatient } from "@/redux/features/patient/patientSlice";
 import { setIdUserEps } from "@/redux/features/eps/epsSlice";
@@ -69,6 +71,12 @@ const EpsCreateRequestForm: React.FC = () => {
   );
   const reqTypeState = useAppSelector(
     (state) => state.medicalReq.requirement_type
+  );
+  const haveRightPetitionState = useAppSelector(
+    (state) => state.medicalReq.right_petition
+  );
+  const epsFilesRightPetitionState = useAppSelector(
+    (state) => state.medicalReq.files_copy_right_petition
   );
   const haveUserMessageDocumentsState = useAppSelector(
     (state) => state.medicalReq.have_user_message_documents
@@ -151,6 +159,18 @@ const EpsCreateRequestForm: React.FC = () => {
     ) {
       dispatch(setComponentChange(false));
     }
+    if (
+      haveRightPetitionState === false &&
+      epsFilesRightPetitionState.length > 0
+    ) {
+      dispatch(setFileCopyRightPetitionMedicalReq([]));
+    }
+    if (
+      haveUserMessageDocumentsState === false &&
+      userMessageFilesMedicalReqState.length > 0
+    ) {
+      dispatch(setFileUserMessageMedicalReq([]));
+    }
   }, [
     reqTypesData,
     reqTypesLoading,
@@ -160,6 +180,9 @@ const EpsCreateRequestForm: React.FC = () => {
     userEpsLoading,
     userEpsFetching,
     idUserEpsState,
+    haveRightPetitionState,
+    epsFilesRightPetitionState,
+    haveUserMessageDocumentsState,
     userMessageFilesMedicalReqState,
     componentChangeState,
     idTypePatientState,
@@ -184,6 +207,10 @@ const EpsCreateRequestForm: React.FC = () => {
       setIsSubmittingNewMedicalReq(true);
 
       const statesToUpload = [
+        {
+          state: epsFilesRightPetitionState,
+          paramName: "copy_right_petition",
+        },
         {
           state: userMessageFilesMedicalReqState,
           paramName: "user_message_documents",
@@ -221,6 +248,7 @@ const EpsCreateRequestForm: React.FC = () => {
           patient_id_number: idNumberPatientState,
           requirement_type: reqTypeState,
           user_message: userMessageMedicalReqState,
+          right_petition: haveRightPetitionState,
           registration_dates: registrationDatesState,
           ...responses,
         },
@@ -240,10 +268,11 @@ const EpsCreateRequestForm: React.FC = () => {
         setModalIsOpenConfirm(false);
         setModalIsOpenSuccess(true);
 
+        dispatch(setRightPetitionMedicalReq(false));
+        dispatch(setFileCopyRightPetitionMedicalReq([]));
         dispatch(setHaveUserMessageMedicalReq(false));
         dispatch(setFileUserMessageMedicalReq([]));
-        dispatch(setHaveUserMessageMedicalReq(false));
-        dispatch(setFileCopyRightPetitionMedicalReq([]));
+        dispatch(setRegistrationDatesMedicalReq(""));
         dispatch(setDefaultValuesUserPatient());
       }
     } catch (error) {
@@ -425,6 +454,19 @@ const EpsCreateRequestForm: React.FC = () => {
             familiarReqTypeValueDataForm={reqTypeState}
             handleOnChangeSelectReqTypeDataForm={handleOnChangeSelectIdType}
             familiarReqTypeListDataForm={typesMedicalReqState}
+            haveRightPetitionPatientDataForm={
+              haveRightPetitionState ? true : false
+            }
+            onChangeHaveRightPetitionFamiliarDataForm={(e) => {
+              const newValue = e.target.value === true;
+
+              dispatch(setRightPetitionMedicalReq(newValue));
+            }}
+            tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud."
+            copyRightPetitionSetterDataform={setFileCopyRightPetitionMedicalReq}
+            copyRightPetitionRemoverDataform={
+              removeFileCopyRightPetitionMedicalReq
+            }
             userMessageMedicalReqDataForm={userMessageMedicalReqState}
             haveReferenceDocumentDataForm={
               haveUserMessageDocumentsState ? true : false

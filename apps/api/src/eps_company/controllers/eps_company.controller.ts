@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Req } from '@nestjs/common';
 import { EpsCompanyService } from '../services/eps_company.service';
 import { CreateEpsCompanyDto } from '../dto/create-eps_company.dto';
 import { UpdateEpsCompanyDto } from '../dto/update-eps_company.dto';
@@ -37,7 +28,17 @@ export class EpsCompanyController {
     );
   }
 
+  @Post('/updateEpsFromHosvital')
+  updateEpsCompaniesFromHosvital() {
+    return this.epsCompanyService.updateEpsCompaniesFromHosvital();
+  }
+
   // GET METHODS //
+
+  @Get('/getAllEps')
+  validateHosvitalEpsCompanies() {
+    return this.epsCompanyService.validateHosvitalEpsCompanies();
+  }
 
   @Get('/getAll')
   getAllEpsCompanies() {

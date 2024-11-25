@@ -21,6 +21,14 @@ export class CreateMedicalReqEpsDto {
   @IsString()
   registration_dates: string;
 
+  @IsNotEmpty()
+  @IsBoolean()
+  right_petition: boolean;
+
+  @IsOptional()
+  @IsArray()
+  copy_right_petition: string[];
+
   @IsOptional()
   @IsUUID()
   aplicantId: string;

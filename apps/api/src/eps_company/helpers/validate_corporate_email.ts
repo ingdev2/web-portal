@@ -22,7 +22,6 @@ async function validateCorporateEmail(email: string): Promise<boolean> {
 
     return false;
   } catch (error) {
-    console.error('Error during email validation:', error);
     return false;
   }
 }

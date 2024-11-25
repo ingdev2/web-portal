@@ -118,30 +118,42 @@ const FamiliarCreateRequestFormData: React.FC<{
   const patientCategoryNameState = useAppSelector(
     (state) => state.medicalReq.patient_class_status_abbrev
   );
+
   const rightPetitionFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_right_petition
   );
+
+  const referenceDocumentFilesMedicalReqState = useAppSelector(
+    (state) => state.medicalReq.files_user_message_documents
+  );
+
   const registrationDatesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.registration_dates
   );
+
   const userMessageFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_user_message_documents
   );
+
   const copyApplicantIdentificationFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_applicant_identification_document
   );
+
   const copyPatientCitizenshipCardFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_patient_citizenship_card
   );
   const copyPatientCivilRegistrationFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_patient_civil_registration
   );
+
   const copyParentsCitizenshipFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_parents_citizenship_card
   );
+
   const copyMarriageCertificateFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_marriage_certificate
   );
+
   const copyCohabitationCertificateFilesMedicalReqState = useAppSelector(
     (state) => state.medicalReq.files_copy_cohabitation_certificate
   );
@@ -883,8 +895,11 @@ const FamiliarCreateRequestFormData: React.FC<{
             style={{ marginBottom: "13px" }}
             rules={[
               {
-                required: false,
-                message: "¡Por favor adjuntar documento de referencia!",
+                required: true,
+                validator: validateRequiredFiles(
+                  referenceDocumentFilesMedicalReqState,
+                  "¡Por favor adjuntar documento de referencia!"
+                ),
               },
             ]}
           >

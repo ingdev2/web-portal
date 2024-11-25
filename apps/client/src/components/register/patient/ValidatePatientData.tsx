@@ -19,7 +19,7 @@ import {
   Row,
 } from "antd";
 import PhoneInput from "antd-phone-input";
-import { titleStyleCss } from "@/theme/text_styles";
+import { titleStyleCss, subtitleStyleCss } from "@/theme/text_styles";
 import { LockOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import CustomSpin from "../../common/custom_spin/CustomSpin";
 import CustomMessage from "../../common/custom_messages/CustomMessage";
@@ -37,13 +37,14 @@ import { useCreateUserPatientMutation } from "@/redux/apis/register/registerUser
 import { useGetAllAuthMethodsQuery } from "@/redux/apis/auth_method/authMethodApi";
 
 import CustomModalTwoOptions from "../../common/custom_modal_two_options/CustomModalTwoOptions";
+import ModalHowUpdatePersonalData from "./modal_how_update_personal_data/ModalHowUpdatePersonalData";
 import {
   checkboxProcessingPersonalDataValidator,
   checkboxMessagesValidator,
 } from "@/helpers/checkbox_validator/checkbox_validator";
 
-import { CONTACT_PBX } from "@/utils/constants/constants";
 import { AuthenticationMethodEnum } from "@/utils/enums/authentication_method.enum";
+import { EMAIL_CONTACT } from "@/utils/constants/constants";
 
 const ValidatePatientData: React.FC = () => {
   const { data: session, status } = useSession();
@@ -99,6 +100,10 @@ const ValidatePatientData: React.FC = () => {
 
   const [isCheckboxMessagesChecked, setIsCheckboxMessagesChecked] =
     useState(false);
+  const [
+    showCustomEmailUpdatePersonalDataModal,
+    setShowCustomEmailUpdatePersonalDataModal,
+  ] = useState(false);
   const [showCustomCancelModal, setShowCustomCancelModal] = useState(false);
   const [showCustomConfirmModal, setShowCustomConfirmModal] = useState(false);
 
@@ -333,6 +338,17 @@ const ValidatePatientData: React.FC = () => {
           marginInline: "13px",
         }}
       >
+        {showCustomEmailUpdatePersonalDataModal && (
+          <ModalHowUpdatePersonalData
+            showCustomEmailUpdatePersonalDataModal={
+              showCustomEmailUpdatePersonalDataModal
+            }
+            setShowCustomEmailUpdatePersonalDataModal={
+              setShowCustomEmailUpdatePersonalDataModal
+            }
+          />
+        )}
+
         {showCustomConfirmModal && (
           <CustomModalTwoOptions
             key={"custom-confirm-modal"}
@@ -390,11 +406,29 @@ const ValidatePatientData: React.FC = () => {
                 textAlign: "center",
               }}
             >
-              Por favor, verifique si todos sus datos están correctos, de lo
-              contrario debe comunicarse a nuestra línea PBX:
-              <b>{CONTACT_PBX}</b> para realizar la actualización de sus datos
-              personales.
+              Por favor, revise que todos sus datos sean correctos. Si detecta
+              alguna inconsistencia, le solicitamos que envíe un correo
+              electrónico a <b>{EMAIL_CONTACT}</b> para actualizar su
+              información personal.
             </p>
+
+            <div
+              style={{
+                paddingBlock: "7px",
+                textAlign: "center",
+              }}
+            >
+              <a
+                className="what-data-should-I-send"
+                style={{ textDecoration: "underline" }}
+                onClick={() => {
+                  setShowCustomEmailUpdatePersonalDataModal(true);
+                }}
+              >
+                ¿Cómo solicito vía correo electrónico actualizar mis datos
+                personales?
+              </a>
+            </div>
 
             <div style={{ textAlign: "start" }}>
               <Typography.Title style={{ marginTop: 7 }} level={5}>
@@ -442,6 +476,7 @@ const ValidatePatientData: React.FC = () => {
                 color: "#960202",
                 fontWeight: 500,
                 textAlign: "center",
+                paddingBlock: "13px",
               }}
             >
               El correo electrónico y el número de celular que se muestran a
@@ -687,7 +722,7 @@ const ValidatePatientData: React.FC = () => {
                         .split("-");
 
                       if (
-                        nameWords?.some((word) =>
+                        nameWords?.some((word: string) =>
                           passwordUpperCase?.includes(word)
                         )
                       ) {

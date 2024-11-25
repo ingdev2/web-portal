@@ -34,7 +34,7 @@ const AuditLogsPage = () => {
 
   const { data: systemsCompanyAreaData, error: systemsCompanyAreaError } =
     useGetCompanyAreaByNameQuery({
-      name: CompanyAreaEnum.SYSTEM_DEPARTAMENT,
+      name: CompanyAreaEnum.SYSTEM_DEPARTMENT,
     });
 
   const { data: externalAuditorData, error: externalAuditorError } =

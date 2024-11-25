@@ -99,8 +99,8 @@ const FamiliarHeaderLayout: React.FC = () => {
             flexFlow: "column wrap",
             justifyContent: "center",
             alignContent: "center",
-            width: "80%",
-            height: "80%",
+            width: "96px",
+            height: "88%",
             backgroundColor: "#f2f2f2",
             borderEndStartRadius: 7,
             borderEndEndRadius: 7,
@@ -111,10 +111,10 @@ const FamiliarHeaderLayout: React.FC = () => {
           }}
         >
           <img
-            src="/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png"
-            alt="Logo de Proced"
+            src="/logos/LOGO-BONNADONA.png"
+            alt="Logo de portal"
             style={{
-              maxWidth: "72%",
+              maxWidth: "88%",
               height: "auto",
               objectFit: "contain",
             }}

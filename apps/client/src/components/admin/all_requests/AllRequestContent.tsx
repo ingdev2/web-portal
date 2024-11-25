@@ -14,6 +14,7 @@ import { TbEye } from "react-icons/tb";
 
 import ModalActionButtons from "./modal_action_buttons/ModalActionButtons";
 import StatusItems from "./categorization_by_items/StatusItems";
+import AverageResponseTime from "./average_response_time/AverageResponseTime";
 import { getTagComponentStatus } from "@/components/common/custom_tags_medical_req_status/CustomTagsStatus";
 
 import {
@@ -830,6 +831,8 @@ const AllRequestContent: React.FC = () => {
                   })}
                   onClickUpdateCustomTable={handleButtonUpdate}
                 />
+
+                <AverageResponseTime />
               </>
             )}
           </>

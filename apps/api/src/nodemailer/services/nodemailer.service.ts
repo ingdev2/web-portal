@@ -62,11 +62,8 @@ export class NodemailerService {
       attachments: [
         {
           filename: 'LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
-          path: join(
-            __dirname,
-            '../../../assets/logos/LOGO-HORIZONTAL-TRANS-130-X-130-PX.png',
-          ),
-          cid: 'logo_proced@bonnadona.co',
+          path: join(__dirname, '../../../assets/logos/LOGO-BONNADONA.png'),
+          cid: 'logo_portal@bonnadona.co',
         },
         {
           filename: 'LOGO-BONNADONA.png',
