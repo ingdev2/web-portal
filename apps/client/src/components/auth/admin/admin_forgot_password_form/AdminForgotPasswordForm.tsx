@@ -79,10 +79,13 @@ const AdminForgotPasswordForm: React.FC<{
     isLoading: isAdminLoading,
     isFetching: isAdminFetching,
     isError: isAdminError,
-  } = useGetAdminByIdTypeAndNumberQuery({
-    admin_id_type: idTypeAdminLocalState,
-    id_number: idNumberAdminLocalStateInt,
-  });
+  } = useGetAdminByIdTypeAndNumberQuery(
+    {
+      admin_id_type: idTypeAdminLocalState,
+      id_number: idNumberAdminLocalStateInt,
+    },
+    { skip: !isSubmittingForgotPassword }
+  );
 
   const {
     data: idTypesAdminData,
@@ -230,8 +233,7 @@ const AdminForgotPasswordForm: React.FC<{
         />
       )}
 
-      {linkToResetPasswordSent &&
-      corporateEmailAdminOfModalSuccessLocalState ? (
+      {linkToResetPasswordSent ? (
         <CustomResultOneButton
           key={"link-to-reset-password-sent-success-custom-result-admin"}
           statusTypeResult={"success"}

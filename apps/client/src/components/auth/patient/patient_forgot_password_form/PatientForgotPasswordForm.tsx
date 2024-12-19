@@ -78,10 +78,13 @@ const PatientForgotPasswordForm: React.FC<{
     isLoading: isUserLoading,
     isFetching: isUserFetching,
     isError: isUserError,
-  } = useGetUserByIdNumberQuery({
-    user_id_type: idTypePatientLocalState,
-    id_number: idNumberPatientLocalStateInt,
-  });
+  } = useGetUserByIdNumberQuery(
+    {
+      user_id_type: idTypePatientLocalState,
+      id_number: idNumberPatientLocalStateInt,
+    },
+    { skip: !isSubmittingForgotPassword }
+  );
 
   const {
     data: idTypesPatientData,

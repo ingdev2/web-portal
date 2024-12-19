@@ -288,6 +288,7 @@ export const useMenuItems = () => {
         directorPositionLevelData.id,
         coordinatorPositionLevelData.id,
         colaboratorPositionLevelData.id,
+        auditorPositionLevelData.id,
       ]) &&
       isAdminInCompanyAreas(companyAreaIdAdminState, [
         systemsCompanyAreaData.id,
@@ -302,7 +303,10 @@ export const useMenuItems = () => {
             ItemKeys.ITEM_USERS_KEY,
             <FaUsers size={17} />,
             [
-              isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
+              isAdminWithRoles(roleIdAdminState, [
+                superAdminRoleData.id,
+                adminRoleData.id,
+              ]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
               ]) &&
@@ -329,6 +333,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_AUDITORS,
@@ -361,6 +366,10 @@ export const useMenuItems = () => {
                   )
                 : null,
 
+              isAdminWithRoles(roleIdAdminState, [
+                superAdminRoleData.id,
+                adminRoleData.id,
+              ]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
@@ -384,9 +393,14 @@ export const useMenuItems = () => {
           )
         : null,
 
+      isAdminWithRoles(roleIdAdminState, [
+        superAdminRoleData.id,
+        adminRoleData.id,
+      ]) &&
       isAdminInPositionLevel(positionLevelIdAdminState, [
         directorPositionLevelData.id,
         coordinatorPositionLevelData.id,
+        colaboratorPositionLevelData.id,
       ]) &&
       isAdminInCompanyAreas(companyAreaIdAdminState, [
         systemsCompanyAreaData.id,
@@ -408,6 +422,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_COMPANIES_PARAMS,
@@ -427,6 +442,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_REASONS_FOR_REJECTION_PARAMS,
@@ -446,6 +462,7 @@ export const useMenuItems = () => {
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_REQ_TYPES_PARAMS,
@@ -454,13 +471,17 @@ export const useMenuItems = () => {
                   )
                 : null,
 
-              isAdminWithRoles(roleIdAdminState, [superAdminRoleData.id]) &&
+              isAdminWithRoles(roleIdAdminState, [
+                superAdminRoleData.id,
+                adminRoleData.id,
+              ]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
               ]) &&
               isAdminInPositionLevel(positionLevelIdAdminState, [
                 directorPositionLevelData.id,
                 coordinatorPositionLevelData.id,
+                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_COMPANY_AREAS_PARAMS,
@@ -472,6 +493,10 @@ export const useMenuItems = () => {
           )
         : null,
 
+      isAdminWithRoles(roleIdAdminState, [
+        superAdminRoleData.id,
+        adminRoleData.id,
+      ]) &&
       isAdminInPositionLevel(positionLevelIdAdminState, [
         directorPositionLevelData.id,
         auditorPositionLevelData.id,
