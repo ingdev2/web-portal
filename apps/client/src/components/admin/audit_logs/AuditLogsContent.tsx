@@ -168,9 +168,7 @@ const AuditLogsContent: React.FC = () => {
                     selectedRowDataLocalState?.createdAt
                   )}
                   labelHourOfAuditLog="Hora de acción"
-                  selectedHourOfAuditLog={formatTime(
-                    selectedRowDataLocalState?.createdAt
-                  )}
+                  selectedHourOfAuditLog={selectedRowDataLocalState?.timeAt}
                 />
               </>
             </>

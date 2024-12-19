@@ -45,7 +45,7 @@ export const tableColumnsAuditLogs = ({
     title: "NOMBRE DE USUARIO",
     key: userNameAuditLogKey,
     dataIndex: userNameAuditLogKey,
-    width: 321,
+    width: 222,
     sorter: (a: AuditLogs, b: AuditLogs) => {
       return a[userNameAuditLogKey].localeCompare(b[userNameAuditLogKey]);
     },
@@ -70,7 +70,7 @@ export const tableColumnsAuditLogs = ({
     title: "ACCIÓN REALIZADA",
     key: actionTypeAuditLogKey,
     dataIndex: actionTypeAuditLogKey,
-    width: 301,
+    width: 321,
     filters: enumDataFilters(ActionTypesEnum),
     onFilter: (value: any, record: any) => {
       return String(record.action_type) === String(value);
@@ -142,7 +142,7 @@ export const tableColumnsAuditLogs = ({
     title: "CORREO ELECTRÓNICO",
     key: userEmailAuditLogKey,
     dataIndex: userEmailAuditLogKey,
-    width: 371,
+    width: 321,
     ellipsis: true,
     searchable: true,
   },
