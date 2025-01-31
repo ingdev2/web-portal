@@ -369,7 +369,14 @@ const ValidatePatientData: React.FC = () => {
             iconCustomModal={<FcHighPriority size={77} />}
             openCustomModalState={showCustomCancelModal}
             titleCustomModal="¿Tus datos son incorrectos?"
-            subtitleCustomModal="Si tus datos no son correctos, te recomendamos no activar tu cuenta y comunicarte a nuestra línea de PBX para realizar la actualización de tus datos personales."
+            subtitleCustomModal={
+              <p>
+                Si tus datos no son correctos, te recomendamos no activar tu
+                cuenta y comunicarte al siguiente correo:
+                <b>contaccenter@bonnadona.co</b> para realizar la actualización
+                de tus datos personales.
+              </p>
+            }
             handleCancelCustomModal={() => setShowCustomCancelModal(false)}
             handleConfirmCustomModal={handleConfirmIncorrectDataModal}
             handleClickCustomModal={handleButtonClick}
