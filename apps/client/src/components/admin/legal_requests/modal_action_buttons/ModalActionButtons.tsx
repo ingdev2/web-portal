@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 
 import { Button, Col, Row } from "antd";
-import { LuInspect } from "react-icons/lu";
+import { VscInspect } from "react-icons/vsc";
 
 import {
   useChangeStatusToUnderReviewMutation,
@@ -129,7 +129,7 @@ const ModalActionButtons: React.FC<{}> = ({}) => {
                   justifyContent: "center",
                 }}
               >
-                <LuInspect size={17} />
+                <VscInspect size={17} />
                 &nbsp; Gestionar solicitud
               </div>
             </Button>
