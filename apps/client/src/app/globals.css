@@ -27,3 +27,9 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #015e90;
 }
+
+/* Color de las clases de las filas de las tablas */
+
+.row-all-resolved {
+  background-color: #afffaf;
+}

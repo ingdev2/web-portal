@@ -272,6 +272,15 @@ const AllExternalConsultationRequestContent: React.FC = () => {
     setSelectedDocumentId(documentId);
   };
 
+  const rowClassName = (record: MedicalReq): string => {
+    switch (true) {
+      case record.answer_date !== null:
+        return "row-all-resolved";
+      default:
+        return "";
+    }
+  };
+
   const handleButtonUpdate = () => {
     refecthAllMedicalReqExtConsultationArea();
   };
@@ -725,6 +734,7 @@ const AllExternalConsultationRequestContent: React.FC = () => {
                     }
                   )}
                   onClickUpdateCustomTable={handleButtonUpdate}
+                  rowClassName={rowClassName}
                 />
 
                 <AverageResponseTime />

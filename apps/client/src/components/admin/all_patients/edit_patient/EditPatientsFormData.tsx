@@ -226,6 +226,7 @@ const EditPatientsFormData: React.FC<{
               autoComplete="off"
               min={0}
               enableSearch
+              disabled
             />
           </Form.Item>
         </Col>
@@ -303,6 +304,7 @@ const EditPatientsFormData: React.FC<{
               placeholder="Correo electrónico"
               onChange={onChangeEmailEditAdminFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </Col>
@@ -350,6 +352,7 @@ const EditPatientsFormData: React.FC<{
               placeholder="Dirección de residencia"
               onChange={onChangeResidenceAddressEditAdminFormData}
               autoComplete="off"
+              disabled
             />
           </Form.Item>
         </Col>
