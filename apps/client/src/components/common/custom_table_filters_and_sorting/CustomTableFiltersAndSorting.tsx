@@ -39,7 +39,13 @@ const CustomTableFiltersAndSorting: React.FC<{
   dataCustomTable: MedicalReq[];
   columnsCustomTable: ColumnConfig<any>[];
   onClickUpdateCustomTable: () => void;
-}> = ({ dataCustomTable, columnsCustomTable, onClickUpdateCustomTable }) => {
+  rowClassName?: (record: any) => string;
+}> = ({
+  dataCustomTable,
+  columnsCustomTable,
+  onClickUpdateCustomTable,
+  rowClassName,
+}) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
@@ -390,6 +396,7 @@ const CustomTableFiltersAndSorting: React.FC<{
           scrollToFirstRowOnChange: true,
         }}
         rowKey={(record) => record.id}
+        rowClassName={rowClassName}
         columns={columns}
         dataSource={dataCustomTable}
         onChange={handleChange}

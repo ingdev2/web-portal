@@ -21,6 +21,7 @@ import {
   setTableRowFilingNumber,
   setTableRowId,
 } from "@/redux/features/common/modal/modalSlice";
+import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
 import {
   useChangeStatusToVisualizedMutation,
@@ -60,6 +61,9 @@ const AllRequestContent: React.FC = () => {
     (state) => state.medicalReq.area_redirection_message
   );
 
+  const copyDocumentsDeliveredFilesState = useAppSelector(
+    (state) => state.medicalReq.files_documents_delivered
+  );
   const responseCommentsState = useAppSelector(
     (state) => state.medicalReq.response_comments
   );
@@ -149,21 +153,41 @@ const AllRequestContent: React.FC = () => {
     isLoading: documentUrlsLoading,
     isFetching: documentUrlsFetching,
     error: documentUrlsError,
-  } = useViewFileQuery(selectedDocumentId, { skip: !selectedDocumentId });
+  } = useViewFileQuery(selectedDocumentId, {
+    skip: !selectedDocumentId,
+  });
 
   useEffect(() => {
-    if (
-      (currentlyInAreaState && areaRedirectionMessageState) ||
-      responseCommentsState ||
-      (responseCommentsState && motivesForRejectionState)
-    ) {
+    if (currentlyInAreaState && areaRedirectionMessageState) {
       refecthAllMedicalReqUsers();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
       }, 4000);
     }
+  }, [currentlyInAreaState, areaRedirectionMessageState]);
 
+  useEffect(() => {
+    if (responseCommentsState && copyDocumentsDeliveredFilesState) {
+      refecthAllMedicalReqUsers();
+
+      setTimeout(() => {
+        setIsModalVisibleLocalState(false);
+      }, 4000);
+    }
+  }, [responseCommentsState, copyDocumentsDeliveredFilesState]);
+
+  useEffect(() => {
+    if (responseCommentsState && motivesForRejectionState) {
+      refecthAllMedicalReqUsers();
+
+      setTimeout(() => {
+        setIsModalVisibleLocalState(false);
+      }, 4000);
+    }
+  }, [responseCommentsState, motivesForRejectionState]);
+
+  useEffect(() => {
     if (
       documentUrls &&
       documentUrls.length > 0 &&
@@ -174,15 +198,16 @@ const AllRequestContent: React.FC = () => {
       documentUrls.forEach((url) => {
         window.open(url, "_blank");
       });
+
+      setTimeout(() => {
+        setSelectedDocumentId([]);
+      }, 200);
     }
   }, [
     documentUrls,
     documentUrlsLoading,
     documentUrlsFetching,
     documentUrlsError,
-    currentlyInAreaState,
-    areaRedirectionMessageState,
-    responseCommentsState,
   ]);
 
   const idTypeGetName = transformIdToNameMap(idTypesData);
@@ -245,6 +270,8 @@ const AllRequestContent: React.FC = () => {
     dispatch(setTableRowFilingNumber(""));
     setSelectedRowDataLocalState(null);
 
+    setDefaultValuesMedicalReq();
+
     if (
       record &&
       idsOfMedicalReqStates &&
@@ -266,6 +293,15 @@ const AllRequestContent: React.FC = () => {
     setSelectedDocumentId(documentId);
   };
 
+  const rowClassName = (record: MedicalReq): string => {
+    switch (true) {
+      case record.answer_date !== null:
+        return "row-all-resolved";
+      default:
+        return "";
+    }
+  };
+
   const handleButtonUpdate = () => {
     refecthAllMedicalReqUsers();
   };
@@ -284,6 +320,8 @@ const AllRequestContent: React.FC = () => {
             dispatch(setTableRowId(""));
             dispatch(setTableRowFilingNumber(""));
             setSelectedRowDataLocalState(null);
+
+            setDefaultValuesMedicalReq();
 
             refecthAllMedicalReqUsers();
 
@@ -830,6 +868,7 @@ const AllRequestContent: React.FC = () => {
                     aplicantTypeData: allUserRolesData,
                   })}
                   onClickUpdateCustomTable={handleButtonUpdate}
+                  rowClassName={rowClassName}
                 />
 
                 <AverageResponseTime />

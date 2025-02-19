@@ -272,6 +272,15 @@ const AllLegalRequestContent: React.FC = () => {
     setSelectedDocumentId(documentId);
   };
 
+  const rowClassName = (record: MedicalReq): string => {
+    switch (true) {
+      case record.answer_date !== null:
+        return "row-all-resolved";
+      default:
+        return "";
+    }
+  };
+
   const handleButtonUpdate = () => {
     refecthAllMedicalReqLegalArea();
   };
@@ -723,6 +732,7 @@ const AllLegalRequestContent: React.FC = () => {
                     aplicantTypeData: allUserRolesData,
                   })}
                   onClickUpdateCustomTable={handleButtonUpdate}
+                  rowClassName={rowClassName}
                 />
 
                 <AverageResponseTime />
