@@ -1075,15 +1075,19 @@ export class MedicalReqService {
       const [hoursPart, minutesPart] = record.response_time
         .split(' y ')
         .map((part) => parseInt(part.match(/\d+/)[0], 10));
-      const minutes = hoursPart * 60 + minutesPart;
+
+      const minutes = (hoursPart || 0) * 60 + (minutesPart || 0);
       return total + minutes;
     }, 0);
 
     const averageMinutes = Math.floor(totalMinutes / allMedicalReqUsers.length);
-
     const averageHours = Math.floor(averageMinutes / 60);
     const averageRemainingMinutes = averageMinutes % 60;
-    const averageResponseTime = `${averageHours.toString().padStart(2, '0')} Horas y ${averageRemainingMinutes.toString().padStart(2, '0')} Minutos`;
+
+    const averageResponseTime =
+      averageHours > 0
+        ? `${averageHours} Horas y ${averageRemainingMinutes.toString().padStart(2, '0')} Minutos`
+        : `${averageRemainingMinutes.toString().padStart(2, '0')} Minutos`;
 
     return [averageResponseTime];
   }
