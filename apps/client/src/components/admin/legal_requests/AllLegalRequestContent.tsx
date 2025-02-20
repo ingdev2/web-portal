@@ -64,6 +64,9 @@ const AllLegalRequestContent: React.FC = () => {
     (state) => state.medicalReq.area_redirection_message
   );
 
+  const copyDocumentsDeliveredFilesState = useAppSelector(
+    (state) => state.medicalReq.files_documents_delivered
+  );
   const responseCommentsState = useAppSelector(
     (state) => state.medicalReq.response_comments
   );
@@ -158,18 +161,36 @@ const AllLegalRequestContent: React.FC = () => {
   } = useViewFileQuery(selectedDocumentId, { skip: !selectedDocumentId });
 
   useEffect(() => {
-    if (
-      (currentlyInAreaState && areaRedirectionMessageState) ||
-      responseCommentsState ||
-      (responseCommentsState && motivesForRejectionState)
-    ) {
+    if (currentlyInAreaState && areaRedirectionMessageState) {
       refecthAllMedicalReqLegalArea();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
       }, 4000);
     }
+  }, [currentlyInAreaState, areaRedirectionMessageState]);
 
+  useEffect(() => {
+    if (responseCommentsState && copyDocumentsDeliveredFilesState) {
+      refecthAllMedicalReqLegalArea();
+
+      setTimeout(() => {
+        setIsModalVisibleLocalState(false);
+      }, 4000);
+    }
+  }, [responseCommentsState, copyDocumentsDeliveredFilesState]);
+
+  useEffect(() => {
+    if (responseCommentsState && motivesForRejectionState) {
+      refecthAllMedicalReqLegalArea();
+
+      setTimeout(() => {
+        setIsModalVisibleLocalState(false);
+      }, 4000);
+    }
+  }, [responseCommentsState, motivesForRejectionState]);
+
+  useEffect(() => {
     if (
       documentUrls &&
       documentUrls.length > 0 &&
@@ -180,15 +201,16 @@ const AllLegalRequestContent: React.FC = () => {
       documentUrls.forEach((url) => {
         window.open(url, "_blank");
       });
+
+      setTimeout(() => {
+        setSelectedDocumentId([]);
+      }, 200);
     }
   }, [
     documentUrls,
     documentUrlsLoading,
     documentUrlsFetching,
     documentUrlsError,
-    currentlyInAreaState,
-    areaRedirectionMessageState,
-    responseCommentsState,
   ]);
 
   const idTypeGetName = transformIdToNameMap(idTypesData);
