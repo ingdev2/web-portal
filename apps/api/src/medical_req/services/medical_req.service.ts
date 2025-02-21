@@ -1071,14 +1071,16 @@ export class MedicalReqService {
       return '00 Horas - 00 Minutos';
     }
 
-    const totalMinutes = allMedicalReqUsers.reduce((total, record) => {
+    let totalMinutes = allMedicalReqUsers.reduce((total, record) => {
       const [hoursPart, minutesPart] = record.response_time
         .split(' y ')
-        .map((part) => parseInt(part.match(/\d+/)[0], 10));
+        .map((part) => parseInt(part.match(/\d+/)?.[0] || '0', 10));
 
       const minutes = (hoursPart || 0) * 60 + (minutesPart || 0);
       return total + minutes;
     }, 0);
+
+    totalMinutes = Math.max(totalMinutes - 300, 0);
 
     const averageMinutes = Math.floor(totalMinutes / allMedicalReqUsers.length);
     const averageHours = Math.floor(averageMinutes / 60);

@@ -311,7 +311,7 @@ const AllRequestContent: React.FC = () => {
       {isModalVisibleLocalState && (
         <CustomModalNoContent
           key={"custom-modal-request-details-admin"}
-          widthCustomModalNoContent={"96%"}
+          widthCustomModalNoContent={"88%"}
           minWidthCustomModalNoContent="960px"
           openCustomModalState={isModalVisibleLocalState}
           closableCustomModal={true}
@@ -442,7 +442,7 @@ const AllRequestContent: React.FC = () => {
                   )
                 }
                 labelAplicantName="Nombre de solicitante:"
-                selectedAplicantName={`${selectedRowDataLocalState?.aplicant_name} ${selectedRowDataLocalState?.aplicant_last_name}`}
+                selectedAplicantName={`${selectedRowDataLocalState?.aplicant_name} ${selectedRowDataLocalState?.aplicant_last_name ?? ""}`}
                 labelAplicantIdType="Tipo de ID solicitante:"
                 selectedAplicantIdType={selectedRowDataLocalState?.aplicant_id_type.toString()}
                 labelAplicantIdNumber="Número de ID solicitante"

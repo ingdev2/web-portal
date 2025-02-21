@@ -96,7 +96,7 @@ const ModalHowUpdatePersonalData: React.FC<{
                     title: "Cuerpo del correo:",
                     description: "Escribir y enviar los siguientes datos:",
                     items: [
-                      "1. Adjuntar copia legible de documento de identidad (ambos lados)",
+                      "1. Adjuntar copia legible de documento de identidad (ambos lados) o certificado de cédula digital",
                       "2. Adjuntar foto frontal de paciente con documento de identidad original (similar a imagen de ejemplo)",
                       "3. Escribir número de celular de contacto actualizado",
                       "4. Escribir correo electrónico de contacto actualizado",

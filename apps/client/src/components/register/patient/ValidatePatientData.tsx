@@ -591,7 +591,7 @@ const ValidatePatientData: React.FC = () => {
               autoComplete="false"
               layout="vertical"
             >
-              <Form.Item
+              {/* <Form.Item
                 id="radio-select-auth-method"
                 name="radio-select-auth-method"
                 label="Método de autenticación"
@@ -621,7 +621,7 @@ const ValidatePatientData: React.FC = () => {
                     ))}
                   </Space>
                 </Radio.Group>
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item
                 id="patient-user-whatsapp-register"
