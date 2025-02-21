@@ -615,7 +615,7 @@ const AddRelativeForm: React.FC = () => {
             setFamiliarGenderLocalState(e);
           }}
           familiarGenderListDataForm={familiarGenderListLocalState}
-          tooltipUploadFamilyIdentityDocumentDataform="Adjunta el documento de identidad del familiar que deseas agregar a tu núcleo"
+          tooltipUploadFamilyIdentityDocumentDataform="Adjunta el documento de identidad del familiar que deseas agregar a tu núcleo. Formatos permitidos: (.PDF .JPG .PNG .JPEG)"
           fileStatusSetterFamilyIdentityDocumentDataform={
             setFileCopyFamiliarCitizenshipCard
           }

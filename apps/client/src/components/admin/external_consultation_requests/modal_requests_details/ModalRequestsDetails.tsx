@@ -168,7 +168,7 @@ const ModalRequestsDetails: React.FC<{
         {titleDescription}
       </h2>
 
-      <Row gutter={[24, 24]} style={{ width: "100%" }}>
+      <Row gutter={[72, 24]} style={{ width: "100%" }}>
         {[
           {
             title: "Información de la Solicitud",

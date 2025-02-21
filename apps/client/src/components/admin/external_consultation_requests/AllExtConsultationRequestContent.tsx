@@ -425,7 +425,7 @@ const AllExternalConsultationRequestContent: React.FC = () => {
                   )
                 }
                 labelAplicantName="Nombre de solicitante:"
-                selectedAplicantName={`${selectedRowDataLocalState?.aplicant_name} ${selectedRowDataLocalState?.aplicant_last_name}`}
+                selectedAplicantName={`${selectedRowDataLocalState?.aplicant_name} ${selectedRowDataLocalState?.aplicant_last_name ?? ""}`}
                 labelAplicantIdType="Tipo de ID solicitante:"
                 selectedAplicantIdType={getTagComponentIdTypes(
                   selectedRowDataLocalState?.aplicant_id_type.toString()

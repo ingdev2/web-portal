@@ -431,7 +431,7 @@ const PatientCreateRequestForm: React.FC = () => {
 
             dispatch(setRightPetitionMedicalReq(newValue));
           }}
-          tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud."
+          tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud. Formatos permitidos: (.PDF .JPG .PNG .JPEG)"
           copyRightPetitionSetterDataform={setFileCopyRightPetitionMedicalReq}
           copyRightPetitionRemoverDataform={
             removeFileCopyRightPetitionMedicalReq
@@ -445,7 +445,7 @@ const PatientCreateRequestForm: React.FC = () => {
 
             dispatch(setHaveUserMessageMedicalReq(newValue));
           }}
-          tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos de referencia adicionales, para así ser más exactos y precisos al darte respuesta a su solicitud."
+          tooltipUploadReferenceDocumentsDataform="Aquí puedes adjuntar documentos de referencia adicionales, para así ser más exactos y precisos al darte respuesta a su solicitud. Formatos permitidos: (.PDF .JPG .PNG .JPEG)"
           fileStatusSetterDataform={setFileUserMessageMedicalReq}
           fileStatusRemoverDataform={removeFileUserMessageMessageMedicalReq}
           handleOnChangeUserMessageMedicalReqDataForm={(e) =>
@@ -453,7 +453,7 @@ const PatientCreateRequestForm: React.FC = () => {
           }
           onChangeDateCustomDoubleDatePicker={onRangeChange}
           tooltipRegistrationDatesDataform="Selecciona el rango de fecha en el que deseas ver tus registros del tipo de solicitud que requieres."
-          tooltipUploadCitizenshipCardPatientDataform="Adjunte copia de su documento de identidad para así verificar que es usted."
+          tooltipUploadCitizenshipCardPatientDataform="Adjunte copia de su documento de identidad para así verificar que es usted. Formatos permitidos: (.PDF .JPG .PNG .JPEG)"
           copyPatientCitizenshipCardSetterDataform={
             setFileCopyPatientCitizenshipCardMedicalReq
           }

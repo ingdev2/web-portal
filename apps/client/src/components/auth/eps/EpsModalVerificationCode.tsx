@@ -364,6 +364,19 @@ const EpsModalVerificationCode: React.FC = () => {
             </Button>
           )}
 
+          <h5
+            className="spam-message-eps"
+            style={{
+              ...subtitleStyleCss,
+              color: "#8C1111",
+              paddingTop: "13px",
+              margin: "0px",
+            }}
+          >
+            Si el correo no se muestra en la bandeja de entrada o principal, por
+            favor revisar en la bandeja de spam o no deseados.
+          </h5>
+
           <div style={{ marginInline: 54 }}>
             <Divider
               style={{
