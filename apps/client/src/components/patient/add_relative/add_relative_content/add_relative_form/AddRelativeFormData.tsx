@@ -432,7 +432,7 @@ const AddRelativeFormData: React.FC<{
         />
       </Form.Item>
 
-      <Form.Item
+      {/* <Form.Item
         name="radio-select-auth-method"
         label="Método de autenticación del familiar"
         tooltip="El método seleccionado es solo para envío de códigos de acceso a la plataforma."
@@ -460,7 +460,7 @@ const AddRelativeFormData: React.FC<{
             ))}
           </Space>
         </Radio.Group>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item
         name="familiar-whatsapp-register"

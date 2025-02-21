@@ -462,7 +462,7 @@ const EpsCreateRequestForm: React.FC = () => {
 
               dispatch(setRightPetitionMedicalReq(newValue));
             }}
-            tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud."
+            tooltipUploadCopyRightPetitionDataform="Aquí puedes adjuntar una copia de derecho de petición a tu solicitud. Formatos permitidos: (.PDF .JPG .PNG .JPEG)"
             copyRightPetitionSetterDataform={setFileCopyRightPetitionMedicalReq}
             copyRightPetitionRemoverDataform={
               removeFileCopyRightPetitionMedicalReq
