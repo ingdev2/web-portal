@@ -1076,11 +1076,12 @@ export class MedicalReqService {
         .split(' y ')
         .map((part) => parseInt(part.match(/\d+/)?.[0] || '0', 10));
 
-      const minutes = (hoursPart || 0) * 60 + (minutesPart || 0);
+      const correctedHours = Math.max((hoursPart || 0) - 5, 0);
+
+      const minutes = correctedHours * 60 + (minutesPart || 0);
+
       return total + minutes;
     }, 0);
-
-    totalMinutes = Math.max(totalMinutes - 300, 0);
 
     const averageMinutes = Math.floor(totalMinutes / allMedicalReqUsers.length);
     const averageHours = Math.floor(averageMinutes / 60);
@@ -1886,18 +1887,27 @@ export class MedicalReqService {
       }
 
       const currentDate = new Date();
+      const sevenDaysLater = new Date(currentDate);
+      sevenDaysLater.setUTCDate(sevenDaysLater.getUTCDate() + 7);
 
-      const sevenDaysLater = new Date();
-      sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
-
-      deliveredStatus.answer_date = currentDate;
-      deliveredStatus.download_expiration_date = sevenDaysLater;
+      deliveredStatus.answer_date = new Date(currentDate.toISOString());
+      deliveredStatus.download_expiration_date = new Date(
+        sevenDaysLater.toISOString(),
+      );
 
       const dateOfAdmission = new Date(requirementFound.createdAt);
       const answerDate = new Date(deliveredStatus.answer_date);
-      const diffMs = answerDate.getTime() - dateOfAdmission.getTime();
-      const diffHours = Math.floor(diffMs / 3600000);
-      const diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+
+      const dateOfAdmissionUTC = new Date(dateOfAdmission.toISOString());
+      const answerDateUTC = new Date(answerDate.toISOString());
+
+      const diffMs = answerDateUTC.getTime() - dateOfAdmissionUTC.getTime();
+
+      const validDiffMs = Math.max(diffMs, 0);
+
+      const diffHours = Math.floor(validDiffMs / 3600000);
+      const diffMinutes = Math.floor((validDiffMs % 3600000) / 60000);
+
       const responseTime = `${diffHours.toString().padStart(2, '0')} Horas y ${diffMinutes.toString().padStart(2, '0')} Minutos`;
 
       if (
@@ -2125,14 +2135,21 @@ export class MedicalReqService {
       }
 
       const currentDate = new Date();
-
-      rejectedStatus.answer_date = currentDate;
+      rejectedStatus.answer_date = new Date(currentDate.toISOString());
 
       const dateOfAdmission = new Date(requirementFound.createdAt);
       const answerDate = new Date(rejectedStatus.answer_date);
-      const diffMs = answerDate.getTime() - dateOfAdmission.getTime();
-      const diffHours = Math.floor(diffMs / 3600000);
-      const diffMinutes = Math.floor((diffMs % 3600000) / 60000);
+
+      const dateOfAdmissionUTC = new Date(dateOfAdmission.toISOString());
+      const answerDateUTC = new Date(answerDate.toISOString());
+
+      const diffMs = answerDateUTC.getTime() - dateOfAdmissionUTC.getTime();
+
+      const validDiffMs = Math.max(diffMs, 0);
+
+      const diffHours = Math.floor(validDiffMs / 3600000);
+      const diffMinutes = Math.floor((validDiffMs % 3600000) / 60000);
+
       const responseTime = `${diffHours.toString().padStart(2, '0')} Horas y ${diffMinutes.toString().padStart(2, '0')} Minutos`;
 
       if (rejectedStatus.answer_date && rejectedStatus.motive_for_rejection) {
