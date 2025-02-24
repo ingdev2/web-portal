@@ -28,20 +28,33 @@ const ExternalConsultationRequestsAdminPage = () => {
   const dispatch = useAppDispatch();
 
   const {
-    data: extConsultationCompanyAreaData,
-    error: extConsultationCompanyAreaError,
+    data: divaExtConsultationCompanyAreaData,
+    error: divaExtConsultationCompanyAreaError,
   } = useGetCompanyAreaByNameQuery({
-    name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+    name: CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+  });
+
+  const {
+    data: arleneExtConsultationCompanyAreaData,
+    error: arleneExtConsultationCompanyAreaError,
+  } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
   });
 
   const allowedRoles = [AdminRolType.ADMIN];
-  const allowedAreas = [extConsultationCompanyAreaData?.id];
+  const allowedAreas = [
+    divaExtConsultationCompanyAreaData?.id,
+    arleneExtConsultationCompanyAreaData?.id,
+  ];
 
   useRoleValidation(allowedRoles);
   useCompanyAreaValidation(allowedAreas);
 
   const waitAdminData =
-    extConsultationCompanyAreaData && !extConsultationCompanyAreaError;
+    divaExtConsultationCompanyAreaData &&
+    !divaExtConsultationCompanyAreaError &&
+    arleneExtConsultationCompanyAreaData &&
+    !arleneExtConsultationCompanyAreaError;
 
   const adminModalState = useAppSelector(
     (state) => state.modal.adminModalIsOpen

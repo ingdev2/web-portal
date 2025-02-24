@@ -75,15 +75,20 @@ export class MedicalReqController {
   @Auth(AdminRolType.ADMIN)
   @Get('/getAllMedReqUsersByArea')
   async getAllMedReqUsersByArea(
-    @Query('companyAreaName') companyAreaName?: CompanyAreaEnum,
+    @Query('companyAreaNames')
+    companyAreaNames?: CompanyAreaEnum[] | CompanyAreaEnum,
     @Query('status') status?: RequirementStatusEnum,
     @Query('type') type?: RequirementTypeEnum,
     @Query('aplicantType') aplicantType?: UserRolType,
     @Query('year') year?: number,
     @Query('month') month?: number,
   ) {
+    const companyAreas = Array.isArray(companyAreaNames)
+      ? companyAreaNames
+      : [companyAreaNames];
+
     return await this.medicalReqService.getAllMedReqUsersByArea(
-      companyAreaName,
+      companyAreas,
       status,
       type,
       aplicantType,

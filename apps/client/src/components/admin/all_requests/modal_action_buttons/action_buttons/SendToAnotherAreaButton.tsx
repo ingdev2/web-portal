@@ -18,6 +18,7 @@ import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
 import {
   setAreaRedirectionMessageMedicalReq,
   setCurrentlyInAreaMedicalReq,
+  setWasSentToAnotherAreaMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 
 import { useForwardToAnotherAreaMutation } from "@/redux/apis/medical_req/medicalReqApi";
@@ -138,6 +139,7 @@ const SendToAnotherAreaButton: React.FC<{}> = ({}) => {
         dispatch(
           setAreaRedirectionMessageMedicalReq(areaRedirectionMessageLocalState)
         );
+        dispatch(setWasSentToAnotherAreaMedicalReq(true));
       }
     } catch (error) {
       console.error(error);

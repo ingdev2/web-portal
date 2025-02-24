@@ -45,6 +45,7 @@ import { reasonForRejectionMap } from "@/helpers/medical_req_reason_for_rejectio
 import { RequirementStatusEnum } from "@/utils/enums/requirement_status.enum";
 import AverageResponseTime from "./average_response_time/AverageResponseTime";
 import { CompanyAreaEnum } from "@/utils/enums/company_area.enum";
+import { setDefaultValuesMedicalReq } from "@/redux/features/medical_req/medicalReqSlice";
 
 const AllLegalRequestContent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -57,22 +58,14 @@ const AllLegalRequestContent: React.FC = () => {
     string[] | undefined
   >([]);
 
-  const currentlyInAreaState = useAppSelector(
-    (state) => state.medicalReq.currently_in_area
+  const wasSentToAnotherAreaState = useAppSelector(
+    (state) => state.medicalReq.wasSentToAnotherArea
   );
-  const areaRedirectionMessageState = useAppSelector(
-    (state) => state.medicalReq.area_redirection_message
+  const documentsWereDeliveredState = useAppSelector(
+    (state) => state.medicalReq.documentsWereDelivered
   );
-
-  const copyDocumentsDeliveredFilesState = useAppSelector(
-    (state) => state.medicalReq.files_documents_delivered
-  );
-  const responseCommentsState = useAppSelector(
-    (state) => state.medicalReq.response_comments
-  );
-
-  const motivesForRejectionState = useAppSelector(
-    (state) => state.medicalReq.motive_for_rejection
+  const wasRejectedState = useAppSelector(
+    (state) => state.medicalReq.wasRejected
   );
 
   const {
@@ -82,7 +75,7 @@ const AllLegalRequestContent: React.FC = () => {
     error: allMedicalReqLegalAreaError,
     refetch: refecthAllMedicalReqLegalArea,
   } = useGetAllMedicalReqUsersByAreaQuery({
-    companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+    companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
   });
 
   const {
@@ -161,34 +154,40 @@ const AllLegalRequestContent: React.FC = () => {
   } = useViewFileQuery(selectedDocumentId, { skip: !selectedDocumentId });
 
   useEffect(() => {
-    if (currentlyInAreaState && areaRedirectionMessageState) {
+    if (wasSentToAnotherAreaState) {
       refecthAllMedicalReqLegalArea();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
+
+        dispatch(setDefaultValuesMedicalReq());
       }, 4000);
     }
-  }, [currentlyInAreaState, areaRedirectionMessageState]);
+  }, [wasSentToAnotherAreaState]);
 
   useEffect(() => {
-    if (responseCommentsState && copyDocumentsDeliveredFilesState) {
+    if (documentsWereDeliveredState) {
       refecthAllMedicalReqLegalArea();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
+
+        dispatch(setDefaultValuesMedicalReq());
       }, 4000);
     }
-  }, [responseCommentsState, copyDocumentsDeliveredFilesState]);
+  }, [documentsWereDeliveredState]);
 
   useEffect(() => {
-    if (responseCommentsState && motivesForRejectionState) {
+    if (wasRejectedState) {
       refecthAllMedicalReqLegalArea();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
+
+        dispatch(setDefaultValuesMedicalReq());
       }, 4000);
     }
-  }, [responseCommentsState, motivesForRejectionState]);
+  }, [wasRejectedState]);
 
   useEffect(() => {
     if (
@@ -273,6 +272,8 @@ const AllLegalRequestContent: React.FC = () => {
     dispatch(setTableRowFilingNumber(""));
     setSelectedRowDataLocalState(null);
 
+    dispatch(setDefaultValuesMedicalReq());
+
     if (
       record &&
       idsOfMedicalReqStates &&
@@ -321,6 +322,8 @@ const AllLegalRequestContent: React.FC = () => {
             dispatch(setTableRowId(""));
             dispatch(setTableRowFilingNumber(""));
             setSelectedRowDataLocalState(null);
+
+            dispatch(setDefaultValuesMedicalReq());
 
             refecthAllMedicalReqLegalArea();
 

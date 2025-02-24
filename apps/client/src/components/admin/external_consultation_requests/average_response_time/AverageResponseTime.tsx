@@ -11,13 +11,18 @@ import { CompanyAreaEnum } from "@/utils/enums/company_area.enum";
 import { useGetAverageResponseTimeData } from "../../statistics/users_medical_req/users_medical_req_data";
 
 const AverageResponseTime: React.FC = () => {
-  const { data: companyAreaData } = useGetCompanyAreaByNameQuery({
-    name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+  const { data: companyAreaDivaData } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+  });
+  const { data: companyAreaArleneData } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
   });
 
-  const { averageResponseTime } = useGetAverageResponseTimeData(
-    companyAreaData?.id
-  );
+  const { averageResponseTime: averageResponseDivaTime } =
+    useGetAverageResponseTimeData(companyAreaDivaData?.id);
+
+  const { averageResponseTime: averageResponseArleneTime } =
+    useGetAverageResponseTimeData(companyAreaArleneData?.id);
 
   return (
     <div
@@ -26,7 +31,7 @@ const AverageResponseTime: React.FC = () => {
         display: "flex",
         flexFlow: "column wrap",
         margin: "0px",
-        paddingBlock: "22px",
+        paddingBlock: "13px",
       }}
     >
       <h3
@@ -37,10 +42,25 @@ const AverageResponseTime: React.FC = () => {
           margin: "0px",
         }}
       >
-        Tiempo de respuesta promedio <b>{companyAreaData?.name}:</b>&nbsp;
+        Tiempo de respuesta promedio <b>{companyAreaDivaData?.name}:</b>&nbsp;
         <br />
         <b style={{ fontSize: "22px", color: "#137A2B" }}>
-          {averageResponseTime}
+          {averageResponseDivaTime}
+        </b>
+      </h3>
+
+      <h3
+        style={{
+          ...subtitleStyleCss,
+          textAlign: "center",
+          paddingTop: "13px",
+          margin: "0px",
+        }}
+      >
+        Tiempo de respuesta promedio <b>{companyAreaArleneData?.name}:</b>&nbsp;
+        <br />
+        <b style={{ fontSize: "22px", color: "#137A2B" }}>
+          {averageResponseArleneTime}
         </b>
       </h3>
     </div>
