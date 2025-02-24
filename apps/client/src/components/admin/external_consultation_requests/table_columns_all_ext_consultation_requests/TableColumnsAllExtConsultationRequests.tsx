@@ -11,6 +11,7 @@ const requirementStatusKey: keyof MedicalReq = "requirement_status";
 const patientNameKey: keyof MedicalReq = "patient_name";
 const patientIdTypeKey: keyof MedicalReq = "patient_id_type";
 const patientIdNumberKey: keyof MedicalReq = "patient_id_number";
+const currentlyInAreaKey: keyof MedicalReq = "currently_in_area";
 const responseTimeKey: keyof MedicalReq = "response_time";
 
 interface TableColumnProps {
@@ -19,6 +20,7 @@ interface TableColumnProps {
   userMedicalReqStatusData: MedicalReqStatus[] | undefined;
   aplicantTypeData: UserRole[] | undefined;
   idTypesData: IdType[] | undefined;
+  currentlyAreaMedicalReqData: CompanyArea[] | undefined;
 }
 
 export const tableColumnsAllExternalConsultationRequests = ({
@@ -27,6 +29,7 @@ export const tableColumnsAllExternalConsultationRequests = ({
   userMedicalReqStatusData,
   aplicantTypeData,
   idTypesData,
+  currentlyAreaMedicalReqData,
 }: TableColumnProps) => [
   {
     title: "# RADICADO",
@@ -157,6 +160,22 @@ export const tableColumnsAllExternalConsultationRequests = ({
     },
     ellipsis: true,
     render: (status: string) => status,
+  },
+  {
+    title: "ÁREA QUE ESTA REVISANDO",
+    key: currentlyInAreaKey,
+    dataIndex: currentlyInAreaKey,
+    width: 231,
+    filters:
+      currentlyAreaMedicalReqData?.map((type) => ({
+        value: type.name,
+        text: type.name,
+      })) || [],
+    onFilter: (value: any, record: any) => {
+      return String(record.currently_in_area) === String(value);
+    },
+    ellipsis: true,
+    render: (area: string) => area,
   },
   {
     title: "VER SOLICITUD COMPLETA",

@@ -54,6 +54,9 @@ interface MedicalReq {
   files_documents_delivered: Array<Express.Multer.File>;
   delegate_id: string;
   typesMedicalReq: string[];
+  documentsWereDelivered: boolean;
+  wasSentToAnotherArea: boolean;
+  wasRejected: boolean;
   createdAt: string;
   updateAt: string;
   deletedAt: string;

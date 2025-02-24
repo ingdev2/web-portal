@@ -56,6 +56,9 @@ const initialState: MedicalReq = {
   response_time: "",
   delegate_id: "",
   typesMedicalReq: [],
+  documentsWereDelivered: false,
+  wasSentToAnotherArea: false,
+  wasRejected: false,
   createdAt: "",
   updateAt: "",
   deletedAt: "",
@@ -340,6 +343,15 @@ export const medicalReqSlice = createSlice({
     setTypesMedicalReq: (state, action) => {
       state.typesMedicalReq = action.payload;
     },
+    setDocumentsWereDeliveredMedicalReq: (state, action) => {
+      state.documentsWereDelivered = action.payload;
+    },
+    setWasRejectedMedicalReq: (state, action) => {
+      state.wasRejected = action.payload;
+    },
+    setWasSentToAnotherAreaMedicalReq: (state, action) => {
+      state.wasSentToAnotherArea = action.payload;
+    },
     setCreatedAtMedicalReq: (state, action) => {
       state.createdAt = action.payload;
     },
@@ -399,6 +411,9 @@ export const medicalReqSlice = createSlice({
       state.motive_for_rejection = [];
       state.documents_delivered = [];
       state.files_documents_delivered = [];
+      state.documentsWereDelivered = false;
+      state.wasRejected = false;
+      state.wasSentToAnotherArea = false;
       state.delegate_id = "";
       state.errors = [];
     },
@@ -470,6 +485,9 @@ export const {
   setResponseTimeMedicalReq,
   setDelegateIdMedicalReq,
   setTypesMedicalReq,
+  setDocumentsWereDeliveredMedicalReq,
+  setWasRejectedMedicalReq,
+  setWasSentToAnotherAreaMedicalReq,
   setCreatedAtMedicalReq,
   setUpdatedAtMedicalReq,
   setDeletedAtMedicalReq,

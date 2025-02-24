@@ -129,10 +129,17 @@ export const useMenuItems = () => {
     });
 
   const {
-    data: externalConsultationCompanyAreaData,
-    error: externalConsultationCompanyAreaError,
+    data: divaExternalConsultationCompanyAreaData,
+    error: divaExternalConsultationCompanyAreaError,
   } = useGetCompanyAreaByNameQuery({
-    name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+    name: CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+  });
+
+  const {
+    data: arleneExternalConsultationCompanyAreaData,
+    error: arleneExternalConsultationCompanyAreaError,
+  } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
   });
 
   const { data: externalAuditorData, error: externalAuditorError } =
@@ -151,17 +158,29 @@ export const useMenuItems = () => {
     data: allMedicalReqLegalAreaStatusUnderReviewData,
     refetch: refetchAllMedicalReqStatusUnderReview,
   } = useGetAllMedicalReqUsersByAreaQuery({
-    companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+    companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
     status: RequirementStatusEnum.UNDER_REVIEW,
   });
 
   const {
-    data: allMedicalReqExtConsultationAreaStatusUnderReviewData,
-    refetch: refetchAllMedicalReqStatusUnderReviewExtConsultationArea,
+    data: allMedicalReqDivaExtConsultationAreaStatusUnderReviewData,
+    refetch: refetchAllMedicalReqStatusUnderReviewDivaExtConsultationArea,
   } = useGetAllMedicalReqUsersByAreaQuery({
-    companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+    companyAreaNames: [CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION],
     status: RequirementStatusEnum.CREATED,
   });
+
+  const {
+    data: allMedicalReqArleneExtConsultationAreaStatusUnderReviewData,
+    refetch: refetchAllMedicalReqStatusUnderReviewArleneExtConsultationArea,
+  } = useGetAllMedicalReqUsersByAreaQuery({
+    companyAreaNames: [CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION],
+    status: RequirementStatusEnum.CREATED,
+  });
+
+  const totalExtConsultationRequests =
+    (allMedicalReqDivaExtConsultationAreaStatusUnderReviewData?.length ?? 0) +
+    (allMedicalReqArleneExtConsultationAreaStatusUnderReviewData?.length ?? 0);
 
   // DATOS DE ADMIN //
 
@@ -188,7 +207,8 @@ export const useMenuItems = () => {
     if (tableRowIdState || tableRowFilingNumberState) {
       refetchAllMedicalReqStatusCreated();
       refetchAllMedicalReqStatusUnderReview();
-      refetchAllMedicalReqStatusUnderReviewExtConsultationArea();
+      refetchAllMedicalReqStatusUnderReviewDivaExtConsultationArea();
+      refetchAllMedicalReqStatusUnderReviewArleneExtConsultationArea();
     }
   }, [
     idNumberAdminState,
@@ -221,8 +241,10 @@ export const useMenuItems = () => {
     !legalCompanyAreaError &&
     admissionsCompanyAreaData &&
     !admissionsCompanyAreaError &&
-    externalConsultationCompanyAreaData &&
-    !externalConsultationCompanyAreaError &&
+    divaExternalConsultationCompanyAreaData &&
+    !divaExternalConsultationCompanyAreaError &&
+    arleneExternalConsultationCompanyAreaData &&
+    !arleneExternalConsultationCompanyAreaError &&
     externalAuditorData &&
     !externalAuditorError;
 
@@ -271,31 +293,31 @@ export const useMenuItems = () => {
 
           isAdminWithRoles(roleIdAdminState, [adminRoleData.id]) &&
           isAdminInCompanyAreas(companyAreaIdAdminState, [
-            externalConsultationCompanyAreaData.id,
+            divaExternalConsultationCompanyAreaData.id,
+            arleneExternalConsultationCompanyAreaData.id,
           ])
             ? getItem(
                 ItemNames.SUB_ALL_EXTERNAL_CONSULTATION_REQUESTS,
                 ItemKeys.SUB_ALL_EXTERNAL_CONSULTATION_REQUESTS_REQ_KEY,
                 <RiFileList3Line size={15} />,
                 undefined,
-                allMedicalReqExtConsultationAreaStatusUnderReviewData?.length
+                totalExtConsultationRequests
               )
             : null,
         ].filter(Boolean)
       ),
 
-      isAdminInPositionLevel(positionLevelIdAdminState, [
-        directorPositionLevelData.id,
-        coordinatorPositionLevelData.id,
-        colaboratorPositionLevelData.id,
-        auditorPositionLevelData.id,
+      isAdminWithRoles(roleIdAdminState, [
+        superAdminRoleData.id,
+        adminRoleData.id,
       ]) &&
       isAdminInCompanyAreas(companyAreaIdAdminState, [
         systemsCompanyAreaData.id,
         archivesCompanyAreaData.id,
         legalCompanyAreaData.id,
         admissionsCompanyAreaData.id,
-        externalConsultationCompanyAreaData.id,
+        divaExternalConsultationCompanyAreaData.id,
+        arleneExternalConsultationCompanyAreaData.id,
         externalAuditorData.id,
       ])
         ? getItem(
@@ -309,11 +331,7 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
+                externalAuditorData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_ADMIN_USERS,
@@ -329,11 +347,6 @@ export const useMenuItems = () => {
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_AUDITORS,
@@ -351,13 +364,8 @@ export const useMenuItems = () => {
                 archivesCompanyAreaData.id,
                 legalCompanyAreaData.id,
                 admissionsCompanyAreaData.id,
-                externalConsultationCompanyAreaData.id,
-                externalAuditorData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
+                divaExternalConsultationCompanyAreaData.id,
+                arleneExternalConsultationCompanyAreaData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_PATIENT_USERS,
@@ -375,13 +383,8 @@ export const useMenuItems = () => {
                 archivesCompanyAreaData.id,
                 legalCompanyAreaData.id,
                 admissionsCompanyAreaData.id,
-                externalConsultationCompanyAreaData.id,
-                externalAuditorData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
+                divaExternalConsultationCompanyAreaData.id,
+                arleneExternalConsultationCompanyAreaData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_RELATIVES_USERS,
@@ -397,14 +400,12 @@ export const useMenuItems = () => {
         superAdminRoleData.id,
         adminRoleData.id,
       ]) &&
-      isAdminInPositionLevel(positionLevelIdAdminState, [
-        directorPositionLevelData.id,
-        coordinatorPositionLevelData.id,
-        colaboratorPositionLevelData.id,
-      ]) &&
       isAdminInCompanyAreas(companyAreaIdAdminState, [
         systemsCompanyAreaData.id,
         archivesCompanyAreaData.id,
+        legalCompanyAreaData.id,
+        divaExternalConsultationCompanyAreaData.id,
+        arleneExternalConsultationCompanyAreaData.id,
       ])
         ? getItem(
             ItemNames.ITEM_PARAMETRIZATION,
@@ -418,11 +419,6 @@ export const useMenuItems = () => {
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_EPS_COMPANIES_PARAMS,
@@ -438,11 +434,9 @@ export const useMenuItems = () => {
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
+                legalCompanyAreaData.id,
+                divaExternalConsultationCompanyAreaData.id,
+                arleneExternalConsultationCompanyAreaData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_REASONS_FOR_REJECTION_PARAMS,
@@ -458,11 +452,6 @@ export const useMenuItems = () => {
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
                 archivesCompanyAreaData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_REQ_TYPES_PARAMS,
@@ -477,11 +466,6 @@ export const useMenuItems = () => {
               ]) &&
               isAdminInCompanyAreas(companyAreaIdAdminState, [
                 systemsCompanyAreaData.id,
-              ]) &&
-              isAdminInPositionLevel(positionLevelIdAdminState, [
-                directorPositionLevelData.id,
-                coordinatorPositionLevelData.id,
-                colaboratorPositionLevelData.id,
               ])
                 ? getItem(
                     ItemNames.SUB_COMPANY_AREAS_PARAMS,

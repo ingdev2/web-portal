@@ -53,10 +53,17 @@ const AllRelativesPage = () => {
     });
 
   const {
-    data: externalConsultationCompanyAreaData,
-    error: externalConsultationCompanyAreaError,
+    data: divaExtConsultationCompanyAreaData,
+    error: divaExtConsultationCompanyAreaError,
   } = useGetCompanyAreaByNameQuery({
-    name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+    name: CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+  });
+
+  const {
+    data: arleneExtConsultationCompanyAreaData,
+    error: arleneExtConsultationCompanyAreaError,
+  } = useGetCompanyAreaByNameQuery({
+    name: CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
   });
 
   // NIVEL DE CARGO //
@@ -86,7 +93,8 @@ const AllRelativesPage = () => {
     archivesCompanyAreaData?.id,
     admissionsCompanyAreaData?.id,
     legalCompanyAreaData?.id,
-    externalConsultationCompanyAreaData?.id,
+    divaExtConsultationCompanyAreaData?.id,
+    arleneExtConsultationCompanyAreaData?.id,
   ];
   const allowedPositionLevels = [
     directorPositionLevelData?.id,
@@ -107,8 +115,10 @@ const AllRelativesPage = () => {
     !legalCompanyAreaError &&
     admissionsCompanyAreaData &&
     !admissionsCompanyAreaError &&
-    externalConsultationCompanyAreaData &&
-    !externalConsultationCompanyAreaError &&
+    divaExtConsultationCompanyAreaData &&
+    !divaExtConsultationCompanyAreaError &&
+    arleneExtConsultationCompanyAreaData &&
+    !arleneExtConsultationCompanyAreaError &&
     directorPositionLevelData &&
     !directorPositionLevelError &&
     coordinatorPositionLevelData &&

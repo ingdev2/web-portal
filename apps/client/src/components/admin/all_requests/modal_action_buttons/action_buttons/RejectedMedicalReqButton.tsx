@@ -18,6 +18,7 @@ import { setErrorsAdmin } from "@/redux/features/admin/adminSlice";
 import {
   setMotiveForRejectionMedicalReq,
   setResponseCommentsMedicalReq,
+  setWasRejectedMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 
 import { useChangeStatusToRejectedMutation } from "@/redux/apis/medical_req/medicalReqApi";
@@ -149,6 +150,7 @@ const RejectedMedicalReqButton: React.FC<{}> = ({}) => {
             reasonForRejectionNumberAdminLocalState
           )
         );
+        dispatch(setWasRejectedMedicalReq(true));
       }
     } catch (error) {
       console.error(error);
