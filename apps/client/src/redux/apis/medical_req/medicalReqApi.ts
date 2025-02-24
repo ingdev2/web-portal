@@ -112,7 +112,7 @@ export const medicalReqApi = createApi({
     getAllMedicalReqUsersByArea: builder.query<
       MedicalReq[],
       {
-        companyAreaName?: CompanyAreaEnum | null;
+        companyAreaNames?: CompanyAreaEnum[] | null;
         status?: RequirementStatusEnum | null;
         type?: RequirementTypeEnum | null;
         aplicantType?: UserRolType | null;
@@ -121,25 +121,28 @@ export const medicalReqApi = createApi({
       }
     >({
       query: ({
-        companyAreaName = null,
+        companyAreaNames = null,
         status = null,
         type = null,
         aplicantType = null,
         year = null,
         month = null,
       }) => {
-        const params: any = {};
+        const params = new URLSearchParams();
 
-        if (companyAreaName !== null) params.companyAreaName = companyAreaName;
-        if (status !== null) params.status = status;
-        if (type !== null) params.type = type;
-        if (aplicantType !== null) params.aplicantType = aplicantType;
-        if (year !== null) params.year = year;
-        if (month !== null) params.month = month;
+        if (companyAreaNames && companyAreaNames.length > 0) {
+          companyAreaNames.forEach((area) =>
+            params.append("companyAreaNames", area)
+          );
+        }
+        if (status) params.append("status", status);
+        if (type) params.append("type", type);
+        if (aplicantType) params.append("aplicantType", aplicantType);
+        if (year) params.append("year", year.toString());
+        if (month) params.append("month", month.toString());
 
         return {
-          url: "getAllMedReqUsersByArea",
-          params,
+          url: `getAllMedReqUsersByArea?${params.toString()}`,
         };
       },
     }),

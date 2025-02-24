@@ -17,42 +17,42 @@ const StatusItems: React.FC = () => {
     isFetching: allMedicalReqUsersFetching,
     error: allMedicalReqUsersError,
   } = useGetAllMedicalReqUsersByAreaQuery({
-    companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+    companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
   });
 
   const { data: allMedicalReqLegalAreaStatusCreatedData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+      companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
       status: RequirementStatusEnum.CREATED,
     });
 
   const { data: allMedicalReqLegalAreaStatusVisualizedData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+      companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
       status: RequirementStatusEnum.VISUALIZED,
     });
 
   const { data: allMedicalReqLegalAreaStatusUnderReviewData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+      companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
       status: RequirementStatusEnum.UNDER_REVIEW,
     });
 
   const { data: allMedicalReqLegalAreaStatusDeliveredData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+      companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
       status: RequirementStatusEnum.DELIVERED,
     });
 
   const { data: allMedicalReqLegalAreaStatusRejectedData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+      companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
       status: RequirementStatusEnum.REJECTED,
     });
 
   const { data: allMedicalReqLegalAreaStatusExpiredData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.LEGAL_DEPARTMENT,
+      companyAreaNames: [CompanyAreaEnum.LEGAL_DEPARTMENT],
       status: RequirementStatusEnum.EXPIRED,
     });
 

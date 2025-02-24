@@ -573,13 +573,14 @@ export class MedicalReqService {
       );
     }
 
-    const externalConsultationArea = await this.companyAreaRepository.findOne({
-      where: {
-        name: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
-      },
-    });
+    const divaExternalConsultationArea =
+      await this.companyAreaRepository.findOne({
+        where: {
+          name: CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        },
+      });
 
-    if (!externalConsultationArea) {
+    if (!divaExternalConsultationArea) {
       throw new HttpException(
         'El área de "CONSULTA EXTERNA" no existe.',
         HttpStatus.NOT_FOUND,
@@ -613,7 +614,8 @@ export class MedicalReqService {
     const aplicantPatientDetails = new CreateMedicalReqPatientDto();
 
     if (medicalReqPatient.requirement_type === reqTypeMipres.id) {
-      aplicantPatientDetails.currently_in_area = externalConsultationArea.id;
+      aplicantPatientDetails.currently_in_area =
+        divaExternalConsultationArea.id;
     } else {
       aplicantPatientDetails.currently_in_area = fileArea.id;
     }
@@ -1166,7 +1168,7 @@ export class MedicalReqService {
   }
 
   async getAllMedReqUsersByArea(
-    companyAreaName?: CompanyAreaEnum,
+    companyAreaNames?: CompanyAreaEnum[],
     status?: RequirementStatusEnum,
     type?: RequirementTypeEnum,
     aplicantType?: UserRolType,
@@ -1178,19 +1180,21 @@ export class MedicalReqService {
       is_it_reviewed: false,
     };
 
-    if (companyAreaName) {
-      const companyArea = await this.companyAreaRepository.findOne({
-        where: { name: companyAreaName },
+    if (companyAreaNames && companyAreaNames.length > 0) {
+      const companyAreas = await this.companyAreaRepository.find({
+        where: { name: In(companyAreaNames) },
       });
 
-      if (!companyArea) {
+      if (companyAreas.length === 0) {
         throw new HttpException(
-          `El área "${companyAreaName}" no existe.`,
+          `Ninguna de las áreas proporcionadas existe.`,
           HttpStatus.NOT_FOUND,
         );
       }
 
-      whereCondition.currently_in_area = companyArea.id;
+      whereCondition.currently_in_area = In(
+        companyAreas.map((area) => area.id),
+      );
     }
 
     if (type) {

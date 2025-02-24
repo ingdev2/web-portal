@@ -17,42 +17,63 @@ const StatusItems: React.FC = () => {
     isFetching: allMedicalReqUsersExtConsultationFetching,
     error: allMedicalReqUsersExtConsultationError,
   } = useGetAllMedicalReqUsersByAreaQuery({
-    companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+    companyAreaNames: [
+      CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+      CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+    ],
   });
 
   const { data: allMedicalReqExtConsultationAreaStatusCreatedData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      companyAreaNames: [
+        CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+      ],
       status: RequirementStatusEnum.CREATED,
     });
 
   const { data: allMedicalReqExtConsultationAreaStatusVisualizedData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      companyAreaNames: [
+        CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+      ],
       status: RequirementStatusEnum.VISUALIZED,
     });
 
   const { data: allMedicalReqExtConsultationAreaStatusUnderReviewData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      companyAreaNames: [
+        CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+      ],
       status: RequirementStatusEnum.UNDER_REVIEW,
     });
 
   const { data: allMedicalReqExtConsultationAreaStatusDeliveredData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      companyAreaNames: [
+        CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+      ],
       status: RequirementStatusEnum.DELIVERED,
     });
 
   const { data: allMedicalReqExtConsultationAreaStatusRejectedData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      companyAreaNames: [
+        CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+      ],
       status: RequirementStatusEnum.REJECTED,
     });
 
   const { data: allMedicalReqExtConsultationAreaStatusExpiredData } =
     useGetAllMedicalReqUsersByAreaQuery({
-      companyAreaName: CompanyAreaEnum.EXTERNAL_CONSULTATION_DEPARTMENT,
+      companyAreaNames: [
+        CompanyAreaEnum.DIVA_EXTERNAL_CONSULTATION,
+        CompanyAreaEnum.ARLENE_EXTERNAL_CONSULTATION,
+      ],
       status: RequirementStatusEnum.EXPIRED,
     });
 

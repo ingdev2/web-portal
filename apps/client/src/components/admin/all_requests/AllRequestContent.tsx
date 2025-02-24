@@ -54,22 +54,14 @@ const AllRequestContent: React.FC = () => {
     string[] | undefined
   >([]);
 
-  const currentlyInAreaState = useAppSelector(
-    (state) => state.medicalReq.currently_in_area
+  const wasSentToAnotherAreaState = useAppSelector(
+    (state) => state.medicalReq.wasSentToAnotherArea
   );
-  const areaRedirectionMessageState = useAppSelector(
-    (state) => state.medicalReq.area_redirection_message
+  const documentsWereDeliveredState = useAppSelector(
+    (state) => state.medicalReq.documentsWereDelivered
   );
-
-  const copyDocumentsDeliveredFilesState = useAppSelector(
-    (state) => state.medicalReq.files_documents_delivered
-  );
-  const responseCommentsState = useAppSelector(
-    (state) => state.medicalReq.response_comments
-  );
-
-  const motivesForRejectionState = useAppSelector(
-    (state) => state.medicalReq.motive_for_rejection
+  const wasRejectedState = useAppSelector(
+    (state) => state.medicalReq.wasRejected
   );
 
   const {
@@ -158,34 +150,40 @@ const AllRequestContent: React.FC = () => {
   });
 
   useEffect(() => {
-    if (currentlyInAreaState && areaRedirectionMessageState) {
+    if (wasSentToAnotherAreaState) {
       refecthAllMedicalReqUsers();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
+
+        dispatch(setDefaultValuesMedicalReq());
       }, 4000);
     }
-  }, [currentlyInAreaState, areaRedirectionMessageState]);
+  }, [wasSentToAnotherAreaState]);
 
   useEffect(() => {
-    if (responseCommentsState && copyDocumentsDeliveredFilesState) {
+    if (documentsWereDeliveredState) {
       refecthAllMedicalReqUsers();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
+
+        dispatch(setDefaultValuesMedicalReq());
       }, 4000);
     }
-  }, [responseCommentsState, copyDocumentsDeliveredFilesState]);
+  }, [documentsWereDeliveredState]);
 
   useEffect(() => {
-    if (responseCommentsState && motivesForRejectionState) {
+    if (wasRejectedState) {
       refecthAllMedicalReqUsers();
 
       setTimeout(() => {
         setIsModalVisibleLocalState(false);
+
+        dispatch(setDefaultValuesMedicalReq());
       }, 4000);
     }
-  }, [responseCommentsState, motivesForRejectionState]);
+  }, [wasRejectedState]);
 
   useEffect(() => {
     if (
@@ -270,7 +268,7 @@ const AllRequestContent: React.FC = () => {
     dispatch(setTableRowFilingNumber(""));
     setSelectedRowDataLocalState(null);
 
-    setDefaultValuesMedicalReq();
+    dispatch(setDefaultValuesMedicalReq());
 
     if (
       record &&
@@ -321,7 +319,7 @@ const AllRequestContent: React.FC = () => {
             dispatch(setTableRowFilingNumber(""));
             setSelectedRowDataLocalState(null);
 
-            setDefaultValuesMedicalReq();
+            dispatch(setDefaultValuesMedicalReq());
 
             refecthAllMedicalReqUsers();
 

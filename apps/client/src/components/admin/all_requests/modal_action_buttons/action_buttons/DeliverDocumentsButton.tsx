@@ -21,6 +21,7 @@ import {
   setFileDocumentsDeliveredMedicalReq,
   removeFileDocumentsDeliveredMedicalReq,
   setDefaultValuesMedicalReq,
+  setDocumentsWereDeliveredMedicalReq,
 } from "@/redux/features/medical_req/medicalReqSlice";
 
 import { useChangeStatusToDeliveredMutation } from "@/redux/apis/medical_req/medicalReqApi";
@@ -144,6 +145,7 @@ const DeliverDocumentsButton: React.FC<{}> = ({}) => {
         setIsModalVisibleLocalState(false);
 
         dispatch(setResponseCommentsMedicalReq(responseCommentsLocalState));
+        dispatch(setDocumentsWereDeliveredMedicalReq(true));
       }
     } catch (error) {
       console.error(error);
